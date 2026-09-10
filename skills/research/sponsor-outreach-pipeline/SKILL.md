@@ -74,18 +74,30 @@ Start from high-priority.md / all-sponsors.json. Verify each against corpus
 Imagine→imagine.io, AWS→aws.ac.th, Unblocked→unblocked.life.
 
 ### 1b. Stage leads: LEADS bucket = FIRST EMAIL not yet sent
-The Leads CRM (newsletterfit.com/crm/, store /home/boxed/nf-crm/data/crm.json) is
-the single source of truth for outreach state — the old tracker is retired. A
-sponsor sits in the **"Leads"** stage only until its first email is actually
-sent; sending from the CRM (or a pad draft sent through it) advances the stage and
-logs the email against the lead automatically. "Sync email" in the CRM reconciles
-pad mail into the timeline and flags replies (a reply moves the lead to Replied).
+The Leads CRM is the pad's Leads tab (newsletterfit.com/pad, engine on
+127.0.0.1:3002) and the single source of truth for outreach state — the old
+tracker is retired. Store: SQLite at `/home/boxed/resend-pad/data/outreach.db`
+(node:sqlite; schema `/home/boxed/resend-pad/schema.sql`, tables leads,
+lead_stage_events, emails, replies, drafts, events — the JSON stores were migrated
+2026-09-10 and the old crm.json is now only a backup at
+`/home/boxed/resend-pad/attic/pre-sqlite-*/`). A sponsor sits in the **"Leads"**
+stage only until its first email is actually sent; sending from the pad (or a pad
+draft sent through it) advances the stage, writes the emails row with the stage
+frozen in `stage_at_send`, and logs the transition to `lead_stage_events`. "Sync
+email" reconciles pad mail into the timeline and flags replies (a reply moves the
+lead to Replied).
 
 Stages: Leads (grey) → First Email (blue) → Follow-up 1-4 (teal/indigo/purple/
-amber) → Replied (pink) → Won (green) / No (red). Companies whose first email is
+amber) → Qualified (cyan) → Replied (pink) → Won (green) / No (red) / Archived
+(grey). `converted` (0/1 + converted_at, value_cents) is kept separate from stage,
+so a deal can close without rewriting the pipeline. Companies whose first email is
 still only a draft are LEADS, NOT "First Email". API (X-CRM-Token = pad token):
-GET /api/leads, PATCH /api/leads/:id {stage}, POST /api/leads/:id/note,
-POST /api/sync, GET /api/meta (stages + counts).
+GET /api/leads, GET /api/leads/:id, GET /api/leads/:id/timeline,
+PATCH /api/leads/:id {stage|priority|value_cents|converted|...},
+POST /api/leads/:id/note, GET /api/pipeline (v_lead_pipeline),
+GET /api/followups-due (v_followups_due), GET /api/emails, GET /api/replies,
+PATCH/DELETE /api/replies/:id (the ✕ is a soft delete), POST /api/sync,
+GET /api/meta (stages + counts + storage).
 
 ### 1c. AUTOMATED INTAKE (cron 'Sponsor intake to leads', daily 10:15 UTC)
 Newly detected/confirmed sponsors are imported into the CRM automatically. The
@@ -95,8 +107,19 @@ already in the CRM, and creates rows with stage="leads" (draft ready, NOT sent)
 via `POST /api/leads` on the CRM (header `X-CRM-Token` = pad token). Max 5 per
 run; Hunter domain-search only if >=5 searches remain (see the billing note in
 section 2). Historical note: rows backfilled before the CRM existed are at
-/home/boxed/backfill_rows.csv and can be pulled in with
-`python3 /home/boxed/nf-crm/import_tracker.py --csv <file>`.
+/home/boxed/backfill_rows.csv. Pull them in with the backfill tool, NOT the old
+Python one (it wrote the retired crm.json and is in attic/):
+
+```
+node /home/boxed/resend-pad/tools/import-tracker.cjs --dry-run   # report first
+node /home/boxed/resend-pad/tools/import-tracker.cjs             # writes the live db
+```
+
+It creates missing companies as LEADS, fills only missing fields on existing
+ones, and files the tracker's First Email / Follow-up 1 columns into `drafts`
+as UNSENT drafts — it never records a send or advances a stage, because the
+column holds a draft body and the export has no send timestamp. Idempotent;
+`--db <path>` aims it at a copy.
 
 ### 2. Find contacts (Hunter)
 Domain-search: `GET /v2/domain-search?domain=<d>|company=<n>&type=personal
@@ -215,13 +238,18 @@ block to the Discord follow-up-intel channel (id: 1542548032254640168; daily 08:
 HARD no-fabrication rule.
 
 ### 5. Track in the Leads CRM
-Leads live in the CRM: `https://newsletterfit.com/crm/` (store
-`/home/boxed/nf-crm/data/crm.json`, API on 127.0.0.1:3002, Caddy route `/crm/*`).
-Stage changes, notes, sent mail and replies are logged per lead; the CRM's "Sync
-email" reconciles the pad's mail against leads. Log Hunter credits per batch in a
-lead note. Backlog of stages: Leads, First Email, Follow-up 1-4, Replied, Won, No.
-The CRM is read/written with the pad token (`X-CRM-Token`), so no Google OAuth is
-needed any more.
+Leads live in the CRM: the **Leads tab inside the pad** (there is no separate
+/crm/ page any more — the engine serves no UI of its own). Engine on
+127.0.0.1:3002, proxied by the pad at `/api/crm/*`, reading and writing SQLite at
+`/home/boxed/resend-pad/data/outreach.db` (one `X-Pad-Token` unlocks both the pad
+and the CRM). Stage changes, notes, sent mail and replies are all rows — nothing
+is stored in JSON files any more. Log Hunter credits per batch in a lead note.
+Backlog of stages: Leads, First Email, Follow-up 1-4, Qualified, Replied, Won, No,
+Archived. Reports come from the two views: `v_lead_pipeline` (per lead: stage,
+converted, emails_sent, replies, last_reply_at) and `v_lead_timeline` (mail and
+stage moves in one chronological stream), plus `v_followups_due` for the touch
+cadence. Commit a state snapshot with
+`/home/boxed/nf-outreach-pipeline/scripts/snapshot-state.sh` after a batch.
 
 ## Reusable artifacts (built 2026-08-26)
 - `/home/boxed/lead_tracking_sheet.csv`
