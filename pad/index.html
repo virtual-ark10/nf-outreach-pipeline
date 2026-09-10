@@ -167,6 +167,28 @@
   .tl { margin-top: 10px; }
   .ev { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
   .ev .t { flex: 0 0 50px; font-size: 10px; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+  /* ---------- tracking + analytics ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; background: #fff; }
+  .kpi .kv-l { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .kpi .kv-v { font-size: 20px; font-weight: 600; line-height: 1.35; }
+  .kpi .kv-n { font-size: 11px; color: var(--muted); }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: #fff; }
+  .card h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
+  .cbox { position: relative; height: 210px; }
+  .cbox.tall { height: 260px; }
+  table.small { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.small th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  table.small td { padding: 5px 6px; border-bottom: 1px dotted var(--line); }
+  table.small td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .fail { color: #b91c1c; font-weight: 600; }
+  .prov { display: flex; gap: 10px; align-items: flex-start; border: 1px dashed var(--line); border-radius: 8px; padding: 11px 12px; margin-bottom: 9px; background: #fff; }
+  .prov .dotp { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); margin-top: 5px; flex: 0 0 9px; }
+  .prov .dotp.on { background: #16a34a; }
+  .prov .pn { font-weight: 600; font-size: 13px; }
+  .prov .pd { font-size: 12px; color: var(--muted); }
+  .pill { display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 10px; text-transform: uppercase; letter-spacing: .4px; background: #EEF0F3; color: var(--muted); }
   @media (max-width: 820px) { .layout { flex-direction: column; } .side { flex-direction: row; flex-wrap: wrap; position: static; } .crm-split { flex-direction: column; } .crm-detail { flex: 1 1 auto; border-left: 0; padding-left: 0; } }
 </style>
 </head>
@@ -176,7 +198,7 @@
   <header class="row">
     <div class="logo">NF</div>
     <div>
-      <h1><span id="brand_name">NewsletterFIT</span> <span class="chip">v2.2</span></h1>
+      <h1><span id="brand_name">NewsletterFIT</span> <span class="chip">v2.3</span></h1>
       <div class="sub">Leads CRM + outreach inbox in one place · powered by Resend</div>
     </div>
     <div class="token-box">
@@ -197,6 +219,8 @@
     <button class="tab" data-tab="compose">Compose</button>
     <button class="tab" data-tab="sent">Sent</button>
     <button class="tab" data-tab="received">Received</button>
+    <button class="tab" data-tab="tracking">Tracking</button>
+    <button class="tab" data-tab="analytics">Analytics</button>
   </nav>
   <main class="main">
 
@@ -292,10 +316,68 @@
     <div id="recv_list"></div>
   </section>
 
+  <!-- ================= TRACKING ================= -->
+  <section class="panel" id="panel-tracking">
+    <div class="row-actions" style="margin:0 0 10px">
+      <strong style="font-size:14px">Tracking</strong>
+      <span style="font-size:12px;color:var(--muted)">everything the pipeline measures, from one store</span>
+      <span class="spacer" style="flex:1"></span>
+      <select id="tr_window" onchange="loadTracking()" style="font-size:12px;padding:4px 6px">
+        <option value="7">last 7 days</option>
+        <option value="30" selected>last 30 days</option>
+        <option value="90">last 90 days</option>
+        <option value="365">last 12 months</option>
+      </select>
+      <button class="ghost" id="btn_tr_refresh">Refresh</button>
+      <span id="status_tr" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div id="tr_kpis" class="kpis"></div>
+    <div id="tr_charts" class="charts">
+      <div class="card"><h3>Activity per day</h3><div class="cbox tall"><canvas id="ch_activity"></canvas></div></div>
+      <div class="card"><h3>Delivery status</h3><div class="cbox"><canvas id="ch_status"></canvas></div></div>
+      <div class="card"><h3>Engagement funnel</h3><div class="cbox"><canvas id="ch_funnel"></canvas></div></div>
+      <div class="card"><h3>Top leads by sends</h3><div class="cbox tall"><canvas id="ch_leads"></canvas></div></div>
+      <div class="card"><h3>By campaign</h3><div class="cbox"><canvas id="ch_campaigns"></canvas></div></div>
+      <div class="card"><h3>Failures by operation</h3><div class="cbox"><canvas id="ch_errors"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-top:12px"><h3>Recent failures &mdash; events where type = 'error'</h3><div id="tr_errors"></div></div>
+    <div class="card" style="margin-top:12px"><h3>Leads &mdash; sends, replies, clicks</h3><div id="tr_leads"></div></div>
+    <div id="tr_sources" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
+  </section>
+
+  <!-- ================= ANALYTICS ================= -->
+  <section class="panel" id="panel-analytics">
+    <h2 style="font-size:14px;margin:0 0 4px">Analytics</h2>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">
+      Website-side analytics. Each provider is connected later over MCP; nothing below
+      talks to either service yet, and no numbers are invented while they are off.
+    </div>
+    <div id="an_providers"></div>
+    <div class="card" style="margin-top:12px">
+      <h3>What lands here once connected</h3>
+      <table class="small">
+        <tr><th>Provider</th><th>Will show</th><th>State</th></tr>
+        <tr><td>Google Analytics 4</td><td>sessions, source/medium, landing pages, conversions on newsletterfit.com</td><td><span class="pill">not connected</span></td></tr>
+        <tr><td>PostHog</td><td>product events, funnels, session replays, feature flags, cohorts</td><td><span class="pill">not connected</span></td></tr>
+      </table>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>Where the Tracking tab numbers come from</h3>
+      <table class="small">
+        <tr><th>Metric</th><th>Source</th></tr>
+        <tr><td>sent / delivered / bounced</td><td>the emails table (Resend webhooks keep the status current)</td></tr>
+        <tr><td>replies</td><td>the replies table (Resend inbox webhook)</td></tr>
+        <tr><td>clicks</td><td>attribution mirror &mdash; first_click_at per minted token</td></tr>
+        <tr><td>opens</td><td>not tracked yet: open tracking is off at Resend, so the number is honestly 0</td></tr>
+        <tr><td>failures</td><td>events rows where type = 'error', grouped by payload.op</td></tr>
+      </table>
+    </div>
+  </section>
+
   </main>
   </div>
 
-  <footer id="pad_footer">NewsletterFIT Pad v2.2 — leads CRM + email in one place. Self-contained client, no external assets. Server API &amp; data live on the VPS.</footer>
+  <footer id="pad_footer">NewsletterFIT Pad v2.3 &mdash; leads CRM, tracking dashboard and email in one place. Self-contained client: the only local asset is the vendored Chart.js, served from this same origin. Server API &amp; data live on the VPS.</footer>
 </div>
 
 <!-- ================= MODAL ================= -->
@@ -310,9 +392,10 @@
   </div>
 </div>
 
+<script src="vendor/chart.umd.min.js"></script>
 <script>
 "use strict";
-const PAD_VERSION = "2.0";
+const PAD_VERSION = "2.3";
 const TOKEN_KEY = "nf_pad_token";
 const TEMPLATES = {
   intro: {
@@ -416,6 +499,8 @@ function switchTab(tab) {
   if (tab === "drafts") loadDrafts();
   if (tab === "sent") loadSent();
   if (tab === "received") loadReceived();
+  if (tab === "tracking") loadTracking();
+  if (tab === "analytics") renderAnalytics();
 }
 document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
@@ -870,6 +955,195 @@ async function crmSync() {
   } catch (e) { s.textContent = "Sync failed: " + e.message; }
 }
 $("btn_crm_sync").addEventListener("click", crmSync);
+
+// ---------- tracking ----------
+// Everything here comes from /api/tracking in one round trip. Chart.js is
+// vendored locally and served from this same origin, so there is still no
+// external asset and a blocked CDN cannot break the pad; if it fails to load,
+// the tab says so and the tables below still work.
+const CHART_COLORS = { sent: "#2563eb", delivered: "#16a34a", bounced: "#f59e0b", replies: "#db2777", clicks: "#7c3aed", errors: "#dc2626", opened: "#0891b2", muted: "#94a3b8" };
+const liveCharts = {};
+const num = (v) => String(Number(v) || 0);   // NB: esc() maps a falsy 0 to "", never use it for counts
+
+function makeChart(id, config) {
+  const el = $(id);
+  if (!el || typeof el.getContext !== "function") return false;   // DOM stub / no canvas
+  if (typeof Chart === "undefined") return false;                 // vendor file missing
+  if (liveCharts[id]) { try { liveCharts[id].destroy(); } catch (e) { /* replaced below */ } }
+  try {
+    // Pass the ELEMENT, not the context: Chart.js 4's DOM platform acquires the
+    // context itself and rejects one that was handed to it (context.canvas ===
+    // element must hold), so new Chart(ctx, cfg) yields a chart that never draws.
+    liveCharts[id] = new Chart(el, config);
+    return true;
+  } catch (e) {
+    console.warn("[PAD] chart failed:", id, e && e.message);
+    return false;
+  }
+}
+function chartsAvailable() {
+  const el = $("ch_activity");
+  return typeof Chart !== "undefined" && !!el && typeof el.getContext === "function";
+}
+function noChartsNotice() {
+  const box = $("tr_charts");
+  if (box) box.innerHTML = '<div class="card"><h3>Charts unavailable</h3><div class="empty" style="font-size:12px">Chart.js did not load (vendor/chart.umd.min.js). The tables below are unaffected.</div></div>';
+}
+function kpiCell(label, value, note) {
+  return '<div class="kpi"><div class="kv-l">' + esc(label) + '</div><div class="kv-v">' + num(value) + "</div>" +
+    (note ? '<div class="kv-n">' + esc(note) + "</div>" : "") + "</div>";
+}
+async function loadTracking() {
+  const kpis = $("tr_kpis");
+  if (!kpis) return;
+  const days = ($("tr_window") && $("tr_window").value) || "30";
+  const st = $("status_tr");
+  if (st) st.textContent = "Loading…";
+  kpis.innerHTML = '<div class="empty" style="font-size:12px">Loading…</div>';
+  try {
+    const d = await api("api/tracking?days=" + encodeURIComponent(days), authed("GET"));
+    renderTracking(d);
+    if (st) st.textContent = "Updated " + new Date().toLocaleTimeString();
+  } catch (e) {
+    kpis.innerHTML = '<div class="empty">Could not load tracking: ' + esc(e.message || String(e)) + "</div>";
+    if (st) st.textContent = "Failed: " + (e.message || e);
+  }
+}
+function renderTracking(d) {
+  const t = d.totals || {};
+  const src = d.sources || {};
+  $("tr_kpis").innerHTML = [
+    kpiCell("Leads", t.leads, num(t.converted) + " converted"),
+    kpiCell("Sent", t.sent),
+    kpiCell("Delivered", t.delivered),
+    kpiCell("Replied", t.replies, num(t.replied_leads) + " distinct leads"),
+    kpiCell("Clicked", t.clicks, num(t.clicks_minted) + " links minted"),
+    kpiCell("Opens", t.opens, src.opens_tracked ? "" : "open tracking off at Resend"),
+    kpiCell("Bounced", t.bounced, t.complained ? num(t.complained) + " complaints" : ""),
+    kpiCell("Failed sends", t.failed),
+    kpiCell("Failures logged", t.errors, "events with type=error"),
+  ].join("");
+
+  const days = d.by_day || [];
+  if (!chartsAvailable()) {
+    noChartsNotice();
+  } else {
+    const labels = days.map((r) => String(r.day).slice(5));
+    makeChart("ch_activity", {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          { label: "Sent", data: days.map((r) => r.sent), borderColor: CHART_COLORS.sent, backgroundColor: "rgba(37,99,235,.12)", tension: .3, fill: true },
+          { label: "Replies", data: days.map((r) => r.replies), borderColor: CHART_COLORS.replies, tension: .3 },
+          { label: "Clicks", data: days.map((r) => r.clicks), borderColor: CHART_COLORS.clicks, tension: .3 },
+          { label: "Failures", data: days.map((r) => r.errors), borderColor: CHART_COLORS.errors, tension: .3 },
+        ],
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
+    });
+
+    const st = d.statuses || [];
+    makeChart("ch_status", {
+      type: "doughnut",
+      data: {
+        labels: st.length ? st.map((r) => r.status) : ["no mail yet"],
+        datasets: [{ data: st.length ? st.map((r) => r.n) : [1], backgroundColor: [CHART_COLORS.delivered, CHART_COLORS.sent, CHART_COLORS.bounced, CHART_COLORS.errors, CHART_COLORS.muted], borderWidth: 1 }],
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 11 } } } } },
+    });
+
+    makeChart("ch_funnel", {
+      type: "bar",
+      data: {
+        labels: ["Sent", "Delivered", "Opened", "Clicked", "Replied"],
+        datasets: [{
+          label: "leads/messages",
+          data: [t.sent, t.delivered, t.opens, t.clicks, t.replies].map((v) => Number(v) || 0),
+          backgroundColor: [CHART_COLORS.sent, CHART_COLORS.delivered, CHART_COLORS.opened, CHART_COLORS.clicks, CHART_COLORS.replies],
+        }],
+      },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } },
+    });
+
+    const leads = (d.leads || []).filter((r) => (Number(r.sent) || 0) > 0 || (Number(r.replies) || 0) > 0);
+    makeChart("ch_leads", {
+      type: "bar",
+      data: {
+        labels: leads.length ? leads.map((r) => r.company || r.lead_id) : ["no sends yet"],
+        datasets: [
+          { label: "Sent", data: leads.length ? leads.map((r) => r.sent) : [0], backgroundColor: CHART_COLORS.sent },
+          { label: "Replies", data: leads.length ? leads.map((r) => r.replies) : [0], backgroundColor: CHART_COLORS.replies },
+          { label: "Clicks", data: leads.length ? leads.map((r) => r.clicks) : [0], backgroundColor: CHART_COLORS.clicks },
+        ],
+      },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { ticks: { font: { size: 10 } } } } },
+    });
+
+    const camps = d.campaigns || [];
+    makeChart("ch_campaigns", {
+      type: "bar",
+      data: {
+        labels: camps.length ? camps.map((r) => r.campaign) : ["(none)"],
+        datasets: [
+          { label: "Delivered", data: camps.length ? camps.map((r) => r.delivered) : [0], backgroundColor: CHART_COLORS.delivered },
+          { label: "Sent (other)", data: camps.length ? camps.map((r) => Math.max(0, (Number(r.sent) || 0) - (Number(r.delivered) || 0) - (Number(r.bounced) || 0))) : [0], backgroundColor: CHART_COLORS.sent },
+          { label: "Bounced", data: camps.length ? camps.map((r) => r.bounced) : [0], backgroundColor: CHART_COLORS.bounced },
+        ],
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } } },
+    });
+
+    const errs = d.error_ops || [];
+    makeChart("ch_errors", {
+      type: "bar",
+      data: {
+        labels: errs.length ? errs.map((r) => r.op || "(unlabelled)") : ["no failures recorded"],
+        datasets: [{ label: "failures", data: errs.length ? errs.map((r) => r.n) : [0], backgroundColor: CHART_COLORS.errors }],
+      },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } },
+    });
+  }
+
+  // ---- the failure list: the events backbone, read back
+  const recent = d.recent_errors || [];
+  $("tr_errors").innerHTML = recent.length ? (
+    '<table class="small"><tr><th>When</th><th>Entity</th><th>Operation</th><th>Status</th><th>Message</th></tr>' +
+    recent.map((e) => "<tr><td>" + esc(String(e.at || "").replace("T", " ").slice(0, 19)) + "</td><td>" + esc(e.entity || "") +
+      (e.entity_id ? " / " + esc(e.entity_id) : "") + "</td><td>" + esc(e.op || "") + "</td><td>" + esc(e.status == null ? "" : e.status) +
+      "</td><td>" + esc(String(e.message || "").slice(0, 160)) + "</td></tr>").join("") + "</table>"
+  ) : '<div class="empty" style="font-size:12px">Nothing has failed. Every route records its failures here (entity, operation, HTTP status and message), so a quiet list is a real signal, not a missing feature.</div>';
+
+  // ---- per-lead table
+  const rows = d.leads || [];
+  $("tr_leads").innerHTML = rows.length ? (
+    '<table class="small"><tr><th>Lead</th><th>Stage</th><th class="n">Sent</th><th class="n">Replies</th><th class="n">Clicks</th><th class="n">Failures</th><th>Last contact</th></tr>' +
+    rows.map((r) => "<tr><td>" + esc(r.company || r.lead_id) + "</td><td>" + esc(r.stage || "") + '</td><td class="n">' + num(r.sent) +
+      '</td><td class="n">' + num(r.replies) + '</td><td class="n">' + num(r.clicks) + '</td><td class="n' + (Number(r.failures) ? " fail" : "") + '">' + num(r.failures) +
+      "</td><td>" + esc(String(r.last_contact_at || "—").replace("T", " ").slice(0, 16)) + "</td></tr>").join("") + "</table>"
+  ) : '<div class="empty" style="font-size:12px">No leads yet.</div>';
+
+  $("tr_sources").textContent = "source: " + (src.store || "?") + " · clicks: " + (src.attribution_mirror === "ok" ? "attribution mirror" : "mirror unavailable") +
+    " · opens: " + (src.opens_tracked ? "tracked" : "not tracked") + " · window: last " + num(d.window_days) + " days · generated " + String(d.generated_at || "").replace("T", " ").slice(0, 19);
+}
+if ($("btn_tr_refresh")) $("btn_tr_refresh").addEventListener("click", loadTracking);
+
+// ---------- analytics ----------
+// Providers are listed but NOT connected: nothing here talks to Google or
+// PostHog yet, and nothing is guessed to fill the space. When the MCP wiring
+// lands, each card becomes the real panel.
+function renderAnalytics() {
+  const box = $("an_providers");
+  if (!box) return;
+  const providers = [
+    { name: "Google Analytics 4", desc: "Sessions, source/medium, landing pages and conversions on newsletterfit.com.", on: false, via: "MCP" },
+    { name: "PostHog", desc: "Product events, funnels, session replays, feature flags and cohorts.", on: false, via: "MCP" },
+  ];
+  box.innerHTML = providers.map((p) =>
+    '<div class="prov"><span class="dotp' + (p.on ? " on" : "") + '"></span><div><div class="pn">' + esc(p.name) +
+    ' <span class="pill">' + (p.on ? "connected" : "not connected") + "</span></div><div class=\"pd\">" + esc(p.desc) +
+    (p.on ? "" : " Connects over " + esc(p.via) + ".") + "</div></div></div>").join("");
+}
 
 // ---------- boot ----------
 if (token) $("pad_token").value = "••••••••";

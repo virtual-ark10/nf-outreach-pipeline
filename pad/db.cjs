@@ -122,6 +122,32 @@ function logEvent({ entity, entity_id, type, payload, actor, at }) {
     [entity, entity_id == null ? null : String(entity_id), type, j(payload), at || nowISO(), actor || null]
   );
 }
+
+// ---------------------------------------------------------------- failures
+// A failure is a first-class event, not just a log line. Anything that throws or
+// comes back non-2xx on the way to doing real work writes a type='error' row so
+// the failure lands in the same stream as the successes (countable, chartable,
+// and visible next to the lead it concerns). payload.op says WHICH operation
+// failed, so one type stays easy to aggregate: SELECT op, COUNT(*) ...
+// This must never throw — recording a failure must not create one.
+function logFailure({ entity = 'system', entity_id = null, op, error = null, status = null, actor = null, at = null, extra = null }) {
+  const message = String((error && error.message) || error || 'unknown error');
+  let payload;
+  try {
+    payload = j(Object.assign({ op: op || 'unknown', message: message.slice(0, 900), status: status == null ? null : status }, extra || {}));
+  } catch (e) {
+    payload = j({ op: op || 'unknown', message: message.slice(0, 900) });
+  }
+  try {
+    return run(
+      'INSERT INTO events (entity, entity_id, type, payload, at, actor) VALUES (?, ?, ?, ?, ?, ?)',
+      [entity, entity_id == null ? null : String(entity_id), 'error', payload, at || nowISO(), actor || null]
+    );
+  } catch (e) {
+    try { console.error('[db] could not record a failure event:', e && e.message); } catch (_) { /* nothing left to do */ }
+    return null;
+  }
+}
 function stageEvent({ lead_id, from_stage, to_stage, at, by, note, source }) {
   return run(
     'INSERT INTO lead_stage_events (lead_id, from_stage, to_stage, at, by, note, source) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -174,7 +200,7 @@ function derive(lead) {
 module.exports = {
   DB_PATH, SCHEMA_PATH, open, all, one, run, exec, val, tx, plain, bind,
   nowISO, j, pj, bit, int, csvList, addressesOf, findLeadByAddress,
-  logEvent, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
+  logEvent, logFailure, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
 };
 
 if (require.main === module) {

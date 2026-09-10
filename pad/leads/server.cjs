@@ -121,8 +121,14 @@ const server = http.createServer(async (req, res) => {
   if ((p === '/' || p === '/index.html') && (req.method === 'GET' || req.method === 'HEAD')) {
     return send(res, 200, 'The leads engine has no UI of its own — open the pad and use its Leads tab.', 'text/plain; charset=utf-8');
   }
-  if (!TOKEN) return send(res, 500, { error: 'server missing CRM_TOKEN/PAD_TOKEN' });
-  if (req.headers['x-crm-token'] !== TOKEN) return send(res, 401, { error: 'unauthorized' });
+  if (!TOKEN) {
+    db.logFailure({ entity: 'system', op: 'config', error: new Error('CRM_TOKEN/PAD_TOKEN not set'), status: 500, actor: 'crm' });
+    return send(res, 500, { error: 'server missing CRM_TOKEN/PAD_TOKEN' });
+  }
+  if (req.headers['x-crm-token'] !== TOKEN) {
+    db.logFailure({ entity: 'system', op: 'auth', error: new Error('token mismatch'), status: 401, actor: 'crm', extra: { route: `${req.method} ${url}` } });
+    return send(res, 401, { error: 'unauthorized' });
+  }
 
   try {
     // ---------------- meta
@@ -291,7 +297,14 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ---------------- sync
-    if (p === '/api/sync' && req.method === 'POST') return send(res, 200, await P.syncEmail());
+    if (p === '/api/sync' && req.method === 'POST') {
+      try {
+        return send(res, 200, await P.syncEmail());
+      } catch (e) {
+        db.logFailure({ entity: 'system', op: 'sync', error: e, actor: 'crm' });
+        throw e;                     // the outer catch still answers 500
+      }
+    }
 
     // ---------------- email passthrough (single sending path: the pad)
     if (p === '/api/email/inbox' && req.method === 'GET') {
@@ -316,6 +329,8 @@ const server = http.createServer(async (req, res) => {
           const out = P.recordOutbound({ lead, subject: b.subject, to: b.to, text: b.text, html: b.html, resendId, campaign: b.campaign });
           db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { resend_id: resendId, subject: b.subject || '', stage: out.stage }, at: db.nowISO(), actor: 'crm_send' });
         }
+      } else {
+        db.logFailure({ entity: 'email', op: 'crm_send', error: new Error('pad returned ' + r.status), status: r.status, actor: 'crm', extra: { to: b.to, subject: b.subject || '', body: String(JSON.stringify(r.json || {})).slice(0, 300) } });
       }
       return send(res, r.status, r.json);
     }
@@ -336,6 +351,8 @@ const server = http.createServer(async (req, res) => {
           });
           db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { draft_id: draftId, resend_id: resendId, stage: out.stage }, at: db.nowISO(), actor: 'crm_send' });
         }
+      } else {
+        db.logFailure({ entity: 'draft', entity_id: draftId, op: 'crm_draft_send', error: new Error('pad returned ' + r.status), status: r.status, actor: 'crm', extra: { body: String(JSON.stringify(r.json || {})).slice(0, 300) } });
       }
       return send(res, r.status, r.json);
     }
@@ -343,6 +360,7 @@ const server = http.createServer(async (req, res) => {
     return send(res, 404, { error: 'not found' });
   } catch (e) {
     console.error('[CRM]', (e && e.stack) || e);
+    db.logFailure({ entity: 'system', op: 'http', error: e, status: 500, actor: 'crm', extra: { route: `${req.method} ${url}` } });
     return send(res, 500, { error: String((e && e.message) || e) });
   }
 });

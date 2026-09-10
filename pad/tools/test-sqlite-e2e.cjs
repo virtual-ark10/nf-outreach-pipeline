@@ -52,6 +52,35 @@ function sign(secret, id, ts, body) {
   const meta = await api(CRM, '/api/meta');
   check('meta lists the 11 NF stages', meta.body && meta.body.stages.length === 11, meta.body && meta.body.stages.map((s) => s.key));
   check('meta reports the sqlite engine', meta.body && meta.body.storage && /sqlite/.test(meta.body.storage.engine), meta.body && meta.body.storage);
+
+  // ------------------------------------------------- events: the failure backbone
+  // A rejected request must leave a countable failure event behind, not just a log
+  // line. The 401 above (crm rejects a missing token) is the trigger.
+  const tr = await api(PAD, '/api/tracking?days=30');
+  check('GET /api/tracking answers with the dashboard aggregates',
+    tr.status === 200 && tr.body && tr.body.totals && Array.isArray(tr.body.by_day)
+    && Array.isArray(tr.body.statuses) && Array.isArray(tr.body.leads) && Array.isArray(tr.body.recent_errors),
+    tr.body && Object.keys(tr.body));
+  check('tracking totals carry the engagement numbers',
+    tr.body && ['sent', 'delivered', 'bounced', 'replies', 'clicks', 'opens', 'errors'].every((k) => typeof tr.body.totals[k] === 'number'),
+    tr.body && tr.body.totals);
+  check('tracking names its sources honestly',
+    tr.body && tr.body.sources && tr.body.sources.opens_tracked === false && typeof tr.body.sources.store === 'string',
+    tr.body && tr.body.sources);
+
+  // the CRM's rejected token must be visible in the same events table the
+  // dashboard reads — failure -> events row -> dashboard, end to end
+  check('the rejected token reaches the dashboard failure list',
+    (tr.body.recent_errors || []).some((e) => e.op === 'auth'),
+    tr.body && tr.body.recent_errors);
+
+  // and the same for the pad's own auth gate
+  const raw401 = await fetch(PAD + '/api/tracking', { headers: { 'X-Pad-Token': 'not-the-token' } });
+  check('pad rejects a bad token (401)', raw401.status === 401, raw401.status);
+  const tr2 = await api(PAD, '/api/tracking?days=30');
+  check('the pad records its own rejection as a failure event',
+    (tr2.body.recent_errors || []).some((e) => e.op === 'auth' && e.actor === 'pad'),
+    tr2.body && tr2.body.recent_errors);
   check('meta counts add up to the migrated total',
     meta.body && Object.values(meta.body.counts).reduce((a, b) => a + b, 0) === meta.body.total, meta.body && meta.body.counts);
 

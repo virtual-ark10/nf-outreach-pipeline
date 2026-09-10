@@ -69,7 +69,7 @@ global.localStorage.setItem('nf_pad_token', TOKEN);
 (async () => {
   // expose the pad's own functions to this harness
   // eslint-disable-next-line no-eval
-  eval(clientSrc + '\n;globalThis.__pad = { connectPad: connectPad, loadCRM: loadCRM, crm: crm, switchTab: switchTab, crmSelect: crmSelect };');
+  eval(clientSrc + '\n;globalThis.__pad = { connectPad: connectPad, loadCRM: loadCRM, crm: crm, switchTab: switchTab, crmSelect: crmSelect, loadTracking: loadTracking, renderAnalytics: renderAnalytics };');
   const P = globalThis.__pad;
   await P.connectPad(TOKEN);
   await wait(1500);
@@ -99,6 +99,30 @@ global.localStorage.setItem('nf_pad_token', TOKEN);
 
   console.log('\n  detail panel after selecting a lead:', det.length > 80 ? 'rendered' : 'EMPTY (' + det.length + ' chars)');
   has('lead detail renders', det.length > 80);
+
+  // ---- tracking dashboard (drives /api/tracking through the real pad)
+  await P.loadTracking();
+  await wait(1200);
+  const kpis = (nodes.tr_kpis && nodes.tr_kpis.innerHTML) || '';
+  const trLeads = (nodes.tr_leads && nodes.tr_leads.innerHTML) || '';
+  const trErrs = (nodes.tr_errors && nodes.tr_errors.innerHTML) || '';
+  const trCharts = (nodes.tr_charts && nodes.tr_charts.innerHTML) || '';
+  const trSources = (nodes.tr_sources && nodes.tr_sources.textContent) || '';
+
+  has('tracking KPI tiles rendered', kpis.includes('class="kpi"') && kpis.includes('Sent') && kpis.includes('Delivered'));
+  has('tracking KPI tiles include clicks + replies + failures', kpis.includes('Clicked') && kpis.includes('Replied') && kpis.includes('Failures logged'));
+  has('per-lead tracking table rendered', trLeads.includes('<table class="small"') || trLeads.includes('No leads'));
+  has('failure list rendered (table or the all-clear note)', trErrs.includes('<table class="small"') || trErrs.includes('Nothing has failed'));
+  has('source line names the store + window', trSources.includes('window: last') && trSources.includes('source:'));
+  console.log('  tracking source line:', trSources.slice(0, 120));
+  // The DOM stub has no canvas: the tab must degrade, not crash.
+  has('charts degrade gracefully without a canvas', trCharts.includes('Charts unavailable') || trCharts.length === 0);
+
+  // ---- analytics tab (providers listed, nothing claimed as connected)
+  P.renderAnalytics();
+  const prov = (nodes.an_providers && nodes.an_providers.innerHTML) || '';
+  has('analytics lists both providers', prov.includes('Google Analytics 4') && prov.includes('PostHog'));
+  has('analytics claims nothing is connected', prov.includes('not connected') && !prov.includes('>connected<'));
 
   let pass = 0;
   for (const [label, ok] of checks) { console.log((ok ? '  PASS  ' : '  FAIL  ') + label); if (ok) pass++; }

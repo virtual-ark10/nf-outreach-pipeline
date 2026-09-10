@@ -62,6 +62,31 @@ const OUTREACH_CONF = {
   baseUrl: 'https://newsletterfit.com',
 };
 
+// Clicks live only in the local attribution mirror (the api service keeps its own
+// copy of the same store). Read it defensively — the dashboard must still render
+// if the file is missing or unreadable.
+function clickStats() {
+  const out = { ok: false, minted: 0, total: 0, byLead: {}, byDay: {} };
+  try {
+    const raw = JSON.parse(fs.readFileSync(OUTREACH_CONF.storePath, 'utf8'));
+    const rows = Array.isArray(raw.clicks) ? raw.clicks : [];
+    out.minted = rows.length;
+    for (const c of rows) {
+      const at = c && c.first_click_at;
+      if (!at) continue;                       // minted but never clicked
+      const day = String(at).slice(0, 10);
+      const lead = (c && c.lead_id) || '(unknown)';
+      out.total += 1;
+      out.byDay[day] = (out.byDay[day] || 0) + 1;
+      out.byLead[lead] = (out.byLead[lead] || 0) + 1;
+    }
+    out.ok = true;
+  } catch (e) {
+    db.logFailure({ entity: 'system', op: 'tracking_clicks', error: e, actor: 'pad' });
+  }
+  return out;
+}
+
 if (!RESEND_API_KEY) console.warn('[WARN] RESEND_API_KEY not set — send/list endpoints will 503');
 if (!PAD_TOKEN) console.warn('[WARN] PAD_TOKEN not set — /api/* (except webhook) will reject with 503');
 
@@ -286,7 +311,14 @@ const server = http.createServer((req, res) => {
 
   // ---- API routes ----
   if (url.startsWith('/api/')) {
-    return handleApi(req, res, url, ip);
+    try {
+      return handleApi(req, res, url, ip);
+    } catch (e) {
+      console.error('[API] unhandled:', e && e.message);
+      db.logFailure({ entity: 'system', op: 'http', error: e, status: 500, actor: 'pad', extra: { route: res.reqPath } });
+      try { return sendJson(res, 500, { error: 'internal error: ' + (e && e.message) }); }
+      catch (_) { return res.end(); }
+    }
   }
 
   // ---- Static files ----
@@ -331,7 +363,10 @@ function proxyCrm(req, res, targetPath) {
       });
       r.pipe(res);
     });
-    up.on('error', () => sendJson(res, 502, { error: 'Leads engine unavailable — check the nf-crm service' }));
+    up.on('error', (e) => {
+      db.logFailure({ entity: 'system', op: 'crm_proxy', error: e, status: 502, actor: 'pad', extra: { route: res.reqPath } });
+      sendJson(res, 502, { error: 'Leads engine unavailable — check the nf-crm service' });
+    });
     if (chunks.length) up.write(Buffer.concat(chunks));
     up.end();
   });
@@ -353,16 +388,21 @@ function handleApi(req, res, url, ip) {
       const v = verifyWebhook(rawBody, req.headers);
       if (!v.ok) {
         console.warn('[WEBHOOK] Rejected:', v.reason);
+        db.logFailure({ entity: 'webhook', op: 'webhook_signature', error: new Error(v.reason), status: 400, actor: 'resend' });
         return sendJson(res, 400, { error: `Invalid webhook: ${v.reason}` });
       }
       let event;
-      try { event = JSON.parse(rawBody); } catch { return sendJson(res, 400, { error: 'bad json' }); }
+      try { event = JSON.parse(rawBody); } catch (e) {
+        db.logFailure({ entity: 'webhook', op: 'webhook_json', error: e, status: 400, actor: 'resend' });
+        return sendJson(res, 400, { error: 'bad json' });
+      }
       try {
         const r = handleWebhook(event, new Date().toISOString());
         console.log(`[WEBHOOK] ${r.type} stored=${JSON.stringify(r.stored)}${r.skipped ? ' skipped=' + r.skipped : ''}`);
         return sendJson(res, 200, { ok: true, type: r.type, stored: r.stored, skipped: r.skipped });
       } catch (e) {
         console.error('[WEBHOOK] store failed:', e && e.message);
+        db.logFailure({ entity: 'webhook', op: 'webhook_store', error: e, status: 500, actor: 'resend', extra: { type: event && event.type } });
         return sendJson(res, 500, { error: 'store failed: ' + (e && e.message) });
       }
     });
@@ -384,6 +424,7 @@ function handleApi(req, res, url, ip) {
   if (!PAD_TOKEN || auth !== PAD_TOKEN) {
     const mask = (s) => s ? s.slice(0, 4) + '…' + s.slice(-4) : '(none)';
     console.log(`[AUTH-FAIL] ${req.method} ${url} got=${mask(auth)} expected=${mask(PAD_TOKEN)}`);
+    db.logFailure({ entity: 'system', op: 'auth', error: new Error(PAD_TOKEN ? 'token mismatch' : 'PAD_TOKEN not configured'), status: 401, actor: 'pad', extra: { route: `${req.method} ${url}` } });
     return sendJson(res, 401, { error: 'Unauthorized — missing or invalid token' });
   }
 
@@ -393,6 +434,112 @@ function handleApi(req, res, url, ip) {
     return proxyCrm(req, res, '/api' + p.slice('/api/crm'.length));
   }
 
+  // ---------------------------------------------------------------- tracking
+  // Everything the Tracking dashboard needs in one round trip. The mail numbers
+  // come from the same SQLite store the rest of the app uses; clicks come from
+  // the local attribution mirror, which is the only place they are recorded.
+  if (req.method === 'GET' && p === '/api/tracking') {
+    const days = Math.max(1, Math.min(parseInt(new URL(url, 'http://x').searchParams.get('days') || '30', 10) || 30, 365));
+    const since = `-${days} days`;
+    const dayKey = "substr(COALESCE(sent_at, created_at), 1, 10)";
+
+    const mail = db.all(
+      `SELECT ${dayKey} AS day,
+              SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) AS sent,
+              SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) AS delivered,
+              SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) AS bounced
+         FROM emails
+        WHERE substr(COALESCE(sent_at, created_at), 1, 10) >= date('now', ?)
+        GROUP BY day ORDER BY day`, [since]);
+
+    const replyDays = db.all(
+      `SELECT substr(COALESCE(received_at, created_at), 1, 10) AS day, COUNT(*) AS replies
+         FROM replies WHERE deleted_at IS NULL
+          AND substr(COALESCE(received_at, created_at), 1, 10) >= date('now', ?)
+        GROUP BY day ORDER BY day`, [since]);
+
+    const errorDays = db.all(
+      `SELECT substr(at, 1, 10) AS day, COUNT(*) AS errors
+         FROM events WHERE type = 'error' AND substr(at, 1, 10) >= date('now', ?)
+        GROUP BY day ORDER BY day`, [since]);
+
+    const clicks = clickStats();
+
+    // One dense series per day, so a quiet day plots as a zero rather than a gap.
+    const byDay = new Map();
+    const dayOf = (d) => {
+      if (!byDay.has(d)) byDay.set(d, { day: d, sent: 0, delivered: 0, bounced: 0, replies: 0, clicks: 0, errors: 0 });
+      return byDay.get(d);
+    };
+    for (const r of mail) Object.assign(dayOf(r.day), { sent: r.sent || 0, delivered: r.delivered || 0, bounced: r.bounced || 0 });
+    for (const r of replyDays) dayOf(r.day).replies = r.replies || 0;
+    for (const r of errorDays) dayOf(r.day).errors = r.errors || 0;
+    for (const [d, n] of Object.entries(clicks.byDay)) dayOf(d).clicks = n;
+
+    const totals = {
+      leads: db.val('SELECT COUNT(*) FROM leads WHERE deleted_at IS NULL') || 0,
+      converted: db.val('SELECT COUNT(*) FROM leads WHERE converted = 1') || 0,
+      sent: db.val("SELECT COUNT(*) FROM emails WHERE direction = 'outbound'") || 0,
+      delivered: db.val("SELECT COUNT(*) FROM emails WHERE status = 'delivered'") || 0,
+      bounced: db.val("SELECT COUNT(*) FROM emails WHERE status = 'bounced'") || 0,
+      complained: db.val("SELECT COUNT(*) FROM emails WHERE status = 'complained'") || 0,
+      failed: db.val("SELECT COUNT(*) FROM emails WHERE status IN ('failed', 'rejected')") || 0,
+      replies: db.val('SELECT COUNT(*) FROM replies WHERE deleted_at IS NULL') || 0,
+      replied_leads: db.val("SELECT COUNT(DISTINCT lead_id) FROM replies WHERE deleted_at IS NULL AND lead_id IS NOT NULL") || 0,
+      clicks: clicks.total,
+      clicks_minted: clicks.minted,
+      opens: db.val("SELECT COUNT(*) FROM events WHERE type IN ('email.opened', 'opened')") || 0,
+      errors: db.val("SELECT COUNT(*) FROM events WHERE type = 'error'") || 0,
+    };
+
+    const statuses = db.all(
+      `SELECT COALESCE(status, 'unknown') AS status, COUNT(*) AS n
+         FROM emails WHERE direction = 'outbound' GROUP BY status ORDER BY n DESC`);
+
+    const campaigns = db.all(
+      `SELECT COALESCE(campaign, '(none)') AS campaign, COUNT(*) AS emails,
+              SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) AS sent,
+              SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) AS delivered,
+              SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) AS bounced
+         FROM emails GROUP BY campaign ORDER BY sent DESC LIMIT 12`);
+
+    const perLead = db.all(
+      `SELECT l.id AS lead_id, l.company, l.stage, l.last_contact_at,
+              (SELECT COUNT(*) FROM emails e WHERE e.lead_id = l.id AND e.direction = 'outbound') AS sent,
+              (SELECT COUNT(*) FROM replies r WHERE r.lead_id = l.id AND r.deleted_at IS NULL) AS replies,
+              (SELECT COUNT(*) FROM events v WHERE v.entity = 'lead' AND v.entity_id = l.id AND v.type = 'error') AS failures
+         FROM leads l WHERE l.deleted_at IS NULL
+        ORDER BY sent DESC, replies DESC, l.company LIMIT 15`);
+    for (const r of perLead) r.clicks = clicks.byLead[r.lead_id] || 0;
+
+    const errorOps = db.all(
+      `SELECT json_extract(payload, '$.op') AS op, COUNT(*) AS n, MAX(at) AS last_at
+         FROM events WHERE type = 'error' GROUP BY op ORDER BY n DESC LIMIT 12`);
+
+    const recentErrors = db.all(
+      `SELECT entity, entity_id, payload, at, actor FROM events
+        WHERE type = 'error' ORDER BY at DESC LIMIT 20`)
+      .map((r) => Object.assign({ entity: r.entity, entity_id: r.entity_id, at: r.at, actor: r.actor }, db.pj(r.payload, {}) || {}));
+
+    return sendJson(res, 200, {
+      generated_at: db.nowISO(),
+      window_days: days,
+      totals,
+      by_day: Array.from(byDay.values()).sort((a, b) => (a.day < b.day ? -1 : 1)),
+      statuses,
+      campaigns,
+      leads: perLead,
+      error_ops: errorOps,
+      recent_errors: recentErrors,
+      sources: {
+        store: db.DB_PATH,
+        attribution_mirror: clicks.ok ? 'ok' : 'unavailable',
+        clicks_tracked: true,
+        opens_tracked: false,   // Resend open tracking is off, so opens read 0
+      },
+    });
+  }
+
   if (req.method === 'POST' && p === '/api/send') {
     return readBody(req, res, (body, size) => {
       let data;
@@ -400,7 +547,10 @@ function handleApi(req, res, url, ip) {
       if (!data.from) return sendJson(res, 400, { error: 'from is required' });
       const leadId = 'manual-' + (String((Array.isArray(data.to) ? data.to[0] : data.to) || 'unknown').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'unknown');
       const doSend = () => resendRequest('POST', '/emails', JSON.stringify(data), (err, status, rbody) => {
-        if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
+        if (err) {
+          db.logFailure({ entity: 'email', entity_id: leadId, op: 'send', error: err, status: 502, actor: 'pad', extra: { to: data.to, subject: data.subject || '' } });
+          return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
+        }
         if (status === 200 || status === 201) {
           console.log('[SEND] Email accepted, id:', rbody.slice(0, 200));
           // Log it against the lead here too: whichever process records first wins,
@@ -413,7 +563,12 @@ function handleApi(req, res, url, ip) {
               const out = P.recordOutbound({ lead, subject: data.subject, to: data.to, text: data.text, html: data.html, resendId, campaign: data.campaign });
               db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { resend_id: resendId, subject: data.subject || '', stage: out.stage }, at: db.nowISO(), actor: 'pad' });
             }
-          } catch (e) { console.error('[SEND] lead record failed:', e && e.message); }
+          } catch (e) {
+            console.error('[SEND] lead record failed:', e && e.message);
+            db.logFailure({ entity: 'lead', entity_id: leadId, op: 'send_lead_record', error: e, actor: 'pad', extra: { resend_id: (safeJson(rbody) || {}).id || null } });
+          }
+        } else {
+          db.logFailure({ entity: 'email', entity_id: leadId, op: 'send_rejected', error: new Error('Resend returned ' + status), status, actor: 'pad', extra: { to: data.to, subject: data.subject || '', body: String(rbody).slice(0, 300) } });
         }
         sendJson(res, status, safeJson(rbody));
       });
@@ -427,6 +582,7 @@ function handleApi(req, res, url, ip) {
         doSend();
       }).catch((e) => {
         console.log(`[SEND] BLOCKED ${leadId}: ${e.message}`);
+        db.logFailure({ entity: 'email', entity_id: leadId, op: 'send_blocked', error: e, status: 400, actor: 'pad', extra: { to: data.to } });
         sendJson(res, 400, { error: `Not sent: ${e.message}` });
       });
     });
@@ -521,11 +677,13 @@ function handleApi(req, res, url, ip) {
         if (draft.attachments && Array.isArray(draft.attachments)) payload.attachments = draft.attachments;
         if (draft.headers) payload.headers = draft.headers;
         if (!payload.from || payload.to.length === 0 || !payload.subject) {
+          db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_incomplete', error: new Error('from/to/subject required'), status: 400, actor: 'pad' });
           return sendJson(res, 400, { error: 'Draft is incomplete (from/to/subject required)' });
         }
         const doSendDraft = () => resendRequest('POST', '/emails', JSON.stringify(payload), (err, status, rbody) => {
           if (err) {
             db.run('UPDATE drafts SET send_error = ?, updated_at = ? WHERE id = ?', [err.message, db.nowISO(), draftId]);
+            db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_send', error: err, status: 502, actor: 'pad', extra: { to: payload.to } });
             return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
           }
           if (status === 200 || status === 201) {
@@ -534,6 +692,7 @@ function handleApi(req, res, url, ip) {
             console.log(`[DRAFT] Sent + archived: ${draftId} (${stored.company || payload.to}) -> lead=${out.lead_id || 'none'} stage=${out.stage || '-'}`);
           } else {
             db.run('UPDATE drafts SET send_error = ?, updated_at = ? WHERE id = ?', [String(rbody).slice(0, 500), db.nowISO(), draftId]);
+            db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_send_rejected', error: new Error('Resend returned ' + status), status, actor: 'pad', extra: { to: payload.to, body: String(rbody).slice(0, 300) } });
           }
           sendJson(res, status, safeJson(rbody));
         });
@@ -555,6 +714,7 @@ function handleApi(req, res, url, ip) {
           doSendDraft();
         }).catch((e) => {
           console.log(`[DRAFT] BLOCKED ${draftId}: ${e.message}`);
+          db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_send_blocked', error: e, status: 400, actor: 'pad' });
           sendJson(res, 400, { error: `Not sent: ${e.message}` });
         });
       });
