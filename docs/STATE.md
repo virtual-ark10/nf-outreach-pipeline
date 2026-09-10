@@ -7,7 +7,7 @@ history — `pad/data/outreach.db` itself is a binary that does not diff.
 ```
 database: /home/boxed/resend-pad/data/outreach.db
 
-rows: {"leads":16,"lead_stage_events":17,"emails":18,"replies":9,"drafts":8,"events":61}
+rows: {"leads":17,"lead_stage_events":18,"emails":18,"replies":9,"drafts":13,"events":62}
 
 pipeline (v_lead_pipeline):
   granola                first_email  conv=0 sent=1 replies=0 due=-
@@ -20,6 +20,7 @@ pipeline (v_lead_pipeline):
   bolt-new               leads        conv=0 sent=0 replies=0 due=-
   brex                   leads        conv=0 sent=0 replies=0 due=-
   ground-news            leads        conv=0 sent=0 replies=0 due=-
+  hubspot                leads        conv=0 sent=0 replies=0 due=-
   profound               leads        conv=0 sent=0 replies=0 due=-
   stacker                leads        conv=0 sent=0 replies=0 due=-
   superblocks            leads        conv=0 sent=0 replies=0 due=-
@@ -29,10 +30,10 @@ pipeline (v_lead_pipeline):
 
 follow-ups due now: 0
 
-leads by stage: leads=9 first_email=5 follow_up_1=2
+leads by stage: leads=10 first_email=5 follow_up_1=2
 mail by direction/status: inbound/received=9 outbound/sent=8 outbound/delivered=1
 
-drafts pending: 7
+drafts pending: 12
   xplor-pay                Xplor Pay                Xplor Pay in Linear (Vertical AI) — 3 similar pubs
   stacker                  Stacker                  Stacker in Eli Schwartz's SEO & AEO — 3 pubs ridin
   bolt-new                 Bolt.new                 Bolt.new in Product Growth (240K) — where else AI-
@@ -40,4 +41,9 @@ drafts pending: 7
   brex                     Brex                     Brex in Core Memory + Sourcery — 3 similar founder
   tracksuit                Tracksuit                Tracksuit in On Brand Magazine + The Brand Waves —
   superblocks              Superblocks              Superblocks in PMAssist + The System Design Newsle
+  brex--first-email        Brex                     First Email
+  profound--first-email    Profound                 First Email
+  unblocked--first-email   Unblocked                First Email
+  tracksuit--first-email   Tracksuit                First Email
+  hubspot--first-email     HubSpot                  First Email
 ```
