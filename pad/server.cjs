@@ -3,7 +3,8 @@
 // - Bearer token auth (PAD_TOKEN) on all /api/* except webhooks
 // - In-memory rate limiting, 5MB body cap, no wildcard CORS
 // - Phase 2: Received Emails API (GET /api/received, GET /api/received/:id)
-// - Phase 3: webhook archive with Svix signature verification -> data/webhooks.jsonl
+// - Phase 3: webhook archive with Svix signature verification -> events table
+//   (SQLite since 2026-09-10; was data/webhooks.jsonl, now a backup)
 
 const http = require('http');
 const https = require('https');
