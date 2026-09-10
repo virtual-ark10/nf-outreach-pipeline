@@ -1,8 +1,8 @@
 # Runtime state is deliberately versioned in this repo — it is the only off-box
 # archive of the CRM and the mail log (Resend only keeps email for 30 days).
-# So do NOT add data/ or leads/data/ to this file.
+# So do NOT add data/ or lead data to this file.
 #
-# Secrets, logs and tooling noise are excluded.
+# Secrets, logs, database journals and tooling noise are excluded.
 
 # --- secrets (never commit) ---
 .env
@@ -12,6 +12,10 @@
 
 # --- logs ---
 *.log
+
+# --- sqlite journals (the .db itself IS versioned; these are per-process scratch) ---
+*-wal
+*-shm
 
 # --- scratch / migration artefacts ---
 *.bak-*

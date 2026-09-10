@@ -64,26 +64,99 @@ const OUTREACH_CONF = {
 if (!RESEND_API_KEY) console.warn('[WARN] RESEND_API_KEY not set — send/list endpoints will 503');
 if (!PAD_TOKEN) console.warn('[WARN] PAD_TOKEN not set — /api/* (except webhook) will reject with 503');
 
-fs.mkdirSync(DATA_DIR, { recursive: true });
-const WEBHOOK_LOG = path.join(DATA_DIR, 'webhooks.jsonl');
-const DRAFTS_FILE = path.join(DATA_DIR, 'drafts.json');
-const SENT_LOG = path.join(DATA_DIR, 'sent-drafts.jsonl');
+const db = require('./db.cjs');
+const P = require('./pipeline.cjs');
 
-// ---- Draft store (review-before-send queue) ----
+// ---------------------------------------------------------------- store
+// Drafts, the send log and the webhook archive used to be three files
+// (drafts.json, sent-drafts.jsonl, webhooks.jsonl). They are now rows in the
+// shared SQLite store, so the pad and the leads engine read one source of truth.
+//
+// A 'discarded' or 'sent' draft is kept with its status, never spliced out of a
+// list: the queue is a view (status = 'draft') and the history survives.
+function draftToApi(r) {
+  if (!r) return null;
+  return {
+    id: r.id, company: r.company, to: r.to_addr, cc: r.cc, from: r.from_addr,
+    reply_to: r.reply_to, subject: r.subject, text: r.body_text, html: r.body_html,
+    status: r.status, lead_id: r.lead_id, campaign: r.campaign,
+    created_at: r.created_at, updated_at: r.updated_at, sent_at: r.sent_at,
+    discarded_at: r.discarded_at, resend_id: r.resend_id, error: r.send_error,
+  };
+}
 function readDrafts() {
-  try {
-    const raw = fs.readFileSync(DRAFTS_FILE, 'utf8');
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch { return []; }
+  return db.all("SELECT * FROM drafts WHERE status = 'draft' ORDER BY created_at DESC").map(draftToApi);
 }
-function writeDrafts(arr) {
-  fs.writeFileSync(DRAFTS_FILE, JSON.stringify(arr, null, 2) + '\n');
+function getDraft(id) {
+  return db.one('SELECT * FROM drafts WHERE id = ?', [id]);
 }
-function appendSentDraft(entry) {
-  return new Promise((resolve) => {
-    fs.appendFile(SENT_LOG, JSON.stringify(entry) + '\n', (err) => resolve(!err));
+function upsertDraft(d) {
+  const lead = db.findLeadByAddress(db.csvList(d.to)) || (d.id ? db.one('SELECT id FROM leads WHERE id = ?', [d.id]) : null);
+  db.run(
+    `INSERT INTO drafts (id, lead_id, company, from_addr, to_addr, cc, reply_to, subject, body_text, body_html, status, campaign, created_at, updated_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,'draft',?,?,?)
+     ON CONFLICT(id) DO UPDATE SET
+       company = COALESCE(excluded.company, drafts.company),
+       from_addr = COALESCE(excluded.from_addr, drafts.from_addr),
+       to_addr = COALESCE(excluded.to_addr, drafts.to_addr),
+       cc = COALESCE(excluded.cc, drafts.cc),
+       reply_to = COALESCE(excluded.reply_to, drafts.reply_to),
+       subject = COALESCE(excluded.subject, drafts.subject),
+       body_text = COALESCE(excluded.body_text, drafts.body_text),
+       body_html = COALESCE(excluded.body_html, drafts.body_html),
+       updated_at = excluded.updated_at`,
+    [d.id, lead ? lead.id : null, d.company || null, d.from || null, db.csvList(d.to), db.csvList(d.cc),
+     db.csvList(d.reply_to), d.subject || null, d.text || null, d.html || null,
+     d.campaign || null, d.created_at || db.nowISO(), db.nowISO()]
+  );
+  return getDraft(d.id);
+}
+// The send of record for a draft: status + resend_id, and the lead-side record
+// (emails row + stage move) so the CRM is correct without waiting for a sync.
+function markDraftSent(draft, { resendId, subject, text, html, to }) {
+  const at = db.nowISO();
+  return db.tx(() => {
+    db.run("UPDATE drafts SET status = 'sent', sent_at = ?, resend_id = ?, send_error = NULL, updated_at = ? WHERE id = ?",
+      [at, resendId || null, at, draft.id]);
+    db.logEvent({ entity: 'draft', entity_id: draft.id, type: 'draft_sent', payload: { resend_id: resendId, subject: subject || draft.subject }, at, actor: 'pad' });
+    const lead = (draft.lead_id ? db.one('SELECT * FROM leads WHERE id = ?', [draft.lead_id]) : null)
+      || db.findLeadByAddress(db.csvList(to || draft.to_addr));
+    if (!lead) return { sent: true, lead_id: null };
+    const out = P.recordOutbound({
+      lead, subject: subject || draft.subject, to: to || draft.to_addr,
+      text: text || draft.body_text, html: html || draft.body_html, resendId, campaign: draft.campaign,
+    });
+    db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { draft_id: draft.id, resend_id: resendId, stage: out.stage }, at, actor: 'pad' });
+    return { sent: true, lead_id: lead.id, stage: out.stage, advanced: out.advanced };
   });
+}
+function markDraftDiscarded(id) {
+  const at = db.nowISO();
+  db.run("UPDATE drafts SET status = 'discarded', discarded_at = ?, updated_at = ? WHERE id = ? AND status = 'draft'", [at, at, id]);
+  db.logEvent({ entity: 'draft', entity_id: id, type: 'draft_discarded', payload: {}, at, actor: 'pad' });
+  return getDraft(id);
+}
+// Resend webhook -> tables. Never a raw append-only file again: a delivery receipt
+// updates the message it refers to, an inbound message becomes a reply.
+function handleWebhook(ev, receivedAt) {
+  const type = ev.type || 'unknown';
+  const d = ev.data || {};
+  const at = d.created_at || receivedAt || db.nowISO();
+  const out = { type, stored: null, skipped: null };
+  db.logEvent({ entity: 'webhook', entity_id: d.email_id || d.message_id || null, type, payload: ev, at: receivedAt || at, actor: 'resend' });
+  const addrs = [].concat(d.to || [], d.from || [], d.received_for || []);
+  if (!P.isBrandMail(...addrs)) { out.skipped = 'another brand on the shared Resend account'; return out; }
+  if (type === 'email.received') {
+    const r = P.recordInbound({
+      from: d.from, to: d.received_for || d.to, subject: d.subject,
+      text: d.text, html: d.html, resendId: d.email_id, messageId: d.message_id,
+      inReplyTo: d.in_reply_to || null, at, raw: ev,
+    });
+    out.stored = { reply_id: r.reply_id, lead_id: r.lead_id, duplicate: Boolean(r.duplicate) };
+  } else if (/^email\.(delivered|bounced|complained|failed|opened|clicked)$/.test(type)) {
+    out.stored = P.recordDeliveryStatus({ resendId: d.email_id, status: type.split('.')[1], to: d.to, from: d.from, at });
+  }
+  return out;
 }
 
 const rateBuckets = new Map(); // ip -> { count, resetAt }
@@ -283,11 +356,14 @@ function handleApi(req, res, url, ip) {
       }
       let event;
       try { event = JSON.parse(rawBody); } catch { return sendJson(res, 400, { error: 'bad json' }); }
-      appendWebhookLog({ received_at: new Date().toISOString(), event }).then((written) => {
-        console.log(`[WEBHOOK] ${event.type || 'unknown'} archived (${written ? 'OK' : 'WRITE FAILED'})`);
-        if (!written) return sendJson(res, 500, { error: 'archive write failed' });
-        return sendJson(res, 200, { ok: true, type: event.type || 'unknown' });
-      });
+      try {
+        const r = handleWebhook(event, new Date().toISOString());
+        console.log(`[WEBHOOK] ${r.type} stored=${JSON.stringify(r.stored)}${r.skipped ? ' skipped=' + r.skipped : ''}`);
+        return sendJson(res, 200, { ok: true, type: r.type, stored: r.stored, skipped: r.skipped });
+      } catch (e) {
+        console.error('[WEBHOOK] store failed:', e && e.message);
+        return sendJson(res, 500, { error: 'store failed: ' + (e && e.message) });
+      }
     });
   }
 
@@ -324,7 +400,20 @@ function handleApi(req, res, url, ip) {
       const leadId = 'manual-' + (String((Array.isArray(data.to) ? data.to[0] : data.to) || 'unknown').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'unknown');
       const doSend = () => resendRequest('POST', '/emails', JSON.stringify(data), (err, status, rbody) => {
         if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
-        if (status === 200 || status === 201) console.log('[SEND] Email accepted, id:', rbody.slice(0, 200));
+        if (status === 200 || status === 201) {
+          console.log('[SEND] Email accepted, id:', rbody.slice(0, 200));
+          // Log it against the lead here too: whichever process records first wins,
+          // and the emails.resend_id unique index makes the other a no-op.
+          try {
+            const to = (String(data.to || '').match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/) || [])[0];
+            const lead = db.findLeadByAddress(to);
+            if (lead) {
+              const resendId = (safeJson(rbody) || {}).id || null;
+              const out = P.recordOutbound({ lead, subject: data.subject, to: data.to, text: data.text, html: data.html, resendId, campaign: data.campaign });
+              db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { resend_id: resendId, subject: data.subject || '', stage: out.stage }, at: db.nowISO(), actor: 'pad' });
+            }
+          } catch (e) { console.error('[SEND] lead record failed:', e && e.message); }
+        }
         sendJson(res, status, safeJson(rbody));
       });
       const rawText = data.text || '';
@@ -392,19 +481,14 @@ function handleApi(req, res, url, ip) {
     });
   }
 
-  // Phase 3: webhook archive (read back, most recent first)
+  // Phase 3: webhook archive (read back from the events table, most recent first)
   if (req.method === 'GET' && p === '/api/archive') {
     const limit = parseInt(new URL(url, 'http://x').searchParams.get('limit') || '50', 10);
-    return fs.readFile(WEBHOOK_LOG, 'utf8', (err, content) => {
-      if (err) return sendJson(res, 200, { data: [] });
-      const lines = content.split('\n').filter(Boolean).slice(-limit).map((l) => {
-        try { return JSON.parse(l); } catch { return null; }
-      }).filter(Boolean).reverse();
-      sendJson(res, 200, { data: lines });
-    });
+    const rows = db.all("SELECT at, type, entity_id, payload FROM events WHERE entity = 'webhook' ORDER BY at DESC LIMIT ?", [limit]);
+    return sendJson(res, 200, { data: rows.map((r) => ({ received_at: r.at, type: r.type, email_id: r.entity_id, event: db.pj(r.payload, {}) })) });
   }
 
-  // Phase 4: draft queue (review-before-send)
+  // Phase 4: draft queue (review-before-send) — rows in `drafts`, status='draft'
   if (req.method === 'GET' && p === '/api/drafts') {
     return sendJson(res, 200, { data: readDrafts() });
   }
@@ -417,11 +501,11 @@ function handleApi(req, res, url, ip) {
       return readBody(req, res, (body, size) => {
         let data;
         try { data = JSON.parse(body); } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
-        const drafts = readDrafts();
-        const idx = drafts.findIndex((d) => d.id === draftId);
-        if (idx < 0) return sendJson(res, 404, { error: 'Draft not found' });
+        const stored = getDraft(draftId);
+        if (!stored) return sendJson(res, 404, { error: 'Draft not found' });
+        if (stored.status !== 'draft') return sendJson(res, 409, { error: `Draft is already ${stored.status}` });
         // Merge any client edits over the stored draft
-        const draft = Object.assign({}, drafts[idx], data || {});
+        const draft = Object.assign({}, draftToApi(stored), data || {});
         const payload = {
           from: draft.from || data.from,
           to: String(draft.to || '').split(',').map((s) => s.trim()).filter(Boolean),
@@ -439,13 +523,16 @@ function handleApi(req, res, url, ip) {
           return sendJson(res, 400, { error: 'Draft is incomplete (from/to/subject required)' });
         }
         const doSendDraft = () => resendRequest('POST', '/emails', JSON.stringify(payload), (err, status, rbody) => {
-          if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
+          if (err) {
+            db.run('UPDATE drafts SET send_error = ?, updated_at = ? WHERE id = ?', [err.message, db.nowISO(), draftId]);
+            return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
+          }
           if (status === 200 || status === 201) {
-            const sent = { id: draftId, company: draft.company || '', subject: draft.subject, to: draft.to, sent_at: new Date().toISOString(), resend_id: safeJson(rbody)?.id };
-            appendSentDraft(sent);
-            drafts.splice(idx, 1);
-            writeDrafts(drafts);
-            console.log(`[DRAFT] Sent + removed: ${draftId} (${draft.company || draft.to})`);
+            const resendId = (safeJson(rbody) || {}).id || null;
+            const out = markDraftSent(stored, { resendId, subject: payload.subject, text: payload.text, html: payload.html, to: payload.to });
+            console.log(`[DRAFT] Sent + archived: ${draftId} (${stored.company || payload.to}) -> lead=${out.lead_id || 'none'} stage=${out.stage || '-'}`);
+          } else {
+            db.run('UPDATE drafts SET send_error = ?, updated_at = ? WHERE id = ?', [String(rbody).slice(0, 500), db.nowISO(), draftId]);
           }
           sendJson(res, status, safeJson(rbody));
         });
@@ -462,8 +549,7 @@ function handleApi(req, res, url, ip) {
             console.log(`[DRAFT] Internalized ${out.minted.length} link(s) for ${draftId} at send time`);
             // Persist the rewritten draft so the queue shows the final links
             // even if Resend rejects the send.
-            drafts[idx] = Object.assign({}, drafts[idx], { text: out.text, html: finalHtml, updated_at: new Date().toISOString() });
-            writeDrafts(drafts);
+            db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [out.text, finalHtml, db.nowISO(), draftId]);
           }
           doSendDraft();
         }).catch((e) => {
@@ -478,26 +564,28 @@ function handleApi(req, res, url, ip) {
       return readBody(req, res, (body, size) => {
         let data;
         try { data = JSON.parse(body); } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
-        const drafts = readDrafts();
-        const idx = drafts.findIndex((d) => d.id === id);
-        if (idx < 0) return sendJson(res, 404, { error: 'Draft not found' });
-        drafts[idx] = Object.assign({}, drafts[idx], data, { updated_at: new Date().toISOString() });
-        writeDrafts(drafts);
-        sendJson(res, 200, { ok: true, id });
+        const stored = getDraft(id);
+        if (!stored) return sendJson(res, 404, { error: 'Draft not found' });
+        const m = Object.assign({}, draftToApi(stored), data || {});
+        upsertDraft({
+          id, company: m.company, from: m.from, to: m.to, cc: m.cc, reply_to: m.reply_to,
+          subject: m.subject, text: m.text, html: m.html, campaign: m.campaign,
+          created_at: stored.created_at,
+        });
+        return sendJson(res, 200, { ok: true, id });
       });
     }
     return sendJson(res, 405, { error: 'Method not allowed' });
   }
 
+  // DELETE /api/drafts/:id — discard, not delete: the row keeps its history.
   if (req.method === 'DELETE' && p.startsWith('/api/drafts/')) {
     const id = decodeURIComponent(p.slice('/api/drafts/'.length));
-    const drafts = readDrafts();
-    const idx = drafts.findIndex((d) => d.id === id);
-    if (idx < 0) return sendJson(res, 404, { error: 'Draft not found' });
-    drafts.splice(idx, 1);
-    writeDrafts(drafts);
+    const stored = getDraft(id);
+    if (!stored || stored.status !== 'draft') return sendJson(res, 404, { error: 'Draft not found' });
+    markDraftDiscarded(id);
     console.log(`[DRAFT] Discarded: ${id}`);
-    return sendJson(res, 200, { ok: true, id });
+    return sendJson(res, 200, { ok: true, id, status: 'discarded' });
   }
 
   return sendJson(res, 404, { error: 'Not found' });
@@ -509,5 +597,6 @@ function safeJson(raw) {
 
 server.listen(PORT, () => {
   console.log(`✓ Resend Pad running on http://127.0.0.1:${PORT}`);
+  console.log(`  db: ${db.DB_PATH}`);
   console.log(`  POST /api/send | GET /api/domains | GET /api/sent | GET /api/received | POST /api/webhook | GET /api/archive | GET /api/drafts | POST /api/drafts/:id/send | PUT/DELETE /api/drafts/:id`);
 });

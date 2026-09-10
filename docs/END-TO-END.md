@@ -11,17 +11,22 @@ nothing in `pad/` itself hardcodes them.
 | Newsletter corpus (read-only) | `/home/boxed/.config/newsletterfit/corpus.env` (`$MONGODB_URI`, `$NEWSLETTERFIT_API`, `$API_BEARER_TOKEN`) |
 | Sponsor export | `/srv/newsletterfit/reports/sponsor-outreach/all-sponsors.json` (read OK, never write) |
 | Daily intake CSV | `/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv` |
-| Lead state (the CRM) | `pad/leads/data/crm.json` on the box; API `127.0.0.1:3002` |
-| Mail | Resend (the pad's inbox/sent are live API views, 30-day retention) |
+| Lead state (the CRM) | **SQLite** at `/home/boxed/resend-pad/data/outreach.db` (`pad/data/outreach.db` in this repo); API `127.0.0.1:3002` |
+| Mail | Resend (the pad's inbox/sent are live API views, 30-day retention) — everything the pipeline did is a row in `emails` / `replies` |
+| Read the state | `node pad/tools/db-report.cjs` (or `--lead <id>` for one timeline) |
 | Contacts | Hunter.io, free tier: 50 searches + 100 verifications per month |
 
 ## 0. Start the services
 
 ```bash
-cd pad && ./boot.sh          # pad on 127.0.0.1:3001, CRM on 127.0.0.1:3002
+cd pad && ./boot.sh          # pad on 127.0.0.1:3001
+cd pad/leads && ./boot.sh    # leads engine on 127.0.0.1:3002
 ```
 
-Health: `GET /api/meta` on the CRM returns the stage list and per-stage counts.
+Health: `GET /api/meta` on the CRM returns the stage list, per-stage counts and
+the storage it is reading. Both processes open the same SQLite file
+(`pad/data/outreach.db`, WAL mode); a minute-by-minute cron watchdog restarts
+whichever one dies.
 
 ## 1. Select and verify sponsors
 
@@ -150,5 +155,7 @@ each due touch from corpus + last30days + web. Hard rule: never invent a fact.
 - `/srv/newsletterfit` is not writable: write outputs under `/home/boxed`.
 - Series recaps bundle sponsors (Brex + MongoDB + AssemblyAI in one post) —
   treat each name as its own sponsor.
-- Resend keeps email 30 days. Anything you want to keep must be captured in the
-  CRM or committed from `artifacts/`.
+- Resend keeps email 30 days; the pipeline's own history lives in
+  `pad/data/outreach.db` (leads, stage history, every message, replies) and is
+  mirrored into git by `scripts/snapshot-state.sh`. Run it after a batch — and
+  never leave `OUTREACH_DB` set in a shell that starts the live services.
