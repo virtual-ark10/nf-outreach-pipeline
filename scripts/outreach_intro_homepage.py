@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Add NewsletterFIT intro paragraphs + per-lead homepage tracking links to first-contact drafts.
 
-For every draft in drafts.json:
+For every draft in the pad's LIVE queue (SQLite-backed since 2026-09-10, read and
+written over the pad's API — the retired data/drafts.json is not the queue):
   1. Mints a per-lead tracking token for https://newsletterfit.com (homepage) via
      POST {NEWSLETTERFIT_API}/outreach/links — signature link is attributable to
      that lead.
@@ -13,8 +14,8 @@ For every draft in drafts.json:
   5. Mirrors new tokens into the local attribution store + audit file.
 
 Usage:
-  python3 outreach_intro_homepage.py [--drafts path] [--store path]
-Reusing outreach_internalize.api_mint / wrap_links / load_env.
+  python3 outreach_intro_homepage.py [--pad http://127.0.0.1:3001] [--store path] [--dry-run]
+Reusing outreach_internalize.api_mint / wrap_links / load_env / read_live_queue.
 """
 import argparse
 import json
@@ -24,7 +25,9 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from outreach_internalize import api_mint, load_env, wrap_links  # noqa: E402
+from outreach_internalize import (  # noqa: E402
+    api_mint, load_env, read_live_queue, save_changed_drafts, wrap_links,
+)
 
 LT_RE = re.compile(r"https://newsletterfit\.com/api/click\?lt=([A-Za-z0-9_-]{20,40})")
 SIG_TEXT = "Ian Hinga, Founder, NewsletterFIT — newsletterfit.com"
@@ -57,7 +60,8 @@ INTROS = {
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--drafts", default="/home/boxed/resend-pad/data/drafts.json")
+    ap.add_argument("--pad", default=os.environ.get("PAD_URL", "http://127.0.0.1:3001"),
+                    help="the pad's base URL (its /api/drafts is the live queue)")
     ap.add_argument("--store", default="/home/boxed/newsletterfit/attribution/attribution.json")
     ap.add_argument("--out-tokens", default="/home/boxed/newsletterfit/attribution/attribution.homepage-tokens.json")
     ap.add_argument("--dry-run", action="store_true")
@@ -70,7 +74,8 @@ def main():
         print("FATAL: API_BEARER_TOKEN not found", file=sys.stderr)
         sys.exit(1)
 
-    drafts = json.load(open(args.drafts, encoding="utf-8"))
+    drafts = read_live_queue(args.pad)
+    before = {d.get("id"): (d.get("text"), d.get("html")) for d in drafts}
     store = json.load(open(args.store, encoding="utf-8"))
     clicks = store.get("clicks", [])
 
@@ -129,7 +134,8 @@ def main():
         print(f"  [OK] {lead_id}: intro + homepage link {home['token'][:10]}…")
 
     if not args.dry_run:
-        json.dump(drafts, open(args.drafts, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        saved, failed = save_changed_drafts(args.pad, drafts, before)
+        print(f"== pushed {saved} rewritten draft(s) to the pad" + (f", {failed} FAILED" if failed else ""))
         json.dump(store, open(args.store, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
         if new_tokens:
             json.dump({"tokens": new_tokens,

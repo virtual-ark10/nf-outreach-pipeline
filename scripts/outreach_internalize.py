@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Internalize outreach links — newsletters must never send valuable leads to external sites.
 
-Sweeps the Pad draft queue (drafts.json), and for every outreach link whose stored
+Sweeps the Pad draft queue (the SQLite-backed one, read over the pad's API), and for every outreach link whose stored
 destination is an EXTERNAL publication site (substack.com, thedigitalcreator.co, ...),
 Resolves the publication to its NewsletterFIT internal page via the corpus search API,
 mints a NEW token via POST /api/v1/outreach/links (server-side — no file merge or
@@ -11,15 +11,15 @@ Policy: all outreach links are internal. The lead stays on newsletterfit.com and
 nf_attr cookie + click counts still attribute the visit — no traffic is given away.
 
 Outputs:
-  - drafts.json rewritten (internal tokens)
+  - the rewritten drafts pushed back to the pad (PUT /api/drafts/:id)
   - attribution store (home) mirrored with the minted tokens (dedupe cache)
   - attribution.new-tokens.json — audit log of tokens minted this run (server already
     holds them; no merge/restart required)
   - a report line per swap; unresolved pubs are reported and left untouched
 
 Usage:
-  python3 outreach_internalize.py [--drafts path] [--store path] [--dry-run]
-Env (or --flag): NEWSLETTERFIT_API, API_BEARER_TOKEN, NF_BASE_URL
+  python3 outreach_internalize.py [--pad http://127.0.0.1:3001] [--store path] [--dry-run]
+Env (or --flag): NEWSLETTERFIT_API, API_BEARER_TOKEN, NF_BASE_URL, PAD_URL, PAD_TOKEN
 """
 import argparse
 import json
@@ -75,6 +75,87 @@ def wrap_links(html, link):
 
 def norm(s):
     return re.sub(r"[^a-z0-9]+", "", (s or "").lower())
+
+
+# ---------------------------------------------------------------- pad queue
+# Since the SQLite cutover (2026-09-10) the draft queue is rows in the pad's
+# database, NOT data/drafts.json — and that retired file still sits on disk, so
+# reading it would "succeed" on a stale copy while the live queue never changed.
+# The queue is therefore read and written over the pad's own API.
+PAD_ENV = "/home/boxed/resend-pad/.env"
+PAD_BASE = os.environ.get("PAD_URL", "http://127.0.0.1:3001")
+
+
+def pad_token():
+    """The pad token: env first, then the pad's .env (never printed)."""
+    tok = (os.environ.get("PAD_TOKEN") or "").strip()
+    if tok:
+        return tok
+    try:
+        with open(PAD_ENV, encoding="utf-8") as fh:
+            for line in fh:
+                if line.startswith("PAD_TOKEN="):
+                    return line.split("=", 1)[1].strip()
+    except OSError:
+        pass
+    return ""
+
+
+def _pad_json(req):
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read().decode("utf-8") or "{}")
+
+
+def pad_drafts(base, token):
+    """The LIVE draft queue (the pad returns only status='draft' rows)."""
+    return _pad_json(urllib.request.Request(
+        base.rstrip("/") + "/api/drafts", headers={"X-Pad-Token": token})).get("data", [])
+
+
+def pad_put_draft(base, token, draft_id, fields):
+    """Save edits onto an existing draft. The pad merges, so sending only the
+    changed fields is enough — and a 404 means the draft is no longer in the
+    queue (sent or discarded in the pad), which must not be papered over."""
+    req = urllib.request.Request(
+        base.rstrip("/") + "/api/drafts/" + urllib.parse.quote(str(draft_id)),
+        data=json.dumps(fields).encode("utf-8"), method="PUT",
+        headers={"X-Pad-Token": token, "Content-Type": "application/json"})
+    return _pad_json(req)
+
+
+def read_live_queue(base):
+    """The live queue, or a hard exit. An empty read must never be mistaken for
+    'nothing to do' — that is exactly how a stale copy fools you."""
+    token = pad_token()
+    if not token:
+        print(f"FATAL: PAD_TOKEN not found (env or {PAD_ENV})", file=sys.stderr)
+        sys.exit(1)
+    try:
+        drafts = pad_drafts(base, token)
+    except Exception as e:                      # refused, 401, proxy down …
+        print(f"FATAL: could not read the draft queue from {base}: {e}", file=sys.stderr)
+        sys.exit(1)
+    print(f"queue: {base.rstrip('/')}/api/drafts — {len(drafts)} pending draft(s)")
+    return drafts
+
+
+def save_changed_drafts(base, drafts, before):
+    """Push back only the drafts this run actually changed. A draft that is gone
+    from the queue (sent or discarded in the pad meanwhile) 404s and is reported
+    as a failure rather than silently dropped. Returns (saved, failed)."""
+    token = pad_token()
+    saved = failed = 0
+    for d in drafts:
+        did = d.get("id")
+        if before.get(did) == (d.get("text"), d.get("html")):
+            continue
+        try:
+            pad_put_draft(base, token, did, {"text": d.get("text"), "html": d.get("html")})
+            saved += 1
+        except Exception as e:
+            failed += 1
+            print(f"  [WARN] could not save {did}: {e}", file=sys.stderr)
+    return saved, failed
 
 
 def load_env(env_path):
@@ -160,7 +241,7 @@ def pick_pub(query, dest_host, results):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--drafts", default="/home/boxed/resend-pad/data/drafts.json")
+    ap.add_argument("--pad", default=PAD_BASE, help="the pad's base URL (its /api/drafts is the queue)")
     ap.add_argument("--store", default="/home/boxed/newsletterfit/attribution/attribution.json")
     ap.add_argument("--out-tokens", default="/home/boxed/newsletterfit/attribution/attribution.new-tokens.json")
     ap.add_argument("--dry-run", action="store_true")
@@ -174,7 +255,8 @@ def main():
         print("FATAL: API_BEARER_TOKEN not found", file=sys.stderr)
         sys.exit(1)
 
-    drafts = json.load(open(args.drafts, encoding="utf-8"))
+    drafts = read_live_queue(args.pad)
+    before = {d.get("id"): (d.get("text"), d.get("html")) for d in drafts}
     store = json.load(open(args.store, encoding="utf-8"))
     clicks = store.get("clicks", [])
     by_token = {c["token"]: c for c in clicks}
@@ -272,7 +354,8 @@ def main():
         draft["html"] = html
 
     if not args.dry_run:
-        json.dump(drafts, open(args.drafts, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+        saved, failed = save_changed_drafts(args.pad, drafts, before)
+        print(f"== pushed {saved} rewritten draft(s) to the pad" + (f", {failed} FAILED" if failed else ""))
         json.dump(store, open(args.store, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
         json.dump({"tokens": new_tokens,
                     "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

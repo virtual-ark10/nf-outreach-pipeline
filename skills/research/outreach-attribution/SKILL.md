@@ -126,8 +126,9 @@ node scripts/rebuild-links.js [campaign]     # token-only links (all campaigns i
   away. Resolve each suggested pub to `https://newsletterfit.com/app/publications/<slug>`
   via the corpus search API (`GET $NEWSLETTERFIT_API/search?q=<pub name>`) and
   mint the token against THAT dest. Loop that does it automatically over the
-  Pad drafts queue: `python3 /home/boxed/outreach_internalize.py` (reads
-  drafts.json, resolves slugs, mints/reuses internal tokens, rewrites text+html,
+  Pad drafts queue: `python3 /home/boxed/outreach_internalize.py` (reads the LIVE
+  queue through the pad API — SQLite, not drafts.json — resolves slugs,
+  mints/reuses internal tokens, rewrites text+html, PUTs the drafts back, then
   writes store + `attribution.new-tokens.json` merge payload).
 - "Tokenize a link/URL" in this domain = MINT a tracking link
   (`https://.../api/click?lt=<32-hex>`). It never means counting LLM tokens —

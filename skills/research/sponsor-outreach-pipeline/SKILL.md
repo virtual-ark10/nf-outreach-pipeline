@@ -170,9 +170,11 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   (`GET $NEWSLETTERFIT_API/search?q=<pub name>`) returns the canonical `slug`,
   then dest = `https://newsletterfit.com/app/publications/<slug>`. Only mint a
   token whose `dest` starts with `https://newsletterfit.com`. The loop that does
-  this automatically (drafts.json -> resolve slugs -> mint internal tokens ->
-  rewrite text+html -> write drafts.json + store + merge payload) is:
-  `python3 /home/boxed/outreach_internalize.py`
+  this automatically (live pad queue -> resolve slugs -> mint internal tokens ->
+  rewrite text+html -> PUT the drafts back to the pad + store + merge payload) is:
+  `python3 /home/boxed/outreach_internalize.py` — the queue is SQLite behind the
+  pad API, so `drafts.json` is retired; use `--dry-run` first, `--pad <url>` to
+  point it elsewhere.
 - Paste the returned `link` URLs into the email lines below (Outlook auto-links
   pasted URLs).
 - Pasted links carry ONLY the tracking token (`https://newsletterfit.com/api/click?lt=<TOKEN>`)
