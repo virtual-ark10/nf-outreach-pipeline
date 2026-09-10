@@ -1,0 +1,3322 @@
+{
+ "matic": [
+  {
+   "pub": "ByteByteGo Newsletter",
+   "method": "colon_sponsored",
+   "conf": null,
+   "evidence": "Matic: A new era of visually intelligent cleaning (Sponsored) Try Matic, backed by their 6 month money back guarantee. Get Matic In June 202",
+   "verdict": null
+  },
+  {
+   "pub": "Not Boring by Packy McCormick",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "e Base Power Company story. For now\u2026 Let's get to it. Today's Weekly Dose is brought to you by\u2026 Matic It's not actually brought to you by Ma",
+   "verdict": null
+  }
+ ],
+ "workos pipes": [
+  {
+   "pub": "ByteByteGo Newsletter",
+   "method": "colon_sponsored",
+   "conf": null,
+   "evidence": "WorkOS Pipes: More context makes for smarter products (Sponsored) Users expect apps and agents to reach the tools they already work in.",
+   "verdict": null
+  }
+ ],
+ "nutrient ai": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "memories' (read: text in files) that it combed through to produce this. I recommend you give it a whirl. Ben's Bites is brought to you by Nu",
+   "verdict": null
+  }
+ ],
+ "brief struggling": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "in them. Let me know if there's anything specific you need to wrap your head around (I may need to too). Ben's Bites is brought to you by Br",
+   "verdict": null
+  }
+ ],
+ "ability ai this": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "cot hooked up to an agent so i can drag him to my todos and ask him to do stuff\u2026 I'll share more soon \ud83d\ude0a Ben's Bites is brought to you by Ab",
+   "verdict": null
+  }
+ ],
+ "metatate most": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "er whose AI gateway is faster. Here's the result of last week's poll: I guess everyone likes Fable more. Ben's Bites is brought to you by Me",
+   "verdict": null
+  }
+ ],
+ "veridect guardrails": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "l test new things too. Please be open with your feedback, but be nice today; it's my birthday after all. Ben's Bites is brought to you by Ve",
+   "verdict": null
+  }
+ ],
+ "serpapi": [
+  {
+   "pub": "Product Growth",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Brought to you by: SerpApi - Get started with SerpApi using 250 free credits.",
+   "verdict": null
+  }
+ ],
+ "type work": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "it and pick up stuff along the way. Like learning a language, if you're in it you'll pick it up faster. Ben's Bites is brought to you by Typ",
+   "verdict": null
+  }
+ ],
+ "bolt.new": [
+  {
+   "pub": "Product Growth",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Check out the conversation on Apple, Spotify, and YouTube. Brought to you by: Bolt.new - Ship AI-powered products 10x faster Product Faculty",
+   "verdict": null
+  }
+ ],
+ "strange files alexander strange": [
+  {
+   "pub": "Tropic Press: J.C. Bruce",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Today's sponsor: The Strange Files Alexander Strange wants to get to Florida in the worst way.",
+   "verdict": null
+  },
+  {
+   "pub": "Tropic Press: J.C. Bruce",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Today's sponsor: The Strange Files Alexander Strange wants to get to Florida in the worst way.",
+   "verdict": null
+  }
+ ],
+ "myfitnesspal": [
+  {
+   "pub": "Scott's Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "my Podcast & connect with me on YouTube / Twitter. We turn your favorite newsletters into podcasts at 10minmindset.org Sponsored by MyFitnes",
+   "verdict": null
+  },
+  {
+   "pub": "Scott's Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "my Podcast & connect with me on YouTube / Twitter. We turn your favorite newsletters into podcasts at 10minmindset.org Sponsored by MyFitnes",
+   "verdict": null
+  },
+  {
+   "pub": "Scott's Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "my Podcast & connect with me on YouTube / Twitter. We turn your favorite newsletters into podcasts at 10minmindset.org Sponsored by MyFitnes",
+   "verdict": null
+  },
+  {
+   "pub": "Scott's Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "my Podcast & connect with me on YouTube / Twitter. We turn your favorite newsletters into podcasts at 10minmindset.org Sponsored by MyFitnes",
+   "verdict": null
+  }
+ ],
+ "poshmark": [
+  {
+   "pub": "Money with Katie",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "hoping for modest returns in exchange for unknowingly providing exit liquidity; the other is Elon Musk. This issue was brought to you by Pos",
+   "verdict": null
+  }
+ ],
+ "bull street": [
+  {
+   "pub": "Daily Headlines",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "own: the Dow down -0.8% to 52,146, the S&P 500 down -1.0% to 7,458, the Nasdaq down -1.4% to 25,520. The market read is brought to you by Bu",
+   "verdict": null
+  },
+  {
+   "pub": "Daily Headlines",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "cks closed up: the Dow up +0.7% to 52,225, the S&P 500 up +0.9% to 7,509, the Nasdaq flat at 25,508. The market read is brought to you by Bu",
+   "verdict": null
+  },
+  {
+   "pub": "Daily Headlines",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "down: the Dow down -0.3% to 52,499, the S&P 500 down -0.8% to 7,515, the Nasdaq up +0.3% to 26,282. The market read is brought to you by Bul",
+   "verdict": null
+  }
+ ],
+ "render": [
+  {
+   "pub": "Fursah AI",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "it works. Maximum effort. Minimum babysitting. The next step is yours. \ud83d\udc49 Claim your $25 and build the thing FINAL NOTE This issue is sponso",
+   "verdict": null
+  },
+  {
+   "pub": "Fursah AI",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Who buys this, how to find them, and how a live demo on a phone closes faster than any pitch deck ever will. FINAL NOTE This issue is sponso",
+   "verdict": null
+  },
+  {
+   "pub": "Fursah AI",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "project and a product. You now have the architecture for a product. \ud83d\udc49 Claim your $25 and start the upgrade FINAL NOTE This issue is sponsor",
+   "verdict": null
+  },
+  {
+   "pub": "AI Cheatcode",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ilt directly into your browser workflow so you can summarize, write, and research without switching tabs. \ud83d\udcac Final Note This issue is sponso",
+   "verdict": null
+  },
+  {
+   "pub": "AI Cheatcode",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ilt directly into your browser workflow so you can summarize, write, and research without switching tabs. \ud83d\udcac Final Note This issue is sponso",
+   "verdict": null
+  },
+  {
+   "pub": "AI Cheatcode",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ook. You have the infrastructure. The only next step is yours. \ud83d\udc49 Claim your $25 Render credits and start \ud83d\udcac Final Note This issue is sponso",
+   "verdict": null
+  }
+ ],
+ "wispr flow": [
+  {
+   "pub": "Tech Scoop",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ateway. It is every place where an AI platform turns an untrusted artifact into computation. Today's newsletter is also brought to you by: W",
+   "verdict": null
+  },
+  {
+   "pub": "Tech Scoop",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ode can often move backward. Production data systems usually have to move forward\u2014carefully. Today's newsletter is also brought to you by: W",
+   "verdict": null
+  },
+  {
+   "pub": "Tech Scoop",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "bots at all. It will be about building a trust layer for autonomous actors on the Internet. Today's newsletter is also brought to you by: Wi",
+   "verdict": null
+  }
+ ],
+ "coderabbit": [
+  {
+   "pub": "Tech Scoop",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "shifting from whether AI will change the economy to who will capture the value when it does. Today's newsletter is also brought to you by: C",
+   "verdict": null
+  }
+ ],
+ "godaddy's airo": [
+  {
+   "pub": "The AI Corner",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "r 8 founders who felt hopeless. I watched the full interview so you can skip it. Here are the 10 takeaways that matter. brought to you by Go",
+   "verdict": null
+  }
+ ],
+ "scowl": [
+  {
+   "pub": "Theatr's Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This week's newsletter is brought to you by SCOWL: QUEERAPALOOZA.",
+   "verdict": null
+  }
+ ],
+ "ahrefs you": [
+  {
+   "pub": "Marketing Ideas",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's \u2728 free marketing idea \u2728 is sponsored by Ahrefs You know that moment when someone asks \u201cwHy Is TrAfFiC dOwN? \ud83e\udeea\u201c and finding the answ",
+   "verdict": null
+  }
+ ],
+ "credit banc": [
+  {
+   "pub": "The Weekly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "or platforms, including our website, Apple Podcasts, Spotify, Audible, and YouTube. The Liquid Lunch Project Podcast is sponsored by Credit",
+   "verdict": null
+  },
+  {
+   "pub": "The Weekly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "h the timing, cost, and cash flow before you charge ahead. Get In Touch Until next week, -Matt & Luigi \ud83c\udf7b The Weekly is sponsored by Credit",
+   "verdict": null
+  },
+  {
+   "pub": "The Weekly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e building?\u201d And that's where this deal took a turn. More on that next week. Until then, -Matt & Luigi \ud83c\udf7b The Weekly is sponsored by Credit",
+   "verdict": null
+  },
+  {
+   "pub": "The Weekly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "or platforms, including our website, Apple Podcasts, Spotify, Audible, and YouTube. The Liquid Lunch Project Podcast is sponsored by Credit",
+   "verdict": null
+  },
+  {
+   "pub": "The Weekly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ood at finding out where the bodies are buried. Financially speaking. See you next week. -Matt & Luigi \ud83c\udf7b The Weekly is sponsored by Credit",
+   "verdict": null
+  }
+ ],
+ "kiro": [
+  {
+   "pub": "Coding Challenges",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ured to have you as a reader. \ud83c\udf89 I'm pleased to be hosting the Ready, Spec, Ship Hackathon alongside Angie Jones, , and sponsored by Kiro. Y",
+   "verdict": null
+  },
+  {
+   "pub": "Coding Challenges",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": ", Ship Hackathon I'm Running! I'm pleased to be hosting the Ready, Spec, Ship Hackathon alongside Angie Jones, and; and sponsored by Kiro. Y",
+   "verdict": null
+  }
+ ],
+ "anam": [
+  {
+   "pub": "Coding Challenges",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "persona and prompt design, session-based authentication, and post-session transcript analysis. This project is kindly sponsored by Anam.",
+   "verdict": null
+  }
+ ],
+ "google cloud": [
+  {
+   "pub": "Coding Challenges",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e is all about the process of taking a demo through to something you'd be happy to run for real. This project is kindly sponsored by Google",
+   "verdict": null
+  }
+ ],
+ "novu connect welcome": [
+  {
+   "pub": "AI Agents Simplified",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to the 62nd issue of AI Agents Simplified \ud83c\udf7b This issue is brought to you by Novu Connect Welcome to the Agentic Reading Roadmap. He",
+   "verdict": null
+  }
+ ],
+ "hubspot every ai": [
+  {
+   "pub": "AI Agents Simplified",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to the 63rd issue of AI Agents Simplified \ud83c\udf7b This issue is brought to you by HubSpot Every AI agent demo works, and that's exactly w",
+   "verdict": null
+  }
+ ],
+ "ollie": [
+  {
+   "pub": "Women in AI",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "e leverage to everything else. Try Ollie's upgraded plan free for one month ($25 value) with code WOMENINAI. Meet Ollie Thanks to Ollie for",
+   "verdict": null
+  },
+  {
+   "pub": "Women in AI",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "fe easier, one task at a time. Try Ollie's upgraded plan free for one month ($25 value) with code WOMENINAI. Meet Ollie Thanks to Ollie for",
+   "verdict": null
+  }
+ ],
+ "relay": [
+  {
+   "pub": "Nonlinear News",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "help you become Niche Famous - build a brand that's seen by the right people to grow your career, network and business! This post is sponsor",
+   "verdict": null
+  }
+ ],
+ "bluevine": [
+  {
+   "pub": "The Storytelling Edge",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This week\u2019s newsletter is brought to you by Bluevine.",
+   "verdict": null
+  }
+ ],
+ "content marketing world": [
+  {
+   "pub": "The Storytelling Edge",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "summit with LIONS. Register here to get $200 off with Code Lazer200 and snag a spot before my session is full. Register This week's newslett",
+   "verdict": null
+  },
+  {
+   "pub": "The Storytelling Edge",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "00 off with Code Lazer200, and DM me when you do. I'd love to host a meetup for Storytelling Edge subscribers. Register This week's newslett",
+   "verdict": null
+  }
+ ],
+ "mcalvany precious metals": [
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  },
+  {
+   "pub": "Clusterfuck Nation",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "uck Nation is a reader-supported publication. Subscribe to this blog on Patreon or right here on Substack! This blog is sponsored by McAlvan",
+   "verdict": null
+  }
+ ],
+ "burford capital": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n, which you can read and subscribe to at davidlat.substack.com. You're listening to a special edition of this podcast, sponsored by Burford",
+   "verdict": null
+  }
+ ],
+ "with": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Wachtell, Lipton, Rosen & Katz, with my name in the fourth column (photo by David Lat). This week's Judicial Notice is sponsored by With a p",
+   "verdict": null
+  }
+ ],
+ "nexfirm": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "you, David. Thank you. DL: Thanks so much to Ben for joining me, and congratulations to him on the launch of his firm. Thanks to NexFirm for",
+   "verdict": null
+  }
+ ],
+ "tracksuit": [
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Tracksuit, the always-on brand tracker built for marketers and agencies to",
+   "verdict": null
+  },
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Tracksuit, the always-on brand tracker built for marketers and agencies to answer the question \u201cIs my strate",
+   "verdict": null
+  },
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Image courtesy of 818 Tequila This newsletter is sponsored by Tracksuit, the always-on brand tracker built for marketers and agencies to ans",
+   "verdict": null
+  },
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n this edition, discover stories, strategies, and creative ideas that are redefining how brands connect with audiences. This newsletter is s",
+   "verdict": null
+  },
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n this edition, discover stories, strategies, and creative ideas that are redefining how brands connect with audiences. This newsletter is s",
+   "verdict": null
+  },
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n this edition, discover stories, strategies, and creative ideas that are redefining how brands connect with audiences. This newsletter is s",
+   "verdict": null
+  },
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n this edition, discover stories, strategies, and creative ideas that are redefining how brands connect with audiences. This newsletter is s",
+   "verdict": null
+  },
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Images courtesy of Abbode This newsletter is sponsored by Tracksuit, the always-on brand tracker built for marketers and agencies to answer",
+   "verdict": null
+  },
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Images courtesy of FRAME and Old Navy This newsletter is sponsored by Tracksuit, the always-on brand tracker built for marketers and agencie",
+   "verdict": null
+  },
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n this edition, discover stories, strategies, and creative ideas that are redefining how brands connect with audiences. This newsletter is s",
+   "verdict": null
+  },
+  {
+   "pub": "Because of Marketing",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Tracksuit",
+   "verdict": null
+  }
+ ],
+ "revolut": [
+  {
+   "pub": "The Money Memo",
+   "method": "supported_by",
+   "conf": 0.94,
+   "evidence": "overseas, to fund the fun. It's out on Thursday, so make sure you're subscribed on Apple Podcasts, Spotify, or YouTube. This episode is supp",
+   "verdict": null
+  }
+ ],
+ "discovery channel": [
+  {
+   "pub": "The Progress Network",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "they still do. Around 25 million people tune into Shark Week, which by the way, just ended. And no, this episode is not sponsored by the Dis",
+   "verdict": null
+  }
+ ],
+ "swan ai": [
+  {
+   "pub": "GTM Strategist",
+   "method": "supported_by",
+   "conf": 0.94,
+   "evidence": "This newsletter is supported by Swan AI, the AI GTM engineer. Swan helped build something every GTM team should have in their toolkit.",
+   "verdict": null
+  }
+ ],
+ "miro": [
+  {
+   "pub": "GTM Strategist",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Miro - the collaborative workspace where agents and teams converge to think, decide, and build together. Mir",
+   "verdict": null
+  }
+ ],
+ "1mind": [
+  {
+   "pub": "GTM Strategist",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ack in the thread - sourced, specific, ready to forward. He adds a line of context and sends it before finishing lunch. This newsletter is s",
+   "verdict": null
+  }
+ ],
+ "metricool": [
+  {
+   "pub": "Dangerously Educated by Tayla Burrell",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "also the best opportunity for wealth creation and positive impact that exists right now. Here's how to make it easier. Thank you to Metricoo",
+   "verdict": null
+  }
+ ],
+ "zedcrest wealth": [
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner The market is open, but opportunity doesn't wait. With t",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner The market is open, but opportunity doesn't wait.",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner The market is open, but opportunity doesn't wait. With t",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner The market is open, but opportunity doesn't wait.",
+   "verdict": null
+  },
+  {
+   "pub": "The GenZ HR",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's Newsletter is Sponsored by Zedcrest Wealth, Your Trusted Investment Partner",
+   "verdict": null
+  }
+ ],
+ "brex": [
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "from the server rack (19:00) The geopolitics of the optical supply chain (20:16) The advice that shaped Michael's path Brought to you by: Br",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Brought to you by: Brex\u2014The intelligent finance platform: cards, expenses, travel, bill pay, banking\u2014wrapped into a high-performance stack.",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "rooms as a kid (36:48) On-Device AI models are about to change everything (43:03) The people who shaped Dylan's career Brought to you by: Br",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "t thinks nobody's asking yet (39:59) The poker match that almost closed a deal (41:24) Scott's vision for the next year Brought to you by: B",
+   "verdict": null
+  },
+  {
+   "pub": "Core Memory ",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "count thanks to Core Memory on whatever you're trying to build. We believe in you. Brex The Core Memory podcast is also sponsored by Brex, t",
+   "verdict": null
+  },
+  {
+   "pub": "Core Memory ",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "count thanks to Core Memory on whatever you're trying to build. We believe in you. Brex The Core Memory podcast is also sponsored by Brex, t",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Choosing their earliest backers (52:51) Why they refuse to work on Humans (58:07) Are they secretly working on Aliens? Brought to you by: Br",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "different? (51:02) Why planning horizons are shrinking (52:55) Lessons From Elon & Masa (56:44) What's next for Nikesh? Brought to you by: B",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "(1:15:48) Adam and Gio's hottest takes (1:19:50) How to actually stay locked in (1:24:47) Building something that lasts Brought to you by: B",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "nside the new product introduction line (17:01) What roles is Neros hiring for (19:00) Soren's hot take on defense tech Brought to you by: B",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "changing drone warfare (39:14) What happens when a drone loses its signal (40:41) Soren's learnings from Kelly Johnson Brought to you by: Br",
+   "verdict": null
+  },
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "does Peter draw his inspiration? (36:12) Why he's never read a Business book (37:31) Why their Engine is painted black Brought to you by: Br",
+   "verdict": null
+  }
+ ],
+ "mongodb": [
+  {
+   "pub": "Sourcery",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "to Brex, MongoDB, & AssemblyAI for helping make this RAISE AI Summit mini-series in Paris, France happen. Want more??? Brought to you by: Mo",
+   "verdict": null
+  },
+  {
+   "pub": "Decoding AI Magazine",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "se. Leave a comment Enjoyed the article? The most sincere compliment is to restack this for your readers. Share Special thanks to MongoDB fo",
+   "verdict": null
+  }
+ ],
+ "curatorial": [
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "ntirely around the dread of automation \u2014 the fear that the hand is being quietly written out. The full lineup is below. This week's edition",
+   "verdict": null
+  },
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "se, punch-cut paper, satirical flowers, and a historic downtown print gallery's summer hang. See the full lineup below. This week's edition",
+   "verdict": null
+  },
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "ts, masked faces \u2014 a week about the image caught in the act of being built by hand. Check out the full lineup is below. This week's edition",
+   "verdict": null
+  },
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "i sculptor's first show outside India, and a one-night sound sculpture in Pasadena. Check out the full lineup is below. This week's edition",
+   "verdict": null
+  },
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "g hard at the picture and its underside, from a photographed address to a city made of junk. See the full lineup below. This week's edition",
+   "verdict": null
+  },
+  {
+   "pub": "LA Insider",
+   "method": "newsletter_presented_by",
+   "conf": 0.95,
+   "evidence": "er. Five ways of building an image or an object and asking the city to stand in front of it. See the full lineup below. This week's edition",
+   "verdict": null
+  }
+ ],
+ "financial cents": [
+  {
+   "pub": "Get Work Done Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to \u201cGet Work Done,\u201d where we discuss the complexities of efficiently running accounting and bookkeeping firms. This newsletter is br",
+   "verdict": null
+  },
+  {
+   "pub": "Get Work Done Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to \u201cGet Work Done,\u201d where we discuss the complexities of efficiently running accounting and bookkeeping firms. This newsletter is br",
+   "verdict": null
+  },
+  {
+   "pub": "Get Work Done Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to \u201cGet Work Done,\u201d where we discuss the complexities of efficiently running accounting and bookkeeping firms. This newsletter is br",
+   "verdict": null
+  },
+  {
+   "pub": "Get Work Done Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to \u201cGet Work Done,\u201d where we discuss the complexities of efficiently running accounting and bookkeeping firms. This newsletter is br",
+   "verdict": null
+  },
+  {
+   "pub": "Get Work Done Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to \u201cGet Work Done,\u201d where we discuss the complexities of efficiently running accounting and bookkeeping firms. This newsletter is br",
+   "verdict": null
+  }
+ ],
+ "cube": [
+  {
+   "pub": "Data Engineering Central",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "re cost-effective, and are generally a pleasure to work with. Customer-facing analytics that ship in days, not quarters Thanks to Cube for s",
+   "verdict": null
+  }
+ ],
+ "penguin random house": [
+  {
+   "pub": "Telling the Bees",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This newsletter is brought to you by Penguin Random House.",
+   "verdict": null
+  }
+ ],
+ "city": [
+  {
+   "pub": "BLACK VIRGINIA NEWS",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "m. The youth violence prevention initiative has nearly doubled its participation since 2024. Share Friday Night Nets is sponsored by the Cit",
+   "verdict": null
+  }
+ ],
+ "town": [
+  {
+   "pub": "The Leverage",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": ", companies pay me to analyze their bet and explain it to you. I retain complete editorial independence. Today's bet is brought to you by To",
+   "verdict": null
+  },
+  {
+   "pub": "The Leverage",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "tech acquisitions of all time, and data that helped reshape my thinking on the market size of coding models. But first, this newsletter is b",
+   "verdict": null
+  }
+ ],
+ "stay hydrated and healthy": [
+  {
+   "pub": "Mo News",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "A MESSAGE FROM OUR SPONSOR Stay Hydrated And Healthy With LMNT \ud83d\udca7 Hydration isn\u2019t just about drinking water.",
+   "verdict": null
+  }
+ ],
+ "sen": [
+  {
+   "pub": "CT Capitol Dispatch",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ission to strengthen economic, educational, technological and cultural ties between the state and India The bill was co-sponsored by Sen. Su",
+   "verdict": null
+  }
+ ],
+ "senator sujata gadkar-wilcox": [
+  {
+   "pub": "CT Capitol Dispatch",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "the state and India. The bill signing took place at a ceremony in the State Capitol in Hartford. The legislation was co-sponsored by Senator",
+   "verdict": null
+  }
+ ],
+ "xsolla": [
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: Xsolla - selling PC games directly to players More than 1,000 PC games already run a direct channel alongside Steam, saving developers a combined $280M in platform fees in 2025 alone.",
+   "verdict": null
+  },
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: Xsolla - selling PC games directly to players More than 1,000 PC games already run a direct channel alongside Steam, saving developers a combined $280M in platform fees in 2025 alone.",
+   "verdict": null
+  }
+ ],
+ "surfshark vpn": [
+  {
+   "pub": "Ken LaCorte",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Friends \u2014 Today's post is sponsored by Surfshark VPN.",
+   "verdict": null
+  }
+ ],
+ "overdeck family foundation by": [
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": ", and Cooley, for making Edtech Insiders possible. Teacher Optimism on AI Is Dropping. The Reason Isn't the Technology. Sponsored by Overdec",
+   "verdict": null
+  },
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ecoming a sponsor, email us at info@edtechinsiders.org The Three Jobs of Teaching a Child to Read, and Where AI Fits In Sponsored by Overdec",
+   "verdict": null
+  },
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ooley, for making Edtech Insiders possible. Homework Helper or AI Tutor? The Difference Determines What Students Learn. Sponsored by Overdec",
+   "verdict": null
+  }
+ ],
+ "overdeck family foundation": [
+  {
+   "pub": "Edtech Insiders",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "ween self-reported and objective-based measures. Proceedings of LAK26 / arXiv. https://arxiv.org/abs/2601.06101 Special thanks to Overdeck F",
+   "verdict": null
+  },
+  {
+   "pub": "Edtech Insiders",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "f-regulation. Teenagers, midway through developing exactly that capacity, may be the population most exposed.\u21a9\ufe0e Special thanks to Overdeck F",
+   "verdict": null
+  },
+  {
+   "pub": "Edtech Insiders",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "SCALE Initiative at Stanford University. https://scale.stanford.edu/research-in-action/ai-tutoring-not-monolith Special thanks to Overdeck F",
+   "verdict": null
+  }
+ ],
+ "brilliant sue khim": [
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "artnerships and sponsorships. Subscribe now Building an AI Tutor That Gets Students to Think with Sue Khim of Brilliant Sponsored by Brillia",
+   "verdict": null
+  }
+ ],
+ "maester cloud": [
+  {
+   "pub": "Entra.News - Your weekly dose of Microsoft Entra",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "he built end-to-end using AI-assisted, spec-driven development. Andres Canello on LinkedIn Andres Canello on X/Twitter Sponsored by Maester",
+   "verdict": null
+  }
+ ],
+ "mercury": [
+  {
+   "pub": "Dwarkesh Podcast",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "This is a video recording of a post I wrote last week. If you want to read the original you can check it out here. Thanks to Mercury for spo",
+   "verdict": null
+  }
+ ],
+ "trump": [
+  {
+   "pub": "Jonathan Larsen\u2019s Substack",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "and House study groups that the Bible proves that God doesn't want government helping the needy. His Bible studies are sponsored by Trump ap",
+   "verdict": null
+  }
+ ],
+ "placers": [
+  {
+   "pub": "Chris\u2019s Substack",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This episode of Outside Insights is brought to you by Placers \u2014 a values-led staffing partner helping businesses and individuals reach their",
+   "verdict": null
+  },
+  {
+   "pub": "Chris\u2019s Substack",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This episode of Outside Insights is brought to you by Placers \u2014 a values-led staffing partner helping businesses and individuals reach their",
+   "verdict": null
+  }
+ ],
+ "harmonic": [
+  {
+   "pub": "NEW ECONOMIES",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "episodes include If you enjoyed this episode, help sustain our work by clicking \u2764\ufe0f and \ud83d\udd04 at the top of this post. \u2026.. Brought to you by Har",
+   "verdict": null
+  }
+ ],
+ "kodiak": [
+  {
+   "pub": "Sage Economics",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This post is sponsored by KODIAK \u2013 Proven Workforce Solutions. I wouldn't accept a sponsor for this newsletter unless they were 1) a company",
+   "verdict": null
+  }
+ ],
+ "profound": [
+  {
+   "pub": "MKT1 Newsletter with Emily Kramer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "brought to you by Profound, Framer, and",
+   "verdict": null
+  },
+  {
+   "pub": "#SEOForLunch",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "links. They'll be paying them to correct the information influencing how AI describes people, products, and businesses. Thank you to Profoun",
+   "verdict": null
+  }
+ ],
+ "traction complete": [
+  {
+   "pub": "MKT1 Newsletter with Emily Kramer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "brought to you by Traction Complete",
+   "verdict": null
+  }
+ ],
+ "framer": [
+  {
+   "pub": "MKT1 Newsletter with Emily Kramer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "\ud83d\udc4b This is a monthly free edition of MKT1 Newsletter\u2014a deep dive into a B2B startup marketing topic, brought to you by Framer, Closing Media",
+   "verdict": null
+  },
+  {
+   "pub": "MKT1 Newsletter with Emily Kramer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "\ud83d\udc4b This is a monthly free edition of MKT1 Newsletter\u2014a deep dive into a B2B startup marketing topic, brought to you by Framer, Profound's AE",
+   "verdict": null
+  }
+ ],
+ "athyna": [
+  {
+   "pub": "The Signal",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "dictate instead of type. If you're a paid subscriber, reply to this email for access. Upgrade to Pro Today's Signal is brought to you by Ath",
+   "verdict": null
+  }
+ ],
+ "hubspot": [
+  {
+   "pub": "The Signal",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "dictate instead of type. If you're a paid subscriber, reply to this email for access. Upgrade to Pro Today's Signal is brought to you by Hub",
+   "verdict": null
+  },
+  {
+   "pub": "AI Blueprint",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Together with our sponsor, HubSpot 100 proven side hustles for founders, each with real startup costs, time needed, and earning potential, plus a scoring system to match one to your life.",
+   "verdict": null
+  }
+ ],
+ "unblocked": [
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week\u2019s newsletter is sponsored by Unblocked. [Webinar] Can you prove AI is working?",
+   "verdict": null
+  },
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week\u2019s newsletter is sponsored by Unblocked. [Webinar] Can you prove AI is working?",
+   "verdict": null
+  },
+  {
+   "pub": "Refactoring",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "f the \ud83d\udca1 Monday Ideas \ud83d\udca1 \u2014 ideas and readings to start the week on the right foot. \ud83d\udd0d Can you prove your AI is working? This newsletter is b",
+   "verdict": null
+  },
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's newsletter is sponsored by Unblocked. [Webinar] Can you prove AI is working? AI is in your engineering workflow.",
+   "verdict": null
+  },
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Unblocked. [Webinar] How to stop babysitting your agents Agents can generate code. Getting it right for your",
+   "verdict": null
+  }
+ ],
+ "notion learn": [
+  {
+   "pub": "Refactoring",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Listen now: YouTube | Apple | Spotify Today's episode is brought to you by: Notion Learn more about Notion's Developer Platform today at htt",
+   "verdict": null
+  }
+ ],
+ "dx": [
+  {
+   "pub": "Refactoring",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "This idea is brought to you by today's sponsor, DX!",
+   "verdict": null
+  }
+ ],
+ "granola": [
+  {
+   "pub": "The AI Corner",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ed Opus 5 the day before this interview. I watched it twice, so you can skip it. Here are the 10 learnings that matter. sponsored by Granola",
+   "verdict": null
+  },
+  {
+   "pub": "Marketing with AI",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "int marketers have about AI, which is that it forgets the brand voice you taught it last week. Disclosure: the video is sponsored by Granola",
+   "verdict": null
+  }
+ ],
+ "incogni a": [
+  {
+   "pub": "Recomendo",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "beautifully, has a metal body, a knurled barrel, and satisfying weight. It comes with a converter for bottled ink. \u2014 MF THIS ISSUE IS SPONSO",
+   "verdict": null
+  }
+ ],
+ "kentbeck.com": [
+  {
+   "pub": "Software Design: Tidy First?",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "real software flows, and hand you the truth plus what to do about it. Curious whether it fits? Tell me about your team. This post is sponsor",
+   "verdict": null
+  }
+ ],
+ "google": [
+  {
+   "pub": "Liminal News With Daniel Pinchbeck",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "dea, saying, \u201c[h]umans behave better when they're being watched.\u201d I find this hideous. The Future Vision competition is sponsored by Google,",
+   "verdict": null
+  }
+ ],
+ "abundant mines": [
+  {
+   "pub": "Profstonge Weekly",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Visit our Sponsor Abundant Mines. Mine Bitcoin, Keep the Profits, Reduce your Taxes. We handle Everything.",
+   "verdict": null
+  },
+  {
+   "pub": "Profstonge Weekly",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Visit our Sponsor Abundant Mines. Mine Bitcoin, Keep the Profits, Reduce your Taxes. We handle Everything.",
+   "verdict": null
+  }
+ ],
+ "coinkite": [
+  {
+   "pub": "Profstonge Weekly",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Visit our Sponsor Coinkite. Protect your Bitcoin with an Ultra-Secure Hardware Wallet.",
+   "verdict": null
+  }
+ ],
+ "monetary metals": [
+  {
+   "pub": "Profstonge Weekly",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Visit our sponsor Monetary Metals. Earn 4% interest on your gold and silver, paid in more ounces of physical gold and silver.",
+   "verdict": null
+  },
+  {
+   "pub": "Profstonge Weekly",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Visit our sponsor Monetary Metals. Earn 4% interest on your gold and silver, paid in more ounces of physical gold and silver.",
+   "verdict": null
+  }
+ ],
+ "cello": [
+  {
+   "pub": "GTM Strategist",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Cello - referrals on autopilot.",
+   "verdict": null
+  },
+  {
+   "pub": "GTM Strategist",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Cello - referrals on autopilot. Partnerships are one of the most profitable GTM motions, and most teams are",
+   "verdict": null
+  }
+ ],
+ "prowritingaid": [
+  {
+   "pub": "\u270d\ufe0f Make Writing Your Job",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This email is sponsored by ProWritingAid. I only partner with tools I actually use. Hi writer, Quick question: how many finished drafts do y",
+   "verdict": null
+  }
+ ],
+ "dial": [
+  {
+   "pub": "AI Newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Message from our Sponsor Dial gives your agent its own real phone number.",
+   "verdict": null
+  }
+ ],
+ "kelly chapman": [
+  {
+   "pub": "Night Club 101",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Secret Ballot presents Secret Agent: a night of readings across the Acela with New York and DC friends, fans, and foes. Brought to you by Ke",
+   "verdict": null
+  }
+ ],
+ "typeform": [
+  {
+   "pub": "Elena's Growth Scoop",
+   "method": "paid_partnership",
+   "conf": 0.92,
+   "evidence": "(Disclosure: This post is part of a paid partnership with Typeform, including the use of the Research Flow platform at no cost. All of the f",
+   "verdict": null
+  }
+ ],
+ "eon": [
+  {
+   "pub": "DataExpert.io Newsletter",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "what you'll really need are competent, trusted, proactive secretaries. That's much harder. But doable! This article is brought to you by: Eo",
+   "verdict": null
+  }
+ ],
+ "lovable early may": [
+  {
+   "pub": "Moj Mahdara",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "at move fast without saying why. Say why. Loudly. More than once. Magic of AI Dinner: What I heard at the Kinship table brought to you by Lo",
+   "verdict": null
+  }
+ ],
+ "delegate embry": [
+  {
+   "pub": "Campaign Zero with DeRay",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ed House Bill 467 / Senate Bill 822 into law. Based on Campaign Zero's research on parole across the United States, and sponsored by Delegat",
+   "verdict": null
+  }
+ ],
+ "stata": [
+  {
+   "pub": "Platypus Economics",
+   "method": "paid_partnership",
+   "conf": 0.92,
+   "evidence": ", consider becoming a free or paid subscriber. One last thing for the nerdiest of my Platypals! Today's post includes a paid partnership wit",
+   "verdict": null
+  }
+ ],
+ "keva dine agency": [
+  {
+   "pub": "GOOD THINKING",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "interesting in the last month. This week, we have an exciting development: our first sponsor! This month's episodes are sponsored by The Kev",
+   "verdict": null
+  }
+ ],
+ "euro top tech": [
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  },
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  },
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  },
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  },
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  },
+  {
+   "pub": "The European Engineer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thanks for reading The European Engineer! Subscribe for free to receive new posts and support my work. This article is brought to you by: Eu",
+   "verdict": null
+  }
+ ],
+ "fastspring.gg": [
+  {
+   "pub": "Brutally Honest by Matej Lancaric",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ket, the biggest mistake might not be scaling too aggressively. It might be finding a winner and scaling it too slowly. This newsletter is b",
+   "verdict": null
+  },
+  {
+   "pub": "Brutally Honest by Matej Lancaric",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "unlocking spend. A really good senior UA manager can handle $1-1.5mil/month spend, but need creative + analytical help. This newsletter is b",
+   "verdict": null
+  }
+ ],
+ "t-mobile": [
+  {
+   "pub": "Sadie\u2019s Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "By Sadie St. Lawrence | Human Machine Collaboration Institute This post is sponsored by T-Mobile for Business. As always, the perspective an",
+   "verdict": null
+  }
+ ],
+ "oumi": [
+  {
+   "pub": "State of AI",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "lcome to this month's edition of State of AI: Monthly Paper Deep Dive. Before we get into the paper: today's edition is sponsored by Oumi, a",
+   "verdict": null
+  }
+ ],
+ "growthpair growthpair": [
+  {
+   "pub": "Claude Marketers",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ill get their hands on ai due to this. It's a win overall for the xAI team. Now, let's get into it. Claude Marketers is brought to you by Gr",
+   "verdict": null
+  },
+  {
+   "pub": "Claude Marketers",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "y to combat this. Ugh. Such interesting times. Alright with that, let's get into it. Lots to cover. Claude Marketers is brought to you by Gr",
+   "verdict": null
+  },
+  {
+   "pub": "Claude Marketers",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "us of anyone charging you for a guaranteed formula, because the data doesn't have one. Ok let's go. Claude Marketers is brought to you by Gr",
+   "verdict": null
+  },
+  {
+   "pub": "Claude Marketers",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "repo structure and all. Louise, you have my full support (doubt she's reading this, but still lol) Claude Marketers is brought to you by Gro",
+   "verdict": null
+  }
+ ],
+ "duckbill duckbill": [
+  {
+   "pub": "Claude Marketers",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "winners from here are those that have been using ai to ideate and refine their human-written ideas. Claude Marketers is brought to you by Du",
+   "verdict": null
+  }
+ ],
+ "uk aisi": [
+  {
+   "pub": "Black Tech Pipeline",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ng first. Data is gold, including data on weaknesses and vulnerabilities. That $171,800 payout came from a challenge co-sponsored by UK AISI",
+   "verdict": null
+  }
+ ],
+ "firecrawl": [
+  {
+   "pub": "The Skip",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "oach \u2014 it's free \u2014 to access this content and other exclusive resources. Listen on YouTube, Spotify, and Apple Podcasts Brought to you by: F",
+   "verdict": null
+  },
+  {
+   "pub": "The Skip",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "oach \u2014 it's free \u2014 to access this content and other exclusive resources. Listen on YouTube, Spotify, and Apple Podcasts Brought to you by: F",
+   "verdict": null
+  }
+ ],
+ "asana": [
+  {
+   "pub": "The Skip",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "oach \u2014 it's free \u2014 to access this content and other exclusive resources. Listen on YouTube, Spotify, and Apple Podcasts Brought to you by: A",
+   "verdict": null
+  },
+  {
+   "pub": "The Skip",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Listen on YouTube, Spotify, and Apple Podcasts Brought to you by: Asana: The Operating System for Human-Agent Teams\u2014Try Now In the past few",
+   "verdict": null
+  }
+ ],
+ "glean": [
+  {
+   "pub": "The Skip",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "to join Skip Coach to access this content and other exclusive resources. Listen on YouTube, Spotify, and Apple Podcasts Brought to you by: G",
+   "verdict": null
+  }
+ ],
+ "bright data": [
+  {
+   "pub": "The Growth Stack Mafia \ud83e\udd5e\u2694",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This edition of Growth Stack Mafia is brought to you by Bright Data. Bright Data Scraper Studio turns a plain-English description of the dat",
+   "verdict": null
+  }
+ ],
+ "cyber": [
+  {
+   "pub": "ASPI's Cyber and Tech Digest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "heck out The Strategist and ASPI's Stop the World podcast\u2014or our other Substack newsletters: The Cyber & Tech Digest is brought to you by th",
+   "verdict": null
+  },
+  {
+   "pub": "ASPI's Cyber and Tech Digest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "rticle was first published in The Strategist on 19 August 2026. Subscribe to AI Under Heaven The Cyber & Tech Digest is brought to you by th",
+   "verdict": null
+  },
+  {
+   "pub": "ASPI's Cyber and Tech Digest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "heck out The Strategist and ASPI's Stop the World podcast\u2014or our other Substack newsletters: The Cyber & Tech Digest is brought to you by th",
+   "verdict": null
+  },
+  {
+   "pub": "ASPI's Cyber and Tech Digest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "heck out The Strategist and ASPI's Stop the World podcast\u2014or our other Substack newsletters: The Cyber & Tech Digest is brought to you by th",
+   "verdict": null
+  },
+  {
+   "pub": "ASPI's Cyber and Tech Digest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "heck out The Strategist and ASPI's Stop the World podcast\u2014or our other Substack newsletters: The Cyber & Tech Digest is brought to you by th",
+   "verdict": null
+  }
+ ],
+ "evo medical spa cybersecurity": [
+  {
+   "pub": "Paula Sofia Gomez",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "cess wasn't about finding a quick fix. It was about having experts, a plan, accountability, and a supportive community. Sponsored by EVO Med",
+   "verdict": null
+  }
+ ],
+ "jack craver": [
+  {
+   "pub": "CoMotion NEWS",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "that.\u201d Thanks for reading! Sign-up to stay informed about the most critical mobility news. CoMotion's mobility goodness brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "CoMotion NEWS",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ntown. Thanks for reading! Sign-up to stay informed about the most critical mobility news. CoMotion's mobility goodness brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "CoMotion NEWS",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "lture. Thanks for reading! Sign-up to stay informed about the most critical mobility news. CoMotion's mobility goodness brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "CoMotion NEWS",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "iving. Thanks for reading! Sign-up to stay informed about the most critical mobility news. CoMotion's mobility goodness brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "CoMotion NEWS",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "here! Thanks for reading! Sign-up to stay informed about the most critical mobility news. CoMotion's mobility goodness brought to you by: Ja",
+   "verdict": null
+  }
+ ],
+ "ieee robotics": [
+  {
+   "pub": "Robots & Startups",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "on Humanoid Robots is the internationally recognized prime event of the humanoid robotics community. The conference is sponsored by the IEEE",
+   "verdict": null
+  },
+  {
+   "pub": "Robots & Startups",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "on Humanoid Robots is the internationally recognized prime event of the humanoid robotics community. The conference is sponsored by the IEEE",
+   "verdict": null
+  },
+  {
+   "pub": "Robots & Startups",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "on Humanoid Robots is the internationally recognized prime event of the humanoid robotics community. The conference is sponsored by the IEEE",
+   "verdict": null
+  },
+  {
+   "pub": "Robots & Startups",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "on Humanoid Robots is the internationally recognized prime event of the humanoid robotics community. The conference is sponsored by the IEEE",
+   "verdict": null
+  }
+ ],
+ "ultimus": [
+  {
+   "pub": "Alt Goes Mainstream",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ence of private markets and private wealth since December 2020. A word from AGM podcast sponsor, Ultimus Fund Solutions This episode of Alt",
+   "verdict": null
+  },
+  {
+   "pub": "Alt Goes Mainstream",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ence of private markets and private wealth since December 2020. A word from AGM podcast sponsor, Ultimus Fund Solutions This episode of Alt",
+   "verdict": null
+  }
+ ],
+ "london-based": [
+  {
+   "pub": "SoTA Letters",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "n the assumption that energy is scarce. Cheap solar makes it abundant, but also intermittent. Our ongoing Commission is sponsored by London-",
+   "verdict": null
+  }
+ ],
+ "xplor pay": [
+  {
+   "pub": "Linear: A Vertical Software & Vertical AI Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's newsletter is sponsored by Xplor Pay. Artificial intelligence is changing how software is built, customer expectations are evolving,",
+   "verdict": null
+  },
+  {
+   "pub": "Linear: A Vertical Software & Vertical AI Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's newsletter is sponsored by Xplor Pay. Artificial intelligence is changing how software is built, customer expectations are evolving,",
+   "verdict": null
+  },
+  {
+   "pub": "Linear: A Vertical Software & Vertical AI Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's newsletter is sponsored by Xplor Pay. Artificial intelligence is changing how software is built, customer expectations are evolving,",
+   "verdict": null
+  },
+  {
+   "pub": "Linear: A Vertical Software & Vertical AI Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's newsletter is sponsored by Xplor Pay. Artificial intelligence is changing how software is built, customer expectations are evolving,",
+   "verdict": null
+  }
+ ],
+ "rep": [
+  {
+   "pub": "K-12 Executive Intelligence",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ontinuing Appropriations and Extensions Act, 2027,\u201d and the formal status on the tracker reads Passed Senate. The bill, sponsored by Rep. Ja",
+   "verdict": null
+  },
+  {
+   "pub": "FingerLakes1.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "and connect children and families with medical care, counseling, crisis intervention and other services. A federal bill sponsored by Rep. Jo",
+   "verdict": null
+  }
+ ],
+ "hinge we": [
+  {
+   "pub": "keepsake",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "this newsletter is sponsored by Hinge We hadn't texted for about a week when all of a sudden his name lights up my phone again. Are we still",
+   "verdict": null
+  }
+ ],
+ "hinge": [
+  {
+   "pub": "keepsake",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ing, but tonight I know what it is. I click on his name and draft the first text. Share Thank you for reading keepsake! This newsletter is s",
+   "verdict": null
+  }
+ ],
+ "stacker": [
+  {
+   "pub": "The Future of SEO & AEO by Eli Schwartz",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's newsletter is sponsored by Stacker and Airops. (sponsored)",
+   "verdict": null
+  },
+  {
+   "pub": "The Future of SEO & AEO by Eli Schwartz",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's newsletter is sponsored by Stacker and Semrush Paid subscribers can download this audit template to help you figure out your job",
+   "verdict": null
+  }
+ ],
+ "foundation marketing": [
+  {
+   "pub": "The Future of SEO & AEO by Eli Schwartz",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's newsletter is sponsored by Foundation Marketing and Semrush {Sponsored} Are you wondering whether your agency is ripping you off",
+   "verdict": null
+  },
+  {
+   "pub": "The Future of SEO & AEO by Eli Schwartz",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's newsletter is sponsored by Foundation Marketing and Ahrefs. Paid subscribers can download this Python crawler, which calculates",
+   "verdict": null
+  }
+ ],
+ "saral": [
+  {
+   "pub": "The Brand Waves",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Image \u00a9 Hawaiian Tropic This newsletter is sponsored by SARAL, the platform that helps brands build and manage influencer marketing programs",
+   "verdict": null
+  }
+ ],
+ "fidelity investments": [
+  {
+   "pub": "RiskReversal Recap",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "WATCH 'The Dick & Paul Show' on YouTube: https://youtu.be/LtLBhBp5T40 This episode is sponsored by Fidelity Investments and the all-new Fide",
+   "verdict": null
+  }
+ ],
+ "cardenas law group": [
+  {
+   "pub": "The Vibe",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e because words create worlds. Wear what you believe. Speak what you want to become. order your VIBE Essentials Proudly sponsored by Cardena",
+   "verdict": null
+  },
+  {
+   "pub": "The Vibe",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ll leave asking yourself one question: What could my next 90 minutes become? This edition of The VIBE Report is proudly sponsored by Cardena",
+   "verdict": null
+  }
+ ],
+ "zikoko": [
+  {
+   "pub": "Zikoko HER",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "self up at the absolute crack of dawn today because your girl is currently getting ready for the Naira Life Conference (brought to you by Zi",
+   "verdict": null
+  },
+  {
+   "pub": "Zikoko HER",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "comfort and uncertainty soon spirals into an arrangement that promises a way out of poverty. The Naira Life Conference, brought to you by Zi",
+   "verdict": null
+  },
+  {
+   "pub": "Zikoko HER",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ted a different winner. The journey Kimberly went on got her exactly where she needed to be. The Naira Life Conference, brought to you by Zi",
+   "verdict": null
+  },
+  {
+   "pub": "Zikoko HER",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "t is about identity, pride, and the cultures these players carry with them onto every pitch. The Naira Life Conference, brought to you by Zi",
+   "verdict": null
+  },
+  {
+   "pub": "Zikoko HER",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "This is a filmmaker who is not waiting for permission to tell the stories she wants to tell. The Naira Life Conference, brought to you by Zi",
+   "verdict": null
+  }
+ ],
+ "imagine": [
+  {
+   "pub": "Press Gazette Future of Media US",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires.",
+   "verdict": null
+  },
+  {
+   "pub": "Press Gazette",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires.",
+   "verdict": null
+  },
+  {
+   "pub": "Press Gazette",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires. Journalist.net gives you access to both halves of that: the coverage and the people.",
+   "verdict": null
+  },
+  {
+   "pub": "Press Gazette",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires.",
+   "verdict": null
+  },
+  {
+   "pub": "Press Gazette",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires.",
+   "verdict": null
+  },
+  {
+   "pub": "Press Gazette",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "From our sponsor Imagine having 11,000 reporters based in 180 countries The stories that matter break locally first, in local publications, in local languages, days before they reach the wires.",
+   "verdict": null
+  }
+ ],
+ "uber": [
+  {
+   "pub": "Drinks First",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "end to the other and sponsor late-night Uber Eats. My friend ordered a pizza late one night and I think it was actually sponsored by Uber, a",
+   "verdict": null
+  }
+ ],
+ "combat antisemitism movement": [
+  {
+   "pub": "The Free Mind",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "I do not claim that one week in Israel, courtesy of the Combat Antisemitism Movement, makes me an expert.",
+   "verdict": null
+  }
+ ],
+ "crazy beat": [
+  {
+   "pub": "Wooden City",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "front door, I noticed cuttings from a nine-year-old Romford Recorder article, next to a photo of a local football team sponsored by Crazy Be",
+   "verdict": null
+  }
+ ],
+ "newshook": [
+  {
+   "pub": "Aly Walansky's Newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Check out today's sponsor, Newshook. It scans HARO, Source of Sources, SourceBottle, MentionMatch, X, Reddit, Bluesky, Substack, LinkedIn, Featured and reader callouts from major publications for journalist requests",
+   "verdict": null
+  },
+  {
+   "pub": "Aly Walansky's Newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Check out today's sponsor, Newshook. It scans HARO, Source of Sources, SourceBottle, MentionMatch, X, Reddit, Bluesky, Substack, LinkedIn, Featured and reader callouts from major publications for journalist requests",
+   "verdict": null
+  },
+  {
+   "pub": "Aly Walansky's Newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Check out today's sponsor, Newshook. It scans HARO, Source of Sources, SourceBottle, MentionMatch, X, Reddit, Bluesky, Substack, LinkedIn, Featured and reader callouts from major publications for journalist requests",
+   "verdict": null
+  },
+  {
+   "pub": "Aly Walansky's Newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "Check out today's sponsor, Newshook. It scans HARO, Source of Sources, SourceBottle, MentionMatch, X, Reddit, Bluesky, Substack, LinkedIn, Featured and reader callouts from major publications for journalist requests",
+   "verdict": null
+  }
+ ],
+ "cure parkinson's": [
+  {
+   "pub": "Rory\u2019s Always On Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "IPT Rory Cellan-Jones 0:06 You're listening to Movers and Shakers, a podcast about living with Parkinson's. The show is sponsored by Cure Pa",
+   "verdict": null
+  }
+ ],
+ "foley & lardner": [
+  {
+   "pub": "Murray\u2019s Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "oley & Lardner, San Francisco Current YC founders and alumni, drinks and light bites, no presentations and no pitching. Sponsored by Foley &",
+   "verdict": null
+  }
+ ],
+ "deleteme": [
+  {
+   "pub": "Objection: Everything",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "t few weeks, this is the moment it matters most. You can get 20% off at joindeleteme.com/EORLINS with the code EORLINS. Thank you to DeleteM",
+   "verdict": null
+  },
+  {
+   "pub": "Platypus Economics",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "wers\u2014as always with this series, they're a combination of confident assertions, vague recollections, and my best guess! This post is sponsor",
+   "verdict": null
+  }
+ ],
+ "global affairs canada": [
+  {
+   "pub": "The Bureau",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "oman who came to Canada from China, moved through universities and Canadian government institutions, and was ultimately sponsored by Global",
+   "verdict": null
+  }
+ ],
+ "rudderstack your": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e windowless cabins and emergency evacuations, but if it clears them, it could reshape how long-haul flights are built. SPONSORED BY RUDDERS",
+   "verdict": null
+  }
+ ],
+ "section the ai": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "eral intelligence,\" though even Generalist admits the skills are still developmental. See the breakthrough unfold here. SPONSORED BY SECTION",
+   "verdict": null
+  }
+ ],
+ "attio the": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "rs a glimpse inside xAI's massive Colossus II data center in Memphis. See the insane hardware required to train Grok 5. SPONSORED BY ATTIO T",
+   "verdict": null
+  }
+ ],
+ "nebius give kimi k3": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "day's most-clicked story: Apple's new AirPods will let you \u201csave\u201d anything you see. This leaked product demo shows how. SPONSORED BY NEBIUS",
+   "verdict": null
+  }
+ ],
+ "fluency why": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "who perform well on their homework ace their tests. But that long-standing trend has flipped upside down, thanks to AI. SPONSORED BY FLUENCY",
+   "verdict": null
+  }
+ ],
+ "workos workos": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "st-clicked story: Anthropic revealed how its new text watermark works, with one engineer creating a visual explanation. SPONSORED BY WORKOS",
+   "verdict": null
+  }
+ ],
+ "agiloop what's": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "official design skills now, after Anthropic synced Claude's art board workflow into the coding tool. See how it works. SPONSORED BY AGILOOP",
+   "verdict": null
+  }
+ ],
+ "rudderstack learn": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "s, potentially making critical infrastructure far easier to deploy in disaster zones and regions with unreliable grids. SPONSORED BY RUDDERS",
+   "verdict": null
+  }
+ ],
+ "deasy labs data": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "w Chinese robot imports last month, yet it seems America's robotics industry still depends heavily on Chinese hardware. SPONSORED BY DEASY L",
+   "verdict": null
+  }
+ ],
+ "aws build": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "s it automatically continue working once your usage limit resets. No more setting a timer to check back in hours later. SPONSORED BY AWS Bui",
+   "verdict": null
+  }
+ ],
+ "skirt shop": [
+  {
+   "pub": "a16z",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "st introduced best friends Fable, Sol, and Kimi - described as \u201crecursive\u201d and \u201cagentic.\u201d Her preference-day outfit was sponsored by The Ski",
+   "verdict": null
+  }
+ ],
+ "crusoe": [
+  {
+   "pub": "The Deep View",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "s approach reflects a broader shift in enterprise AI: making deployment cheaper, faster and less operationally complex. Thanks to Crusoe for",
+   "verdict": null
+  }
+ ],
+ "jet2": [
+  {
+   "pub": "Geekout Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ds to have their logo alongside TikTok's own when the app is opened. Think of it a bit like things like the 'Friends is sponsored by Jet2' s",
+   "verdict": null
+  }
+ ],
+ "incogni": [
+  {
+   "pub": "Ken LaCorte",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Incogni. Friends \u2014 For a few years, ISIS was the biggest story on Earth.",
+   "verdict": null
+  }
+ ],
+ "coframe": [
+  {
+   "pub": "Marketing Ideas",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Today's \u2728 free marketing idea \u2728 is sponsored by Coframe. Coframe is an AI platform that A/B tests your website nonstop.",
+   "verdict": null
+  }
+ ],
+ "incogni the bbc": [
+  {
+   "pub": "Recomendo",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "key. They pinch comfortably on my nose, so they don't need arms. They are nearly flat and incredibly lightweight. \u2014 MF THIS ISSUE IS SPONSOR",
+   "verdict": null
+  }
+ ],
+ "betterment": [
+  {
+   "pub": "Money with Katie",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of our brains that, as with all good propaganda, feels so innate, so instinctual, as to be irrefutable. This issue was brought to you by Bet",
+   "verdict": null
+  }
+ ],
+ "delta": [
+  {
+   "pub": "Data Engineering Central",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "you do it as an Engineer and Architect. One will be moderately technical, the other philosophical and *gasp political. Thanks to Delta for s",
+   "verdict": null
+  }
+ ],
+ "circleci if": [
+  {
+   "pub": "AI Agents Simplified",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to the 68th issue of AI Agents Simplified \ud83c\udf7b This issue is brought to you by CircleCI If you're anything like me, you've probably op",
+   "verdict": null
+  }
+ ],
+ "hubspot if": [
+  {
+   "pub": "AI Agents Simplified",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to the 65th issue of AI Agents Simplified \ud83c\udf7b This issue is brought to you by HubSpot If you've finished Titanic and House Prices and",
+   "verdict": null
+  }
+ ],
+ "circleci i": [
+  {
+   "pub": "AI Agents Simplified",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Welcome to the 66th issue of AI Agents Simplified \ud83c\udf7b This issue is brought to you by CircleCI I had a marketing idea in my head that I wante",
+   "verdict": null
+  }
+ ],
+ "chambers-ranked": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "one, Marc Agnifilo, and Karen Friedman Agnifilo (photo by Jeenah Moon via Getty Images). This week's Judicial Notice is sponsored by Chamber",
+   "verdict": null
+  }
+ ],
+ "coder": [
+  {
+   "pub": "The Signal",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "dictate instead of type. If you're a paid subscriber, reply to this email for access. Upgrade to Pro Today's Signal is brought to you by Cod",
+   "verdict": null
+  }
+ ],
+ "turn": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Hearn\u2014a case she dropped, a few weeks later (photo by Anna Moneymaker via Getty Images). This week's Judicial Notice is sponsored by Turn yo",
+   "verdict": null
+  }
+ ],
+ "scan": [
+  {
+   "pub": "Entra.News - Your weekly dose of Microsoft Entra",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "tra Verified ID, verifiable credentials, Face Check, identity verification partners, and self-service account recovery. Sponsored by Scan, S",
+   "verdict": null
+  }
+ ],
+ "waiting": [
+  {
+   "pub": "20 Percent Berlin",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "from our sponsor Waiting on your residence permit or citizenship application? You don't have to. Get a free case assessment and find out what your options are. Check out LegalWeg",
+   "verdict": null
+  }
+ ],
+ "deepvista ai": [
+  {
+   "pub": "FounderCoHo",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "al new human behavior always fails, and how to turn generic everyday utilities into irreplaceable \u201cInternet Treasures.\u201d Brought to you by: D",
+   "verdict": null
+  }
+ ],
+ "masterclass friday": [
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "icket now before the price goes up! Get Your Ticket! Upcoming Events What Is the Future of Higher Education in America? Sponsored by Masterc",
+   "verdict": null
+  },
+  {
+   "pub": "Edtech Insiders",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "s, discussion, and time to catch up with edtech community. RSVP Here What Is the Future of Higher Education in America? Sponsored by Masterc",
+   "verdict": null
+  }
+ ],
+ "name.com ship": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "gents actually just answer the damn question now instead of changing a bunch of shit and then answering! Ben's Bites is brought to you by Na",
+   "verdict": null
+  },
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Grok Bot is powered by the newly released Grok 4.6\u2026 (with 4.7 a couple weeks away). More on that below. Ben's Bites is brought to you by Nam",
+   "verdict": null
+  }
+ ],
+ "cloudera a": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "tside of work, handling email, doing stuff on your computer, etc. - answers revealed in Thursday's post. Ben's Bites is brought to you by Cl",
+   "verdict": null
+  }
+ ],
+ "atono": [
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Atono. AI is definitely making engineers ship faster than ever. But AI-generated specs keep coming back with",
+   "verdict": null
+  }
+ ],
+ "sonar": [
+  {
+   "pub": "Engineering Leadership",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This newsletter is sponsored by Sonar. Cut AI coding token costs by up to 36% with Sonar Vortex",
+   "verdict": null
+  }
+ ],
+ "veuve clicquot": [
+  {
+   "pub": "Bite The Apple",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "vel day (yes, three hours on the train is loooong). The cherry on top was the complimentary Summer Season Golden Hours, sponsored by Veuve C",
+   "verdict": null
+  }
+ ],
+ "kajabi": [
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "\u2705 Identify what's worth doubling down on. \u2705 Let go of what drains you. \u2705 Test drive one new approach. Today's issue is brought to you by Kaj",
+   "verdict": null
+  }
+ ],
+ "belay": [
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "y Takeaways: \u2705 You're not alone struggling. \u2705 Forced pauses bring clarity. \u2705 Know what not to pursue. Today's issue is brought to you by BEL",
+   "verdict": null
+  }
+ ],
+ "podpitch": [
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "25. As always, I'm grateful for your trust and continued support. Wishing you a Happy \ud83e\udd83 Thanksgiving! Today's issue is brought to you by Po",
+   "verdict": null
+  },
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Key Takeaways: \u2705 Research before you pitch. \u2705 Follow up strategically. \u2705 Network like making friends. Today's issue is brought to you by Pod",
+   "verdict": null
+  }
+ ],
+ "authory": [
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "eaways: \u2705 Make marketing non-negotiable. \u2705 Embrace the slow-burn mindset. \u2705 Mix inbound and outbound. Today's issue is brought to you by Aut",
+   "verdict": null
+  },
+  {
+   "pub": "Expert\u2022ish Freelancer",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ish essential protections and processes. Prioritize a professional brand and client-focused marketing. Today's issue is brought to you by Au",
+   "verdict": null
+  }
+ ],
+ "hey": [
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, Rebrands are the adult version of reorganizing your pantry instead of making dinner. Don't get me",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, The decision to quit usually happens slowly, then all at once.",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, I used to think a \u201creal\u201d creator had a \u201creal\u201d studio.",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, There will always be at least one night each week where I find myself thinking, \u201cI should be aslee",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, beehiiv recently introduced a new feature called Copilot, an internal AI tool that can read your n",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, Somewhere along the way, \u201caesthetic\u201d became synonymous with \u201cperformative.\u201d As if the moment somet",
+   "verdict": null
+  },
+  {
+   "pub": "Please Hustle Responsibly",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey honeys and hustlers, If you've ever watched an interview and felt secondhand embarrassment creeping up your spine\u2014congr",
+   "verdict": null
+  },
+  {
+   "pub": "Raising Humans",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey, Raising Humans Crew! Somewhere this week, a kid is running a lemonade stand on a folding table, charging fifty cents a",
+   "verdict": null
+  },
+  {
+   "pub": "Raising Humans",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey, Raising Humans Crew! It's 8:47 pm. You said lights out at 8:30. Your child has already negotiated a glass of water, on",
+   "verdict": null
+  },
+  {
+   "pub": "Raising Humans",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Hey, Raising Humans Crew! Think back to a summer from your childhood. Not a specific date. Just a feeling. Maybe it's the p",
+   "verdict": null
+  }
+ ],
+ "second front": [
+  {
+   "pub": "The VC Corner",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "new funds, VC jobs, resources, and the hottest deals, here's everything you need to stay ahead \ud83d\udc47 this weekly recap is brought to you by Sec",
+   "verdict": null
+  }
+ ],
+ "by hand research": [
+  {
+   "pub": "AI by Hand \u270d\ufe0f",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ry workbook is yours to keep and to modify. Transformer Ops Agent Tokens Loop Engineering [coming Sep 3] This series is sponsored by By Hand",
+   "verdict": null
+  }
+ ],
+ "firstlook analytics": [
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: FirstLook Analytics + Engagement You can see your wishlist count. You can't see who's behind it. FirstLook just launched Analytics + Engagement.",
+   "verdict": null
+  }
+ ],
+ "pwn games": [
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: PWN Games - PC Paid Media Done Right Advertise your PC game with PWN Games.",
+   "verdict": null
+  },
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: PWN Games - PC Paid Media Done Right Advertise your PC game with PWN Games. With our CPA model, you only pay when a player wishlists, installs, engages, or pays.",
+   "verdict": null
+  }
+ ],
+ "expert tool": [
+  {
+   "pub": "The GameDiscoverCo newsletter",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "OUR SPONSOR: The Expert Tool for Influencer Marketing Time and preparation are crucial for planning your organic influencer marketing campaign.",
+   "verdict": null
+  }
+ ],
+ "briefcatch": [
+  {
+   "pub": "Original Jurisdiction",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Chief Judge Yvonne Gonzalez Rogers (photo by Drew Angerer/AFP via Getty Images). This week's Judicial Notice is sponsored by BriefCatch is t",
+   "verdict": null
+  }
+ ],
+ "span": [
+  {
+   "pub": "The Leverage",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "h Substack in the throat, and why a billion dollars doesn't even get you a seat at the AI lab table anymore. But first, this newsletter is b",
+   "verdict": null
+  },
+  {
+   "pub": "The Leverage",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "es of that this week with robotics, turning ourselves into training data, and Stripe's bold new acquisition. But first, this edition is brou",
+   "verdict": null
+  }
+ ],
+ "turbotenant": [
+  {
+   "pub": "Everything Coliving",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "herry Creek in Denver. 400+ operators in the room. 21 speakers across two days. Operator-led, tactical, no-pitch format sponsored by TurboTe",
+   "verdict": null
+  }
+ ],
+ "profitsnack": [
+  {
+   "pub": "Ad Catalyst",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's issue is sponsored by ProfitSnack. Bite-sized business case studies from industry leaders and power players with actionable insi",
+   "verdict": null
+  },
+  {
+   "pub": "Ad Catalyst",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's issue is sponsored by ProfitSnack. Bite-sized business case studies from industry leaders and power players with actionable insi",
+   "verdict": null
+  },
+  {
+   "pub": "Ad Catalyst",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "This week's issue is sponsored by ProfitSnack. Bite-sized business case studies from industry leaders and power players with actionable insi",
+   "verdict": null
+  }
+ ],
+ "jolly search": [
+  {
+   "pub": "#SEOForLunch",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "k you to Jolly Search for sponsoring this week's #SEOForLunch One Warm Intro = $1,620. Want the Job That Collects Them? Brought to you by Jo",
+   "verdict": null
+  }
+ ],
+ "semrush enterprise": [
+  {
+   "pub": "#SEOForLunch",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "be concerned about the first question. But let's discuss why so many people are really panicking: \u201cDa rankingz, Nick!\u201d Thank you to Semrush",
+   "verdict": null
+  },
+  {
+   "pub": "#SEOForLunch",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "s that once the contract was signed, the salesperson collected the commission while someone else inherited the promise. Thank you to Semrush",
+   "verdict": null
+  }
+ ],
+ "jolly": [
+  {
+   "pub": "#SEOForLunch",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thank you to Jolly for sponsoring this week's #SEOForLunch",
+   "verdict": null
+  },
+  {
+   "pub": "#SEOForLunch",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ck Thank you to Jolly for sponsoring this week's #SEOForLunch One Warm Intro = $1,620. Want the Job That Collects Them? Brought to you by Jo",
+   "verdict": null
+  },
+  {
+   "pub": "#SEOForLunch",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Thank you to Jolly for sponsoring this week's #SEOForLunch",
+   "verdict": null
+  },
+  {
+   "pub": "#SEOForLunch",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "liver. ~Nick Thank you to Jolly for sponsoring this week's #SEOForLunch If You're Not in the AI Answer, You Don't Exist Brought to you by Jo",
+   "verdict": null
+  }
+ ],
+ "airops": [
+  {
+   "pub": "#SEOForLunch",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "nsta bro's telling you to \u201cAI the world?\u201d I'll tell you the uncomfortable truth each week as we cover all things SEO/AI Thank you to AirOps",
+   "verdict": null
+  }
+ ],
+ "semrush": [
+  {
+   "pub": "#SEOForLunch",
+   "method": "thank_you_for_sponsoring",
+   "conf": 0.97,
+   "evidence": "everyone else pulls back. Thanks for reading #SEOForLunch! Subscribe for free to receive new posts and support my work. Thank you to Semrush",
+   "verdict": null
+  }
+ ],
+ "glean last": [
+  {
+   "pub": "superhuman.ai",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ence for open weight models, and is especially noteworthy considering OpenAI has been an investor in Harvey since 2022. SPONSORED BY GLEAN L",
+   "verdict": null
+  }
+ ],
+ "dove how": [
+  {
+   "pub": "Emilie Mendham",
+   "method": "paid_partnership",
+   "conf": 0.92,
+   "evidence": "In paid partnership with Dove How to relax before a first date and be yourself Do you ever notice your own body differently when you date? I",
+   "verdict": null
+  }
+ ],
+ "crystal clear party ice": [
+  {
+   "pub": "News Sidequest",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "en't going so well, they hunker down and people need less ice. Care to guess where things are at the moment? This story brought to you by Cr",
+   "verdict": null
+  }
+ ],
+ "podcast space": [
+  {
+   "pub": "The Podcast Haven",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "e Program Reminder Alert: We're just about a week away from an event you won't wanna miss\u2014Collaboration Beyond The Mic, brought to you by Th",
+   "verdict": null
+  }
+ ],
+ "jamie patricof": [
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  },
+  {
+   "pub": "Jamie's List",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "of, Sawyer Patricof, Shu Chowdhury, Todd Steinman, The Hungry Tourist, The Infatuation, Vinny Dotolo. Today's email was brought to you by: J",
+   "verdict": null
+  }
+ ],
+ "canon get behind": [
+  {
+   "pub": "The Publish Press",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "or more of Galloway's insight on YouTube, AI, and video strategy, check out the conversation with Colin and Samir here. Sponsored by Canon G",
+   "verdict": null
+  }
+ ],
+ "deleteme the hidden cost": [
+  {
+   "pub": "The Publish Press",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "not, it may be more of a costume than a tool. Got an underrated prop you want us to uncover? Hit reply and let us know. Sponsored by DeleteM",
+   "verdict": null
+  }
+ ],
+ "circle get": [
+  {
+   "pub": "The Publish Press",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "creator's reach, brands are hiring their judgment\u2014and giving them the authority to lead the creative and its execution. Sponsored by Circle",
+   "verdict": null
+  }
+ ],
+ "cannes lions lions creators": [
+  {
+   "pub": "The Publish Press",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "creator x traditional media deals is picking up. Today, both MS NOW and NBC News are building creator content programs. Sponsored by Cannes",
+   "verdict": null
+  }
+ ],
+ "boeing": [
+  {
+   "pub": "Hill Heat",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "adly plumes of smoke into the United States. Speaking of deadly plumes of smoke, Trump's Freedom 250 Salute To America, Sponsored By Boeing,",
+   "verdict": null
+  }
+ ],
+ "aramco": [
+  {
+   "pub": "Hill Heat",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "res. On a happier note, Spain, France, and England are each at the top of their respective group in the FIFA World Cup, sponsored by Aramco.",
+   "verdict": null
+  }
+ ],
+ "quick bites culinary dropout": [
+  {
+   "pub": "Flavors of Charlotte",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "licking the link to watch their dessert video might be the most dangerous thing you can do today! Today's newsletter is brought to you by: Q",
+   "verdict": null
+  }
+ ],
+ "at ameripro roofing": [
+  {
+   "pub": "Flavors of Charlotte",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "ts This weekend in events Notable Eats Quick Bites Parent's Corner Vote: Share your voice Who should we spotlight next? Brought to you by: A",
+   "verdict": null
+  }
+ ],
+ "moomoo canada this": [
+  {
+   "pub": "Tank Talks with Matt Cohen",
+   "method": "contextual_marker",
+   "conf": null,
+   "evidence": "A big thanks to our sponsor, Moomoo Canada This is the kind of tooling that used to live on a Bloomberg terminal, but now it is on your phone, just a few taps away.",
+   "verdict": null
+  }
+ ],
+ "zeteo": [
+  {
+   "pub": "The Racket",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ting Israel's war seems to be even more firmly entrenched on the left. A new survey out today from Data For Progress, cosponsored by Zeteo a",
+   "verdict": null
+  }
+ ],
+ "athletic brewing the": [
+  {
+   "pub": "Melanin MVP",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "onal Players Anthem \ud83c\udfc0 The Late Night Host of Women's Basketball \ud83c\udfbe The Guest List Was the Point Share the newsletter \u2192 Sponsored by Athleti",
+   "verdict": null
+  }
+ ],
+ "outrank": [
+  {
+   "pub": "The Digital Creator",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "w Do You Price an Offer Without Flinching? How Do You Actually Sell It? What's the 7-Day Offer Sprint? Before we begin, this post is sponsor",
+   "verdict": null
+  }
+ ],
+ "gabby williams": [
+  {
+   "pub": "Women's Basketball Roundup",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Gabby Williams celebrates her 2026 WNBA All-Star Starter recognition with the Golden State Valkyries fans. Photo Credit: Golden",
+   "verdict": null
+  }
+ ],
+ "liberty release blh": [
+  {
+   "pub": "Women's Basketball Roundup",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by THE LIBERTY RELEASE BLH. WASHINGTON WINS THE VET OFF WAIVERS. Five seasons. One championship. Cold decision. After five years,",
+   "verdict": null
+  }
+ ],
+ "alumni ventures the": [
+  {
+   "pub": "Fintech Is Femme",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "the third story we'll get into after) matters for the work you're doing today. Let's get into it. \u2728 Join Us at FTW: SF SPONSORED BY ALUMNI V",
+   "verdict": null
+  }
+ ],
+ "happy friday": [
+  {
+   "pub": "THE CROSSOVER",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Friday! This became an unexpectedly busy week after BTS' major Grammy decision on Wednesday that I feel like threw the en",
+   "verdict": null
+  }
+ ],
+ "as": [
+  {
+   "pub": "billion dollar energy by Jenny Stojkovic",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": ", legacy, and freedom. Forwarded this email? Join 55,000+ other professionals every Wednesday. Billion Dollar Energy is brought to you by: A",
+   "verdict": null
+  },
+  {
+   "pub": "billion dollar energy by Jenny Stojkovic",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": ", legacy, and freedom. Forwarded this email? Join 55,000+ other professionals every Wednesday. Billion Dollar Energy is brought to you by: A",
+   "verdict": null
+  }
+ ],
+ "speak": [
+  {
+   "pub": "billion dollar energy by Jenny Stojkovic",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": ", legacy, and freedom. Forwarded this email? Join 50,000+ other professionals every Wednesday. Billion Dollar Energy is brought to you by: S",
+   "verdict": null
+  }
+ ],
+ "evertrace": [
+  {
+   "pub": "Learning VC\ud83d\udca1",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Founders abroad \u25aa\ufe0f Swedish Founders abroad If you like this new series, like or comment so we know you want more! Share Brought to you by Ev",
+   "verdict": null
+  }
+ ],
+ "happy monday": [
+  {
+   "pub": "No Cap Space WBB",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Monday, Ball-Knowers! We are officially less than two weeks away from the FIBA World Cup in Germany.",
+   "verdict": null
+  },
+  {
+   "pub": "No Cap Space WBB",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Monday, Ball-Knowers! Our world has settled back into a nice equilibrium and that means a stretch run of WNBA content as",
+   "verdict": null
+  }
+ ],
+ "happy tuesday": [
+  {
+   "pub": "No Cap Space WBB",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Tuesday, Ball-Knowers! Five Out is here, and ready for awards season.",
+   "verdict": null
+  }
+ ],
+ "happy wednesday": [
+  {
+   "pub": "No Cap Space WBB",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Wednesday, Ball-Knowers! Some small cosmetic changes are coming to the newsletter starting next week. You'll still get th",
+   "verdict": null
+  }
+ ],
+ "happy thursday": [
+  {
+   "pub": "No Cap Space WBB",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Happy Thursday, Ball-Knowers! Today had some international flavor in the world of women's basketball. Team USA released their 2",
+   "verdict": null
+  }
+ ],
+ "we're": [
+  {
+   "pub": "The Sickos Sentinel",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by We're less than three weeks away (I'm going to forget to change this in the middle of writing all of these and you will remin",
+   "verdict": null
+  },
+  {
+   "pub": "The Sickos Sentinel",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by We're less than three weeks away (I'm going to forget to change this in the middle of writing all of these and you will remin",
+   "verdict": null
+  },
+  {
+   "pub": "The Sickos Sentinel",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by We're less than four weeks away (I'm going to forget to change this in the middle of writing all of these and you will remind",
+   "verdict": null
+  },
+  {
+   "pub": "The Sickos Sentinel",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by We're less than four weeks away (I'm going to forget to change this in the middle of writing all of these and you will remind",
+   "verdict": null
+  }
+ ],
+ "monster energy": [
+  {
+   "pub": "The Sickos Sentinel",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ommittee by buying some of our merchandise. (hundreds click What the hell is this? And unsubscribe.) The Big XII is now sponsored by Monster",
+   "verdict": null
+  }
+ ],
+ "samsung": [
+  {
+   "pub": "Unrivaled Basketball Club",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "eer-high 24 points, seven rebounds, and a steal. Vinyl enters ranked 6th, and the Owls 8th. With the Unrivaled Playoffs Sponsored by Samsung",
+   "verdict": null
+  },
+  {
+   "pub": "Unrivaled Basketball Club",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "d Honors: Allisha Gray earned 2nd Team All-Unrivaled recognition for her two-way impact all season long. \ud83c\udfc5 Semifinals Sponsored by Samsung:",
+   "verdict": null
+  },
+  {
+   "pub": "Unrivaled Basketball Club",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "CHAMPIONSHIP PREVIEW: Mist at Phantom \ud83d\udc51 Two clubs fight for the Season 2 Unrivaled Championship sponsored by Samsung! \ud83c\udfc6\ufe0f Phantom BC and Mi",
+   "verdict": null
+  },
+  {
+   "pub": "Unrivaled Basketball Club",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "league history to record a double-double in the playoffs. Your NYC Schedule for Today \ud83d\uddfd Spend the Unrivaled Playoffs Sponsored by Samsung w",
+   "verdict": null
+  }
+ ],
+ "samsung tickets": [
+  {
+   "pub": "Unrivaled Basketball Club",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "including what to expect on-site and how you can get involved. \u00a9 & Warner Bros. Entertainment Inc. Grab Your Playoffs Sponsored by Samsung T",
+   "verdict": null
+  }
+ ],
+ "kick": [
+  {
+   "pub": "One Thing Better",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e) shares one way to be happier and more effective at work \u2014 and build a career or company you love. Today's edition is sponsored by Kick, m",
+   "verdict": null
+  },
+  {
+   "pub": "One Thing Better",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e) shares one way to be happier and more effective at work \u2014 and build a career or company you love. Today's edition is sponsored by Kick, m",
+   "verdict": null
+  },
+  {
+   "pub": "One Thing Better",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e) shares one way to be happier and more effective at work \u2014 and build a career or company you love. Today's edition is sponsored by Kick, m",
+   "verdict": null
+  },
+  {
+   "pub": "One Thing Better",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e) shares one way to be happier and more effective at work \u2014 and build a career or company you love. Today's edition is sponsored by Kick, m",
+   "verdict": null
+  }
+ ],
+ "upwork": [
+  {
+   "pub": "One Thing Better",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "e) shares one way to be happier and more effective at work \u2014 and build a career or company you love. Today's edition is sponsored by Upwork.",
+   "verdict": null
+  }
+ ],
+ "sap": [
+  {
+   "pub": "Simon Sinek",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "er that the things worth protecting are usually the ones we never planned for at all. This\u2026 is A Bit of Optimism. + + + This episode is brou",
+   "verdict": null
+  }
+ ],
+ "no": [
+  {
+   "pub": "1986-mets-rewatch.beehiiv.com",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "flied out to Wilson to end the game. The Mets were now 81-41, assured of not having a losing season (LOL). Today's game brought to you by No",
+   "verdict": null
+  }
+ ],
+ "fanduel": [
+  {
+   "pub": "1986-mets-rewatch.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Hatcher up, Milo Hamilton said \"You got a mortgage you wanna pay off. Bet on bunting.\" No word on if Milo's comment was sponsored by FanDuel",
+   "verdict": null
+  }
+ ],
+ "groundnews": [
+  {
+   "pub": "Narativ with Zev Shalev ",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Today's FiveStack is brought to you by GroundNews \u2014 FiveStack viewers get 40% off their Vantage plan.",
+   "verdict": null
+  }
+ ],
+ "high school nationals a": [
+  {
+   "pub": "FCL Coaches Corner",
+   "method": "supported_by",
+   "conf": 0.94,
+   "evidence": "st: Why Some Teams Pull Together and Others Don't (Link) \ud83d\udd25 A Webinar Freebie: Matt Dunn - Touchdown Dril (scroll down) This issue is suppor",
+   "verdict": null
+  }
+ ],
+ "streams": [
+  {
+   "pub": "247.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Streams are renting. Fans are owning. Quick gut-check: if you got 40,000 streams tomorrow, you'd make about $100 \u2014 once. If one",
+   "verdict": null
+  }
+ ],
+ "brilliant": [
+  {
+   "pub": "1and1.beehiiv.com",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "TOGETHER WITH Drop 025 is brought to you by Brilliant \u2014 the interactive app that makes it easy to master concepts in math, data, and compute",
+   "verdict": null
+  }
+ ],
+ "apollo": [
+  {
+   "pub": "1and1.beehiiv.com",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "TOGETHER WITH Today's Drop is brought to you by Apollo \u2014 a wearable that uses proven touch therapy to rebalance your nervous system and supp",
+   "verdict": null
+  }
+ ],
+ "cincinnati museum center holiday": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Cincinnati Museum Center Holiday traditions live at Cincinnati Museum Center. Enjoy78 years of winterland whimsy at Holiday Jun",
+   "verdict": null
+  }
+ ],
+ "cincinnati art museum did": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Cincinnati Art Museum Did you know the Cincinnati Art Museum has free general admission and parking? It's true! This season, ex",
+   "verdict": null
+  }
+ ],
+ "holiday junction": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "sponsored by Holiday Junction at Cincinnati Museum Center Holiday traditions live at Cincinnati Museum Center. Enjoy 78 years of winterland",
+   "verdict": null
+  }
+ ],
+ "cincinnati christkindlmarkt step": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "ogy. Get registered for their \u201cProject Feederwatch\u201d, happening on December and January weekends. Registration required. sponsored by Cincinn",
+   "verdict": null
+  },
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Cincinnati Christkindlmarkt Step into Cincinnati's beloved Christkindlmarkt, a German-American holiday experience filled with f",
+   "verdict": null
+  },
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Cincinnati Christkindlmarkt Step into Cincinnati's beloved Christkindlmarkt, a German-American holiday experience filled with f",
+   "verdict": null
+  }
+ ],
+ "great parks' holidays": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Great Parks' Holidays on the Farm Step back from the holiday hustle into your new tradition of winter wonder at Holidays on the",
+   "verdict": null
+  }
+ ],
+ "broadway": [
+  {
+   "pub": "365Cincinnati Newsletter",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Broadway in Cincinnati Give the unforgettable gift of Broadway magic! With six incredible shows remaining in First Financial Ba",
+   "verdict": null
+  }
+ ],
+ "did": [
+  {
+   "pub": "30-second-timeout.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Did someone share this email with you? Get daily women's basketball updates straight to your inbox. Sign up here! What to K",
+   "verdict": null
+  }
+ ],
+ "monkey stew": [
+  {
+   "pub": "Freelancing With Tim",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "hing else you might need help with! (Paid subscribers get 33% off any one-on-one session.) Click here to book a session This post is brought",
+   "verdict": null
+  }
+ ],
+ "palantir's": [
+  {
+   "pub": "404-found.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Palantir's revenue grew 85 percent in the first quarter of 2026. The pension fund for Dutch civil servants sold every share it",
+   "verdict": null
+  }
+ ],
+ "pew research center": [
+  {
+   "pub": "404-found.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by The Pew Research Center published its annual AI survey this month. 5,119 US adults, conducted February 2026. The headline numbe",
+   "verdict": null
+  }
+ ],
+ "in": [
+  {
+   "pub": "404-found.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by In the autumn of 2022, Ukrainian forces requested that SpaceX extend Starlink coverage over Sevastopol to guide a sea dron",
+   "verdict": null
+  }
+ ],
+ "price genie": [
+  {
+   "pub": "421.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "inted. The Secret Stash Follow 421 Reports on X to see the entire Secret Stash 421 Collection At The Price Genie 421 is sponsored by The Pri",
+   "verdict": null
+  }
+ ],
+ "last": [
+  {
+   "pub": "High-Stakes Human Skills",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Last week I asked you to say your real price out loud to one person. No hedging, no \"depending on scope,\" just the number. S",
+   "verdict": null
+  }
+ ],
+ "dear": [
+  {
+   "pub": "404trends.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Dear friends, founders, and anyone who dreamed about a vending machine that pops out perfect clients? I've got some snacks t",
+   "verdict": null
+  }
+ ],
+ "snow operating": [
+  {
+   "pub": "The Storm Skiing Journal and Podcast",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "now Pass will offer two days each at 14 ski areas for winter 2026-27: Best viewed on computer machine. The Snow Pass is sponsored by Snow Op",
+   "verdict": null
+  }
+ ],
+ "gravitee every ai": [
+  {
+   "pub": "Ben's Bites",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "aying there doing the luge while all the ideas swirl around my head when I should be reading + sleeping. Ben's Bites is brought to you by Gr",
+   "verdict": null
+  }
+ ],
+ "customer.io": [
+  {
+   "pub": "Product Growth",
+   "method": "brought_to_you_by",
+   "conf": 0.95,
+   "evidence": "Brought to you by Customer.io - Send smarter messages using your product data",
+   "verdict": null
+  }
+ ],
+ "you've": [
+  {
+   "pub": "58clicks.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by You've got 10K followers on Instagram. Great. Now Instagram tweaks the algorithm. Your reach drops 40%. And those 10K people?",
+   "verdict": null
+  }
+ ],
+ "landing": [
+  {
+   "pub": "4houraiworkweek.beehiiv.com",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Landing pages can make or break your sales. A great one will skyrocket your profits, while a poor one leaves money on the table",
+   "verdict": null
+  }
+ ],
+ "good": [
+  {
+   "pub": "AI for Daily Living",
+   "method": "sponsored_by",
+   "conf": 0.98,
+   "evidence": "Sponsored by Good morning. This issue starts with an AI catching something doctors missed for a hundred years, and carries one idea throu",
+   "verdict": null
+  }
+ ]
+}

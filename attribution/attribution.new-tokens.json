@@ -1,0 +1,5 @@
+{
+  "tokens": [],
+  "generated_at": "2026-09-09T10:08:26Z",
+  "merge_note": "Audit only — these tokens were minted server-side via POST /api/v1/outreach/links; the server store already holds them, no file merge or service restart required."
+}

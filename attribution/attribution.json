@@ -1,0 +1,686 @@
+{
+ "clicks": [
+  {
+   "token": "7f4f9e81269e454539ccb6b9742b8d51",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-the-digital-creator",
+   "dest": "https://newsletter.thedigitalcreator.co",
+   "created_at": "2026-09-02T16:41:14.430Z",
+   "expires_at": "2026-10-02T16:41:14.435Z",
+   "first_click_at": null
+  },
+  {
+   "token": "d03a8ae526e1c627a50b1a751bae4b70",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-platypus-economics",
+   "dest": "https://platypuseconomics.substack.com",
+   "created_at": "2026-09-02T16:41:14.438Z",
+   "expires_at": "2026-10-02T16:41:14.438Z",
+   "first_click_at": null
+  },
+  {
+   "token": "b86aaf1efd8e4a079008c6aa4f18ea99",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-sadies-newsletter",
+   "dest": "https://sadiestlawrence.substack.com",
+   "created_at": "2026-09-02T16:41:14.439Z",
+   "expires_at": "2026-10-02T16:41:14.439Z",
+   "first_click_at": null
+  },
+  {
+   "token": "5076e30caa46f66da5d566f5fd5e78af",
+   "lead_id": "mcalvany",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-floatvibes",
+   "dest": "https://floatvibes.substack.com",
+   "created_at": "2026-09-02T16:41:14.439Z",
+   "expires_at": "2026-10-02T16:41:14.439Z",
+   "first_click_at": null
+  },
+  {
+   "token": "318fa08dad246dd582c53a8cde0063b5",
+   "lead_id": "mcalvany",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-simon-sinek",
+   "dest": "https://simonsinek.substack.com",
+   "created_at": "2026-09-02T16:41:14.440Z",
+   "expires_at": "2026-10-02T16:41:14.440Z",
+   "first_click_at": null
+  },
+  {
+   "token": "8239612d8ed74ebf181483beb4b0aebd",
+   "lead_id": "mcalvany",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-goods-unite-us",
+   "dest": "https://goodsuniteus.substack.com",
+   "created_at": "2026-09-02T16:41:14.440Z",
+   "expires_at": "2026-10-02T16:41:14.440Z",
+   "first_click_at": null
+  },
+  {
+   "token": "7b92376468b31c5c2515fb39b0be35a5",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-growth-memo",
+   "dest": "https://growthmemo.substack.com",
+   "created_at": "2026-09-02T16:41:14.443Z",
+   "expires_at": "2026-10-02T16:41:14.443Z",
+   "first_click_at": null
+  },
+  {
+   "token": "4c16d9866489f11c21ed029901aa521f",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-amanda-moita",
+   "dest": "https://amandamoita.substack.com",
+   "created_at": "2026-09-02T16:41:14.443Z",
+   "expires_at": "2026-10-02T16:41:14.443Z",
+   "first_click_at": null
+  },
+  {
+   "token": "8428ade36eb39f0870d2c6bfaab6b500",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-on-brand-mag",
+   "dest": "https://onbrandmag.substack.com",
+   "created_at": "2026-09-02T16:41:14.444Z",
+   "expires_at": "2026-10-02T16:41:14.444Z",
+   "first_click_at": null
+  },
+  {
+   "token": "027019438e812c07358d4f55080ad19b",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-tech-scoop",
+   "dest": "https://techscoop.substack.com",
+   "created_at": "2026-09-02T16:41:14.445Z",
+   "expires_at": "2026-10-02T16:41:14.445Z",
+   "first_click_at": null
+  },
+  {
+   "token": "bb1498c76baa5a62b2ca461e748df6ee",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-supercompanies",
+   "dest": "https://supercompanies.substack.com",
+   "created_at": "2026-09-02T16:41:14.445Z",
+   "expires_at": "2026-10-02T16:41:14.445Z",
+   "first_click_at": null
+  },
+  {
+   "token": "8bd2970f4e25c7427c6e16c8369fc159",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-eqapp-ai",
+   "dest": "https://marcussawyerr.substack.com",
+   "created_at": "2026-09-02T16:41:14.446Z",
+   "expires_at": "2026-10-02T16:41:14.446Z",
+   "first_click_at": null
+  },
+  {
+   "token": "e0b3fc425c68ac51cb91311d8daeaea9",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-katie-phang",
+   "dest": "https://katiephang.substack.com",
+   "created_at": "2026-09-02T16:41:14.446Z",
+   "expires_at": "2026-10-02T16:41:14.446Z",
+   "first_click_at": null
+  },
+  {
+   "token": "148db4dabe2650b0c3bf4abee26aacc8",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-save-austin-now",
+   "dest": "https://saveaustinnow.substack.com",
+   "created_at": "2026-09-02T16:41:14.446Z",
+   "expires_at": "2026-10-02T16:41:14.446Z",
+   "first_click_at": null
+  },
+  {
+   "token": "62c422fcf5c063444571828aaf068228",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-underpriced-actions",
+   "dest": "https://garyvee.substack.com",
+   "created_at": "2026-09-02T16:41:14.447Z",
+   "expires_at": "2026-10-02T16:41:14.447Z",
+   "first_click_at": null
+  },
+  {
+   "token": "c835367fe89501fdb3a1b5d03641fb92",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-rest-of-world-report",
+   "dest": "https://restoftheworldreport.substack.com",
+   "created_at": "2026-09-02T16:42:07.202Z",
+   "expires_at": "2026-10-02T16:42:07.202Z",
+   "first_click_at": null
+  },
+  {
+   "token": "d8048812e1bae4d602de2346d033d763",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-monte-mader",
+   "dest": "https://montemader.substack.com",
+   "created_at": "2026-09-02T16:42:07.213Z",
+   "expires_at": "2026-10-02T16:42:07.213Z",
+   "first_click_at": null
+  },
+  {
+   "token": "ccba9af6a266e96167b589c1b8333e28",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-normal-island-news",
+   "dest": "https://www.normalisland.co.uk",
+   "created_at": "2026-09-02T16:42:07.214Z",
+   "expires_at": "2026-10-02T16:42:07.214Z",
+   "first_click_at": null
+  },
+  {
+   "token": "cf0f388a853b8af3ef2175c347c21c52",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-thedigitalcreator-nf",
+   "dest": "https://newsletterfit.com/app/publications/aiandcapital",
+   "created_at": "2026-09-08T13:59:33.138Z",
+   "expires_at": "2026-10-08T13:59:33.140Z",
+   "first_click_at": null
+  },
+  {
+   "token": "abc30bdc03ccb164f0b14e17c9235ac0",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-sadiestlawrence-nf",
+   "dest": "https://newsletterfit.com/app/publications/sadiestlawrence",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "24bb1a5dbf27cf93f98d4f7fd28c3dbe",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-platypuseconomics-nf",
+   "dest": "https://newsletterfit.com/app/publications/platypuseconomics",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "c3a1b6a475d045481cf3cf156c1c614b",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-floatvibes-nf",
+   "dest": "https://newsletterfit.com/app/publications/floatvibes",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "737a0726526f2820a3533223a69ec1d0",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-simonsinek-nf",
+   "dest": "https://newsletterfit.com/app/publications/simonsinek",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "e3a2de00a521906925899fa61231edd4",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-goodsuniteus-nf",
+   "dest": "https://newsletterfit.com/app/publications/goodsuniteus",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "8c766f6d14ce56730d8e6b8f329a2426",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-amandamoita-nf",
+   "dest": "https://newsletterfit.com/app/publications/amandamoita",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "07e7123141b61431bddd6db0b99245d1",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-onbrandmag-nf",
+   "dest": "https://newsletterfit.com/app/publications/onbrandmag",
+   "created_at": "2026-09-08T14:17:29.000Z",
+   "expires_at": "2026-10-08T14:17:29.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "f7514e782cc1ccc88a965a98cb5f63e8",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-growthmemo-nf",
+   "dest": "https://newsletterfit.com/app/publications/growthmemo",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "afd844e5a6829b540d5282e556694caa",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-supercompanies-nf",
+   "dest": "https://newsletterfit.com/app/publications/supercompanies",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "98d907ee7bc0252b393696019d4d7c5b",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-marcussawyerr-nf",
+   "dest": "https://newsletterfit.com/app/publications/marcussawyerr",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "95c31aafdf000e2a6387de2bb27cb49c",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-techscoop-nf",
+   "dest": "https://newsletterfit.com/app/publications/techscoop",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "1776029e88b81ae09f2edebf06b4f94a",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-restoftheworldreport-nf",
+   "dest": "https://newsletterfit.com/app/publications/restoftheworldreport",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "acb97d304d54236ec269733a7222c7fb",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-normalislandnews-nf",
+   "dest": "https://newsletterfit.com/app/publications/normalislandnews",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "d5f890908e98ef776afe334fbd506cf3",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-montemader-nf",
+   "dest": "https://newsletterfit.com/app/publications/montemader",
+   "created_at": "2026-09-08T14:17:30.000Z",
+   "expires_at": "2026-10-08T14:17:30.000Z",
+   "first_click_at": null
+  },
+  {
+   "token": "bfwXKhx1Im_9PpoR2cvAAHjW",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-sadiestlawrence-nf",
+   "dest": "https://newsletterfit.com/app/publications/sadiestlawrence",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.786Z",
+   "first_click_at": null
+  },
+  {
+   "token": "ZP6L5rqsaG6VbzZQZ6Jw_pgW",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-platypuseconomics-nf",
+   "dest": "https://newsletterfit.com/app/publications/platypuseconomics",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.789Z",
+   "first_click_at": null
+  },
+  {
+   "token": "nQXBPFtlFT_drNXmfxTJbzJo",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-aiandcapital-nf",
+   "dest": "https://newsletterfit.com/app/publications/aiandcapital",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.790Z",
+   "first_click_at": null
+  },
+  {
+   "token": "FJ8xaBl0DcLscCHMo11QpuG3",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-goodsuniteus-nf",
+   "dest": "https://newsletterfit.com/app/publications/goodsuniteus",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.793Z",
+   "first_click_at": null
+  },
+  {
+   "token": "GBCYq6xCY1xXNEy5WKnxTY3j",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-simonsinek-nf",
+   "dest": "https://newsletterfit.com/app/publications/simonsinek",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.795Z",
+   "first_click_at": null
+  },
+  {
+   "token": "eG0uzs_1LsqfY2b5d6vHM6BR",
+   "lead_id": "mcalvany-precious-metals",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-floatvibes-nf",
+   "dest": "https://newsletterfit.com/app/publications/floatvibes",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.798Z",
+   "first_click_at": null
+  },
+  {
+   "token": "WEw5iguHRj3hBprQr2Kv_Bqk",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-onbrandmag-nf",
+   "dest": "https://newsletterfit.com/app/publications/onbrandmag",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.800Z",
+   "first_click_at": null
+  },
+  {
+   "token": "k3Y_ZYbhplePw8B_JQYNcWLO",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-growthmemo-nf",
+   "dest": "https://newsletterfit.com/app/publications/growthmemo",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.803Z",
+   "first_click_at": null
+  },
+  {
+   "token": "Yo_320o_gljQ-PCijsHjUyBv",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-amandamoita-nf",
+   "dest": "https://newsletterfit.com/app/publications/amandamoita",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.805Z",
+   "first_click_at": null
+  },
+  {
+   "token": "3CB1Oa6jJLe4fMzCOwgDU5zo",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-supercompanies-nf",
+   "dest": "https://newsletterfit.com/app/publications/supercompanies",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.807Z",
+   "first_click_at": null
+  },
+  {
+   "token": "I5YrF7ieZdrLZN0HCMmYKOhD",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-techscoop-nf",
+   "dest": "https://newsletterfit.com/app/publications/techscoop",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.809Z",
+   "first_click_at": null
+  },
+  {
+   "token": "KdJdP6vuFUelTxCfaBX-KS3k",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-marcussawyerr-nf",
+   "dest": "https://newsletterfit.com/app/publications/marcussawyerr",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.811Z",
+   "first_click_at": null
+  },
+  {
+   "token": "uF67-ukabtCSsCbcgoYFOo0R",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-montemader-nf",
+   "dest": "https://newsletterfit.com/app/publications/montemader",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.813Z",
+   "first_click_at": null
+  },
+  {
+   "token": "NWDfcd-LC0mCuHVOTybVLqdb",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-restoftheworldreport-nf",
+   "dest": "https://newsletterfit.com/app/publications/restoftheworldreport",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.815Z",
+   "first_click_at": null
+  },
+  {
+   "token": "1BZRaADiS9wi80QbC_YdHgT0",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-normalislandnews-nf",
+   "dest": "https://newsletterfit.com/app/publications/normalislandnews",
+   "created_at": "2026-09-09T10:07:42.000Z",
+   "expires_at": "2026-12-08T10:07:42.817Z",
+   "first_click_at": null
+  },
+  {
+   "lead_id": "test-linkify-e2e",
+   "campaign": "sep2-2026",
+   "link_ref": "pub-platypuseconomics-nf",
+   "dest": "https://newsletterfit.com/app/publications/platypuseconomics",
+   "token": "Rnr2zqLdFNrqXoJayWBlxhq1",
+   "link": "https://newsletterfit.com/api/click?lt=Rnr2zqLdFNrqXoJayWBlxhq1",
+   "expires_at": "2026-12-08T11:10:18.801Z"
+  },
+  {
+   "token": "uMk2AW9IhQlJ6I0dZekGRxn3",
+   "lead_id": "xplor-pay",
+   "campaign": "sep2-2026",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-09-09T12:06:16.000Z",
+   "expires_at": "2026-12-08T12:06:16.478Z",
+   "first_click_at": null
+  },
+  {
+   "token": "JnkFGa_BURBbhfprD4I8GtLP",
+   "lead_id": "stacker",
+   "campaign": "sep2-2026",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-09-09T12:06:16.000Z",
+   "expires_at": "2026-12-08T12:06:16.483Z",
+   "first_click_at": null
+  },
+  {
+   "token": "qilU59GmADaXCBW3TkpnIj6n",
+   "lead_id": "bolt-new",
+   "campaign": "sep2-2026",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-09-09T12:06:16.000Z",
+   "expires_at": "2026-12-08T12:06:16.488Z",
+   "first_click_at": null
+  },
+  {
+   "token": "-r5q6fnhO4zRu2LoFf1iuMOw",
+   "lead_id": "ground-news",
+   "campaign": "sep2-2026",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-09-09T12:06:16.000Z",
+   "expires_at": "2026-12-08T12:06:16.492Z",
+   "first_click_at": null
+  },
+  {
+   "token": "oAzoinRmsSn0VRWIwfyM3XNB",
+   "lead_id": "brex",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-thevccorner-nf",
+   "dest": "https://newsletterfit.com/app/publications/thevccorner",
+   "link": "https://newsletterfit.com/api/click?lt=oAzoinRmsSn0VRWIwfyM3XNB",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.443Z",
+   "first_click_at": null
+  },
+  {
+   "token": "MQueHcJqd3ilRByNQ6GPxibz",
+   "lead_id": "brex",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-platypuseconomics-nf",
+   "dest": "https://newsletterfit.com/app/publications/platypuseconomics",
+   "link": "https://newsletterfit.com/api/click?lt=MQueHcJqd3ilRByNQ6GPxibz",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.471Z",
+   "first_click_at": null
+  },
+  {
+   "token": "_5wPMeQrvYMsW482OfToMBrS",
+   "lead_id": "brex",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-buildwithaiclub418-nf",
+   "dest": "https://newsletterfit.com/app/publications/buildwithaiclub418",
+   "link": "https://newsletterfit.com/api/click?lt=_5wPMeQrvYMsW482OfToMBrS",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.581Z",
+   "first_click_at": null
+  },
+  {
+   "token": "roB_cxMNZFCscHdiTCQu6RiT",
+   "lead_id": "brex",
+   "campaign": "gtm-2026-09",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "link": "https://newsletterfit.com/api/click?lt=roB_cxMNZFCscHdiTCQu6RiT",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.588Z",
+   "first_click_at": null
+  },
+  {
+   "token": "ZspMC0b01xhdjFnUr4HwM1wk",
+   "lead_id": "tracksuit",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-milkkarten-nf",
+   "dest": "https://newsletterfit.com/app/publications/milkkarten",
+   "link": "https://newsletterfit.com/api/click?lt=ZspMC0b01xhdjFnUr4HwM1wk",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.616Z",
+   "first_click_at": null
+  },
+  {
+   "token": "M5b7ZBLA6kg7ZmZSjNF628Qe",
+   "lead_id": "tracksuit",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-nonlineartechies-nf",
+   "dest": "https://newsletterfit.com/app/publications/nonlineartechies",
+   "link": "https://newsletterfit.com/api/click?lt=M5b7ZBLA6kg7ZmZSjNF628Qe",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.654Z",
+   "first_click_at": null
+  },
+  {
+   "token": "sOpJ4mC-yL99uPKw4TrxA_X8",
+   "lead_id": "tracksuit",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-mirandadoesbrands-nf",
+   "dest": "https://newsletterfit.com/app/publications/mirandadoesbrands",
+   "link": "https://newsletterfit.com/api/click?lt=sOpJ4mC-yL99uPKw4TrxA_X8",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.679Z",
+   "first_click_at": null
+  },
+  {
+   "token": "wBENhFgDSRG1dz-GU9vQHLxE",
+   "lead_id": "tracksuit",
+   "campaign": "gtm-2026-09",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "link": "https://newsletterfit.com/api/click?lt=wBENhFgDSRG1dz-GU9vQHLxE",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.684Z",
+   "first_click_at": null
+  },
+  {
+   "token": "zXkR1vAS3D-C3XCamXLGY-Y6",
+   "lead_id": "superblocks",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-aiagentssimplified-nf",
+   "dest": "https://newsletterfit.com/app/publications/aiagentssimplified",
+   "link": "https://newsletterfit.com/api/click?lt=zXkR1vAS3D-C3XCamXLGY-Y6",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.767Z",
+   "first_click_at": null
+  },
+  {
+   "token": "uEkZoefmgJ-5c9cfnRl9Hwok",
+   "lead_id": "superblocks",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-techscoop-nf",
+   "dest": "https://newsletterfit.com/app/publications/techscoop",
+   "link": "https://newsletterfit.com/api/click?lt=uEkZoefmgJ-5c9cfnRl9Hwok",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.792Z",
+   "first_click_at": null
+  },
+  {
+   "token": "Vr6JP5kKIj5EWXynt0srFjAg",
+   "lead_id": "superblocks",
+   "campaign": "gtm-2026-09",
+   "link_ref": "pub-outcomeschool-nf",
+   "dest": "https://newsletterfit.com/app/publications/outcomeschool",
+   "link": "https://newsletterfit.com/api/click?lt=Vr6JP5kKIj5EWXynt0srFjAg",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.823Z",
+   "first_click_at": null
+  },
+  {
+   "token": "cPNRBHmdyvt8OGnmnJGvI2F8",
+   "lead_id": "superblocks",
+   "campaign": "gtm-2026-09",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "link": "https://newsletterfit.com/api/click?lt=cPNRBHmdyvt8OGnmnJGvI2F8",
+   "created_at": "2026-09-10T19:28:50.000Z",
+   "expires_at": "2026-12-09T19:28:50.828Z",
+   "first_click_at": null
+  },
+  {
+   "token": "59AxgKUNA1JVxqwqJNycY-nW",
+   "lead_id": "brex",
+   "campaign": "gtm-2026-09",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-12-09T19:36:24.754Z",
+   "expires_at": "2026-12-09T19:36:24.754Z",
+   "first_click_at": null
+  },
+  {
+   "token": "xqiBU7ed6NththZeiIM-cF2X",
+   "lead_id": "tracksuit",
+   "campaign": "gtm-2026-09",
+   "link_ref": "site-nf",
+   "dest": "https://newsletterfit.com",
+   "created_at": "2026-12-09T19:36:24.757Z",
+   "expires_at": "2026-12-09T19:36:24.757Z",
+   "first_click_at": null
+  }
+ ],
+ "visits": []
+}

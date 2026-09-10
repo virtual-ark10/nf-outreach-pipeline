@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NewsletterFIT — Email Pad</title>
+<!-- v2 self-contained: zero external CDNs, zero clipboard deps, hand-rolled CSS/JS -->
+<style>
+  :root {
+    --brand: #0E7A66;
+    --brand-dark: #0A5F4F;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --line: #E3E6EB;
+    --ink: #1B2430;
+    --muted: #6B7280;
+    --ok: #138A5A;
+    --err: #C0392B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px; line-height: 1.5;
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 16px 20px; }
+
+  header.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .logo {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--brand);
+    color: #fff; font-weight: 800; font-size: 15px; display: grid; place-items: center;
+  }
+  h1 { font-size: 17px; margin: 0; }
+  .sub { font-size: 12px; color: var(--muted); }
+  .chip {
+    font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #E8F3EE;
+    color: var(--brand-dark); border: 1px solid #C8E3D8;
+  }
+  .token-box { display: flex; gap: 8px; margin-left: auto; }
+  input[type=password], input[type=text], select, textarea {
+    font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--ink);
+  }
+  input:focus, select:focus { outline: 2px solid #9ED8C8; outline-offset: 1px; }
+  button {
+    font: inherit; padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+  }
+  button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  button.primary:hover { background: var(--brand-dark); }
+  button.ghost { background: #fff; }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+
+  .banner { display: none; }
+  .banner.show {
+    display: block; margin: 0 0 12px; padding: 10px 14px; border-radius: 10px;
+  }
+  .banner.ok { background: #E9F7EF; color: var(--ok); border: 1px solid #BFE8CF; }
+  .banner.err { background: #FDEDEC; color: var(--err); border: 1px solid #F3C1C0; }
+  .banner.fatal {
+    background: #FBE9E7; color: #7A1F17; border: 2px solid var(--err);
+    font-weight: 600;
+  }
+
+  nav.tabs { display: flex; gap: 8px; margin: 0 0 18px; }
+  .tab {
+    padding: 8px 16px; border-radius: 9px; border: 1px solid var(--line);
+    background: #fff; color: var(--muted); font-weight: 500; cursor: pointer;
+  }
+  .tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+  .panel { display: none; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .panel.active { display: block; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .full { width: 100%; }
+
+  .editor {
+    border: 1px solid var(--line); border-radius: 8px; min-height: 180px;
+    padding: 10px 12px; font: inherit; color: var(--ink);
+  }
+  .editor:focus { outline: 2px solid #9ED8C8; outline-offset: 1px; }
+  .editor p { margin: 0 0 6px; }
+
+  .row-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+  .attach-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .attach {
+    font-size: 12px; background: #F1F3F6; border: 1px solid var(--line);
+    border-radius: 999px; padding: 3px 10px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .attach a { cursor: pointer; color: var(--err); text-decoration: none; }
+
+  .list-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer;
+    border-radius: 8px;
+  }
+  .list-row:hover { background: #F2F4F7; }
+  .list-row + .list-row { border-top: 1px solid var(--line); }
+  .l-main { flex: 1; min-width: 0; }
+  .l-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .l-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .l-time { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .empty { color: var(--muted); padding: 16px 12px; font-size: 13px; }
+  .count { color: var(--muted); font-size: 12px; }
+
+  .chip-status {
+    font-size: 11px; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .st-delivered { background: #E1F5E6; color: #1C7A3D; }
+  .st-opened { background: #E6F3EE; color: var(--brand-dark); }
+  .st-clicked { background: #E8EDF9; color: #3B53A6; }
+  .st-sent { background: #E8F0F7; color: #2563A0; }
+  .st-bounced, .st-complained, .st-failed { background: #FDEDEC; color: var(--err); }
+  .st-scheduled { background: #F1F3F6; color: var(--muted); }
+  .st-default { background: #F1F3F6; color: var(--muted); }
+
+  .modal-mask {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, .45);
+    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
+  }
+  .modal {
+    background: #fff; border-radius: 14px; max-width: 720px; max-height: 85vh;
+    width: 100%; overflow: auto; box-shadow: 0 20px 45px rgba(0,0,0,.22);
+  }
+  .modal-head {
+    display: flex; align-items: center; gap: 8px; padding: 12px 18px;
+    border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff;
+  }
+  .modal-title { font-weight: 700; font-size: 15px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .modal-x { cursor: pointer; font-size: 20px; color: var(--muted); line-height: 1; background: none; border: none; }
+  .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px 18px; border-bottom: 1px solid var(--line); }
+  .modal-body { padding: 16px 18px; font-size: 14px; color: var(--ink); word-break: break-word; }
+  .modal-body .meta { font-size: 12px; color: var(--muted); margin: 0 0 10px; }
+  .modal-body img { max-width: 100%; }
+
+  footer { margin-top: 22px; color: var(--muted); font-size: 12px; }
+  /* ---------- sidebar: Leads (CRM) on top, email below ---------- */
+  .layout { display: flex; align-items: flex-start; gap: 18px; }
+  .side { flex: 0 0 184px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 16px; }
+  .side-head { font-size: 11px; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); padding: 10px 10px 2px; }
+  .side .tab { text-align: left; padding: 8px 12px; }
+  .main { flex: 1; min-width: 0; }
+  /* ---------- leads ---------- */
+  .chipf { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; color: var(--muted); }
+  .chipf.on { color: var(--ink); font-weight: 600; }
+  .chipf .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  table.leads { width: 100%; border-collapse: collapse; min-width: 560px; }
+  table.leads th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.leads td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+  table.leads td.nw { white-space: nowrap; }
+  table.leads tr.row { cursor: pointer; }
+  table.leads tr.row:hover { background: #FAFBFC; }
+  table.leads tr.row.sel { background: #F1F8F5; }
+  .spill { display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 11px; color: #fff; white-space: nowrap; }
+  .role { display: inline-block; border-radius: 4px; padding: 1px 6px; font-size: 10px; text-transform: uppercase; background: #E8F3EE; color: var(--brand-dark); margin-left: 5px; }
+  .role.other { background: #EEF0F3; color: var(--muted); }
+  .due { color: #B45309; font-weight: 600; }
+  .crm-split { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .crm-list { flex: 1 1 520px; min-width: 0; overflow-x: auto; }
+  .crm-detail { flex: 1 1 300px; max-width: 420px; border-left: 1px solid var(--line); padding-left: 16px; }
+  .crm-detail .kv { clear: both; }
+  .kv { margin: 8px 0; }
+  .kv .k { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .tl { margin-top: 10px; }
+  .ev { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+  .ev .t { flex: 0 0 50px; font-size: 10px; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+  @media (max-width: 820px) { .layout { flex-direction: column; } .side { flex-direction: row; flex-wrap: wrap; position: static; } .crm-split { flex-direction: column; } .crm-detail { flex: 1 1 auto; border-left: 0; padding-left: 0; } }
+</style>
+</head>
+<body data-pad-version="2.1">
+<div class="wrap">
+
+  <header class="row">
+    <div class="logo">NF</div>
+    <div>
+      <h1><span id="brand_name">NewsletterFIT</span> <span class="chip">v2.2</span></h1>
+      <div class="sub">Leads CRM + outreach inbox in one place · powered by Resend</div>
+    </div>
+    <div class="token-box">
+      <input type="password" id="pad_token" placeholder="Pad token" style="width:170px" autocomplete="off">
+      <button id="btn_connect" class="primary">Connect</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner"></div>
+  <noscript><div class="banner fatal show">JavaScript is disabled — this pad cannot run without JS.</div></noscript>
+
+  <div class="layout">
+  <nav class="side">
+    <div class="side-head">CRM</div>
+    <button class="tab active" data-tab="crm">Leads <span id="crm_count" class="count"></span></button>
+    <div class="side-head">Email</div>
+    <button class="tab" data-tab="drafts">Drafts <span id="draft_count" class="count"></span></button>
+    <button class="tab" data-tab="compose">Compose</button>
+    <button class="tab" data-tab="sent">Sent</button>
+    <button class="tab" data-tab="received">Received</button>
+  </nav>
+  <main class="main">
+
+  <!-- ================= LEADS (CRM) ================= -->
+  <section class="panel active" id="panel-crm">
+    <div class="row-actions" style="margin:0 0 10px">
+      <strong style="font-size:14px">Leads</strong>
+      <input type="text" id="crm_search" placeholder="search company, contact, email" style="width:230px" oninput="crmSearch(this.value)">
+      <span class="spacer" style="flex:1"></span>
+      <button class="ghost" id="btn_crm_sync">Sync email</button>
+      <span id="status_crm" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div id="crm_chips" class="row-actions" style="gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
+    <div class="crm-split">
+      <div class="crm-list" id="crm_list"><div class="empty">Loading leads…</div></div>
+      <div class="crm-detail" id="crm_detail"><div class="empty" style="font-size:12px">Pick a lead to see its contact, notes and history.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= DRAFTS ================= -->
+  <section class="panel" id="panel-drafts">
+    <h2 style="font-size:14px;margin:0 0 8px">Ready to send <span class="count" id="draft_list_count"></span></h2>
+    <div id="draft_list"></div>
+  </section>
+
+  <!-- ================= COMPOSE ================= -->
+  <section class="panel" id="panel-compose">
+    <div class="grid2">
+      <div>
+        <label for="f_from">From</label>
+        <select id="f_from" class="full"></select>
+      </div>
+      <div>
+        <label for="f_template">Template preset</label>
+        <select id="f_template" class="full">
+          <option value="">— none —</option>
+          <option value="intro">Sponsor intro (first contact)</option>
+          <option value="fu1">Follow-up 1 (3–5 days)</option>
+          <option value="fu2">Follow-up 2 (1 week)</option>
+          <option value="fu3">Follow-up 3 (final, 2 weeks)</option>
+          <option value="waitlist">Waitlist thank-you</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid3">
+      <div><label for="v_company">Company</label><input id="v_company" class="full" placeholder="Acme Inc"></div>
+      <div><label for="v_first">First name</label><input id="v_first" class="full" placeholder="Jane"></div>
+      <div><label for="v_audience">Audience / subscribers</label><input id="v_audience" class="full" placeholder="12,000 indie founders"></div>
+    </div>
+    <div class="grid2">
+      <div><label for="f_to">To</label><input id="f_to" class="full" placeholder="partner@acme.com"></div>
+      <div><label for="f_cc">CC</label><input id="f_cc" class="full" placeholder="(optional)"></div>
+    </div>
+    <div class="grid2">
+      <div><label for="f_subject">Subject</label><input id="f_subject" class="full"></div>
+      <div><label for="f_replyto">Reply-To</label><input id="f_replyto" class="full" placeholder="Default = From"></div>
+    </div>
+    <input type="hidden" id="f_inreply">
+<input type="hidden" id="f_draft_id">
+
+    <div style="margin:10px 0 6px">
+      <label for="editor">Message</label>
+      <div class="editor-toolbar" style="margin:4px 0">
+        <button type="button" id="btn_link" title="Select text, then turn it into a clickable link">Link</button>
+      </div>
+      <div id="editor" class="editor" contenteditable="true"><p>Write your email…</p></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">
+        Paste a bare URL and it becomes a clickable link automatically. Type or paste an outreach
+        tracking link (newsletterfit.com/api/click?lt=…) and it is minted/verified at send time.
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <label style="cursor:pointer;color:var(--brand);font-weight:600;margin:0">
+        + Attach files
+        <input type="file" id="f_files" multiple style="display:none">
+      </label>
+      <span class="attach-list" id="attach_list"></span>
+      <button id="btn_send" class="primary">Send email</button>
+      <span id="status_send" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+  </section>
+
+  <!-- ================= SENT ================= -->
+  <section class="panel" id="panel-sent">
+    <h2 style="font-size:14px;margin:0 0 8px">Sent emails <span class="count" id="sent_count"></span></h2>
+    <div id="sent_list"></div>
+  </section>
+
+  <!-- ================= RECEIVED ================= -->
+  <section class="panel" id="panel-received">
+    <h2 style="font-size:14px;margin:0 0 8px">Received (last 30 days) <span class="count" id="recv_count"></span></h2>
+    <div id="recv_list"></div>
+  </section>
+
+  </main>
+  </div>
+
+  <footer id="pad_footer">NewsletterFIT Pad v2.2 — leads CRM + email in one place. Self-contained client, no external assets. Server API &amp; data live on the VPS.</footer>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal-mask" id="modal_mask">
+  <div class="modal" style="pointer-events:auto" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title" id="modal_title"></div>
+      <button class="modal-x" id="modal_close">×</button>
+    </div>
+    <div class="modal-actions" id="modal_actions"></div>
+    <div class="modal-body" id="modal_body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const PAD_VERSION = "2.0";
+const TOKEN_KEY = "nf_pad_token";
+const TEMPLATES = {
+  intro: {
+    subject: "{{company}} × NewsletterFIT — sponsor opportunity",
+    body: "<p>Hi {{first_name}},</p><p>I run <strong>NewsletterFIT</strong>, a briefing for {{audience}}.</p><p>We're opening sponsor slots for our next issues and thought {{company}} could be a great fit. Our readers are exactly the audience you're looking for.</p><p>Would you be open to a quick note on available placements and pricing?</p><p>Best,<br>Ian</p>"
+  },
+  fu1: {
+    subject: "Re: {{company}} × NewsletterFIT — sponsor opportunity",
+    body: "<p>Hi {{first_name}},</p><p>Just floating this back up — wanted to make sure my note from last week didn't get buried.</p><p>Happy to send over our media kit if that's easier than a call.</p><p>Best,<br>Ian</p>"
+  },
+  fu2: {
+    subject: "Re: {{company}} × NewsletterFIT — sponsor opportunity",
+    body: "<p>Hi {{first_name}},</p><p>Following up one more time on the sponsorship note for {{company}}.</p><p>We keep our sponsor slots limited, so if there's any interest for the coming month, now's the time to lock one in.</p><p>Best,<br>Ian</p>"
+  },
+  fu3: {
+    subject: "Re: {{company}} × NewsletterFIT — sponsor opportunity",
+    body: "<p>Hi {{first_name}},</p><p>Last note from me on this — happy to close the loop.</p><p>If sponsorship isn't the right fit right now, no worries at all. Thanks for your time either way.</p><p>Best,<br>Ian</p>"
+  },
+  waitlist: {
+    subject: "Welcome to the NewsletterFIT waitlist",
+    body: "<p>Hi {{first_name}},</p><p>Thanks for joining the NewsletterFIT waitlist! We'll let you know the moment we open up — {{audience}} are exactly who we're building for.</p><p>Best,<br>Ian</p>"
+  }
+};
+
+// ---------- tiny helpers ----------
+const $ = (s) => document.getElementById(s);
+const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = (iso) => {
+  if (!iso) return "";
+  try { const d = new Date(iso); return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }); }
+  catch (e) { return String(iso); }
+};
+const statusChip = (s) => {
+  const map = { delivered: "st-delivered", opened: "st-opened", clicked: "st-clicked",
+    sent: "st-sent", bounced: "st-bounced", complained: "st-complained", failed: "st-failed", scheduled: "st-scheduled" };
+  return `<span class="chip-status ${map[s] || "st-default"}">${esc(s || "—")}</span>`;
+};
+
+// ---------- state ----------
+// Branding comes from the server's env (/api/config), so this checkout can be
+// re-badged for another project without editing this file.
+let BRANDCFG = { brand: "", from_email: "", domains: [], base_url: "" };
+async function loadBrandConfig() {
+  try {
+    const c = await api("api/config", authed("GET"));
+    if (!c) return;
+    BRANDCFG = Object.assign(BRANDCFG, c);
+    if (c.brand) {
+      const b = $("brand_name");
+      if (b) b.textContent = c.brand;
+      document.title = c.brand + " — Email Pad";
+      const f = $("pad_footer");
+      if (f) f.textContent = c.brand + " Pad — leads CRM + email in one place. Self-contained client, no external assets.";
+    }
+  } catch (e) { /* branding is cosmetic — never block the pad on it */ }
+}
+function readToken() {
+  try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || ""; } catch (e) { return ""; }
+}
+function saveToken(v) {
+  try { localStorage.setItem(TOKEN_KEY, v); sessionStorage.setItem(TOKEN_KEY, v); } catch (e) {}
+}
+function clearToken() {
+  try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+}
+let token = readToken();
+let attachments = [];
+let editorHTML = "";
+
+// ---------- status banner ----------
+function setStatus(text, ok) {
+  const b = $("banner");
+  b.className = "banner show " + (ok ? "ok" : "err");
+  b.textContent = text;
+}
+
+// ---------- API ----------
+async function api(path, options) {
+  const res = await fetch(path, Object.assign({ headers: {} }, options || {}));
+  if (res.status === 401) {
+    setStatus("Not connected — enter the pad token above and click Connect.", false);
+    try { sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+    throw new Error("unauthorized");
+  }
+  if (res.status === 429) { setStatus("Rate limit hit — wait a few seconds.", false); throw new Error("rate limited"); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || data.message || ("HTTP " + res.status));
+  return data;
+}
+function authed(method, body) {
+  return { method, headers: { "X-Pad-Token": token, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined };
+}
+
+// ---------- tabs ----------
+function switchTab(tab) {
+  document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+  $("panel-" + tab).classList.add("active");
+  document.querySelector('.tab[data-tab="' + tab + '"]').classList.add("active");
+  if (tab === "crm") loadCRM();
+  if (tab === "drafts") loadDrafts();
+  if (tab === "sent") loadSent();
+  if (tab === "received") loadReceived();
+}
+document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
+
+// ---------- connect ----------
+async function connectPad(raw) {
+  if (!raw) return setStatus("Enter the pad token.", false);
+  token = raw;
+  saveToken(token);
+  try {
+    const d = await api("api/domains", authed("GET"));
+    await loadBrandConfig();
+    const doms = (d.data || []).filter((x) => x.status === "verified");
+    const sel = $("f_from");
+    sel.innerHTML = "";
+    const used = new Set();
+    // Sender local part comes from config (FROM_EMAIL), so re-badging is env-only.
+    const FROM_LOCAL = (BRANDCFG.from_email || "info@").split("@")[0];
+    (d.data || []).forEach((x) => {
+      if (x.status === "verified" && !used.has(x.name)) {
+        used.add(x.name);
+        const fromVal = `${FROM_LOCAL}@${x.name}`;
+        sel.insertAdjacentHTML("beforeend", `<option value="${esc(fromVal)}">${esc(fromVal)}</option>`);
+      }
+    });
+    if (doms.length === 0) setStatus("Connected, but no verified sender domains in Resend yet.", true);
+    else setStatus("Connected — leads and email are live.", true);
+    loadDrafts(); loadSent(); loadReceived(); loadCRM();
+  } catch (e) {
+    setStatus("Connection failed: " + e.message, false);
+  }
+}
+$("btn_connect").addEventListener("click", () => connectPad($("pad_token").value.trim()));
+
+// ---------- editor (plain contenteditable, no external deps) ----------
+$("editor").addEventListener("input", () => { editorHTML = $("editor").innerHTML; });
+
+// Link button — native execCommand('createLink'): turn the selected text into a
+// clickable anchor. No editor library needed (and no CDN — keeps v1's lesson).
+$("btn_link").addEventListener("click", () => {
+  const ed = $("editor");
+  let sel = "";
+  try { sel = (getSelection() || "").toString(); } catch (e) { sel = ""; }
+  const url = (prompt("Link URL:", "https://") || "").trim();
+  if (!url) return;
+  ed.focus();
+  let ok = false;
+  try { ok = document.execCommand("createLink", false, url); } catch (e) { ok = false; }
+  if (ok) {
+    editorHTML = ed.innerHTML;
+    if (!sel) setStatus("Linked. Select existing text next time to turn it into a link.", true);
+  } else {
+    setStatus("This browser blocked createLink — paste the URL as text instead.", false);
+  }
+});
+
+// Paste a bare URL -> insert it as a clickable link immediately (idempotent:
+// already-anchored URLs are untouched by the send-time linkify pass).
+$("editor").addEventListener("paste", (e) => {
+  const ed = $("editor");
+  const dt = e.clipboardData || (window.clipboardData || null);
+  if (!dt) return;
+  const t = (dt.getData("text/plain") || "").trim();
+  if (!/^https?:\/\/\S+$/.test(t)) return;
+  let ok = false;
+  try { ok = document.execCommand("insertHTML", false, `<a href="${t}">${t}</a>`); } catch (err) { ok = false; }
+  if (ok) {
+    e.preventDefault();
+    editorHTML = ed.innerHTML;
+    setStatus("Pasted as a clickable link.", true);
+  }
+});
+
+// ---------- attachments ----------
+$("f_files").addEventListener("change", async (e) => {
+  for (const f of Array.from(e.target.files || [])) {
+    if (f.size > 8 * 1024 * 1024) { setStatus(f.name + " is over 8MB — skipped.", false); continue; }
+    try {
+      const buf = await f.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let bin = "";
+      const CHUNK = 0x8000;
+      for (let i = 0; i < bytes.length; i += CHUNK) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+      attachments.push({ filename: f.name, content: window.btoa(bin) });
+      renderAttachments();
+    } catch (err) {
+      setStatus("Could not read " + f.name + ": " + err.message, false);
+    }
+  }
+  e.target.value = "";
+});
+function renderAttachments() {
+  $("attach_list").innerHTML = attachments.map((a, i) =>
+    `<span class="attach">${esc(a.filename)} <a title="remove" onclick="attachments.splice(${i},1);renderAttachments()">✕</a></span>`).join("");
+}
+
+// ---------- templates ----------
+$("f_template").addEventListener("change", () => {
+  const t = TEMPLATES[$("f_template").value];
+  if (!t) return;
+  const vars = {
+    "{{company}}": $("v_company").value.trim() || "{{company}}",
+    "{{first_name}}": $("v_first").value.trim() || "{{first_name}}",
+    "{{audience}}": $("v_audience").value.trim() || "{{audience}}"
+  };
+  let subject = t.subject, body = t.body;
+  Object.entries(vars).forEach(([k, v]) => { subject = subject.split(k).join(v); body = body.split(k).join(v); });
+  $("f_subject").value = subject;
+  $("editor").innerHTML = body;
+  editorHTML = body;
+});
+
+// ---------- send ----------
+$("btn_send").addEventListener("click", async () => {
+  const st = $("status_send");
+  st.textContent = "Sending…";
+  const from = $("f_from").value;
+  const to = $("f_to").value.trim();
+  if (!from || !to) { st.textContent = "From and To are required."; return; }
+  const replyTo = $("f_replyto").value.trim() || from;
+  const ed = $("editor");
+  const payload = {
+    from,
+    to: to.split(",").map((s) => s.trim()).filter(Boolean),
+    cc: $("f_cc").value.split(",").map((s) => s.trim()).filter(Boolean),
+    subject: $("f_subject").value.trim(),
+    html: editorHTML || ed.innerHTML,
+    text: (ed.innerText || ed.textContent || "").trim(),
+    reply_to: [replyTo],
+    attachments: attachments
+  };
+  const inReply = $("f_inreply").value;
+  if (inReply) payload.headers = { "In-Reply-To": inReply, "References": inReply };
+  const draftId = $("f_draft_id").value.trim();
+  try {
+    const sendPath = draftId ? "api/drafts/" + encodeURIComponent(draftId) + "/send" : "api/send";
+    await api(sendPath, authed("POST", payload));
+    st.textContent = "Sent ✔";
+    setStatus(draftId ? "Draft sent and removed from the queue." : "Email accepted by Resend.", true);
+    ed.innerHTML = "<p>Write your email…</p>";
+    editorHTML = "";
+    $("f_to").value = ""; $("f_cc").value = ""; $("f_subject").value = ""; $("f_inreply").value = "";
+    $("f_draft_id").value = "";
+    attachments = []; renderAttachments();
+    if (draftId) loadDrafts(); // refresh the queue + badge
+    // keep the leads tab honest: this send is logged against the lead and may
+    // advance its stage, so refresh the CRM quietly in the background
+    api("api/crm/sync", authed("POST")).then(() => { if (isCrmOpen()) loadCRM(); }).catch(() => {});
+  } catch (e) {
+    st.textContent = "Failed: " + e.message;
+    setStatus("Send failed: " + e.message, false);
+  }
+});
+
+// ---------- drafts (review-before-send queue) ----------
+let draftsCache = [];
+function textToHtml(t) {
+  // plain text -> simple <p>/<br> html for the contenteditable editor
+  const paras = String(t || "").replace(/\r\n/g, "\n").split(/\n{2,}/).map((p) => p.replace(/\n/g, "<br>"));
+  return paras.filter((p) => p.trim()).map((p) => "<p>" + p + "</p>").join("");
+}
+async function loadDrafts() {
+  const el = $("draft_list");
+  el.innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const d = await api("api/drafts", authed("GET"));
+    draftsCache = d.data || [];
+    $("draft_count").textContent = draftsCache.length ? "(" + draftsCache.length + ")" : "";
+    $("draft_list_count").textContent = "(" + draftsCache.length + ")";
+    if (draftsCache.length === 0) { el.innerHTML = '<div class="empty">No drafts in the queue.</div>'; return; }
+    el.innerHTML = draftsCache.map((m) =>
+      `<div class="list-row" onclick="openDraft('${esc(String(m.id))}')">
+         <div class="l-main">
+           <div class="l-title">${esc(m.subject || "(no subject)")}</div>
+           <div class="l-sub">to ${esc(String(m.to || ""))}${m.cc ? " · cc " + esc(String(m.cc)) : ""}${m.company ? " · " + esc(m.company) : ""}</div>
+         </div>
+         <div class="l-time">${fmtDate(m.created_at)}</div>
+         <span style="margin-left:6px;cursor:pointer;color:var(--err);font-size:16px;line-height:1" title="Discard draft"
+               onclick="event.stopPropagation();discardDraft('${esc(String(m.id))}')">✕</span>
+       </div>`).join("");
+  } catch (e) { el.innerHTML = '<div class="empty">' + esc(e.message) + "</div>"; }
+}
+async function openDraft(id) {
+  const m = draftsCache.find((x) => String(x.id) === String(id));
+  if (!m) { setStatus("Draft not found in queue.", false); return; }
+  switchTab("compose");
+  const fromSel = $("f_from");
+  const want = m.from || BRANDCFG.from_email || "";
+  $("f_from").value = want;
+  // if the stored from isn't an option, fall back to first verified
+  if (!$("f_from").value) { $("f_from").value = fromSel.options.length ? fromSel.options[0].value : ""; }
+  $("f_to").value = m.to || "";
+  $("f_cc").value = m.cc || "";
+  $("f_subject").value = m.subject || "";
+  $("f_replyto").value = m.reply_to || "";
+  $("f_inreply").value = m.in_reply_to || "";
+  $("f_draft_id").value = String(m.id);
+  $("editor").innerHTML = m.html || textToHtml(m.text || "");
+  editorHTML = $("editor").innerHTML;
+  attachments = [];
+  renderAttachments();
+  setStatus("Draft loaded — review, edit if needed, then press Send email. It leaves the queue when sent.", true);
+}
+async function discardDraft(id) {
+  if (!confirm("Discard this draft? It will be removed from the queue without sending.")) return;
+  try {
+    await api("api/drafts/" + encodeURIComponent(id), authed("DELETE"));
+    setStatus("Draft discarded.", true);
+    loadDrafts();
+  } catch (e) { setStatus("Failed to discard: " + e.message, false); }
+}
+
+// ---------- sent ----------
+// The Resend account is shared with other brands, so the server filters the
+// lists to this brand's domains. Say so when it hides anything.
+function brandNote(d) {
+  if (!d || !d.hidden_other_brand) return "";
+  return '<div class="empty" style="text-align:left">Showing ' + esc((d.brand || []).join(", "))
+    + " mail only — " + d.hidden_other_brand + " message(s) from other brands hidden.</div>";
+}
+async function loadSent() {
+  const el = $("sent_list");
+  el.innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const d = await api("api/sent", authed("GET"));
+    const items = d.data || [];
+    $("sent_count").textContent = "(" + items.length + ")";
+    const note = brandNote(d);
+    if (items.length === 0) { el.innerHTML = note + '<div class="empty">No sent emails yet.</div>'; return; }
+    el.innerHTML = note + items.map((m) =>
+      `<div class="list-row" data-id="${esc(m.id)}" onclick="viewSent('${esc(String(m.id))}')">
+         <div class="l-main">
+           <div class="l-title">${esc(m.subject || "(no subject)")}</div>
+           <div class="l-sub">to ${esc((m.to || []).join(", "))}</div>
+         </div>
+         <div class="l-time">${fmtDate(m.created_at)}</div>
+         ${statusChip(m.last_event)}
+       </div>`).join("");
+  } catch (e) { el.innerHTML = '<div class="empty">' + esc(e.message) + "</div>"; }
+}
+
+async function viewSent(id) {
+  try {
+    const m = await api("api/email/" + encodeURIComponent(id), authed("GET"));
+    showModal(m.subject || "(no subject)",
+      `<div class="meta">From: ${esc(m.from)}<br>To: ${esc((m.to || []).join(", "))}<br>Sent: ${fmtDate(m.created_at)} ${statusChip(m.last_event)}</div>` +
+      (m.html || esc(m.text || "")),
+      '<button class="ghost" onclick="closeModal()">Close</button>');
+  } catch (e) { setStatus("Failed to load email: " + e.message, false); }
+}
+
+// ---------- received ----------
+async function loadReceived() {
+  const el = $("recv_list");
+  el.innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const d = await api("api/received?limit=50", authed("GET"));
+    const items = d.data || [];
+    $("recv_count").textContent = "(" + items.length + ")";
+    const note = brandNote(d);
+    if (items.length === 0) { el.innerHTML = note + '<div class="empty">No received emails. Make sure your domain MX points at Resend.</div>'; return; }
+    el.innerHTML = note + items.map((m) =>
+      `<div class="list-row" onclick="viewReceived('${esc(String(m.id))}')">
+         <div class="l-main">
+           <div class="l-title">${esc(m.subject || "(no subject)")}</div>
+           <div class="l-sub">from ${esc(String(m.from || ""))}</div>
+         </div>
+         <div class="l-time">${fmtDate(m.created_at)}</div>
+       </div>`).join("");
+  } catch (e) { el.innerHTML = '<div class="empty">' + esc(e.message) + "</div>"; }
+}
+
+async function viewReceived(id) {
+  try {
+    const m = await api("api/received/" + encodeURIComponent(id), authed("GET"));
+    const fromRaw = String(m.headers?.from || m.from || "");
+    const fromAddr = String(m.from || "").split("<").pop().replace(">", "").trim();
+    const title = m.subject || "(no subject)";
+    const bodyHtml = m.html || esc(m.text || "(no body)");
+    const actions =
+      `<button class="primary" onclick="replyTo('${esc(fromAddr)}','${esc(title)}','${esc(String(m.message_id || ""))}')">Reply</button>
+       <button class="ghost" onclick="closeModal()">Close</button>`;
+    showModal(title,
+      `<div class="meta">From: ${esc(fromRaw)}<br>Received: ${fmtDate(m.created_at)}<br>For: ${esc((m.received_for || m.to || []).join(", "))}</div>` + bodyHtml,
+      actions);
+  } catch (e) { setStatus("Failed to load email: " + e.message, false); }
+}
+
+function replyTo(addr, subject, messageId) {
+  closeModal();
+  switchTab("compose");
+  $("f_to").value = addr;
+  $("f_subject").value = subject.toLowerCase().startsWith("re:") ? subject : "Re: " + subject;
+  $("f_inreply").value = messageId;
+  $("f_replyto").value = "";
+  $("editor").innerHTML = "<p>Write your email…</p>";
+  editorHTML = "";
+  setStatus("Reply drafted — send address and thread are linked automatically.", true);
+}
+
+// ---------- modal ----------
+function showModal(title, bodyHtml, actionsHtml) {
+  $("modal_title").textContent = title;
+  $("modal_body").innerHTML = bodyHtml;
+  $("modal_actions").innerHTML = actionsHtml || "";
+  $("modal_mask").style.display = "flex";
+}
+function closeModal() { $("modal_mask").style.display = "none"; }
+$("modal_close").addEventListener("click", closeModal);
+$("modal_mask").addEventListener("click", closeModal);
+
+// ---------- leads (CRM tab; the pad token unlocks it via the proxy) ----------
+const STAGE_FALLBACK = [
+  ["leads", "Leads", "#64748b"], ["first_email", "First Email", "#2563eb"], ["follow_up_1", "Follow-up 1", "#0d9488"],
+  ["follow_up_2", "Follow-up 2", "#4f46e5"], ["follow_up_3", "Follow-up 3", "#7c3aed"], ["follow_up_4", "Follow-up 4", "#d97706"],
+  ["replied", "Replied", "#db2777"], ["won", "Won", "#16a34a"], ["no", "No", "#dc2626"],
+];
+let crm = { leads: [], meta: null, stage: "", q: "", sel: null, detail: null };
+
+function isCrmOpen() { return $("panel-crm") && $("panel-crm").classList.contains("active"); }
+function stageList() {
+  return (crm.meta && crm.meta.stages) || STAGE_FALLBACK.map(([key, label, color]) => ({ key, label, color }));
+}
+function stageInfo(key) {
+  return stageList().find((s) => s.key === key) || { key, label: key, color: "#64748b" };
+}
+function crmApi(path, opts) {
+  const o = opts || {};
+  return api("api/crm" + path, authed(o.method || "GET", o.body));
+}
+function ago(ts) {
+  if (!ts) return "—";
+  const d = Math.floor((Date.now() - new Date(ts)) / 86400000);
+  return d <= 0 ? "today" : d + "d ago";
+}
+
+async function loadCRM() {
+  if (!token) return;
+  try {
+    const qs = crm.stage ? "?stage=" + encodeURIComponent(crm.stage) : "";
+    const [m, l] = await Promise.all([crmApi("/meta"), crmApi("/leads" + qs)]);
+    crm.meta = m; crm.leads = l.leads || [];
+    if ($("crm_count")) $("crm_count").textContent = m.total || "";
+    renderChips(); renderLeads();
+    if (crm.sel) await crmLoadDetail(crm.sel);
+  } catch (e) {
+    $("crm_list").innerHTML = '<div class="empty">' + esc(e.message) + "</div>";
+  }
+}
+function renderChips() {
+  const counts = (crm.meta && crm.meta.counts) || {};
+  let html = '<button class="chipf' + (crm.stage === "" ? " on" : "") + '" onclick="crmSetFilter(\'\')">All ' + ((crm.meta && crm.meta.total) || 0) + "</button>";
+  stageList().forEach((s) => {
+    const n = counts[s.key] || 0;
+    if (!n) return;
+    html += '<button class="chipf' + (crm.stage === s.key ? " on" : "") + '" onclick="crmSetFilter(\'' + s.key + '\')">'
+      + '<span class="dot" style="background:' + s.color + '"></span>' + esc(s.label) + " " + n + "</button>";
+  });
+  $("crm_chips").innerHTML = html;
+}
+function crmSetFilter(k) { crm.stage = crm.stage === k ? "" : k; loadCRM(); }
+function crmSearch(v) { crm.q = v; renderLeads(); }
+
+function renderLeads() {
+  const q = (crm.q || "").trim().toLowerCase();
+  let rows = crm.leads.filter((l) => !q || [l.company, l.contact_name, l.contact_email, l.contact_title].join(" ").toLowerCase().indexOf(q) >= 0);
+  rows = rows.slice().sort((a, b) => {
+    if (!!a.overdue !== !!b.overdue) return a.overdue ? -1 : 1;
+    if (a.next_due && b.next_due) return new Date(a.next_due) - new Date(b.next_due);
+    if (a.next_due) return -1;
+    if (b.next_due) return 1;
+    return (b.emails_sent || 0) - (a.emails_sent || 0);
+  });
+  if (!rows.length) { $("crm_list").innerHTML = '<div class="empty">No leads match.</div>'; return; }
+  let html = '<table class="leads"><thead><tr><th>Company</th><th>Contact</th><th>Stage</th><th>Last email</th><th>Next due</th><th>Clicks</th></tr></thead><tbody>';
+  rows.forEach((l) => {
+    const st = stageInfo(l.stage);
+    const due = l.next_due
+      ? (l.overdue ? '<span class="due">' + ago(l.next_due) + "</span>" : "in " + Math.max(0, Math.ceil((new Date(l.next_due) - Date.now()) / 86400000)) + "d")
+      : '<span style="color:var(--muted)">—</span>';
+    html += '<tr class="row' + (crm.sel === l.id ? " sel" : "") + '" onclick="crmSelect(\'' + l.id + '\')">'
+      + '<td><strong>' + esc(l.company) + '</strong><div class="sub">' + esc(l.domain || "") + "</div></td>"
+      + "<td>" + (l.contact_name ? esc(l.contact_name) : '<span class="sub">unknown</span>')
+      + '<span class="role' + (l.contact_role === "other" ? " other" : "") + '">' + esc(l.contact_role || "other") + "</span>"
+      + '<div class="sub">' + esc(l.contact_email || "") + "</div></td>"
+      + '<td class="nw"><span class="spill" style="background:' + st.color + '">' + esc(st.label) + "</span></td>"
+      + '<td class="nw">' + ago(l.last_email_out) + '<div class="sub">' + (l.emails_sent || 0) + " sent</div></td>"
+      + '<td class="nw">' + due + '</td><td class="nw">' + (l.clicks || 0) + "</td></tr>";
+  });
+  html += "</tbody></table>";
+  $("crm_list").innerHTML = html;
+}
+
+function crmSelect(id) { crm.sel = id; renderLeads(); crmLoadDetail(id); }
+async function crmLoadDetail(id) {
+  try { crm.detail = await crmApi("/leads/" + encodeURIComponent(id)); renderDetail(); }
+  catch (e) { $("crm_detail").innerHTML = '<div class="empty">' + esc(e.message) + "</div>"; }
+}
+function renderDetail() {
+  const d = crm.detail; if (!d || !d.lead) return;
+  const l = d.lead, acts = d.activity || [];
+  const st = stageInfo(l.stage);
+  let html = "<h3 style=\"font-size:15px;margin:0 0 2px\">" + esc(l.company) + '</h3><div class="sub">' + esc(l.domain || "") + "</div>";
+  html += '<div class="kv"><div class="k">Stage</div><select class="full" onchange="crmSetStage(\'' + l.id + '\', this.value)" style="background:' + st.color + ';color:#fff;border-color:' + st.color + '">'
+    + stageList().map((s) => '<option value="' + s.key + '"' + (s.key === l.stage ? " selected" : "") + ">" + esc(s.label) + "</option>").join("")
+    + "</select></div>";
+  html += '<div class="kv"><div class="k">Contact</div>' + (l.contact_name ? esc(l.contact_name) : '<span class="sub">unknown</span>')
+    + (l.contact_role && l.contact_role !== "other" ? '<span class="role">' + esc(l.contact_role) + "</span>" : "")
+    + '<div class="sub">' + esc(l.contact_title || "") + '</div><div class="sub">' + esc(l.contact_email || "") + "</div></div>";
+  html += '<div class="kv"><div class="k">Outreach</div>' + (l.emails_sent || 0) + " sent, " + (l.emails_received || 0) + " received, " + (l.clicks || 0) + " link click(s)"
+    + (l.sponsored_pubs ? '<div class="sub">Sponsors: ' + esc([].concat(l.sponsored_pubs).join(", ")) + "</div>" : "")
+    + (l.subscriber_range ? '<div class="sub">Audience: ' + esc(l.subscriber_range) + "</div>" : "")
+    + (l.angle ? '<div class="sub">Angle: ' + esc(l.angle) + "</div>" : "") + "</div>";
+  html += '<div class="kv"><div class="k">Note</div><textarea id="crm_note_' + l.id + '" class="full" rows="2" placeholder="add a note"></textarea>'
+    + '<button class="ghost" style="margin-top:4px" onclick="crmAddNote(\'' + l.id + '\')">Save note</button></div>';
+  html += '<div class="kv"><button class="primary" onclick="crmEmail(\'' + l.id + '\')">Email this lead</button></div>';
+  html += '<div class="tl"><div class="k">History</div>';
+  if (!acts.length) html += '<div class="sub">No activity yet.</div>';
+  acts.slice(0, 30).forEach((a) => {
+    const label = a.kind === "email_out" ? "sent" : a.kind === "email_in" ? "reply" : a.kind;
+    html += '<div class="ev"><div class="t">' + esc(label) + '</div><div>' + esc(a.subject || a.detail || "")
+      + '<div class="sub">' + fmtDate(a.ts) + "</div></div></div>";
+  });
+  html += "</div>";
+  $("crm_detail").innerHTML = html;
+}
+async function crmSetStage(id, stage) {
+  try { await crmApi("/leads/" + encodeURIComponent(id), { method: "PATCH", body: { stage } }); setStatus("Stage updated.", true); await loadCRM(); }
+  catch (e) { setStatus("Could not change stage: " + e.message, false); }
+}
+async function crmAddNote(id) {
+  const el = $("crm_note_" + id);
+  if (!el || !el.value.trim()) return;
+  try { await crmApi("/leads/" + encodeURIComponent(id) + "/note", { method: "POST", body: { body: el.value } }); await crmLoadDetail(id); }
+  catch (e) { setStatus("Could not save note: " + e.message, false); }
+}
+function crmEmail(id) {
+  const l = crm.leads.find((x) => x.id === id) || {};
+  switchTab("compose");
+  $("f_to").value = l.contact_email || "";
+  $("f_subject").value = l.company ? l.company + " — " : "";
+  $("v_company").value = l.company || "";
+  $("v_first").value = l.contact_name ? String(l.contact_name).split(" ")[0] : "";
+  setStatus("Composing to " + (l.contact_email || "this lead") + ".", true);
+}
+async function crmSync() {
+  const s = $("status_crm");
+  s.textContent = "Syncing…";
+  try {
+    const r = await crmApi("/sync", { method: "POST" });
+    s.textContent = "Synced — " + (r.logged || 0) + " new mail, " + (r.matched || 0) + " matched to leads";
+    await loadCRM();
+  } catch (e) { s.textContent = "Sync failed: " + e.message; }
+}
+$("btn_crm_sync").addEventListener("click", crmSync);
+
+// ---------- boot ----------
+if (token) $("pad_token").value = "••••••••";
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    if (token) { $("pad_token").value = token; connectPad(token); } // remembered: go straight in
+    console.log("[PAD v" + PAD_VERSION + "] init OK; token " + (token ? "present" : "absent"));
+  } catch (e) {
+    const b = $("banner");
+    b.className = "banner fatal show";
+    b.textContent = "Pad failed to initialize: " + e.message;
+    console.error("[PAD] init error:", e);
+  }
+});
+</script>
+</body>
+</html>

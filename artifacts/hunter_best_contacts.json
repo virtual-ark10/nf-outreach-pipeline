@@ -1,0 +1,290 @@
+[
+ {
+  "sponsor": "Ahrefs",
+  "email": "igor.gorbenko@ahrefs.com",
+  "name": "Igor Gorbenko",
+  "position": "Director of Partnerships",
+  "department": "management",
+  "confidence": 96
+ },
+ {
+  "sponsor": "Asana",
+  "email": "karascoggin@asana.com",
+  "name": "Kara Scoggin",
+  "position": "Head of Partner Marketing",
+  "department": "marketing",
+  "confidence": 85
+ },
+ {
+  "sponsor": "Attio",
+  "email": "alexvale@attio.com",
+  "name": "Alex Vale",
+  "position": "VP of Marketing",
+  "department": "marketing",
+  "confidence": 81
+ },
+ {
+  "sponsor": "Brex",
+  "email": "akhalid@brex.com",
+  "name": "Aiasha Khalid",
+  "position": "Partner Marketing Manager",
+  "department": "marketing",
+  "confidence": 84
+ },
+ {
+  "sponsor": "Bright Data",
+  "email": "itamar@brightdata.com",
+  "name": "Itamar Abramovich",
+  "position": "Director Of Product Management",
+  "department": "product",
+  "confidence": 85
+ },
+ {
+  "sponsor": "Checkmarx",
+  "email": "amit.daniel@checkmarx.com",
+  "name": "Amit Daniel",
+  "position": "CMO",
+  "department": "marketing",
+  "confidence": 98
+ },
+ {
+  "sponsor": "Coder",
+  "email": "carmella@coder.com",
+  "name": "Carmella West",
+  "position": "Marketing Director",
+  "department": "marketing",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Datadog",
+  "email": "vishal.alagh@datadoghq.com",
+  "name": "Vishal Alagh",
+  "position": "Senior Director of Marketing",
+  "department": "marketing",
+  "confidence": 85
+ },
+ {
+  "sponsor": "DeleteMe(correct)",
+  "email": "april.leadbetter@joindeleteme.com",
+  "name": "April Leadbetter",
+  "position": "Chief of Staff",
+  "department": "operations",
+  "confidence": 99
+ },
+ {
+  "sponsor": "ElevenLabs",
+  "email": "matt@elevenlabs.io",
+  "name": "Matt Alegria",
+  "position": "Director of Go-To-Market",
+  "department": "management",
+  "confidence": 84
+ },
+ {
+  "sponsor": "Framer",
+  "email": "oscar@framer.com",
+  "name": "Oscar Carlsson",
+  "position": "Chief Revenue Officer",
+  "department": "sales",
+  "confidence": 98
+ },
+ {
+  "sponsor": "Glean",
+  "email": "jitendra.kavathekar@glean.com",
+  "name": "Jitendra Kavathekar",
+  "position": "Head of Consulting Partners",
+  "department": "consulting",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Granola",
+  "email": "tanya@granola.so",
+  "name": "Tanya Ermolaeva",
+  "position": "Founder",
+  "department": "executive",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Ground News",
+  "email": "courtney@ground.news",
+  "name": "Courtney Hurley",
+  "position": "Vice President of Growth",
+  "department": "executive",
+  "confidence": 96
+ },
+ {
+  "sponsor": "Hostinger",
+  "email": "yaroslav.stepanenko@hostinger.com",
+  "name": "Yaroslav Stepanenko",
+  "position": "Head of Growth",
+  "department": "management",
+  "confidence": 84
+ },
+ {
+  "sponsor": "HubSpot",
+  "email": "chermida@hubspot.com",
+  "name": "Camila Hermida",
+  "position": "Partner Development Manager",
+  "department": "management",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Imagine",
+  "email": "surbhi@imagine.io",
+  "name": "Surbhi Kohli",
+  "position": "Chief Revenue Officer",
+  "department": "sales",
+  "confidence": 95
+ },
+ {
+  "sponsor": "LMNT",
+  "email": "zach@lmnt.com",
+  "name": "Zach Johnson",
+  "position": "Co-Founder",
+  "department": "executive",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Linear",
+  "email": "cristina@linear.app",
+  "name": "Cristina Cordova",
+  "position": "Chief Operating Officer",
+  "department": "operations",
+  "confidence": 81
+ },
+ {
+  "sponsor": "Matic",
+  "email": "logan.j@matic.com",
+  "name": "Logan Jenson",
+  "position": "Vice President, Business Development",
+  "department": "sales",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Mercury",
+  "email": "immad@mercury.com",
+  "name": "Immad Akhund",
+  "position": "CEO",
+  "department": "executive",
+  "confidence": 85
+ },
+ {
+  "sponsor": "Miro",
+  "email": "bret@miro.com",
+  "name": "Bret Lehnhof",
+  "position": "Director of Marketing",
+  "department": "marketing",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Mode Mobile",
+  "email": "nick.cullen@modemobile.com",
+  "name": "Nick Cullen",
+  "position": "Director of Growth",
+  "department": "management",
+  "confidence": 97
+ },
+ {
+  "sponsor": "MongoDB",
+  "email": "anand.vridhagiri@mongodb.com",
+  "name": "Anand Vridhagiri",
+  "position": "Director, Demand Center and Partner Marketing",
+  "department": "marketing",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Oumi",
+  "email": "william@oumi.ai",
+  "name": "William Zeng",
+  "position": "Cofounder",
+  "department": "executive",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Profound",
+  "email": "almar@profound.nl",
+  "name": "Almar Ourensma",
+  "position": "Managing Director",
+  "department": "executive",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Render",
+  "email": "lisa@render.com",
+  "name": "Lisa Kleinsorge",
+  "position": "Head of Product Partnerships",
+  "department": "product",
+  "confidence": 96
+ },
+ {
+  "sponsor": "Replit",
+  "email": "nick.silver@replit.com",
+  "name": "Nick Silver",
+  "position": "VP of Marketing",
+  "department": "marketing",
+  "confidence": 84
+ },
+ {
+  "sponsor": "Salesforce",
+  "email": "m.white@salesforce.com",
+  "name": "Meredith White",
+  "position": "VP of Marketing",
+  "department": "marketing",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Surfshark",
+  "email": "povilas.reinotas@surfshark.com",
+  "name": "Povilas Reinotas",
+  "position": "Head of Product Operations",
+  "department": "product",
+  "confidence": 83
+ },
+ {
+  "sponsor": "Teleport",
+  "email": "jeff@goteleport.com",
+  "name": "Jeff Bunten",
+  "position": "Chief Revenue Officer",
+  "department": "sales",
+  "confidence": 84
+ },
+ {
+  "sponsor": "Tracksuit",
+  "email": "talia@gotracksuit.com",
+  "name": "Talia Hickey",
+  "position": "Director of Partnerships",
+  "department": "management",
+  "confidence": 81
+ },
+ {
+  "sponsor": "Typeform",
+  "email": "jaimee.henry@typeform.com",
+  "name": "Jaimee Henry",
+  "position": "VP of Product Operations",
+  "department": "product",
+  "confidence": 99
+ },
+ {
+  "sponsor": "Uber",
+  "email": "oliver.hudson@uber.com",
+  "name": "Oliver Hudson",
+  "position": "Strategic Partnerships Lead",
+  "department": "management",
+  "confidence": 85
+ },
+ {
+  "sponsor": "Unblocked(correct)",
+  "email": "dennis@getunblocked.com",
+  "name": "Dennis Pilarinos",
+  "position": "CEO",
+  "department": "executive",
+  "confidence": 85
+ },
+ {
+  "sponsor": "Webflow",
+  "email": "mischa.vaughn@webflow.com",
+  "name": "Mischa Vaughn",
+  "position": "Director Of Content",
+  "department": "management",
+  "confidence": 98
+ }
+]

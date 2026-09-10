@@ -1,0 +1,11 @@
+{
+  "name": "nf-attribution",
+  "version": "1.0.0",
+  "description": "Lead-level visit attribution for NewsletterFIT: track which emailed leads click + visit the site, then push visit data to the lead tracking sheet.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "smoke": "node test/smoke.js",
+    "export-visits": "node utils/export-visits.js"
+  }
+}

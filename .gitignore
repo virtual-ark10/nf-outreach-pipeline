@@ -1,0 +1,26 @@
+# Runtime state is deliberately versioned in this repo — it is the only off-box
+# archive of the CRM and the mail log (Resend only keeps email for 30 days).
+# So do NOT add data/ or leads/data/ to this file.
+#
+# Secrets, logs and tooling noise are excluded.
+
+# --- secrets (never commit) ---
+.env
+.env.local
+*.env.bak*
+**/.env
+
+# --- logs ---
+*.log
+
+# --- scratch / migration artefacts ---
+*.bak-*
+*.pre-import
+*.pre-token-fix
+*.DS_Store
+attic/
+
+# --- tooling noise ---
+node_modules/
+__pycache__/
+*.pyc

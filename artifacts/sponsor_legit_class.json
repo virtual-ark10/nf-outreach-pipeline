@@ -1,0 +1,182 @@
+[
+ [
+  "Ahrefs",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Asana",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Attio",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Brex",
+  "LEGIT-MULTI",
+  "12 ad-ev / 12 tot, sus0"
+ ],
+ [
+  "Bright Data",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Checkmarx",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Coder",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Datadog",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "DeleteMe",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "ElevenLabs",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Framer",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Glean",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Granola",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Ground News",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Hostinger",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "HubSpot",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Imagine",
+  "LEGIT-MULTI",
+  "6 ad-ev / 6 tot, sus0"
+ ],
+ [
+  "LMNT",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Linear",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Matic",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Mercury",
+  "UNCLEAR",
+  "0 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Miro",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Mode Mobile",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "MongoDB",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Oumi",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Profound",
+  "LEGIT-MULTI",
+  "2 ad-ev / 2 tot, sus0"
+ ],
+ [
+  "Render",
+  "LEGIT-MULTI",
+  "3 ad-ev / 6 tot, sus0"
+ ],
+ [
+  "Replit",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Salesforce",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Surfshark",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Teleport",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ],
+ [
+  "Tracksuit",
+  "LEGIT-MULTI",
+  "11 ad-ev / 11 tot, sus0"
+ ],
+ [
+  "Typeform",
+  "LEGIT-SINGLE",
+  "1 ad-ev / 1 tot, sus0"
+ ],
+ [
+  "Uber",
+  "FALSE-POSITIVE",
+  "0 ad-ev / 1 tot, sus1"
+ ],
+ [
+  "Unblocked",
+  "LEGIT-MULTI",
+  "5 ad-ev / 5 tot, sus0"
+ ],
+ [
+  "Webflow",
+  "NO-GROUNDED",
+  "no article confirmed in corpus"
+ ]
+]

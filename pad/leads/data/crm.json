@@ -1,0 +1,573 @@
+{
+ "leads": [
+  {
+   "id": "xplor-pay",
+   "company": "Xplor Pay",
+   "contact_email": "ankur.bhatt@xplorpay.com",
+   "contact_name": "",
+   "contact_role": "other",
+   "domain": "xplorpay.com",
+   "stage": "leads",
+   "source": "pad_batch",
+   "campaign": "sep2-2026",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "score": "96",
+   "quality": "MEDIUM",
+   "placements": "5",
+   "subscriber_range": "10K",
+   "sponsored_pubs": [
+    "Linear: A Vertical Software & Vertical AI Newsletter"
+   ],
+   "recommended_pubs": [
+    "The Digital Creator",
+    "Platypus Economics",
+    "Sadie\u2019s Newsletter",
+    "Kieran\u2019s Substack - The AI Marketing Generalist",
+    "Bankable!"
+   ],
+   "angle": "Market exploration"
+  },
+  {
+   "id": "mcalvany",
+   "company": "McAlvany Precious Metals",
+   "contact_email": "robert@mcalvany.com",
+   "contact_name": "Robert",
+   "contact_role": "other",
+   "domain": "mcalvany.com",
+   "stage": "first_email",
+   "source": "pad_batch",
+   "campaign": "sep2-2026",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:30:19.214Z",
+   "score": "96",
+   "quality": "MEDIUM",
+   "placements": "12",
+   "subscriber_range": "33K",
+   "sponsored_pubs": [
+    "Clusterfuck Nation"
+   ],
+   "recommended_pubs": [
+    "floatvibes",
+    "The Rough Cut",
+    "MindWar: The Psychological War on Democracy",
+    "Talia Cadet",
+    "THE WHAT"
+   ],
+   "angle": "Market exploration"
+  },
+  {
+   "id": "stacker",
+   "company": "Stacker",
+   "contact_email": "dmouret@stacker.com",
+   "contact_name": "",
+   "contact_role": "other",
+   "domain": "stacker.com",
+   "stage": "leads",
+   "source": "pad_batch",
+   "campaign": "sep2-2026",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "score": "92",
+   "quality": "MEDIUM",
+   "placements": "3",
+   "subscriber_range": "16K",
+   "sponsored_pubs": [
+    "The Future of SEO & AEO by Eli Schwartz"
+   ],
+   "recommended_pubs": [
+    "Growth Memo",
+    "Taylor Welch",
+    "The Media Copilot",
+    "#SEOForLunch",
+    "On Brand Magazine"
+   ],
+   "angle": "Market exploration"
+  },
+  {
+   "id": "bolt-new",
+   "company": "Bolt.new",
+   "contact_email": "eric.simons@bolt.new",
+   "contact_name": "",
+   "contact_role": "other",
+   "domain": "bolt.new",
+   "stage": "leads",
+   "source": "pad_batch",
+   "campaign": "sep2-2026",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "score": "89",
+   "quality": "MEDIUM",
+   "placements": "2",
+   "subscriber_range": "240K",
+   "sponsored_pubs": [
+    "Product Growth"
+   ],
+   "recommended_pubs": [
+    "Tech Scoop",
+    "Supercompanies with Greg & Taylor",
+    "build mode",
+    "The AI Corner",
+    "Import AI"
+   ],
+   "angle": "Market exploration"
+  },
+  {
+   "id": "ground-news",
+   "company": "Ground News",
+   "contact_email": "courtney@ground.news",
+   "contact_name": "",
+   "contact_role": "other",
+   "domain": "ground.news",
+   "stage": "leads",
+   "source": "pad_batch",
+   "campaign": "sep2-2026",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "score": "76",
+   "quality": "HIGH",
+   "placements": "2",
+   "subscriber_range": "85K\u2013306K",
+   "sponsored_pubs": [
+    "The Jim Acosta Show",
+    "Clear Thinker"
+   ],
+   "recommended_pubs": [
+    "Katie Phang",
+    "Save Austin Now substack",
+    "Underpriced Actions",
+    "Really American",
+    "Glenn Kirschner"
+   ],
+   "angle": "Lookalike"
+  },
+  {
+   "id": "brex",
+   "company": "Brex",
+   "contact_email": "jhodnick@brex.com",
+   "contact_name": "Jessica Hodnick",
+   "contact_title": "Senior Director of Growth Marketing",
+   "contact_role": "growth",
+   "domain": "brex.com",
+   "stage": "leads",
+   "source": "intake",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "pick_basis": "growth (most senior)",
+   "alternates": "Erin Lawhead (Enterprise GTM",
+   "score": "100",
+   "quality": "HIGH",
+   "placements": "18",
+   "subscriber_range": "19K\u2013168K",
+   "sponsored_pubs": [
+    "Core Memory",
+    "Sourcery",
+    "The Generalist"
+   ],
+   "recommended_pubs": [
+    "The VC Corner",
+    "Platypus Economics",
+    "LA FRAISE \u2122",
+    "Build with AI",
+    "Supercompanies with Greg & Taylor"
+   ],
+   "angle": "Rising publication"
+  },
+  {
+   "id": "superblocks",
+   "company": "Superblocks",
+   "contact_email": "justin.l@superblocks.com",
+   "contact_name": "Justin Lee",
+   "contact_title": "Head of GTM Strategy",
+   "contact_role": "gtm",
+   "domain": "superblocks.com",
+   "stage": "leads",
+   "source": "intake",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "pick_basis": "gtm",
+   "alternates": "Puneeth Ghodgeri (Head of Marketing",
+   "score": "100",
+   "quality": "HIGH",
+   "placements": "3",
+   "subscriber_range": "7K\u2013250K",
+   "sponsored_pubs": [
+    "PMAssist Industry Insights",
+    "The System Design Newsletter"
+   ],
+   "recommended_pubs": [
+    "AI Agents Simplified",
+    "Supercompanies with Greg & Taylor",
+    "The Media Copilot",
+    "Tech Scoop",
+    "Outcome School Newsletter"
+   ],
+   "angle": "Rising publication"
+  },
+  {
+   "id": "tracksuit",
+   "company": "Tracksuit",
+   "contact_email": "peter.sloan@gotracksuit.com",
+   "contact_name": "Peter Sloan",
+   "contact_title": "Head of Go-To-Market Operations",
+   "contact_role": "gtm",
+   "domain": "gotracksuit.com",
+   "stage": "leads",
+   "source": "intake",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "pick_basis": "gtm (explicit go-to-market title)",
+   "alternates": "Toby Rozenblit (Head of Revenue",
+   "score": "100",
+   "quality": "HIGH",
+   "placements": "16",
+   "subscriber_range": "16K\u201389K",
+   "sponsored_pubs": [
+    "On Brand Magazine",
+    "The Brand Waves",
+    "Because of Marketing",
+    "Famous Campaigns",
+    "The Social Juice"
+   ],
+   "recommended_pubs": [
+    "Nonlinear News",
+    "Platypus Economics",
+    "LA FRAISE \u2122",
+    "Link in Bio",
+    "Miranda Does Brands"
+   ],
+   "angle": "Rising publication"
+  },
+  {
+   "id": "unblocked",
+   "company": "Unblocked",
+   "contact_email": "dennis@getunblocked.com",
+   "contact_name": "Dennis Pilarinos",
+   "contact_title": "CEO",
+   "contact_role": "founder",
+   "domain": "getunblocked.com",
+   "stage": "leads",
+   "source": "intake",
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "pick_basis": "fallback (no GTM/growth at domain)",
+   "alternates": "none",
+   "score": "100",
+   "quality": "HIGH",
+   "placements": "7",
+   "subscriber_range": "172K\u2013250K",
+   "sponsored_pubs": [
+    "Engineering Leadership",
+    "Refactoring",
+    "The System Design Newsletter"
+   ],
+   "recommended_pubs": [
+    "The Sublime Newsletter",
+    "Prompt Guy",
+    "Almost Timely Newsletter",
+    "Product Growth",
+    "Tech Scoop"
+   ],
+   "angle": "Rising publication"
+  },
+  {
+   "id": "profound",
+   "company": "Profound",
+   "stage": "leads",
+   "source": "intake",
+   "notes": [],
+   "created_at": "2026-09-10T19:28:33.008533+00:00",
+   "updated_at": "2026-09-10T19:28:33.008533+00:00",
+   "blocked": "no contact found (Hunter has no people for this domain)"
+  },
+  {
+   "id": "mode-mobile",
+   "company": "Mode Mobile",
+   "domain": "modemobile.com",
+   "contact_email": "diana.hasbun@modemobile.com",
+   "contact_name": "Diana Hasbun",
+   "contact_title": "Product Marketing Specialist",
+   "contact_role": "marketing",
+   "stage": "first_email",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.543Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": [],
+   "extra_emails": [
+    "roger.fonsi@modemobile.com"
+   ]
+  },
+  {
+   "id": "ledger",
+   "company": "Ledger",
+   "domain": "ledger.com",
+   "contact_email": "matteo.mariat@ledger.com",
+   "contact_name": "Matteo Mariat",
+   "contact_title": "Director of Perfomance Marketing",
+   "contact_role": "marketing",
+   "stage": "first_email",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.544Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": []
+  },
+  {
+   "id": "granola",
+   "company": "Granola",
+   "domain": "granola.so",
+   "contact_email": "marie@granola.so",
+   "contact_name": "Marie",
+   "contact_title": "Influencer Marketing Specialist",
+   "contact_role": "marketing",
+   "stage": "first_email",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.544Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": []
+  },
+  {
+   "id": "kodiak",
+   "company": "Kodiak",
+   "domain": "kodiakls.com",
+   "contact_email": "dani.carlson@kodiakls.com",
+   "contact_name": "Dani Carlson",
+   "contact_title": "Manager",
+   "contact_role": "other",
+   "stage": "first_email",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.544Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": []
+  },
+  {
+   "id": "ollie",
+   "company": "Ollie",
+   "domain": "ollie.ai",
+   "contact_email": "bill@ollie.ai",
+   "contact_name": "Bill",
+   "contact_title": "CEO",
+   "contact_role": "founder",
+   "stage": "follow_up_1",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.544Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": [],
+   "extra_emails": [
+    "kieran@ollie.ai"
+   ]
+  },
+  {
+   "id": "migma",
+   "company": "Migma",
+   "domain": "migma.ai",
+   "contact_email": "adam@migma.ai",
+   "contact_name": "Adam",
+   "contact_title": "CEO",
+   "contact_role": "founder",
+   "stage": "follow_up_1",
+   "source": "import",
+   "created_at": "2026-09-10T19:28:45.544Z",
+   "updated_at": "2026-09-10T19:34:16.270139+00:00",
+   "notes": []
+  }
+ ],
+ "activity": [
+  {
+   "lead_id": "xplor-pay",
+   "kind": "note",
+   "detail": "draft ready in the Email Pad, not sent yet",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "stacker",
+   "kind": "note",
+   "detail": "draft ready in the Email Pad, not sent yet",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "bolt-new",
+   "kind": "note",
+   "detail": "draft ready in the Email Pad, not sent yet",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "ground-news",
+   "kind": "note",
+   "detail": "draft ready in the Email Pad, not sent yet",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "brex",
+   "kind": "note",
+   "detail": "candidate with contact: Jessica Hodnick (Senior Director of Growth Marketing) - growth (most senior)",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "superblocks",
+   "kind": "note",
+   "detail": "candidate with contact: Justin Lee (Head of GTM Strategy) - gtm",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "tracksuit",
+   "kind": "note",
+   "detail": "candidate with contact: Peter Sloan (Head of Go-To-Market Operations) - gtm (explicit go-to-market title)",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "unblocked",
+   "kind": "note",
+   "detail": "candidate with contact: Dennis Pilarinos (CEO) - fallback (no GTM/growth at domain)",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "lead_id": "profound",
+   "kind": "note",
+   "detail": "candidate: no contact available yet - needs a manual/LinkedIn route",
+   "source": "seed",
+   "ts": "2026-09-10T19:28:33.008533+00:00"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.543Z",
+   "lead_id": "mode-mobile",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "ledger",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "granola",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "kodiak",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "ollie",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "ollie",
+   "kind": "email_out",
+   "subject": "Follow-up 1",
+   "detail": "carried over from the previous tracker",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "migma",
+   "kind": "email_out",
+   "subject": "First Email",
+   "detail": "carried over from the previous tracker (no send timestamp)",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:28:45.544Z",
+   "lead_id": "migma",
+   "kind": "email_out",
+   "subject": "Follow-up 1",
+   "detail": "carried over from the previous tracker",
+   "source": "import"
+  },
+  {
+   "ts": "2026-09-10T19:29:23.263Z",
+   "lead_id": "mcalvany",
+   "kind": "email_out",
+   "msg_id": "b825b176-6745-4ae2-85d5-8bf65cecd9cf",
+   "subject": "McAlvany in Clusterfuck Nation \u2014 3 similar culture/markets lists",
+   "detail": "sent via pad",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:30:19.214Z",
+   "lead_id": "mcalvany",
+   "kind": "stage",
+   "from": "leads",
+   "to": "first_email",
+   "detail": "outbound mail on record",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "xplor-pay",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Xplor Pay in Linear (Vertical AI) \u2014 3 similar pubs with real numbers",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "stacker",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Stacker in Eli Schwartz's SEO & AEO \u2014 3 pubs riding AI search",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "bolt-new",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Bolt.new in Product Growth (240K) \u2014 where else AI-agent buyers read",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "ground-news",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Ground News in Narativ \u2014 3 news lists with similar audiences",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "brex",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Brex in Core Memory + Sourcery \u2014 3 similar founder/AI lists",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "tracksuit",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Tracksuit in On Brand Magazine + The Brand Waves \u2014 3 similar brand lists",
+   "source": "sync"
+  },
+  {
+   "ts": "2026-09-10T19:33:04.950Z",
+   "lead_id": "superblocks",
+   "kind": "note",
+   "detail": "draft ready in the pad (not sent): Superblocks in PMAssist + The System Design Newsletter \u2014 3 similar dev lists",
+   "source": "sync"
+  }
+ ],
+ "sync": {
+  "email": "2026-09-10T19:34:39.789Z"
+ }
+}

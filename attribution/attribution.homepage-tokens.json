@@ -1,0 +1,46 @@
+{
+  "tokens": [
+    {
+      "token": "uMk2AW9IhQlJ6I0dZekGRxn3",
+      "lead_id": "xplor-pay",
+      "campaign": "sep2-2026",
+      "link_ref": "site-nf",
+      "dest": "https://newsletterfit.com",
+      "created_at": "2026-09-09T12:06:16.000Z",
+      "expires_at": "2026-12-08T12:06:16.478Z",
+      "first_click_at": null
+    },
+    {
+      "token": "JnkFGa_BURBbhfprD4I8GtLP",
+      "lead_id": "stacker",
+      "campaign": "sep2-2026",
+      "link_ref": "site-nf",
+      "dest": "https://newsletterfit.com",
+      "created_at": "2026-09-09T12:06:16.000Z",
+      "expires_at": "2026-12-08T12:06:16.483Z",
+      "first_click_at": null
+    },
+    {
+      "token": "qilU59GmADaXCBW3TkpnIj6n",
+      "lead_id": "bolt-new",
+      "campaign": "sep2-2026",
+      "link_ref": "site-nf",
+      "dest": "https://newsletterfit.com",
+      "created_at": "2026-09-09T12:06:16.000Z",
+      "expires_at": "2026-12-08T12:06:16.488Z",
+      "first_click_at": null
+    },
+    {
+      "token": "-r5q6fnhO4zRu2LoFf1iuMOw",
+      "lead_id": "ground-news",
+      "campaign": "sep2-2026",
+      "link_ref": "site-nf",
+      "dest": "https://newsletterfit.com",
+      "created_at": "2026-09-09T12:06:16.000Z",
+      "expires_at": "2026-12-08T12:06:16.492Z",
+      "first_click_at": null
+    }
+  ],
+  "generated_at": "2026-09-09T12:06:16Z",
+  "note": "Per-lead homepage (newsletterfit.com) tracking tokens for email signatures."
+}
