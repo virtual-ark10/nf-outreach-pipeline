@@ -208,6 +208,42 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS ix_events_entity ON events(entity, entity_id, at);
 CREATE INDEX IF NOT EXISTS ix_events_type   ON events(type, at);
 
+-- ---------------------------------------------------------------- engagement
+-- Opens and clicks, exactly as Resend reports them. Both are produced by the
+-- tracking subdomain (analytics.newsletterfit.com, a CNAME to Resend's tracking
+-- infrastructure): Resend rewrites every link in the HTML body through it and
+-- embeds a 1x1 pixel, so the recipient's mail client is what fires the event —
+-- there is nothing for this app to serve and nothing to fake.
+--
+-- One row per event, never a counter on its own: the counters are derived from
+-- these rows, so a wrong number can always be traced back to an event. Resend's
+-- webhook payload carries no event id, so `dedupe` is derived from the parts that
+-- are stable across a retry (kind + message + click timestamp or event
+-- created_at + link); the unique index turns a duplicate delivery into a no-op.
+--
+-- Deliberately separate from emails.status: an open is NOT a delivery state, and
+-- letting one overwrite 'delivered' would collapse the funnel.
+CREATE TABLE IF NOT EXISTS email_engagements (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  resend_id  TEXT,                                  -- emails.resend_id (may not be matched)
+  email_id   INTEGER REFERENCES emails(id) ON DELETE SET NULL,
+  lead_id    TEXT REFERENCES leads(id) ON DELETE SET NULL,
+  kind       TEXT NOT NULL,                         -- open | click
+  url        TEXT,                                  -- the clicked link; NULL for opens
+  link_host  TEXT,                                  -- hostname, for grouping links
+  user_agent TEXT,
+  ip         TEXT,
+  at         TEXT NOT NULL,                         -- when it happened (provider time)
+  dedupe     TEXT,
+  created_at TEXT NOT NULL
+) STRICT;
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_eng_dedupe ON email_engagements(dedupe) WHERE dedupe IS NOT NULL;
+CREATE INDEX IF NOT EXISTS ix_eng_resend ON email_engagements(resend_id);
+CREATE INDEX IF NOT EXISTS ix_eng_lead   ON email_engagements(lead_id, at);
+CREATE INDEX IF NOT EXISTS ix_eng_kind   ON email_engagements(kind, at);
+CREATE INDEX IF NOT EXISTS ix_eng_host   ON email_engagements(kind, link_host);
+
 -- ---------------------------------------------------------------- triggers
 -- Safety net: stage_changed_at can never drift from stage, even for a hand-run
 -- UPDATE in sqlite3. The application still writes the stage event itself, because
@@ -288,7 +324,20 @@ UNION ALL
     s.at,
     COALESCE(s.from_stage, '(new)') || ' -> ' || s.to_stage,
     COALESCE(s.note, s.source, '') || COALESCE(' by ' || s.by, '')
-  FROM lead_stage_events s;
+  FROM lead_stage_events s
+UNION ALL
+  -- Opens and clicks belong on the timeline too: they are activity on the lead,
+  -- from the track side rather than the mail side.
+  SELECT
+    g.lead_id,
+    g.kind,
+    'eng:' || g.id,
+    g.at,
+    COALESCE(g.link_host, 'email'),
+    CASE WHEN g.kind = 'click' THEN 'clicked ' || COALESCE(g.url, 'a link')
+         ELSE 'opened the email' END
+  FROM email_engagements g
+  WHERE g.lead_id IS NOT NULL;
 
 -- NF-specific: who is due a touch right now (the day 3 / 7 / 14 cadence).
 DROP VIEW IF EXISTS v_followups_due;
@@ -300,3 +349,57 @@ FROM v_lead_pipeline p
 WHERE p.next_follow_up_at IS NOT NULL
   AND p.next_follow_up_at <= strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
   AND p.stage NOT IN ('replied', 'won', 'no', 'archived', 'qualified');
+
+-- ---------------------------------------------------------------- views: engagement
+-- The three questions the Tracking tab asks, answered from the rows themselves
+-- (never from a stored counter): how much engagement per day, which links earn
+-- the clicks, and how a single lead is engaging.
+DROP VIEW IF EXISTS v_engagement_daily;
+CREATE VIEW v_engagement_daily AS
+SELECT substr(at, 1, 10) AS day,
+       kind,
+       COUNT(*)                        AS n,
+       COUNT(DISTINCT resend_id)       AS messages,
+       COUNT(DISTINCT lead_id)         AS leads
+FROM email_engagements
+GROUP BY day, kind;
+
+DROP VIEW IF EXISTS v_top_links;
+CREATE VIEW v_top_links AS
+SELECT COALESCE(link_host, '(unknown)') AS host,
+       url,
+       COUNT(*)                AS clicks,
+       COUNT(DISTINCT lead_id) AS leads,
+       MIN(at)                 AS first_at,
+       MAX(at)                 AS last_at
+FROM email_engagements
+WHERE kind = 'click'
+GROUP BY url
+ORDER BY clicks DESC;
+
+DROP VIEW IF EXISTS v_engagement_by_lead;
+CREATE VIEW v_engagement_by_lead AS
+SELECT lead_id,
+       SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
+       SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS email_clicks,
+       MIN(CASE WHEN kind = 'open'  THEN at END)       AS first_open_at,
+       MAX(CASE WHEN kind = 'open'  THEN at END)       AS last_open_at,
+       MIN(CASE WHEN kind = 'click' THEN at END)       AS first_click_at,
+       MAX(CASE WHEN kind = 'click' THEN at END)       AS last_click_at
+FROM email_engagements
+WHERE lead_id IS NOT NULL
+GROUP BY lead_id;
+
+-- Per message: what the Sent tab shows beside a mail ("opened 3x, clicked once").
+DROP VIEW IF EXISTS v_email_engagement;
+CREATE VIEW v_email_engagement AS
+SELECT resend_id,
+       SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
+       SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS clicks,
+       MIN(CASE WHEN kind = 'open'  THEN at END)       AS first_open_at,
+       MAX(CASE WHEN kind = 'open'  THEN at END)       AS last_open_at,
+       MIN(CASE WHEN kind = 'click' THEN at END)       AS first_click_at,
+       MAX(CASE WHEN kind = 'click' THEN at END)       AS last_click_at
+FROM email_engagements
+WHERE resend_id IS NOT NULL
+GROUP BY resend_id;

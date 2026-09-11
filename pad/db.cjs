@@ -166,6 +166,82 @@ function setStage(lead_id, to_stage, { by = 'crm', note = null, source = null } 
   });
 }
 
+// ---------------------------------------------------------------- engagement
+// Opens and clicks, as Resend reports them (see the email_engagements table in
+// schema.sql). This is a record of something that already happened at the
+// provider, so it never advances a stage and never touches emails.status — it
+// would be a second writer of both, which is exactly the invariant this engine
+// is built on.
+//
+// `dedupe` collapses a webhook retry. Resend sends no event id, so the caller
+// derives one from the payload's stable parts; identical retries become one row
+// through the unique index, and the counters stay honest.
+function recordEngagement({ resend_id, kind, url = null, user_agent = null, ip = null, at = null, dedupe = null }) {
+  if (!resend_id || !kind) return { inserted: 0, reason: 'resend_id and kind are required' };
+  const when = at || nowISO();
+  return tx(() => {
+    const mail = one('SELECT id, lead_id FROM emails WHERE resend_id = ?', [resend_id]);
+    let host = null;
+    try { host = url ? new URL(url).host.toLowerCase() : null; } catch (e) { host = null; }
+    const key = dedupe || [kind, resend_id, url || '', when].join('|');
+    const ins = run(
+      `INSERT OR IGNORE INTO email_engagements
+         (resend_id, email_id, lead_id, kind, url, link_host, user_agent, ip, at, dedupe, created_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      [resend_id, mail ? mail.id : null, mail ? mail.lead_id : null, kind, url, host,
+       user_agent ? String(user_agent).slice(0, 400) : null, ip || null, when, key, nowISO()]
+    );
+    return {
+      inserted: ins.changes || 0,
+      duplicate: !ins.changes,
+      email_id: mail ? mail.id : null,
+      lead_id: mail ? mail.lead_id : null,
+      matched: Boolean(mail),
+      kind,
+      url,
+    };
+  });
+}
+
+// The three reads the Tracking tab needs. Counters are always derived here, so
+// they can be rebuilt from the rows and can never drift from them.
+function engagementTotals(sinceISO) {
+  return one(
+    `SELECT COUNT(*)                                                        AS events,
+            COALESCE(SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END), 0)     AS opens,
+            COALESCE(SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END), 0)     AS email_clicks,
+            COUNT(DISTINCT CASE WHEN kind = 'open'  THEN resend_id END)      AS opened_messages,
+            COUNT(DISTINCT CASE WHEN kind = 'click' THEN resend_id END)      AS clicked_messages,
+            COUNT(DISTINCT CASE WHEN kind = 'open'  THEN lead_id END)        AS opened_leads,
+            COUNT(DISTINCT CASE WHEN kind = 'click' THEN lead_id END)        AS clicked_leads
+       FROM email_engagements WHERE at >= ?`, [sinceISO]) || {};
+}
+function engagementSeries(sinceISO) {
+  return all(
+    `SELECT substr(at, 1, 10) AS day,
+            SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
+            SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS clicks
+       FROM email_engagements WHERE at >= ? GROUP BY day ORDER BY day`, [sinceISO]);
+}
+function engagementByLead(sinceISO) {
+  return all(
+    `SELECT lead_id,
+            SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
+            SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS email_clicks
+       FROM email_engagements WHERE at >= ? AND lead_id IS NOT NULL
+      GROUP BY lead_id`, [sinceISO]);
+}
+function topLinks(sinceISO, limit = 10) {
+  return all(
+    `SELECT url, link_host AS host, COUNT(*) AS clicks, COUNT(DISTINCT lead_id) AS leads, MAX(at) AS last_at
+       FROM email_engagements
+      WHERE kind = 'click' AND at >= ? AND url IS NOT NULL
+      GROUP BY url ORDER BY clicks DESC, last_at DESC LIMIT ?`, [sinceISO, limit]);
+}
+function engagementForLead(leadId) {
+  return one('SELECT * FROM v_engagement_by_lead WHERE lead_id = ?', [leadId]) || { opens: 0, email_clicks: 0 };
+}
+
 // ---------------------------------------------------------------- NF-derived
 const DUE_DAYS = Object.assign(
   { first_email: 3, follow_up_1: 4, follow_up_2: 7, follow_up_3: 0 },
@@ -178,6 +254,7 @@ function derive(lead) {
   const out = one("SELECT COUNT(*) n, MAX(sent_at) last FROM emails WHERE lead_id = ? AND direction = 'outbound'", [lead.id]) || {};
   const inb = one("SELECT COUNT(*) n FROM replies WHERE lead_id = ? AND deleted_at IS NULL", [lead.id]) || {};
   const clicks = val("SELECT COUNT(*) FROM events WHERE entity = 'lead' AND entity_id = ? AND type = 'click'", [lead.id]) || 0;
+  const eng = engagementForLead(lead.id);
   const lastEv = val('SELECT MAX(at) FROM v_lead_timeline WHERE lead_id = ?', [lead.id]);
   const wait = DUE_DAYS[lead.stage];
   // The persisted next_follow_up_at (written on send) is authoritative; the cadence
@@ -188,7 +265,13 @@ function derive(lead) {
   return {
     emails_sent: out.n || 0,
     emails_received: inb.n || 0,
-    clicks: clicks || 0,
+    clicks: clicks || 0,                      // first-party: minted site links that were clicked
+    opens: eng.opens || 0,                    // Resend open tracking (pixel on the brand's tracking subdomain)
+    email_clicks: eng.email_clicks || 0,      // Resend click tracking — the link in the mail itself
+    first_open_at: eng.first_open_at || null,
+    last_open_at: eng.last_open_at || null,
+    first_click_at: eng.first_click_at || null,
+    last_click_at: eng.last_click_at || null,
     last_activity: lastEv || null,
     last_email_out: out.last || null,
     next_due: due,
@@ -201,6 +284,7 @@ module.exports = {
   DB_PATH, SCHEMA_PATH, open, all, one, run, exec, val, tx, plain, bind,
   nowISO, j, pj, bit, int, csvList, addressesOf, findLeadByAddress,
   logEvent, logFailure, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
+  recordEngagement, engagementTotals, engagementSeries, engagementByLead, topLinks, engagementForLead,
 };
 
 if (require.main === module) {

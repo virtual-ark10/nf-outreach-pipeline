@@ -65,7 +65,10 @@ function sign(secret, id, ts, body) {
     tr.body && ['sent', 'delivered', 'bounced', 'replies', 'clicks', 'opens', 'errors'].every((k) => typeof tr.body.totals[k] === 'number'),
     tr.body && tr.body.totals);
   check('tracking names its sources honestly',
-    tr.body && tr.body.sources && tr.body.sources.opens_tracked === false && typeof tr.body.sources.store === 'string',
+    tr.body && tr.body.sources && tr.body.sources.opens_tracked === true
+    && tr.body.sources.email_clicks_tracked === true
+    && tr.body.sources.tracking_domain === 'analytics.newsletterfit.com'
+    && typeof tr.body.sources.store === 'string',
     tr.body && tr.body.sources);
 
   // the CRM's rejected token must be visible in the same events table the
@@ -98,9 +101,12 @@ function sign(secret, id, ts, body) {
     detail.body && Array.isArray(detail.body.activity) && detail.body.activity.some((a) => a.kind === 'email_out'), detail.body && detail.body.activity);
 
   const tl = await api(CRM, '/api/leads/mcalvany/timeline');
+  // Guarded: a missing fixture must fail this check, not abort the whole run and
+  // hide every check after it.
+  const tlRows = (tl.body && Array.isArray(tl.body.timeline)) ? tl.body.timeline : [];
   check('v_lead_timeline returns email + stage rows',
-    tl.body && tl.body.timeline.filter((r) => r.kind === 'email').length === 1
-    && tl.body.timeline.filter((r) => r.kind === 'stage').length === 2, tl.body && tl.body.timeline);
+    tlRows.filter((r) => r.kind === 'email').length === 1
+    && tlRows.filter((r) => r.kind === 'stage').length === 2, tl.body && tl.body.timeline);
 
   const pipe = await api(CRM, '/api/pipeline');
   check('v_lead_pipeline has a row per live lead', pipe.body && pipe.body.leads.length === 16, pipe.body && pipe.body.leads.length);
@@ -275,6 +281,87 @@ function sign(secret, id, ts, body) {
     check('another brand\'s event is logged but not imported as CRM mail',
       otherRes.status === 200 && otherBody.skipped && !db.val('SELECT id FROM emails WHERE resend_id = ?', ['e2e-hook-other']), otherBody);
   }
+
+  // ---------------------------------------------------------------- engagement (opens + clicks)
+  // Resend fires these from its tracking subdomain (analytics.newsletterfit.com):
+  // the 1x1 pixel for an open, the rewritten link for a click. The send is written
+  // straight through the domain layer so the test spends no real Resend call, and
+  // the webhooks are signed the way Resend signs them.
+  const iso = new Date().toISOString();
+  db.run(`INSERT OR REPLACE INTO leads (id, company, domain, email, stage, created_at, updated_at)
+          VALUES (?, ?, ?, ?, 'leads', ?, ?)`,
+    ['e2e-eng', 'E2E Engagement Co', 'e2e-eng.test', 'eng@e2e-eng.test', iso, iso]);
+  const probe = db.one('SELECT * FROM leads WHERE id = ?', ['e2e-eng']);
+  const sent = P.recordOutbound({ lead: probe, subject: 'engagement probe', to: 'eng@e2e-eng.test', resendId: 'e2e-eng-msg-1' });
+  check('probe send recorded, cadence advanced exactly once', sent && sent.advanced === true && sent.stage === 'first_email', sent);
+  P.recordDeliveryStatus({ resendId: 'e2e-eng-msg-1', status: 'delivered', at: iso });
+
+  if (!secret) {
+    results.push('  SKIP  engagement webhook tests (no RESEND_WEBHOOK_SECRET in .env)');
+  } else {
+    const postHook = async (ev, tag) => {
+      const raw = JSON.stringify(ev);
+      const hid = 'msg_e2e_' + tag;
+      const hts = String(Math.floor(Date.now() / 1000));
+      const res = await fetch(PAD + '/api/webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'svix-id': hid, 'svix-timestamp': hts, 'svix-signature': 'v1,' + sign(secret, hid, hts, raw) },
+        body: raw,
+      });
+      return { status: res.status, body: await res.json() };
+    };
+    const openEv = {
+      type: 'email.opened', created_at: iso,
+      data: { email_id: 'e2e-eng-msg-1', to: ['eng@e2e-eng.test'], from: 'NewsletterFIT <ian@newsletterfit.com>', subject: 'engagement probe' },
+    };
+    const clickEv = {
+      type: 'email.clicked', created_at: iso,
+      data: {
+        email_id: 'e2e-eng-msg-1', to: ['eng@e2e-eng.test'], from: 'NewsletterFIT <ian@newsletterfit.com>', subject: 'engagement probe',
+        click: { link: 'https://newsletterfit.com/pricing', timestamp: iso, ipAddress: '203.0.113.9', userAgent: 'E2E/1.0' },
+      },
+    };
+
+    const o1 = await postHook(openEv, 'open_1');
+    check('open webhook stored as engagement on the right lead',
+      o1.status === 200 && o1.body.stored && o1.body.stored.inserted === 1 && o1.body.stored.lead_id === 'e2e-eng', o1.body);
+    const o2 = await postHook(openEv, 'open_2');   // the retry Svix would send
+    check('a retried open does not double-count (dedupe key collapses it)',
+      o2.body.stored && o2.body.stored.inserted === 0 && o2.body.stored.duplicate === true, o2.body);
+    const c1 = await postHook(clickEv, 'click_1');
+    check('click webhook keeps the link that was clicked',
+      c1.body.stored && c1.body.stored.inserted === 1 && c1.body.stored.url === 'https://newsletterfit.com/pricing', c1.body);
+    const c2 = await postHook(clickEv, 'click_2');
+    check('the same click delivered twice is one row', c2.body.stored && c2.body.stored.inserted === 0, c2.body);
+
+    check('an open never overwrites the delivery status (funnel stays honest)',
+      db.val('SELECT status FROM emails WHERE resend_id = ?', ['e2e-eng-msg-1']) === 'delivered',
+      db.val('SELECT status FROM emails WHERE resend_id = ?', ['e2e-eng-msg-1']));
+    check('engagement rows are matched back to the lead',
+      db.val('SELECT COUNT(*) FROM email_engagements WHERE lead_id = ?', ['e2e-eng']) === 2,
+      db.val('SELECT COUNT(*) FROM email_engagements WHERE lead_id = ?', ['e2e-eng']));
+    check('the clicked link host is stored for grouping',
+      db.val("SELECT link_host FROM email_engagements WHERE kind = 'click'") === 'newsletterfit.com');
+    check('no stage was moved by an open or a click',
+      db.val('SELECT stage FROM leads WHERE id = ?', ['e2e-eng']) === 'first_email');
+    const acts = P.activityFor('e2e-eng');
+    check('open and click both show on the lead timeline',
+      acts.filter((a) => a.kind === 'open').length === 1 && acts.filter((a) => a.kind === 'click').length === 1,
+      acts.map((a) => a.kind));
+
+    const tr = await api(PAD, '/api/tracking?days=30');
+    check('tracking reports the open and the link click from the store',
+      tr.body.totals && tr.body.totals.opens === 1 && tr.body.totals.email_clicks === 1, tr.body && tr.body.totals);
+    check('tracking lists the clicked link with its count',
+      (tr.body.top_links || [])[0] && tr.body.top_links[0].url === 'https://newsletterfit.com/pricing' && tr.body.top_links[0].clicks === 1,
+      tr.body && tr.body.top_links);
+    check('tracking states opens and link clicks are tracked, and from which domain',
+      tr.body.sources && tr.body.sources.opens_tracked === true && tr.body.sources.email_clicks_tracked === true
+        && tr.body.sources.tracking_domain === 'analytics.newsletterfit.com', tr.body && tr.body.sources);
+    const dayRow = (tr.body.by_day || []).find((r) => (Number(r.opens) || 0) > 0);
+    check('opens land on the per-day series (the chart has data)', !!dayRow && dayRow.opens === 1, tr.body && tr.body.by_day);
+  }
+
   const arch = await api(PAD, '/api/archive?limit=5', { headers: { 'X-Pad-Token': TOKEN } });
   check('/api/archive reads back from the events table', arch.status === 200 && Array.isArray(arch.body.data) && arch.body.data.length > 0, arch.body && arch.body.data.length);
 

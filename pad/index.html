@@ -338,10 +338,12 @@
       <div class="card"><h3>Engagement funnel</h3><div class="cbox"><canvas id="ch_funnel"></canvas></div></div>
       <div class="card"><h3>Top leads by sends</h3><div class="cbox tall"><canvas id="ch_leads"></canvas></div></div>
       <div class="card"><h3>By campaign</h3><div class="cbox"><canvas id="ch_campaigns"></canvas></div></div>
+      <div class="card"><h3>Top clicked links</h3><div class="cbox tall"><canvas id="ch_top_links"></canvas></div></div>
       <div class="card"><h3>Failures by operation</h3><div class="cbox"><canvas id="ch_errors"></canvas></div></div>
     </div>
     <div class="card" style="margin-top:12px"><h3>Recent failures &mdash; events where type = 'error'</h3><div id="tr_errors"></div></div>
-    <div class="card" style="margin-top:12px"><h3>Leads &mdash; sends, replies, clicks</h3><div id="tr_leads"></div></div>
+    <div class="card" style="margin-top:12px"><h3>Leads &mdash; sends, replies, opens, clicks</h3><div id="tr_leads"></div></div>
+    <div class="card" style="margin-top:12px"><h3>Links &mdash; what got clicked</h3><div id="tr_toplinks"></div></div>
     <div id="tr_sources" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
   </section>
 
@@ -367,8 +369,10 @@
         <tr><th>Metric</th><th>Source</th></tr>
         <tr><td>sent / delivered / bounced</td><td>the emails table (Resend webhooks keep the status current)</td></tr>
         <tr><td>replies</td><td>the replies table (Resend inbox webhook)</td></tr>
-        <tr><td>clicks</td><td>attribution mirror &mdash; first_click_at per minted token</td></tr>
-        <tr><td>opens</td><td>not tracked yet: open tracking is off at Resend, so the number is honestly 0</td></tr>
+        <tr><td>site clicks</td><td>attribution mirror &mdash; first_click_at per minted token (links back to newsletterfit.com)</td></tr>
+        <tr><td>opens</td><td>Resend open tracking: a 1x1 pixel served from <span id="tr_src_opens_domain">the tracking subdomain</span>; email.opened arrives on the webhook and lands in email_engagements</td></tr>
+        <tr><td>link clicks</td><td>Resend click tracking: every link in the HTML body is rewritten through <span id="tr_src_clicks_domain">the tracking subdomain</span>; email.clicked arrives on the webhook and lands in email_engagements</td></tr>
+        <tr><td>open / click rate</td><td>distinct messages engaged divided by delivered, so the denominator is always stated</td></tr>
         <tr><td>failures</td><td>events rows where type = 'error', grouped by payload.op</td></tr>
       </table>
     </div>
@@ -1012,13 +1016,27 @@ async function loadTracking() {
 function renderTracking(d) {
   const t = d.totals || {};
   const src = d.sources || {};
+  // Every rate is stated with its denominator, so "0%" is never mistaken for "no
+  // data" and every number on this tab can be argued with.
+  const pctTxt = (r) => (r === null || r === undefined ? "no delivered mail yet" : num(r) + "% of delivered");
+  const shortUrl = (u) => {
+    try { const x = new URL(u); return (x.host + x.pathname).replace(/\/$/, "").slice(0, 46); }
+    catch (e) { return String(u || "").slice(0, 46); }
+  };
+  // The tracking subdomain is a Resend DOMAIN setting, so it is never written
+  // into the markup — the server names whichever one this brand uses, and a
+  // second brand sees its own here.
+  const trackHost = src.tracking_domain || "the tracking subdomain";
+  const dOpen = $("tr_src_opens_domain"); if (dOpen) dOpen.textContent = trackHost;
+  const dClick = $("tr_src_clicks_domain"); if (dClick) dClick.textContent = trackHost;
   $("tr_kpis").innerHTML = [
     kpiCell("Leads", t.leads, num(t.converted) + " converted"),
     kpiCell("Sent", t.sent),
     kpiCell("Delivered", t.delivered),
     kpiCell("Replied", t.replies, num(t.replied_leads) + " distinct leads"),
-    kpiCell("Clicked", t.clicks, num(t.clicks_minted) + " links minted"),
-    kpiCell("Opens", t.opens, src.opens_tracked ? "" : "open tracking off at Resend"),
+    kpiCell("Opened", t.opens, pctTxt(t.open_rate)),
+    kpiCell("Clicked (in mail)", t.email_clicks, pctTxt(t.click_rate)),
+    kpiCell("Site clicks", t.clicks, num(t.clicks_minted) + " links minted"),
     kpiCell("Bounced", t.bounced, t.complained ? num(t.complained) + " complaints" : ""),
     kpiCell("Failed sends", t.failed),
     kpiCell("Failures logged", t.errors, "events with type=error"),
@@ -1036,7 +1054,9 @@ function renderTracking(d) {
         datasets: [
           { label: "Sent", data: days.map((r) => r.sent), borderColor: CHART_COLORS.sent, backgroundColor: "rgba(37,99,235,.12)", tension: .3, fill: true },
           { label: "Replies", data: days.map((r) => r.replies), borderColor: CHART_COLORS.replies, tension: .3 },
-          { label: "Clicks", data: days.map((r) => r.clicks), borderColor: CHART_COLORS.clicks, tension: .3 },
+          { label: "Opens", data: days.map((r) => r.opens), borderColor: CHART_COLORS.opened, tension: .3 },
+          { label: "Email clicks", data: days.map((r) => r.email_clicks), borderColor: CHART_COLORS.clicks, tension: .3 },
+          { label: "Site clicks", data: days.map((r) => r.clicks), borderColor: CHART_COLORS.muted, borderDash: [4, 3], tension: .3 },
           { label: "Failures", data: days.map((r) => r.errors), borderColor: CHART_COLORS.errors, tension: .3 },
         ],
       },
@@ -1059,7 +1079,7 @@ function renderTracking(d) {
         labels: ["Sent", "Delivered", "Opened", "Clicked", "Replied"],
         datasets: [{
           label: "leads/messages",
-          data: [t.sent, t.delivered, t.opens, t.clicks, t.replies].map((v) => Number(v) || 0),
+          data: [t.sent, t.delivered, t.opens, t.email_clicks, t.replies].map((v) => Number(v) || 0),
           backgroundColor: [CHART_COLORS.sent, CHART_COLORS.delivered, CHART_COLORS.opened, CHART_COLORS.clicks, CHART_COLORS.replies],
         }],
       },
@@ -1094,6 +1114,16 @@ function renderTracking(d) {
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } } },
     });
 
+    const links = d.top_links || [];
+    makeChart("ch_top_links", {
+      type: "bar",
+      data: {
+        labels: links.length ? links.map((r) => shortUrl(r.url)) : ["no clicks yet"],
+        datasets: [{ label: "clicks", data: links.length ? links.map((r) => r.clicks) : [0], backgroundColor: CHART_COLORS.clicks }],
+      },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { ticks: { font: { size: 10 } } } } },
+    });
+
     const errs = d.error_ops || [];
     makeChart("ch_errors", {
       type: "bar",
@@ -1117,14 +1147,28 @@ function renderTracking(d) {
   // ---- per-lead table
   const rows = d.leads || [];
   $("tr_leads").innerHTML = rows.length ? (
-    '<table class="small"><tr><th>Lead</th><th>Stage</th><th class="n">Sent</th><th class="n">Replies</th><th class="n">Clicks</th><th class="n">Failures</th><th>Last contact</th></tr>' +
+    '<table class="small"><tr><th>Lead</th><th>Stage</th><th class="n">Sent</th><th class="n">Replies</th><th class="n">Opens</th><th class="n">Link clicks</th><th class="n">Site clicks</th><th class="n">Failures</th><th>Last contact</th></tr>' +
     rows.map((r) => "<tr><td>" + esc(r.company || r.lead_id) + "</td><td>" + esc(r.stage || "") + '</td><td class="n">' + num(r.sent) +
-      '</td><td class="n">' + num(r.replies) + '</td><td class="n">' + num(r.clicks) + '</td><td class="n' + (Number(r.failures) ? " fail" : "") + '">' + num(r.failures) +
+      '</td><td class="n">' + num(r.replies) + '</td><td class="n">' + num(r.opens) + '</td><td class="n">' + num(r.email_clicks) +
+      '</td><td class="n">' + num(r.clicks) + '</td><td class="n' + (Number(r.failures) ? " fail" : "") + '">' + num(r.failures) +
       "</td><td>" + esc(String(r.last_contact_at || "—").replace("T", " ").slice(0, 16)) + "</td></tr>").join("") + "</table>"
   ) : '<div class="empty" style="font-size:12px">No leads yet.</div>';
 
-  $("tr_sources").textContent = "source: " + (src.store || "?") + " · clicks: " + (src.attribution_mirror === "ok" ? "attribution mirror" : "mirror unavailable") +
-    " · opens: " + (src.opens_tracked ? "tracked" : "not tracked") + " · window: last " + num(d.window_days) + " days · generated " + String(d.generated_at || "").replace("T", " ").slice(0, 19);
+  // ---- which links actually earn clicks (Resend rewrites each one through the
+  // tracking subdomain, so this is measured at the recipient, not inferred)
+  const links = d.top_links || [];
+  $("tr_toplinks").innerHTML = links.length ? (
+    '<table class="small"><tr><th>Link</th><th>Host</th><th class="n">Clicks</th><th class="n">Leads</th><th>Last click</th></tr>' +
+    links.map((r) => "<tr><td>" + esc(shortUrl(r.url)) + "</td><td>" + esc(r.host || "") + '</td><td class="n">' + num(r.clicks) +
+      '</td><td class="n">' + num(r.leads) + "</td><td>" + esc(String(r.last_at || "—").replace("T", " ").slice(0, 16)) + "</td></tr>").join("") + "</table>"
+  ) : '<div class="empty" style="font-size:12px">No link clicks yet. Every link in the HTML body is rewritten through ' + esc(trackHost) + ' and Resend fires email.clicked on each one, so this table fills itself as recipients click — no pixel of our own to serve, and nothing to fake.</div>';
+
+  $("tr_sources").textContent = "source: " + (src.store || "?") +
+    " · opens: " + (src.opens_tracked ? "tracked (Resend pixel)" : "not tracked") +
+    " · link clicks: " + (src.email_clicks_tracked ? "tracked (Resend link rewrite)" : "not tracked") +
+    " · tracking domain: " + (src.tracking_domain || "—") +
+    " · site clicks: " + (src.attribution_mirror === "ok" ? "attribution mirror" : "mirror unavailable") +
+    " · window: last " + num(d.window_days) + " days · generated " + String(d.generated_at || "").replace("T", " ").slice(0, 19);
 }
 if ($("btn_tr_refresh")) $("btn_tr_refresh").addEventListener("click", loadTracking);
 

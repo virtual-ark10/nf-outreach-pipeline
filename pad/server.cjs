@@ -92,6 +92,13 @@ if (!PAD_TOKEN) console.warn('[WARN] PAD_TOKEN not set — /api/* (except webhoo
 
 const db = require('./db.cjs');
 const P = require('./pipeline.cjs');
+// Resend's tracking subdomain: the host that carries the open pixel and the
+// rewritten links. It is configured per brand ON THE DOMAIN in Resend, not here,
+// so the pad only ever reports which one it belongs to. Derived from PAD_DOMAINS
+// by default (both brands on this Resend account use analytics.<domain>), and
+// overridable with RESEND_TRACKING_DOMAIN for a different subdomain.
+const TRACKING_DOMAIN = process.env.RESEND_TRACKING_DOMAIN
+  || (P.BRAND_DOMAINS && P.BRAND_DOMAINS[0] ? 'analytics.' + P.BRAND_DOMAINS[0] : '');
 
 // ---------------------------------------------------------------- store
 // Drafts, the send log and the webhook archive used to be three files
@@ -179,7 +186,26 @@ function handleWebhook(ev, receivedAt) {
       inReplyTo: d.in_reply_to || null, at, raw: ev,
     });
     out.stored = { reply_id: r.reply_id, lead_id: r.lead_id, duplicate: Boolean(r.duplicate) };
-  } else if (/^email\.(delivered|bounced|complained|failed|opened|clicked)$/.test(type)) {
+  } else if (type === 'email.opened' || type === 'email.clicked') {
+    // Engagement, not delivery. Resend fires these from its tracking subdomain
+    // (per brand, set on the domain in Resend — see TRACKING_DOMAIN): the pixel
+    // for an open, the rewritten link for a click. Deliberately NOT routed to
+    // recordDeliveryStatus — an open must not overwrite 'delivered' on the emails
+    // row, or the funnel collapses and a bounced message can look opened.
+    const c = d.click || {};
+    const kind = type === 'email.clicked' ? 'click' : 'open';
+    out.stored = P.recordEngagement({
+      resendId: d.email_id || d.message_id || null,
+      kind,
+      url: c.link || d.link || null,
+      userAgent: c.userAgent || null,
+      ip: c.ipAddress || null,
+      at: c.timestamp || at,
+      // Resend sends no event id, so the retry key is built from the parts a retry
+      // repeats verbatim. Same click twice = one row.
+      eventId: [type, d.email_id || '', c.link || '', c.timestamp || ev.created_at || ''].join('|'),
+    });
+  } else if (/^email\.(delivered|bounced|complained|failed)$/.test(type)) {
     out.stored = P.recordDeliveryStatus({ resendId: d.email_id, status: type.split('.')[1], to: d.to, from: d.from, at });
   }
   return out;
@@ -441,6 +467,9 @@ function handleApi(req, res, url, ip) {
   if (req.method === 'GET' && p === '/api/tracking') {
     const days = Math.max(1, Math.min(parseInt(new URL(url, 'http://x').searchParams.get('days') || '30', 10) || 30, 365));
     const since = `-${days} days`;
+    // Engagement rows carry ISO timestamps (provider time), so they are filtered
+    // against an ISO cutoff rather than date('now', ?).
+    const sinceISO = new Date(Date.now() - days * 86400000).toISOString();
     const dayKey = "substr(COALESCE(sent_at, created_at), 1, 10)";
 
     const mail = db.all(
@@ -464,17 +493,23 @@ function handleApi(req, res, url, ip) {
         GROUP BY day ORDER BY day`, [since]);
 
     const clicks = clickStats();
+    // Opens and clicks as Resend reported them, plus the links that earned them.
+    const eng = db.engagementTotals(sinceISO);
+    const engDays = db.engagementSeries(sinceISO);
+    const engLeads = db.engagementByLead(sinceISO);
+    const topLinks = db.topLinks(sinceISO, 12);
 
     // One dense series per day, so a quiet day plots as a zero rather than a gap.
     const byDay = new Map();
     const dayOf = (d) => {
-      if (!byDay.has(d)) byDay.set(d, { day: d, sent: 0, delivered: 0, bounced: 0, replies: 0, clicks: 0, errors: 0 });
+      if (!byDay.has(d)) byDay.set(d, { day: d, sent: 0, delivered: 0, bounced: 0, replies: 0, clicks: 0, email_clicks: 0, opens: 0, errors: 0 });
       return byDay.get(d);
     };
     for (const r of mail) Object.assign(dayOf(r.day), { sent: r.sent || 0, delivered: r.delivered || 0, bounced: r.bounced || 0 });
     for (const r of replyDays) dayOf(r.day).replies = r.replies || 0;
     for (const r of errorDays) dayOf(r.day).errors = r.errors || 0;
     for (const [d, n] of Object.entries(clicks.byDay)) dayOf(d).clicks = n;
+    for (const r of engDays) Object.assign(dayOf(r.day), { opens: r.opens || 0, email_clicks: r.clicks || 0 });
 
     const totals = {
       leads: db.val('SELECT COUNT(*) FROM leads WHERE deleted_at IS NULL') || 0,
@@ -486,11 +521,20 @@ function handleApi(req, res, url, ip) {
       failed: db.val("SELECT COUNT(*) FROM emails WHERE status IN ('failed', 'rejected')") || 0,
       replies: db.val('SELECT COUNT(*) FROM replies WHERE deleted_at IS NULL') || 0,
       replied_leads: db.val("SELECT COUNT(DISTINCT lead_id) FROM replies WHERE deleted_at IS NULL AND lead_id IS NOT NULL") || 0,
-      clicks: clicks.total,
+      clicks: clicks.total,                 // first-party: tokenised links back to newsletterfit.com
       clicks_minted: clicks.minted,
-      opens: db.val("SELECT COUNT(*) FROM events WHERE type IN ('email.opened', 'opened')") || 0,
+      email_clicks: eng.email_clicks || 0,  // Resend click tracking on the mail's own links
+      opens: eng.opens || 0,                // Resend open tracking (pixel via the tracking subdomain)
+      opened_messages: eng.opened_messages || 0,
+      clicked_messages: eng.clicked_messages || 0,
+      opened_leads: eng.opened_leads || 0,
+      clicked_leads: eng.clicked_leads || 0,
       errors: db.val("SELECT COUNT(*) FROM events WHERE type = 'error'") || 0,
     };
+    // Rates are per DELIVERED message — the denominator the funnel is built on.
+    const pct = (n, d) => (d ? Math.round((Number(n) / Number(d)) * 1000) / 10 : null);
+    totals.open_rate = pct(eng.opened_messages, totals.delivered);
+    totals.click_rate = pct(eng.clicked_messages, totals.delivered);
 
     const statuses = db.all(
       `SELECT COALESCE(status, 'unknown') AS status, COUNT(*) AS n
@@ -510,7 +554,13 @@ function handleApi(req, res, url, ip) {
               (SELECT COUNT(*) FROM events v WHERE v.entity = 'lead' AND v.entity_id = l.id AND v.type = 'error') AS failures
          FROM leads l WHERE l.deleted_at IS NULL
         ORDER BY sent DESC, replies DESC, l.company LIMIT 15`);
-    for (const r of perLead) r.clicks = clicks.byLead[r.lead_id] || 0;
+    const engByLead = new Map(engLeads.map((r) => [String(r.lead_id), r]));
+    for (const r of perLead) {
+      r.clicks = clicks.byLead[r.lead_id] || 0;
+      const e = engByLead.get(String(r.lead_id)) || {};
+      r.opens = e.opens || 0;
+      r.email_clicks = e.email_clicks || 0;
+    }
 
     const errorOps = db.all(
       `SELECT json_extract(payload, '$.op') AS op, COUNT(*) AS n, MAX(at) AS last_at
@@ -531,11 +581,24 @@ function handleApi(req, res, url, ip) {
       leads: perLead,
       error_ops: errorOps,
       recent_errors: recentErrors,
+      top_links: topLinks,
+      engagement: {
+        opens: eng.opens || 0,
+        email_clicks: eng.email_clicks || 0,
+        opened_messages: eng.opened_messages || 0,
+        clicked_messages: eng.clicked_messages || 0,
+        opened_leads: eng.opened_leads || 0,
+        clicked_leads: eng.clicked_leads || 0,
+        open_rate: totals.open_rate,
+        click_rate: totals.click_rate,
+      },
       sources: {
         store: db.DB_PATH,
         attribution_mirror: clicks.ok ? 'ok' : 'unavailable',
-        clicks_tracked: true,
-        opens_tracked: false,   // Resend open tracking is off, so opens read 0
+        clicks_tracked: true,            // first-party: tokenised site links
+        email_clicks_tracked: true,      // Resend click tracking on the mail's own links
+        opens_tracked: true,             // Resend open tracking (1x1 pixel)
+        tracking_domain: TRACKING_DOMAIN,
       },
     });
   }
