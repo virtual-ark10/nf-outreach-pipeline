@@ -200,7 +200,10 @@ function handleWebhook(ev, receivedAt) {
       url: c.link || d.link || null,
       userAgent: c.userAgent || null,
       ip: c.ipAddress || null,
-      at: c.timestamp || at,
+      // When it actually happened. A click carries its own timestamp; an open has
+      // none, so the event's creation time is the only honest clock (NOT the mail's
+      // created_at, which would file every open under the day it was sent).
+      at: c.timestamp || ev.created_at || at,
       // Resend sends no event id, so the retry key is built from the parts a retry
       // repeats verbatim. Same click twice = one row.
       eventId: [type, d.email_id || '', c.link || '', c.timestamp || ev.created_at || ''].join('|'),
