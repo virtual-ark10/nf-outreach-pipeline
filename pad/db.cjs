@@ -34,8 +34,29 @@ function open() {
   db.exec('PRAGMA busy_timeout = 5000');
   db.exec('PRAGMA synchronous = NORMAL');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));   // idempotent: every object is IF NOT EXISTS
+  migrate(db);                                     // then the columns CREATE TABLE cannot add
   _db = db;
   return _db;
+}
+
+// A store that already exists keeps its shape: CREATE TABLE IF NOT EXISTS is a no-op
+// on it, so anything added to a table LATER has to be applied as an ALTER here, on
+// every open, idempotently. Right now that is the event-queue trio plus the views
+// that depend on it.
+function migrate(db) {
+  const cols = (t) => db.prepare(`PRAGMA table_info(${t})`).all().map((r) => r.name);
+  const add = (t, name, decl) => {
+    if (!cols(t).includes(name)) db.exec(`ALTER TABLE ${t} ADD COLUMN ${name} ${decl}`);
+  };
+  add('events', 'processed_at', 'TEXT');
+  add('events', 'attempts', 'INTEGER NOT NULL DEFAULT 0');
+  add('events', 'last_error', 'TEXT');
+  // The index only exists once the column does, which is why it is not in schema.sql.
+  db.exec('CREATE INDEX IF NOT EXISTS ix_events_pending ON events(processed_at, id)');
+  db.exec('DROP VIEW IF EXISTS v_events_pending');
+  db.exec(`CREATE VIEW v_events_pending AS
+    SELECT id, entity, entity_id, type, payload, at, actor, attempts, last_error
+      FROM events WHERE processed_at IS NULL ORDER BY id`);
 }
 
 // STRICT tables reject booleans and undefined, so every bound value goes through
@@ -242,6 +263,106 @@ function engagementForLead(leadId) {
   return one('SELECT * FROM v_engagement_by_lead WHERE lead_id = ?', [leadId]) || { opens: 0, email_clicks: 0 };
 }
 
+// ---------------------------------------------------------------- event queue
+// events is the audit trail AND the work queue. A row written by one process is
+// drained by whichever process handles the next request, so the pad and the engine
+// react to each other without a message bus.
+//
+// The rules that drain it live in hooks.cjs and may only add notes, flags, reasons
+// and scheduling. Stage transitions belong to pipeline.cjs — the single writer of
+// `stage` — and the `store` facade handed to a rule deliberately has NO setStage, so
+// a rule cannot move a stage even by accident. That is what lets a rule table exist
+// without becoming a second brain that double-advances every send.
+//
+// Claim, apply and mark happen in ONE transaction: a rule either runs and is marked,
+// or throws and is retried later. A rule that keeps throwing cannot stall the queue
+// either — attempts and last_error are recorded, and after maxAttempts the row is
+// dead-lettered (marked processed with the error kept, plus one type='error' event)
+// so everything behind it still moves.
+function processEvents(rules, { limit = 200, maxAttempts = 5 } = {}) {
+  if (!rules) return { processed: 0, actions: [], skipped: 'no rule table' };
+  const rows = all(
+    `SELECT id, entity, entity_id, type, payload, at, attempts FROM events
+      WHERE processed_at IS NULL ORDER BY id LIMIT ?`, [limit]);
+  if (!rows.length) return { processed: 0, actions: [] };
+
+  const store = { one, all, run, val, logEvent, logFailure, nowISO, j, pj };  // no setStage, on purpose
+  const actions = [];
+  try {
+    open().exec('BEGIN IMMEDIATE');
+  } catch (e) {
+    // Someone else is writing the same file; the next request drains instead.
+    return { processed: 0, actions: [], deferred: true };
+  }
+  try {
+    for (const row of rows) {
+      const payload = pj(row.payload, {}) || {};
+      const rule = rules[row.type];
+      let outcome = null;
+      try {
+        if (rule) outcome = rule({ event: row, payload, store });
+      } catch (err) {
+        const attempts = (row.attempts || 0) + 1;
+        const msg = String((err && err.message) || err).slice(0, 500);
+        if (attempts >= maxAttempts) {
+          run('UPDATE events SET processed_at = ?, attempts = ?, last_error = ? WHERE id = ?',
+            [nowISO(), attempts, msg, row.id]);
+          logFailure({
+            entity: 'event', entity_id: String(row.id), op: 'rule_' + row.type, error: err,
+            actor: 'hooks', extra: { event_id: row.id, attempts, dead_lettered: true },
+          });
+          actions.push({ id: row.id, event: row.type, dead_lettered: true, attempts, error: msg });
+        } else {
+          run('UPDATE events SET attempts = ?, last_error = ? WHERE id = ?', [attempts, msg, row.id]);
+          actions.push({ id: row.id, event: row.type, retry: attempts, error: msg });
+        }
+        continue;
+      }
+      run('UPDATE events SET processed_at = ? WHERE id = ?', [nowISO(), row.id]);
+      if (outcome) actions.push(Object.assign({ id: row.id, event: row.type }, outcome));
+    }
+    open().exec('COMMIT');
+  } catch (e) {
+    try { open().exec('ROLLBACK'); } catch (_) { /* nothing left to do */ }
+    throw e;
+  }
+  return { processed: rows.length, actions };
+}
+function pendingEvents(limit = 200) {
+  return all('SELECT id, entity, entity_id, type, payload, at, actor, attempts, last_error FROM v_events_pending LIMIT ?', [limit]);
+}
+function recentEvents({ limit = 100, leadId } = {}) {
+  const where = [];
+  const vals = [];
+  if (leadId) { where.push('entity_id = ?'); vals.push(String(leadId)); }
+  return all(`SELECT id, entity, entity_id, type, payload, at, actor, processed_at, attempts, last_error
+                FROM events ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY id DESC LIMIT ?`,
+    ...vals, limit);
+}
+
+// ---------------------------------------------------------------- redraft
+// Why a draft came back. Rows so the guidance can be counted, and the
+// draft.redraft_requested rule picks these up from the queue.
+function recordRedraft({ draft_id = null, lead_id = null, reason = null, note = null, at = null }) {
+  const when = at || nowISO();
+  return tx(() => {
+    const ins = run(
+      'INSERT INTO redraft_notes (draft_id, lead_id, reason, note, created_at) VALUES (?,?,?,?,?)',
+      [draft_id, lead_id, reason, note, when]);
+    logEvent({
+      entity: 'draft', entity_id: draft_id, type: 'draft.redraft_requested',
+      payload: { reason: reason || null, note: note || null, lead_id }, at: when, actor: 'pad',
+    });
+    return { id: Number(ins.lastInsertRowid), reason, note };
+  });
+}
+function redraftGuidance({ limit = 8 } = {}) {
+  const reasons = all('SELECT reason, n, last_at FROM v_redraft_reasons LIMIT ?', [limit]);
+  const recent = all('SELECT draft_id, lead_id, reason, note, created_at FROM redraft_notes ORDER BY id DESC LIMIT 20');
+  const top = reasons.map((r) => `${r.reason} (${r.n})`).join(', ');
+  return { reasons, recent, summary: top ? `Redraft reasons so far: ${top}.` : 'No redraft feedback yet.' };
+}
+
 // ---------------------------------------------------------------- NF-derived
 const DUE_DAYS = Object.assign(
   { first_email: 3, follow_up_1: 4, follow_up_2: 7, follow_up_3: 0 },
@@ -285,6 +406,7 @@ module.exports = {
   nowISO, j, pj, bit, int, csvList, addressesOf, findLeadByAddress,
   logEvent, logFailure, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
   recordEngagement, engagementTotals, engagementSeries, engagementByLead, topLinks, engagementForLead,
+  processEvents, pendingEvents, recentEvents, recordRedraft, redraftGuidance, migrate,
 };
 
 if (require.main === module) {

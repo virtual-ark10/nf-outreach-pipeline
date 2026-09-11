@@ -75,12 +75,24 @@ def main():
     print()
 
     problems = []
+    pinned = man["product"]["ref"]
     if not prod.exists():
         print(f"!! product checkout missing at {prod} — cannot check product files")
     else:
+        # The pin is a TAG: compare the checkout against the pinned commit, not against
+        # whatever happens to be checked out, or the whole comparison is meaningless.
         head = git(prod, "rev-parse", "--short", "HEAD")
-        behind = git(prod, "rev-list", "--count", "HEAD..origin/main") if git(prod, "rev-parse", "origin/main") else None
-        print(f"product checkout at {head}" + (f", {behind} behind origin/main — fetch before trusting this" if behind not in (None, "0") else ""))
+        pinned_sha = git(prod, "rev-parse", "--short", f"{pinned}^{{commit}}")
+        if pinned_sha is None:
+            print(f"!! the pin {pinned} does not resolve in {prod} — fetch tags first")
+            problems.append(f"pin {pinned} unresolvable")
+        elif head == pinned_sha:
+            print(f"product checkout at {head} = the pin {pinned} ✔")
+        else:
+            ahead = git(prod, "rev-list", "--count", f"{pinned}..HEAD")
+            print(f"!! product checkout is at {head}, NOT the pin {pinned} ({pinned_sha})"
+                  + (f" — {ahead} commits ahead" if ahead else ""))
+            problems.append(f"product checkout not at {pinned}")
         print()
 
     prod_files = tree(prod, man["product"].get("root_subdir", ""))

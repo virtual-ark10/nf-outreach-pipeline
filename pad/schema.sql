@@ -199,10 +199,13 @@ CREATE TABLE IF NOT EXISTS events (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
   entity    TEXT NOT NULL,                          -- lead|draft|email|reply|webhook|system
   entity_id TEXT,
-  type      TEXT NOT NULL,                          -- created|note|draft_sent|webhook|click|sync|...
+  type      TEXT NOT NULL,                          -- lead.created|email.sent|reply.received|error|...
   payload   TEXT,                                   -- JSON
   at        TEXT NOT NULL,
-  actor     TEXT
+  actor     TEXT,
+  processed_at TEXT,                                -- NULL until the rule table ran it
+  attempts     INTEGER NOT NULL DEFAULT 0,          -- how many times a rule threw on it
+  last_error   TEXT                                 -- why the last attempt failed
 ) STRICT;
 
 CREATE INDEX IF NOT EXISTS ix_events_entity ON events(entity, entity_id, at);
@@ -350,7 +353,37 @@ WHERE p.next_follow_up_at IS NOT NULL
   AND p.next_follow_up_at <= strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
   AND p.stage NOT IN ('replied', 'won', 'no', 'archived', 'qualified');
 
--- ---------------------------------------------------------------- views: engagement
+-- ---------------------------------------------------------------- redraft
+-- Why a draft was sent back to be rewritten. Rows, not a log line, so the guidance
+-- can be counted instead of guessed — v_redraft_reasons is what
+-- GET /api/redraft-guidance reads, and the draft.redraft_requested rule reacts to it.
+CREATE TABLE IF NOT EXISTS redraft_notes (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  draft_id   TEXT,
+  lead_id    TEXT REFERENCES leads(id) ON DELETE SET NULL,
+  reason     TEXT,                                   -- short chip label
+  note       TEXT,                                   -- the reviewer's own words
+  created_at TEXT NOT NULL
+) STRICT;
+
+CREATE INDEX IF NOT EXISTS ix_redraft_lead ON redraft_notes(lead_id, created_at);
+
+DROP VIEW IF EXISTS v_redraft_reasons;
+CREATE VIEW v_redraft_reasons AS
+SELECT COALESCE(NULLIF(reason, ''), 'unspecified') AS reason,
+       COUNT(*)      AS n,
+       MAX(created_at) AS last_at
+FROM redraft_notes
+GROUP BY reason
+ORDER BY n DESC;
+
+-- ---------------------------------------------------------------- event queue
+-- events is both the audit trail and a work queue. The three queue columns
+-- (processed_at, attempts, last_error), the index on them and the v_events_pending
+-- view are added to EXISTING stores by db.cjs -> migrate(), because CREATE TABLE IF
+-- NOT EXISTS never alters a table that already exists — and the index cannot be
+-- created here without the column. See hooks.cjs for what drains the queue.
+
 -- The three questions the Tracking tab asks, answered from the rows themselves
 -- (never from a stored counter): how much engagement per day, which links earn
 -- the clicks, and how a single lead is engaging.
