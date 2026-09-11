@@ -645,10 +645,16 @@ function handleApi(req, res, url, ip) {
       },
       sources: {
         store: db.DB_PATH,
+        // Provider-first: opens and link clicks come from Resend and work on any
+        // instance. Minted-link attribution is the OPTIONAL layer — an instance
+        // without it (a tenant that only wants Resend tracking) is not degraded, it
+        // simply has no site-click number, and the UI says so instead of reporting a
+        // zero that looks like a measurement.
+        attribution_enabled: Boolean(clicks.ok),
         attribution_mirror: clicks.ok ? 'ok' : 'unavailable',
-        clicks_tracked: true,            // first-party: tokenised site links
-        email_clicks_tracked: true,      // Resend click tracking on the mail's own links
-        opens_tracked: true,             // Resend open tracking (1x1 pixel)
+        clicks_tracked: Boolean(clicks.ok),   // first-party: tokenised site links
+        email_clicks_tracked: true,           // Resend click tracking on the mail's own links
+        opens_tracked: true,                  // Resend open tracking (1x1 pixel)
         tracking_domain: TRACKING_DOMAIN,
       },
     });
