@@ -92,6 +92,13 @@ if (!PAD_TOKEN) console.warn('[WARN] PAD_TOKEN not set — /api/* (except webhoo
 
 const db = require('./db.cjs');
 const P = require('./pipeline.cjs');
+// Resend's tracking subdomain: the host that carries the open pixel and the
+// rewritten links. It is configured per brand ON THE DOMAIN in Resend, not here,
+// so the pad only ever reports which one it belongs to. Derived from PAD_DOMAINS
+// by default (both brands on this Resend account use analytics.<domain>), and
+// overridable with RESEND_TRACKING_DOMAIN for a different subdomain.
+const TRACKING_DOMAIN = process.env.RESEND_TRACKING_DOMAIN
+  || (P.BRAND_DOMAINS && P.BRAND_DOMAINS[0] ? 'analytics.' + P.BRAND_DOMAINS[0] : '');
 
 // ---------------------------------------------------------------- store
 // Drafts, the send log and the webhook archive used to be three files
@@ -181,10 +188,10 @@ function handleWebhook(ev, receivedAt) {
     out.stored = { reply_id: r.reply_id, lead_id: r.lead_id, duplicate: Boolean(r.duplicate) };
   } else if (type === 'email.opened' || type === 'email.clicked') {
     // Engagement, not delivery. Resend fires these from its tracking subdomain
-    // (analytics.newsletterfit.com): the pixel for an open, the rewritten link for
-    // a click. Deliberately NOT routed to recordDeliveryStatus — an open must not
-    // overwrite 'delivered' on the emails row, or the funnel collapses and a
-    // bounced message can look opened.
+    // (per brand, set on the domain in Resend — see TRACKING_DOMAIN): the pixel
+    // for an open, the rewritten link for a click. Deliberately NOT routed to
+    // recordDeliveryStatus — an open must not overwrite 'delivered' on the emails
+    // row, or the funnel collapses and a bounced message can look opened.
     const c = d.click || {};
     const kind = type === 'email.clicked' ? 'click' : 'open';
     out.stored = P.recordEngagement({
@@ -591,7 +598,7 @@ function handleApi(req, res, url, ip) {
         clicks_tracked: true,            // first-party: tokenised site links
         email_clicks_tracked: true,      // Resend click tracking on the mail's own links
         opens_tracked: true,             // Resend open tracking (1x1 pixel)
-        tracking_domain: 'analytics.newsletterfit.com',
+        tracking_domain: TRACKING_DOMAIN,
       },
     });
   }

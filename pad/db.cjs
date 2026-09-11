@@ -266,7 +266,7 @@ function derive(lead) {
     emails_sent: out.n || 0,
     emails_received: inb.n || 0,
     clicks: clicks || 0,                      // first-party: minted site links that were clicked
-    opens: eng.opens || 0,                    // Resend open tracking (via analytics.newsletterfit.com)
+    opens: eng.opens || 0,                    // Resend open tracking (pixel on the brand's tracking subdomain)
     email_clicks: eng.email_clicks || 0,      // Resend click tracking — the link in the mail itself
     first_open_at: eng.first_open_at || null,
     last_open_at: eng.last_open_at || null,

@@ -370,8 +370,8 @@
         <tr><td>sent / delivered / bounced</td><td>the emails table (Resend webhooks keep the status current)</td></tr>
         <tr><td>replies</td><td>the replies table (Resend inbox webhook)</td></tr>
         <tr><td>site clicks</td><td>attribution mirror &mdash; first_click_at per minted token (links back to newsletterfit.com)</td></tr>
-        <tr><td>opens</td><td>Resend open tracking: a 1x1 pixel served from analytics.newsletterfit.com; email.opened arrives on the webhook and lands in email_engagements</td></tr>
-        <tr><td>link clicks</td><td>Resend click tracking: every link in the HTML body is rewritten through analytics.newsletterfit.com; email.clicked arrives on the webhook and lands in email_engagements</td></tr>
+        <tr><td>opens</td><td>Resend open tracking: a 1x1 pixel served from <span id="tr_src_opens_domain">the tracking subdomain</span>; email.opened arrives on the webhook and lands in email_engagements</td></tr>
+        <tr><td>link clicks</td><td>Resend click tracking: every link in the HTML body is rewritten through <span id="tr_src_clicks_domain">the tracking subdomain</span>; email.clicked arrives on the webhook and lands in email_engagements</td></tr>
         <tr><td>open / click rate</td><td>distinct messages engaged divided by delivered, so the denominator is always stated</td></tr>
         <tr><td>failures</td><td>events rows where type = 'error', grouped by payload.op</td></tr>
       </table>
@@ -1023,6 +1023,12 @@ function renderTracking(d) {
     try { const x = new URL(u); return (x.host + x.pathname).replace(/\/$/, "").slice(0, 46); }
     catch (e) { return String(u || "").slice(0, 46); }
   };
+  // The tracking subdomain is a Resend DOMAIN setting, so it is never written
+  // into the markup — the server names whichever one this brand uses, and a
+  // second brand sees its own here.
+  const trackHost = src.tracking_domain || "the tracking subdomain";
+  const dOpen = $("tr_src_opens_domain"); if (dOpen) dOpen.textContent = trackHost;
+  const dClick = $("tr_src_clicks_domain"); if (dClick) dClick.textContent = trackHost;
   $("tr_kpis").innerHTML = [
     kpiCell("Leads", t.leads, num(t.converted) + " converted"),
     kpiCell("Sent", t.sent),
@@ -1155,7 +1161,7 @@ function renderTracking(d) {
     '<table class="small"><tr><th>Link</th><th>Host</th><th class="n">Clicks</th><th class="n">Leads</th><th>Last click</th></tr>' +
     links.map((r) => "<tr><td>" + esc(shortUrl(r.url)) + "</td><td>" + esc(r.host || "") + '</td><td class="n">' + num(r.clicks) +
       '</td><td class="n">' + num(r.leads) + "</td><td>" + esc(String(r.last_at || "—").replace("T", " ").slice(0, 16)) + "</td></tr>").join("") + "</table>"
-  ) : '<div class="empty" style="font-size:12px">No link clicks yet. Every link in the HTML body is rewritten through analytics.newsletterfit.com and Resend fires email.clicked on each one, so this table fills itself as recipients click — no pixel of our own to serve, and nothing to fake.</div>';
+  ) : '<div class="empty" style="font-size:12px">No link clicks yet. Every link in the HTML body is rewritten through ' + esc(trackHost) + ' and Resend fires email.clicked on each one, so this table fills itself as recipients click — no pixel of our own to serve, and nothing to fake.</div>';
 
   $("tr_sources").textContent = "source: " + (src.store || "?") +
     " · opens: " + (src.opens_tracked ? "tracked (Resend pixel)" : "not tracked") +

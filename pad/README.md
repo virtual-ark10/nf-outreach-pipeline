@@ -69,7 +69,7 @@ Everything project-shaped is env-driven; nothing needs code edits:
 |---|---|
 | `PORT`, `PAD_TOKEN` | pad port and the single access token |
 | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` | Resend credentials (server-side only) |
-| Resend domain settings | open/click tracking and the tracking subdomain are set on the **domain** in Resend (`tracking_subdomain`), not here; the pad only consumes `email.opened` / `email.clicked` from the webhook, so both must be subscribed on the webhook |
+| Resend domain settings | open/click tracking and the tracking subdomain are set on the **domain** in Resend (`tracking_subdomain`), not here; the pad only consumes `email.opened` / `email.clicked` from the webhook, so both must be subscribed on the webhook. `RESEND_TRACKING_DOMAIN` only names the host in the UI and defaults to `analytics.<first PAD_DOMAINS entry>` |
 | `BRAND_NAME`, `FROM_EMAIL`, `PUBLIC_BASE_URL` | branding + sender, served via `GET /api/config` |
 | `PAD_DOMAINS` | comma-separated domains kept in Sent/Received; empty = no filtering |
 | `CRM_PORT`, `CRM_HOST`, `PAD_URL` | leads engine wiring |
