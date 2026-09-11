@@ -100,6 +100,28 @@ const P = require('./pipeline.cjs');
 const TRACKING_DOMAIN = process.env.RESEND_TRACKING_DOMAIN
   || (P.BRAND_DOMAINS && P.BRAND_DOMAINS[0] ? 'analytics.' + P.BRAND_DOMAINS[0] : '');
 
+// The rule table (hooks.cjs) reacts to events; db.processEvents drains the queue. One
+// table serves both services because they run one store: whoever fires the event, the
+// same rule reacts on the next request either service handles.
+//
+// Loaded leniently on purpose — a missing or broken rule table must never stop the pad
+// from serving mail.
+const RULES = (() => {
+  try { return require('./hooks.cjs').buildRules(db); }
+  catch (e) { console.warn('[EVENTS] rule table unavailable:', e && e.message); return null; }
+})();
+function drainEvents(where) {
+  if (!RULES) return null;
+  try {
+    const out = db.processEvents(RULES);
+    if (out && out.processed) console.log(`[EVENTS] drained ${out.processed} (${where}): ${JSON.stringify(out.actions).slice(0, 400)}`);
+    return out;
+  } catch (e) {
+    db.logFailure({ entity: 'event', op: 'drain', error: e, actor: 'pad', extra: { where } });
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------- store
 // Drafts, the send log and the webhook archive used to be three files
 // (drafts.json, sent-drafts.jsonl, webhooks.jsonl). They are now rows in the
@@ -155,18 +177,32 @@ function markDraftSent(draft, { resendId, subject, text, html, to }) {
     const lead = (draft.lead_id ? db.one('SELECT * FROM leads WHERE id = ?', [draft.lead_id]) : null)
       || db.findLeadByAddress(db.csvList(to || draft.to_addr));
     if (!lead) return { sent: true, lead_id: null };
+    // recordOutbound writes the audit entry (email.sent) itself, draft id included, so
+    // the rule table sees one event per send instead of two.
     const out = P.recordOutbound({
       lead, subject: subject || draft.subject, to: to || draft.to_addr,
-      text: text || draft.body_text, html: html || draft.body_html, resendId, campaign: draft.campaign,
+      text: text || draft.body_text, html: html || draft.body_html, resendId,
+      campaign: draft.campaign, draftId: draft.id,
     });
-    db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { draft_id: draft.id, resend_id: resendId, stage: out.stage }, at, actor: 'pad' });
     return { sent: true, lead_id: lead.id, stage: out.stage, advanced: out.advanced };
   });
 }
-function markDraftDiscarded(id) {
+// Discard is not delete: the row keeps its history. The optional reason becomes a
+// redraft_notes row plus the draft.discarded event the rule table reacts to, so "why we
+// dropped it" survives instead of living in someone's memory.
+function markDraftDiscarded(id, { reason = null, note: why = null } = {}) {
   const at = db.nowISO();
+  const row = db.one('SELECT id, lead_id FROM drafts WHERE id = ?', [id]);
   db.run("UPDATE drafts SET status = 'discarded', discarded_at = ?, updated_at = ? WHERE id = ? AND status = 'draft'", [at, at, id]);
-  db.logEvent({ entity: 'draft', entity_id: id, type: 'draft_discarded', payload: {}, at, actor: 'pad' });
+  if (reason || why) {
+    db.run('INSERT INTO redraft_notes (draft_id, lead_id, reason, note, created_at) VALUES (?,?,?,?,?)',
+      [id, row ? row.lead_id : null, reason, why, at]);
+  }
+  db.logEvent({
+    entity: 'draft', entity_id: id, type: 'draft.discarded',
+    payload: { draftId: id, leadId: row ? row.lead_id : null, reason: reason || null, note: why || null },
+    at, actor: 'pad',
+  });
   return getDraft(id);
 }
 // Resend webhook -> tables. Never a raw append-only file again: a delivery receipt
@@ -428,6 +464,9 @@ function handleApi(req, res, url, ip) {
       try {
         const r = handleWebhook(event, new Date().toISOString());
         console.log(`[WEBHOOK] ${r.type} stored=${JSON.stringify(r.stored)}${r.skipped ? ' skipped=' + r.skipped : ''}`);
+        // React now rather than waiting for the next request: a reply or a bounce is
+        // exactly the case where nothing else may arrive for hours.
+        drainEvents('after-webhook');
         return sendJson(res, 200, { ok: true, type: r.type, stored: r.stored, skipped: r.skipped });
       } catch (e) {
         console.error('[WEBHOOK] store failed:', e && e.message);
@@ -456,6 +495,15 @@ function handleApi(req, res, url, ip) {
     db.logFailure({ entity: 'system', op: 'auth', error: new Error(PAD_TOKEN ? 'token mismatch' : 'PAD_TOKEN not configured'), status: 401, actor: 'pad', extra: { route: `${req.method} ${url}` } });
     return sendJson(res, 401, { error: 'Unauthorized — missing or invalid token' });
   }
+
+  // The backbone: drain whatever is queued before answering, so a reaction whose
+  // trigger was a request in the OTHER process still fires promptly. A quiet queue
+  // costs one indexed lookup.
+  //
+  // Skipped when the caller is asking about the queue itself: pre-draining would empty
+  // it out from under /api/events (which shows what is pending) and the manual drain
+  // (which reports what IT did).
+  if (p !== '/api/events' && p !== '/api/events/drain') drainEvents('request');
 
   // Leads tab: /api/crm/* -> the leads engine, authorised by the pad token we
   // just verified. The browser never sees or sends a second token.
@@ -627,7 +675,6 @@ function handleApi(req, res, url, ip) {
             if (lead) {
               const resendId = (safeJson(rbody) || {}).id || null;
               const out = P.recordOutbound({ lead, subject: data.subject, to: data.to, text: data.text, html: data.html, resendId, campaign: data.campaign });
-              db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { resend_id: resendId, subject: data.subject || '', stage: out.stage }, at: db.nowISO(), actor: 'pad' });
             }
           } catch (e) {
             console.error('[SEND] lead record failed:', e && e.message);
@@ -712,6 +759,27 @@ function handleApi(req, res, url, ip) {
   }
 
   // Phase 4: draft queue (review-before-send) — rows in `drafts`, status='draft'
+  // ---- the events backbone, visible and drainable (same shape as the kit's)
+  if (req.method === 'GET' && p === '/api/events') {
+    const q = new URL(url, 'http://x');
+    return sendJson(res, 200, {
+      ...drainEvents('events-read'),
+      data: db.recentEvents({
+        limit: parseInt(q.searchParams.get('limit') || '100', 10),
+        leadId: q.searchParams.get('lead') || undefined,
+      }),
+      pending: db.pendingEvents(),
+    });
+  }
+  if (req.method === 'POST' && p === '/api/events/drain') {
+    return sendJson(res, 200, drainEvents('manual') || { processed: 0, actions: [] });
+  }
+
+  // ---- what reviewers keep sending drafts back for
+  if (req.method === 'GET' && p === '/api/redraft-guidance') {
+    return sendJson(res, 200, db.redraftGuidance());
+  }
+
   if (req.method === 'GET' && p === '/api/drafts') {
     return sendJson(res, 200, { data: readDrafts() });
   }
@@ -785,6 +853,27 @@ function handleApi(req, res, url, ip) {
         });
       });
     }
+    // POST /api/drafts/:id/redraft — send it back for a rewrite and KEEP the reason.
+    // The draft stays in the queue (status unchanged); what the writer reads back is
+    // GET /api/redraft-guidance, and the draft.redraft_requested rule reacts on drain.
+    if (rawId.endsWith('/redraft')) {
+      const draftId = decodeURIComponent(rawId.slice(0, -'/redraft'.length));
+      return readBody(req, res, (body) => {
+        let data = {};
+        try { data = body ? JSON.parse(body) : {}; } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+        const stored = getDraft(draftId);
+        if (!stored) return sendJson(res, 404, { error: 'Draft not found' });
+        if (stored.status !== 'draft') return sendJson(res, 409, { error: `Draft is already ${stored.status}` });
+        const saved = db.recordRedraft({
+          draft_id: draftId, lead_id: stored.lead_id || null,
+          reason: data.reason || null, note: data.note || null,
+        });
+        console.log(`[DRAFT] Redraft requested: ${draftId} — ${saved.reason || 'no reason given'}`);
+        drainEvents('draft-redraft');
+        return sendJson(res, 200, { ok: true, id: draftId, redraft: saved, guidance: db.redraftGuidance() });
+      });
+    }
+
     // PUT /api/drafts/:id — save edits to an existing draft
     if (req.method === 'PUT') {
       const id = decodeURIComponent(rawId);
@@ -805,14 +894,22 @@ function handleApi(req, res, url, ip) {
     return sendJson(res, 405, { error: 'Method not allowed' });
   }
 
-  // DELETE /api/drafts/:id — discard, not delete: the row keeps its history.
+  // DELETE /api/drafts/:id — discard, not delete: the row keeps its history. An
+  // optional {"reason": "...", "note": "..."} body records WHY, which is the one thing
+  // a discarded draft would otherwise lose for good.
   if (req.method === 'DELETE' && p.startsWith('/api/drafts/')) {
     const id = decodeURIComponent(p.slice('/api/drafts/'.length));
     const stored = getDraft(id);
     if (!stored || stored.status !== 'draft') return sendJson(res, 404, { error: 'Draft not found' });
-    markDraftDiscarded(id);
-    console.log(`[DRAFT] Discarded: ${id}`);
-    return sendJson(res, 200, { ok: true, id, status: 'discarded' });
+    return readBody(req, res, (body) => {
+      let data = {};
+      // A reason is a bonus: never fail the discard because the body was empty or odd.
+      try { data = body ? JSON.parse(body) : {}; } catch { data = {}; }
+      markDraftDiscarded(id, { reason: data.reason || null, note: data.note || null });
+      console.log(`[DRAFT] Discarded: ${id}${data.reason ? ' (' + data.reason + ')' : ''}`);
+      drainEvents('draft-discarded');
+      return sendJson(res, 200, { ok: true, id, status: 'discarded', reason: data.reason || null });
+    });
   }
 
   return sendJson(res, 404, { error: 'Not found' });

@@ -362,6 +362,76 @@ function sign(secret, id, ts, body) {
     check('opens land on the per-day series (the chart has data)', !!dayRow && dayRow.opens === 1, tr.body && tr.body.by_day);
   }
 
+  // ---------------------------------------------------------------- hooks: the queue
+  // The rule table reacts to what already happened; it may never move a stage. That
+  // distinction is the whole reason a rule table can live next to pipeline.cjs, so it
+  // is asserted rather than trusted.
+  const hookSrc = fs.readFileSync(path.join(__dirname, '..', 'hooks.cjs'), 'utf8');
+  check('the rule table never touches the stage machine (static guard)',
+    !/setStage|advanceStage/i.test(hookSrc.replace(/^\s*\/\/.*$/gm, '')),
+    (hookSrc.match(/setStage|advanceStage/g) || []).length);
+  const evCols = db.all('PRAGMA table_info(events)').map((r) => r.name);
+  check('events carry the queue trio', ['processed_at', 'attempts', 'last_error'].every((c) => evCols.includes(c)), evCols);
+  check('v_events_pending exists for the queue read', !!db.one("SELECT name FROM sqlite_master WHERE type = 'view' AND name = 'v_events_pending'"));
+
+  // A queued send reaction: the drain must run the rule, report it, and leave the stage
+  // exactly where the (single) writer put it.
+  db.logEvent({
+    entity: 'lead', entity_id: 'e2e-eng', type: 'email.sent',
+    payload: { leadId: 'e2e-eng', resendId: 'e2e-drain-1', stage: 'first_email', first: false }, actor: 'test',
+  });
+  const drained = await api(PAD, '/api/events/drain', { method: 'POST' });
+  check('the drain runs the rule and reports the action',
+    drained.status === 200 && (drained.body.actions || []).some((a) => a.event === 'email.sent' && a.lead_id === 'e2e-eng'),
+    drained.body);
+  check('the drained event is marked processed',
+    db.val("SELECT processed_at FROM events WHERE payload LIKE '%e2e-drain-1%'") !== null);
+  check('the reaction did NOT advance the stage again (single writer holds)',
+    db.val('SELECT stage FROM leads WHERE id = ?', ['e2e-eng']) === 'first_email'
+    && db.val("SELECT COUNT(*) FROM lead_stage_events WHERE lead_id = 'e2e-eng'") === 2,
+    { stage: db.val('SELECT stage FROM leads WHERE id = ?', ['e2e-eng']), moves: db.val("SELECT COUNT(*) FROM lead_stage_events WHERE lead_id = 'e2e-eng'") });
+  const evList = await api(PAD, '/api/events?limit=20');
+  check('GET /api/events returns recent plus still-queued',
+    evList.status === 200 && Array.isArray(evList.body.data) && Array.isArray(evList.body.pending),
+    evList.body && Object.keys(evList.body));
+
+  // A rule that always throws must not stall the queue behind it.
+  db.logEvent({ entity: 'lead', entity_id: 'e2e-eng', type: 'e2e.throws', payload: { leadId: 'e2e-eng' }, actor: 'test' });
+  const rules = require(path.join(__dirname, '..', 'hooks.cjs')).buildRules(db);
+  const badRules = Object.assign({}, rules, { 'e2e.throws': () => { throw new Error('always throws'); } });
+  db.processEvents(badRules, { maxAttempts: 2 });
+  const attempt1 = db.one("SELECT attempts, last_error, processed_at FROM events WHERE type = 'e2e.throws' ORDER BY id DESC LIMIT 1");
+  check('a throwing rule records attempts + last_error and stays queued',
+    attempt1.attempts === 1 && !!attempt1.last_error && attempt1.processed_at === null, attempt1);
+  db.processEvents(badRules, { maxAttempts: 2 });
+  const attempt2 = db.one("SELECT attempts, processed_at FROM events WHERE type = 'e2e.throws' ORDER BY id DESC LIMIT 1");
+  check('after maxAttempts it is dead-lettered instead of blocking the queue',
+    attempt2.attempts === 2 && attempt2.processed_at !== null, attempt2);
+  check('the dead letter is recorded as a failure, like every other one',
+    !!db.val("SELECT id FROM events WHERE type = 'error' AND json_extract(payload, '$.op') = 'rule_e2e.throws' LIMIT 1"));
+
+  // ---------------------------------------------------------------- redraft feedback
+  const d3 = await api(PAD, '/api/drafts');
+  const target2 = (d3.body.data || [])[0];
+  if (target2) {
+    const rd = await api(PAD, '/api/drafts/' + encodeURIComponent(target2.id) + '/redraft', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Pad-Token': TOKEN },
+      body: JSON.stringify({ reason: 'Too long', note: 'cut the intro' }),
+    });
+    check('a redraft request keeps its reason', rd.status === 200 && rd.body.redraft && rd.body.redraft.reason === 'Too long', rd.body);
+    check('the redraft is on the backbone as draft.redraft_requested',
+      !!db.val("SELECT id FROM events WHERE type = 'draft.redraft_requested' AND entity_id = ? LIMIT 1", [target2.id]));
+    const guid = await api(PAD, '/api/redraft-guidance');
+    check('redraft guidance counts the reasons back', guid.status === 200 && (guid.body.reasons || []).some((r) => r.reason === 'Too long'), guid.body);
+    const dd = await api(PAD, '/api/drafts/' + encodeURIComponent(target2.id), {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json', 'X-Pad-Token': TOKEN },
+      body: JSON.stringify({ reason: 'Wrong angle' }),
+    });
+    check('a discard can carry its reason', dd.status === 200 && dd.body.reason === 'Wrong angle', dd.body);
+    check('the discard reason is stored, not lost',
+      !!db.val("SELECT id FROM redraft_notes WHERE draft_id = ? AND reason = 'Wrong angle'", [target2.id]));
+  }
+
   const arch = await api(PAD, '/api/archive?limit=5', { headers: { 'X-Pad-Token': TOKEN } });
   check('/api/archive reads back from the events table', arch.status === 200 && Array.isArray(arch.body.data) && arch.body.data.length > 0, arch.body && arch.body.data.length);
 

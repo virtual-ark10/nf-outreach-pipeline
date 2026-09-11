@@ -370,7 +370,7 @@
         <tr><td>sent / delivered / bounced</td><td>the emails table (Resend webhooks keep the status current)</td></tr>
         <tr><td>replies</td><td>the replies table (Resend inbox webhook)</td></tr>
         <tr><td>site clicks</td><td>attribution mirror &mdash; first_click_at per minted token (links back to newsletterfit.com)</td></tr>
-        <tr><td>opens</td><td>Resend open tracking: a 1x1 pixel served from <span id="tr_src_opens_domain">the tracking subdomain</span>; email.opened arrives on the webhook and lands in email_engagements</td></tr>
+        <tr><td>opens</td><td>Resend open tracking: a 1x1 pixel served from <span id="tr_src_opens_domain">the tracking subdomain</span>; email.opened arrives on the webhook and lands in email_engagements. Treat it as a <strong>soft hint</strong> — mail clients prefetch images, so one mail can log several opens that no human made. Clicks are the hard signal.</td></tr>
         <tr><td>link clicks</td><td>Resend click tracking: every link in the HTML body is rewritten through <span id="tr_src_clicks_domain">the tracking subdomain</span>; email.clicked arrives on the webhook and lands in email_engagements</td></tr>
         <tr><td>open / click rate</td><td>distinct messages engaged divided by delivered, so the denominator is always stated</td></tr>
         <tr><td>failures</td><td>events rows where type = 'error', grouped by payload.op</td></tr>
@@ -1034,7 +1034,7 @@ function renderTracking(d) {
     kpiCell("Sent", t.sent),
     kpiCell("Delivered", t.delivered),
     kpiCell("Replied", t.replies, num(t.replied_leads) + " distinct leads"),
-    kpiCell("Opened", t.opens, pctTxt(t.open_rate)),
+    kpiCell("Opened", t.opens, pctTxt(t.open_rate) + " · soft hint"),
     kpiCell("Clicked (in mail)", t.email_clicks, pctTxt(t.click_rate)),
     kpiCell("Site clicks", t.clicks, num(t.clicks_minted) + " links minted"),
     kpiCell("Bounced", t.bounced, t.complained ? num(t.complained) + " complaints" : ""),

@@ -37,6 +37,25 @@ const P = require('../pipeline.cjs');
 const PORT = parseInt(process.env.CRM_PORT || process.env.PORT || '3002', 10);
 const HOST = process.env.CRM_HOST || '0.0.0.0';
 const TOKEN = process.env.CRM_TOKEN || process.env.PAD_TOKEN || '';
+
+// The same backbone as the pad: the engine drains the event queue too, so a reaction
+// to something the pad queued fires on the next CRM call, and vice versa. One rule
+// table serves both processes because they run one store.
+const RULES = (() => {
+  try { return require('../hooks.cjs').buildRules(db); }
+  catch (e) { console.warn('[EVENTS] rule table unavailable:', e && e.message); return null; }
+})();
+function drainEvents(where) {
+  if (!RULES) return null;
+  try {
+    const out = db.processEvents(RULES);
+    if (out && out.processed) console.log(`[EVENTS] drained ${out.processed} (${where})`);
+    return out;
+  } catch (e) {
+    db.logFailure({ entity: 'event', op: 'drain', error: e, actor: 'crm', extra: { where } });
+    return null;
+  }
+}
 const SERVICE = process.env.SERVICE_NAME || 'nf-crm';
 const BRAND = process.env.BRAND_NAME || '';
 const BODY_CAP = 1024 * 1024;
@@ -129,6 +148,7 @@ const server = http.createServer(async (req, res) => {
     db.logFailure({ entity: 'system', op: 'auth', error: new Error('token mismatch'), status: 401, actor: 'crm', extra: { route: `${req.method} ${url}` } });
     return send(res, 401, { error: 'unauthorized' });
   }
+  drainEvents('request');
 
   try {
     // ---------------- meta
@@ -192,7 +212,7 @@ const server = http.createServer(async (req, res) => {
         updated_at: at,
       };
       db.run(NEW_LEAD_SQL, NEW_LEAD_COLS.map((c) => vals[c]));
-      db.logEvent({ entity: 'lead', entity_id: id, type: 'created', payload: { company: b.company, source: b.source || 'manual' }, at, actor: 'crm' });
+      db.logEvent({ entity: 'lead', entity_id: id, type: 'lead.created', payload: { leadId: id, company: b.company, source: b.source || 'manual' }, at, actor: 'crm' });
       return send(res, 201, { ok: true, lead: P.rowToLead(db.one('SELECT * FROM leads WHERE id = ?', [id])) });
     }
 
@@ -327,7 +347,6 @@ const server = http.createServer(async (req, res) => {
         if (lead) {
           const resendId = (r.json && (r.json.id || (r.json.data && r.json.data.id))) || null;
           const out = P.recordOutbound({ lead, subject: b.subject, to: b.to, text: b.text, html: b.html, resendId, campaign: b.campaign });
-          db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { resend_id: resendId, subject: b.subject || '', stage: out.stage }, at: db.nowISO(), actor: 'crm_send' });
         }
       } else {
         db.logFailure({ entity: 'email', op: 'crm_send', error: new Error('pad returned ' + r.status), status: r.status, actor: 'crm', extra: { to: b.to, subject: b.subject || '', body: String(JSON.stringify(r.json || {})).slice(0, 300) } });
@@ -347,9 +366,9 @@ const server = http.createServer(async (req, res) => {
         if (lead) {
           const out = P.recordOutbound({
             lead, subject: b.subject || (s && s.subject), to: b.to || (s && s.to_addr),
-            text: b.text || (s && s.body_text), html: b.html || (s && s.body_html), resendId, campaign: s && s.campaign,
+            text: b.text || (s && s.body_text), html: b.html || (s && s.body_html), resendId,
+            campaign: s && s.campaign, draftId,
           });
-          db.logEvent({ entity: 'lead', entity_id: lead.id, type: 'send', payload: { draft_id: draftId, resend_id: resendId, stage: out.stage }, at: db.nowISO(), actor: 'crm_send' });
         }
       } else {
         db.logFailure({ entity: 'draft', entity_id: draftId, op: 'crm_draft_send', error: new Error('pad returned ' + r.status), status: r.status, actor: 'crm', extra: { body: String(JSON.stringify(r.json || {})).slice(0, 300) } });

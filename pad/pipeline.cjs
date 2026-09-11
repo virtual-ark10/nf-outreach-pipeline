@@ -143,9 +143,9 @@ function nextFollowUp(stage, fromISO) {
 
 // A send: one emails row (with the stage frozen at send time) + the stage move.
 // This is the only code path that advances a stage on send.
-function recordOutbound({ lead, subject, to, text, html, resendId, campaign, status, at, threadId }) {
+function recordOutbound({ lead, subject, to, text, html, resendId, campaign, status, at, threadId, draftId = null }) {
   const stamp = at || db.nowISO();
-  return db.tx(() => {
+  const out = db.tx(() => {
     const prev = db.one("SELECT id, thread_id FROM emails WHERE lead_id = ? AND direction = 'outbound' ORDER BY id DESC LIMIT 1", [lead.id]);
     const ins = db.run(
       `INSERT OR IGNORE INTO emails
@@ -172,14 +172,31 @@ function recordOutbound({ lead, subject, to, text, html, resendId, campaign, sta
       db.run('UPDATE leads SET stage = ?, stage_changed_at = ?, updated_at = ? WHERE id = ?', [to_stage, stamp, stamp, lead.id]);
       db.stageEvent({ lead_id: lead.id, from_stage: from, to_stage, at: stamp, by: 'send', note: 'auto-advanced by send', source: 'crm_send' });
     }
-    return { email_id: id, stage: to_stage, advanced: to_stage !== from, duplicate: !ins.changes };
+    return { email_id: id, stage: to_stage, advanced: to_stage !== from, duplicate: !ins.changes, at: stamp };
   });
+  // One audit entry per real send, in the same event stream the rule table drains, so
+  // a reaction to "email.sent" needs no extra listener. A duplicate — the pad and the
+  // CRM can both see the same send — writes nothing.
+  if (!out.duplicate) {
+    db.logEvent({
+      entity: 'lead', entity_id: lead.id, type: 'email.sent',
+      payload: {
+        leadId: lead.id, resendId: resendId || null, subject: subject || null, stage: out.stage,
+        advanced: out.advanced, draftId,
+        // "first" is about the lead's position BEFORE the send, which is what decides
+        // whether the cadence started or continued.
+        first: lead.stage === STAGES[0].key && out.advanced,
+      },
+      at: stamp, actor: 'send',
+    });
+  }
+  return out;
 }
 
 // An inbound message: emails row (direction inbound) + replies row + stage move.
 function recordInbound({ from, to, subject, text, html, resendId, messageId, inReplyTo, at, raw, classification, sentiment }) {
   const stamp = at || db.nowISO();
-  return db.tx(() => {
+  const out = db.tx(() => {
     const lead = db.findLeadByAddress(from);
     if (messageId && db.val('SELECT id FROM replies WHERE message_id = ?', [messageId])) {
       return { reply_id: null, duplicate: true, lead_id: lead ? lead.id : null };
@@ -202,8 +219,21 @@ function recordInbound({ from, to, subject, text, html, resendId, messageId, inR
       db.run('UPDATE leads SET stage = ?, stage_changed_at = ?, last_contact_at = ?, updated_at = ? WHERE id = ?', ['replied', stamp, stamp, stamp, lead.id]);
       db.stageEvent({ lead_id: lead.id, from_stage: lead.stage, to_stage: 'replied', at: stamp, by: 'sync', note: 'reply detected', source: 'inbound' });
     }
-    return { reply_id: Number(r.lastInsertRowid), lead_id: lead ? lead.id : null };
+    return { reply_id: Number(r.lastInsertRowid), lead_id: lead ? lead.id : null, at: stamp };
   });
+  // The audit entry the rule table reacts to. Only for a real insert: a re-delivered
+  // inbound webhook returns early as a duplicate and must not log twice.
+  if (out.lead_id && !out.duplicate) {
+    db.logEvent({
+      entity: 'lead', entity_id: out.lead_id, type: 'reply.received',
+      payload: {
+        leadId: out.lead_id, messageId: messageId || null,
+        classification: classification || null, resendId: resendId || null,
+      },
+      at: stamp, actor: 'inbound',
+    });
+  }
+  return out;
 }
 
 // A delivery/bounce receipt from Resend: update the message it refers to. A receipt

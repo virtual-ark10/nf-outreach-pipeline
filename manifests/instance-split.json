@@ -14,7 +14,7 @@
   ],
   "product": {
     "repo": "https://github.com/virtual-ark10/resend-pad.git",
-    "ref": "e34370b",
+    "ref": "v1.0.0",
     "local_path": "/home/boxed/pad-kit",
     "root_subdir": "",
     "files": [
