@@ -1,0 +1,70 @@
+{
+  "_readme": [
+    "Which files in this repository are the PRODUCT (pad-kit), which are the ENGINE (the store",
+    "and the pipeline loop, owned by whoever owns the live data), and which are this INSTANCE's",
+    "own (config, env, data). The drift check reads this file to tell an instance-local hack",
+    "apart from a legitimate instance difference.",
+    "",
+    "Rule of the split: a diff in a PRODUCT file inside an instance tree is a hack that has to",
+    "go upstream as a PR, or move into config. ENGINE files may diverge while the two engines",
+    "coexist, but the divergence is listed every run so it can never be forgotten. INSTANCE",
+    "files are never compared.",
+    "",
+    "Change the pin deliberately: edit product.ref, then run the check."
+  ],
+  "product": {
+    "repo": "https://github.com/virtual-ark10/resend-pad.git",
+    "ref": "e34370b",
+    "local_path": "/home/boxed/pad-kit",
+    "root_subdir": "",
+    "files": [
+      "server.cjs",
+      "index.html",
+      "boot.sh",
+      "watchdog.sh",
+      "config.example.json",
+      "Dockerfile",
+      ".dockerignore",
+      "docker-compose.yml",
+      "package.json",
+      "deploy/",
+      "docs/"
+    ],
+    "absent_ok": [
+      "Dockerfile",
+      ".dockerignore",
+      "docker-compose.yml",
+      "config.example.json",
+      "deploy/",
+      "docs/"
+    ]
+  },
+  "engine": [
+    "db.cjs",
+    "schema.sql",
+    "pipeline.cjs",
+    "hooks.cjs",
+    "rules.cjs",
+    "leads/",
+    "tools/",
+    "outreach-links.cjs",
+    "tests/"
+  ],
+  "instance": [
+    "config.json",
+    ".env",
+    ".env.example",
+    ".gitignore",
+    "data/",
+    "attic/",
+    "*.log",
+    "*.bak-*",
+    "README.md",
+    "ARCHITECTURE.md",
+    "LEADPAD.md",
+    "add_caddy_route.py",
+    "api-proxy.js"
+  ],
+  "instance_tree": "/home/boxed/resend-pad",
+  "instance_prefix": ""
+}

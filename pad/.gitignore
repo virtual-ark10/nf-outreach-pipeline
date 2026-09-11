@@ -1,0 +1,32 @@
+# This directory is both the live NewsletterFIT instance and the pad/ subtree of
+# the instance repo, so this file decides what of it is git and what is runtime.
+#
+# Kept in git on purpose: data/outreach.db — the repo versions it as the off-box
+# archive of the CRM and the mail log (Resend only keeps mail for 30 days). It
+# shows as modified between archive refreshes; that is expected, not drift.
+#
+# Everything else here is either secret, runtime, or retired by the SQLite cutover.
+
+# --- secrets ---
+.env
+leads/.env
+.env.bak-*
+
+# --- logs ---
+*.log
+
+# --- retired JSON stores (the SQLite cutover replaced these) ---
+data/*.json
+data/*.jsonl
+data/*.pre-*
+data/*-wal
+data/*-shm
+
+# --- lead-engine import fixtures ---
+leads/data/*
+
+# --- scratch / migration artefacts ---
+attic/
+node_modules/
+__pycache__
+*.pyc
