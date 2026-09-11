@@ -120,6 +120,17 @@ function activityFor(id) {
     const p = db.pj(e.payload, {});
     acts.push({ ts: e.at, kind: e.type, detail: p.detail || p.body || '', subject: p.subject || '' });
   }
+  // Opens and clicks, from the track side: the lead's story should say it was
+  // read or clicked, not just that something was sent.
+  for (const g of db.all('SELECT id, kind, url, link_host, at FROM email_engagements WHERE lead_id = ? ORDER BY at', [id])) {
+    acts.push({
+      ts: g.at,
+      kind: g.kind,
+      subject: g.link_host || '',
+      detail: g.kind === 'click' ? 'clicked ' + (g.url || 'a link') : 'opened the email',
+      msg_id: 'eng:' + g.id,
+    });
+  }
   return acts.sort((a, b) => String(a.ts).localeCompare(String(b.ts))).reverse();
 }
 
@@ -221,6 +232,31 @@ function recordDeliveryStatus({ resendId, status, to, from, at }) {
   });
 }
 
+// ---------------------------------------------------------------- engagement
+// An open or a click, as Resend's tracking subdomain reported it. This is the one
+// place the engine records engagement, and it deliberately does nothing else: no
+// stage move, no status change. A lead that opens an email has not replied, and a
+// click is a signal for the human reading the CRM, not a transition.
+//
+// Writes go through db.recordEngagement, which collapses retries on `dedupe`.
+function recordEngagement({ resendId, kind, url = null, userAgent = null, ip = null, at = null, eventId = null }) {
+  const out = db.recordEngagement({
+    resend_id: resendId, kind, url, user_agent: userAgent, ip,
+    at: at || db.nowISO(), dedupe: eventId,
+  });
+  if (out.inserted && out.lead_id) {
+    // One audit line so the event stream still shows WHICH lead engaged and with
+    // what; the durable fact is the email_engagements row.
+    db.logEvent({
+      entity: 'lead', entity_id: out.lead_id,
+      type: kind === 'click' ? 'engagement_click' : 'engagement_open',
+      payload: { resend_id: resendId, url: url || null, host: (() => { try { return url ? new URL(url).host.toLowerCase() : null; } catch (e) { return null; } })() },
+      at: at || db.nowISO(), actor: 'resend',
+    });
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------- pad calls
 async function padFetch(method, url, body) {
   const opts = { method, headers: { 'X-Pad-Token': PAD_TOKEN } };
@@ -296,5 +332,5 @@ async function syncEmail() {
 module.exports = {
   STAGES, STAGE_KEYS, NEXT_STAGE, PROTECTED, DUE_DAYS, PROGRESS, BRAND_DOMAINS,
   isBrandMail, rowToLead, activityFor, nextFollowUp, recordOutbound, recordInbound,
-  recordDeliveryStatus, syncEmail, padFetch, kebab,
+  recordDeliveryStatus, recordEngagement, syncEmail, padFetch, kebab,
 };

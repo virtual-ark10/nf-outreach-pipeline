@@ -44,6 +44,16 @@ remembered in the browser afterwards.
 - **Automatic coordination** — sending from Compose logs the email against the
   matching lead and advances its stage; "Sync email" backfills anything the CRM
   has not seen and moves a lead to *Replied* when it finds an inbound reply.
+- **Open + click tracking** — Resend's custom tracking subdomain (for this brand,
+  `analytics.newsletterfit.com`) rewrites every link in the HTML body and embeds a
+  1x1 pixel, so the recipient's client is what fires the event. The
+  `email.opened` / `email.clicked` webhooks land in `email_engagements`: one row per
+  event, deduped on retry (Resend sends no event id, so the key is derived from the
+  payload's stable parts), matched back to the lead and the message. Engagement is
+  never state: an open cannot move a stage and never overwrites `emails.status`
+  (or the funnel would collapse and a bounced message could look opened). The
+  Tracking tab shows opens, link clicks, the links that earn them, and open/click
+  rate stated against delivered.
 - **Brand-safe mail lists** — `PAD_DOMAINS` filters Sent/Received to this
   brand's addresses, because a Resend account is shared across brands and its
   APIs return every brand's mail. The UI says how many were hidden.
@@ -59,6 +69,7 @@ Everything project-shaped is env-driven; nothing needs code edits:
 |---|---|
 | `PORT`, `PAD_TOKEN` | pad port and the single access token |
 | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` | Resend credentials (server-side only) |
+| Resend domain settings | open/click tracking and the tracking subdomain are set on the **domain** in Resend (`tracking_subdomain`), not here; the pad only consumes `email.opened` / `email.clicked` from the webhook, so both must be subscribed on the webhook |
 | `BRAND_NAME`, `FROM_EMAIL`, `PUBLIC_BASE_URL` | branding + sender, served via `GET /api/config` |
 | `PAD_DOMAINS` | comma-separated domains kept in Sent/Received; empty = no filtering |
 | `CRM_PORT`, `CRM_HOST`, `PAD_URL` | leads engine wiring |
@@ -77,6 +88,7 @@ POST /api/send                       send, with send-time link internalization
 GET  /api/sent | /api/received | /api/archive
 GET  /api/drafts   POST /api/drafts/:id/send   PUT|DELETE /api/drafts/:id
 POST /api/webhook                    Resend events (Svix signature)
+GET  /api/tracking?days=N            dashboard aggregates incl. opens + link clicks
 ANY  /api/crm/*                      proxied to the leads engine
 ```
 

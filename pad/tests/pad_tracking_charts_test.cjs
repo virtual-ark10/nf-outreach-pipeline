@@ -139,16 +139,16 @@ global.localStorage.setItem('nf_pad_token', TOKEN);
   await P.loadTracking();           // drives the real /api/tracking endpoint
   await wait(2000);                 // Chart.js renders on animation frames
 
-  const ids = ['ch_activity', 'ch_status', 'ch_funnel', 'ch_leads', 'ch_campaigns', 'ch_errors'];
+  const ids = ['ch_activity', 'ch_status', 'ch_funnel', 'ch_leads', 'ch_campaigns', 'ch_top_links', 'ch_errors'];
   const made = P.liveCharts || {};
   for (const id of ids) has('chart constructed: ' + id, !!made[id]);
-  has('all six charts constructed', ids.every((id) => !!made[id]));
+  has('all seven charts constructed', ids.every((id) => !!made[id]));
   has('drawing calls reached the canvas context', drawCalls.length > 50);
 
   const act = made.ch_activity;
   if (act) {
     has('activity chart is a line chart', act.config.type === 'line');
-    has('activity chart has 4 datasets (sent/replies/clicks/failures)', act.config.data.datasets.length === 4);
+    has('activity chart has 6 datasets (sent/replies/opens/email clicks/site clicks/failures)', act.config.data.datasets.length === 6);
     console.log('  activity datasets:', act.config.data.datasets.map((d) => d.label + '=' + d.data.length + 'pts').join(', '));
     has('activity chart has day labels', act.config.data.labels.length > 0);
   }
