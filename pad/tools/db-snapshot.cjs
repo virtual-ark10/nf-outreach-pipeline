@@ -21,6 +21,25 @@ if (!target) {
   process.exit(2);
 }
 const out = path.resolve(target);
+// Guard: everything below is destructive (unlink + VACUUM INTO). That is only safe
+// when the target is NOT the live database. In this deployment resend-pad/data IS
+// pad/data (the live dir is a checkout of this repo), so snapshot-state.sh used to
+// hand us the live path itself: the unlink below then deleted the running database
+// out from under the pad and the leads engine (2026-09-26 incident). Refuse loudly
+// instead — pass a target outside the live data dir.
+const live = path.resolve(db.DB_PATH);
+const sameFile = (a, b) => {
+  if (a === b) return true;
+  try {
+    const sa = fs.statSync(a), sb = fs.statSync(b);
+    return sa.ino === sb.ino && sa.dev === sb.dev;
+  } catch (e) { return false; }
+};
+if (sameFile(out, live)) {
+  console.error(`refusing: target ${out} IS the live database (${live}).`);
+  console.error('pass a path outside the live data dir (e.g. a separate snapshot checkout)');
+  process.exit(3);
+}
 fs.mkdirSync(path.dirname(out), { recursive: true });
 for (const suffix of ['', '-wal', '-shm']) {
   try { fs.unlinkSync(out + suffix); } catch (e) { /* nothing to remove */ }
