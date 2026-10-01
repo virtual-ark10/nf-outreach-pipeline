@@ -36,6 +36,9 @@ LEDGER = "/home/boxed/newsletterfit/attribution/attribution.json"
 CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
 # The intake export is the corpus's article-level sponsorship record; see Corpus.placements.
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
+# Sends per run. A file, not a constant, so the daily volume is one number to change.
+CAP_FILE = "/home/boxed/nf-outreach-pipeline/data/send-cap.txt"
+DEFAULT_CAP = 50
 
 # --- language that must never ship to a prospect -----------------------------------------
 BACK_REFERENCE = re.compile(
@@ -45,11 +48,16 @@ BACK_REFERENCE = re.compile(
     r"|reaching out again|second time reaching|as i mentioned|as mentioned (earlier|previously)"
     r"|to be transparent|going back through|fabricated|zero ground-truth|feel free to ignore"
     r"|sorry for the (earlier|previous|confusion))", re.I)
-STALE_TIME = re.compile(
-    r"(last week|yesterday|this month|last month|\bin the last \d+ (days|weeks|months|quarter)"
-    r"|since (aug|sep|jul|jun) \w*\s?\d*|most recently [a-z]{3} \d+|latest [a-z]{3} \d+"
-    r"|\((aug|sep|jul|jun|may) \d+[,)]|\blast issue\b|\b\d+ (days?|weeks?|months?|hours?) ago\b"
-    r"|\btoday\b|\brecent issue\b|\bthis week\b)", re.I)
+# Date-anchored staleness, any case: "(Aug 27", "since Aug 3", "most recently Aug 28".
+STALE_DATE = re.compile(
+    r"(since (?:aug|sep|jul|jun) \w*\s?\d|\((?:aug|sep|jul|jun|may) \d+[,)]"
+    r"|\bin the last \d+ (?:days|weeks|months|quarter)|most recently (?:aug|sep|jul|jun) \d"
+    r"|latest (?:aug|sep|jul|jun) \d)", re.I)
+# Relative phrases, lowercase only. Prose writes "last week"; a publication is titled "This Week
+# in Startups", and the staleness check must not fire on a name.
+STALE_RELATIVE = re.compile(
+    r"\b(last week|this week|this month|last month|yesterday|today|recent issue|last issue"
+    r"|\d+ (?:days?|weeks?|months?|hours?) ago)\b")
 CORPUS_SIZE = re.compile(r"\d[\d,.]*\s*(k|m)?\+?\s*newsletters", re.I)
 UNVERIFIABLE_FIGURE = re.compile(
     r"(\d+ issues? in \d+ days|\+\d+(\.\d+)?% (growth|in|subscriber)|in \d+ days;|\d+ pieces? in \d+ days)", re.I)
@@ -259,8 +267,9 @@ def gate(draft, ctx):
         hard(f"back-reference / apology language: {m.group(0)!r}")
     if EM_DASH in blob:
         hard("em-dash (reads as machine-written)")
-    for m in STALE_TIME.finditer(text + " " + subject):
-        hard(f"stale time reference: {m.group(0)!r}")
+    for rx in (STALE_DATE, STALE_RELATIVE):
+        for m in rx.finditer(text + " " + subject):
+            hard(f"stale time reference: {m.group(0)!r}")
     for m in CORPUS_SIZE.finditer(text):
         hard(f"corpus-size claim: {m.group(0)!r}")
     for m in UNVERIFIABLE_FIGURE.finditer(text):
@@ -329,11 +338,28 @@ def gate(draft, ctx):
                  pattern=r"(?<!\d)" + str(n) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))")
 
     pubs_named = re.findall(r"-\s+([^\n:()]{3,60}?)(?:\s*\(est\.|\s*:\s|\n|$)", text)
+    # A publication is verified by the link that was minted onto it: the pad's link pass only
+    # mints for a name it resolved to a corpus slug, and the anchor text is that resolved name.
+    # Re-matching display names against the search endpoint is flaky (the result window shifts
+    # between calls), so a name that carries a token is proof, and a bullet without one is the
+    # thing worth flagging.
+    anchored = {}
+    for m in re.finditer(r"<a[^>]*lt=([A-Za-z0-9_-]{20,40})[^>]*>([\s\S]*?)</a>", html, re.I):
+        label = re.sub(r"<[^>]*>", " ", m.group(2))
+        label = re.sub(r"\s+", " ", label).strip()
+        dest = str((known.get(m.group(1)) or {}).get("dest") or "")
+        if label and "/app/publications/" in dest:
+            anchored[norm(label)] = dest.rsplit("/", 1)[-1]
     for raw in pubs_named:
         name = raw.strip(" -")
+        slug = anchored.get(norm(name))
+        if not slug:
+            soft(f"bullet names {name!r} with no tracked link, so the publication was never "
+                 f"resolved: confirm it exists before sending")
+            continue
         rec = ctx["corpus"].publication(name)
         if not rec:
-            soft(f"publication not found in the corpus: {name!r}")
+            # The mint proves the slug; only the display-name lookup failed, which is a flake.
             continue
         # subscriber label check, when the draft quotes one
         frag = re.search(re.escape(name) + r"[^\n]{0,40}?([\d.,]+\s*[KM])\b", text)
@@ -368,6 +394,8 @@ def main():
     ap.add_argument("--send-clean", action="store_true")
     ap.add_argument("--fix-counts", action="store_true",
                     help="refresh placement counts the corpus has outgrown, then re-gate")
+    ap.add_argument("--cap", type=int, default=None,
+                    help="max sends this run (default: data/send-cap.txt, else 50)")
     args = ap.parse_args()
 
     st, payload = pad_call("GET", "/api/drafts")
@@ -452,13 +480,50 @@ def main():
         print(f"\n  PASS {counts['PASS']}  REVIEW {counts['REVIEW']}  HOLD {counts['HOLD']}  (of {len(results)})")
 
     if args.send_clean:
-        for r in results:
-            if r["verdict"] != "PASS":
-                continue
+        # Breaker before the cap: a bounce or complaint spike means the list or the domain is in
+        # trouble, and sending more is the one thing guaranteed to make it worse.
+        try:
+            rows = list(con.execute(
+                "SELECT status FROM emails WHERE direction='outbound' ORDER BY id DESC LIMIT 100"))
+            total = len(rows)
+            bad = sum(1 for r in rows
+                      if str(r["status"] or "").lower() in ("bounced", "complained", "failed"))
+        except Exception:
+            total = bad = 0
+        if total >= 20 and bad / total > 0.05:
+            print(f"  CIRCUIT BREAKER: {bad} of the last {total} sends bounced or complained "
+                  f"({bad / total:.0%}). Sending nothing until that is looked at.")
+            return 1
+
+        # Priority: the ladder first, then first touches by how good the lead is. A follow-up
+        # is a conversation already in flight, so it outranks a cold open; inside first touches
+        # the CRM's own score decides who is worth the slot.
+        cap = args.cap
+        if cap is None:
+            try:
+                cap = int(open(CAP_FILE).read().strip())
+            except (OSError, ValueError):
+                cap = DEFAULT_CAP
+
+        def kind_and_score(r):
+            d = next((x for x in drafts if str(x.get("id")) == str(r["id"])), {})
+            lead = leads.get(str(d.get("company") or "").lower()) or {}
+            contacted = bool(lead.get("first_contact_at")) or str(lead.get("stage") or "") not in ("", "leads")
+            try:
+                score = int(lead.get("score") or 0)
+            except (TypeError, ValueError):
+                score = 0
+            return (0 if contacted else 1, -score)
+
+        queue = sorted([r for r in results if r["verdict"] == "PASS"], key=kind_and_score)
+        for r in queue[:cap]:
             code, body = pad_call("POST", f"/api/drafts/{urllib.parse.quote(str(r['id']))}/send", {})
             r["sent"] = code == 200
             r["send_response"] = body if code != 200 else "queued"
             print(f"  send {r['id']}: HTTP {code} {json.dumps(body)[:160]}")
+        if len(queue) > cap:
+            print(f"  {len(queue) - cap} clean draft(s) held for capacity this run (cap {cap}); "
+                  f"they go out on the next run")
 
     return 1 if any(r["verdict"] == "HOLD" for r in results) else 0
 

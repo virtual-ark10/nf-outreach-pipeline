@@ -31,3 +31,6 @@ __pycache__/
 
 # VACUUM INTO snapshots taken before CRM writes: data, not source
 pad/snapshots/
+
+# Daily send volume: one number, editable without touching the gate.
+data/send-cap.txt

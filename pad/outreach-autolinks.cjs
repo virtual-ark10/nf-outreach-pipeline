@@ -83,23 +83,39 @@ function httpJson(urlStr, { method = 'GET', headers = {}, body = null, timeout =
   });
 }
 
-/** Corpus search -> best publication match, same scoring the internalize script uses. */
+/** Corpus search -> best publication match, same scoring the internalize script uses.
+ *
+ *  Several query shapes, because the search endpoint reads a short query as a topic and can
+ *  bury the exact publication behind generic lists ("AI Agents Simplified" comes back behind
+ *  'This Week in AI'). One query therefore resolves fewer names than exist, and a bullet that
+ *  does not resolve keeps its [TRACKED_LINK] placeholder, which the send path refuses. */
 async function resolvePublication(name, cfg) {
   const sep = cfg.apiBase.endsWith('/') ? '' : '/';
-  const payload = await httpJson(`${cfg.apiBase}${sep}search?q=${encodeURIComponent(name)}`, {
-    headers: { Authorization: `Bearer ${cfg.token}` },
-  });
-  const results = (((payload || {}).data || {}).newsletters) || [];
   const q = norm(name);
+  const collapsed = String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const head = String(name || '').split(/\s+/).slice(0, 2).join(' ');
+  const queries = [...new Set([String(name || ''), collapsed, head].filter(Boolean))];
   let best = null;
-  for (const r of results) {
-    const rName = r.name || '';
-    const slug = r.slug || '';
-    let score = 0;
-    if (norm(rName) === q) score = 100;
-    else if (norm(slug) === q) score = 95;
-    else if (rName && q && (q.includes(norm(rName)) || norm(rName).includes(q))) score = 80;
-    if (score && (!best || score > best.score)) best = { score, slug, name: rName };
+  for (const query of queries) {
+    let payload = null;
+    try {
+      payload = await httpJson(`${cfg.apiBase}${sep}search?q=${encodeURIComponent(query)}`, {
+        headers: { Authorization: `Bearer ${cfg.token}` },
+      });
+    } catch (e) {
+      continue;
+    }
+    const results = (((payload || {}).data || {}).newsletters) || [];
+    for (const r of results) {
+      const rName = r.name || '';
+      const slug = r.slug || '';
+      let score = 0;
+      if (norm(rName) === q) score = 100;
+      else if (norm(slug) === q) score = 95;
+      else if (rName && q && (q.includes(norm(rName)) || norm(rName).includes(q))) score = 80;
+      if (score && (!best || score > best.score)) best = { score, slug, name: rName };
+    }
+    if (best && best.score === 100) break;
   }
   return best;
 }
