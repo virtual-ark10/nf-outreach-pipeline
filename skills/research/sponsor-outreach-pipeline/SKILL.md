@@ -233,6 +233,16 @@ Want me to pull the reader profiles + momentum behind these three?
 [Name], Founder, NewsletterFIT
 ```
 
+**No stale time references.** Anything anchored to "now" ages badly in a queue: "last
+week (Aug 27, the FIVESTACK trade piece)", "twice this month, most recently Aug 28",
+"5 placements since Aug 3", "in the last 30 days", "last issue yesterday", "recent issue
+2 days ago". A draft can sit for days between writing and sending, so a dated claim is
+wrong the moment the week turns over. Write either a date-free version ("5 placements in
+Linear's Vertical Software & AI newsletter") or re-derive the figure from the corpus on the
+day it sends. The pad cannot tell you a claim has aged: scan the body yourself before a
+send. (Relative-but-current phrasing like "Most recently <Pub>" at the head of the opener
+is fine, because it describes the newest placement rather than a date that passes.)
+
 **No em-dashes.** Prose em-dashes are a recognised tell that a machine wrote the email;
 the first emails shipped with five each (opener, theme line, every bullet) and it read
 badly. Use a period, a comma, or a colon instead — "18 Brex placements in the newsletters I
