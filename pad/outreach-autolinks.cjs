@@ -1,30 +1,38 @@
-// outreach-autolinks.cjs — fill a draft's tracked links before it can ever be sent.
+// outreach-autolinks.cjs — fill a draft's tracked links, and make every link an anchor.
 //
-// Why this exists: the first-email drafts are generated as templates with literal
-// placeholders — "[TRACKED_LINK]" on each recommended publication and "[Name]" in the
-// signature — and nothing ever filled them. So a draft sat in the queue with no minted
-// link at all (no attribution possible) and, worse, would have sent the placeholder
-// text itself to the recipient.
+// Two jobs, both about what the recipient SEES:
 //
-// This pass closes that: for each bullet naming a publication, it resolves the
-// publication to its NewsletterFIT page via the corpus search, mints a token for that
-// page through POST {apiBase}/outreach/links, and puts the tracked URL where the
-// placeholder was. Same conventions the outreach scripts already use: dest is the
-// internal page, ref is pub-<slug>-nf, and the signature link is the homepage (site-nf).
+// 1. Fill the template. The first-email drafts are written from a template with literal
+//    `[TRACKED_LINK]` on each recommended publication and `[Name]` in the signature, and
+//    nothing filled them — a draft sat in the queue with no link (no attribution) and the
+//    placeholder text itself would have gone to the prospect.
 //
-// Rules:
-//   - Idempotent. A draft that already carries a token, with no placeholder left, is
-//     returned untouched, so this can run on every save without ever double-minting.
-//   - Never blocks a save. An unresolved publication is reported and its placeholder is
-//     left in place; the send path refuses to send a draft that still has one.
-//   - Never invents a link for a draft that has no placeholder: such a draft gets the
-//     signature link only, so every outgoing mail is attributable at least at the site.
+// 2. Never show a raw tracking URL. A visible `https://…/api/click?lt=<token>` reads as
+//    spam and does not get clicked, so the html anchors the NAME: the publication on its
+//    bullet, the brand on the signature. The plain-text part keeps names as names (text
+//    has no anchors), which also keeps a token-laden URL out of a text-only reader's view.
+//
+// Conventions, matching what the outreach scripts already produce: dest is the
+// publication's NewsletterFIT page (/app/publications/<slug>), ref is pub-<slug>-nf, the
+// signature is the homepage (site-nf), and every minted token is mirrored into the local
+// attribution store — the send path refuses a token it cannot resolve.
+//
+// Rules: idempotent (a draft that is already conforming is returned unchanged, so this can
+// run on every save without double-minting); never blocks a save (an unresolved publication
+// is reported and its placeholder left in place); the send path refuses a draft that still
+// contains `[TRACKED_LINK]` or `[Name]`.
 'use strict';
 
-const { mintLink, linkifyHtml } = require('./outreach-links.cjs');
+const { mintLink } = require('./outreach-links.cjs');
 
-const TOKEN_IN_BODY_RE = /https:\/\/newsletterfit\.com\/api\/click\?lt=([A-Za-z0-9_-]{20,40})/;
-const BARE_SITE_RE = /newsletterfit\.com(?!\S*api\/click)/g;
+const LT_SRC = 'https:\\/\\/newsletterfit\\.com\\/api\\/click\\?lt=([A-Za-z0-9_-]{20,40})';
+const LT_URL_SRC = 'https:\\/\\/newsletterfit\\.com\\/api\\/click\\?lt=[A-Za-z0-9_-]{20,40}';
+const TOKEN_IN_BODY_RE = new RegExp(LT_SRC);
+const BARE_TRACKED_RE = new RegExp(LT_SRC, 'g');
+const ANY_TRACKED_RE = /api\/click\?lt=([A-Za-z0-9_-]{20,40})/g;
+// group 1 = the url, group 2 = the visible text (non-capturing inside, or the callback
+// would receive the token where it expects the label)
+const ANCHOR_RE = new RegExp(`<a\\s+[^>]*href=["'](${LT_URL_SRC})["'][^>]*>([\\s\\S]*?)<\\/a>`, 'g');
 
 /** Unfilled template markers anywhere in the body — the send path refuses these. */
 function unfilled(text, html) {
@@ -37,6 +45,10 @@ function unfilled(text, html) {
 
 function norm(s) {
   return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function httpJson(urlStr, { method = 'GET', headers = {}, body = null, timeout = 20000 } = {}) {
@@ -96,9 +108,8 @@ function displayName(from) {
   return m ? m[1].trim() : '';
 }
 
-// The send path resolves every token against the local attribution mirror and REFUSES
-// to send one it cannot find, so a token minted here has to be mirrored there or the
-// draft becomes unsendable. Same file, same shape the outreach scripts write.
+// The send path resolves every token against the local attribution mirror and REFUSES to
+// send one it cannot find, so a token minted here has to be mirrored there.
 function readStore(storePath) {
   const fs = require('fs');
   try {
@@ -135,25 +146,50 @@ function mirrorMinted(cfg, rows) {
 
 /** Plain text -> simple html, so a text-only draft still carries real anchors. */
 function textToHtml(text) {
-  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return String(text || '')
     .split(/\n{2,}/)
     .map((block) => `<p>${esc(block.trim()).replace(/\n/g, '<br>')}</p>`)
     .join('');
 }
 
-/** Replace the bare signature mention (the LAST one) with the tracked url. */
-function trackSignature(text, url) {
-  const hits = [...text.matchAll(BARE_SITE_RE)];
-  if (!hits.length) return `${text.trimEnd()}\n\nIan Hinga, Founder, NewsletterFIT — ${url}\n`;
-  const last = hits[hits.length - 1];
-  return text.slice(0, last.index) + url + text.slice(last.index + last[0].length);
+/** The publication named on a bullet: "- Tech Scoop — 155K subs …" -> "Tech Scoop". */
+function bulletName(line) {
+  return String(line).replace(/^\s*[-*•]\s*/, '').split(/\s+—\s+|\s+-\s+|\s+\|\s+|:/)[0].trim();
+}
+
+/** What a link's visible text should be: the publication on its bullet, else the brand. */
+function anchorLabel(html, index) {
+  const before = html.slice(0, Math.max(0, index));
+  const segStart = Math.max(before.lastIndexOf('<p>'), before.lastIndexOf('<br>'), before.lastIndexOf('\n'));
+  const segment = before.slice(segStart).replace(/<[^>]*>/g, ' ').trim();
+  if (/Founder|NewsletterFIT\s*—?\s*$/i.test(segment) || !segment.includes('—')) return 'newsletterfit.com';
+  return bulletName(segment.replace(/^[>\s]+/, '')) || 'newsletterfit.com';
+}
+
+/** Rewrite any anchor whose visible text is a raw tracking URL into its context label. */
+function anchorifyHtml(html) {
+  const src = String(html);
+  return src.replace(ANCHOR_RE, (whole, url, visible, offset) => {
+    if (!/newsletterfit\.com\/api\/click/.test(visible)) return whole;
+    // The label comes out of the html, so it is already entity-encoded: strip anything
+    // that could break the attribute, but do not re-escape its &amp; into &amp;amp;.
+    const label = anchorLabel(src, offset).replace(/[<>"]/g, '').trim();
+    return `<a href="${url}">${label}</a>`;
+  });
+}
+
+/** Plain-text part: names stay names; no token-laden URL for a reader to see. */
+function detokenText(text) {
+  return String(text)
+    .replace(new RegExp(`\\s*[—–-]\\s*${LT_SRC}`, 'g'), '')
+    .replace(new RegExp(`:\\s*${LT_SRC}`, 'g'), '')
+    .replace(new RegExp(`\\s*<${LT_SRC}>`, 'g'), '')
+    .replace(BARE_TRACKED_RE, 'newsletterfit.com');
 }
 
 /**
- * Fill in a draft's links.
- * @returns { text, html, minted: [{name, slug, token, url}], unresolved: [name],
- *            nameFilled: string|null, changed: boolean, notes: [string] }
+ * Fill in and normalise a draft's links.
+ * @returns { text, html, minted, unresolved, nameFilled, changed, mirrored, notes }
  */
 async function prepareDraft(draft, cfg) {
   let text = String(draft.text || '');
@@ -163,6 +199,8 @@ async function prepareDraft(draft, cfg) {
   const minted = [];
   const unresolved = [];
   const notes = [];
+  const published = [];            // { name, url } per filled bullet
+  const rawMints = [];
   let changed = false;
 
   const textPlaceholders = (text.match(/\[TRACKED_LINK\]/g) || []).length;
@@ -170,81 +208,69 @@ async function prepareDraft(draft, cfg) {
 
   if ((textPlaceholders || htmlPlaceholders) && !cfg.token) {
     notes.push('no API_BEARER_TOKEN on this pad, so nothing could be minted');
-    return { text, html, minted, unresolved, nameFilled: null, changed: false, notes };
+    return { text, html, minted, unresolved, nameFilled: null, changed: false, mirrored: 0, notes };
   }
 
-  const urlsInOrder = [];
-  const rawMints = [];
-
-  // One publication per line that carries a placeholder. The line reads
-  // "- Tech Scoop — 155K subs, AI/agents — [TRACKED_LINK]", so the name is what
-  // precedes the first separator.
+  // ---- 1. bullets: resolve, mint, and keep the NAME where the URL was --------------
   if (textPlaceholders) {
     const lines = text.split('\n');
     for (let i = 0; i < lines.length; i += 1) {
       if (!lines[i].includes('[TRACKED_LINK]')) continue;
       const raw = lines[i];
-      const namePart = raw.replace(/^\s*[-*•]\s*/, '').split(/\s+—\s+|\s+-\s+|\s+\|\s+|:/)[0].trim();
-      if (!namePart) { unresolved.push(raw.slice(0, 40).trim()); continue; }
+      const name = bulletName(raw);
+      if (!name) { unresolved.push(raw.slice(0, 40).trim()); continue; }
       let resolved = null;
       try {
-        resolved = await resolvePublication(namePart, cfg);
+        resolved = await resolvePublication(name, cfg);
       } catch (e) {
-        notes.push(`search failed for "${namePart}": ${e.message}`);
+        notes.push(`search failed for "${name}": ${e.message}`);
       }
-      if (!resolved) { unresolved.push(namePart); continue; }
-      let token = null;
+      if (!resolved) { unresolved.push(name); continue; }
       try {
         const row = await mintLink(cfg, leadId, `${cfg.baseUrl.replace(/\/$/, '')}/app/publications/${resolved.slug}`, `pub-${resolved.slug}-nf`, campaign);
-        token = row.token;
         rawMints.push(row);
+        const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
+        lines[i] = raw.replace(/\s*[—–-]?\s*:?\s*\[TRACKED_LINK\]\s*$/, '').trimEnd();
+        published.push({ name: resolved.name || name, url });
+        minted.push({ name: resolved.name || name, slug: resolved.slug, token: row.token, url });
+        changed = true;
       } catch (e) {
-        notes.push(`mint failed for "${namePart}": ${e.message}`);
-        unresolved.push(namePart);
-        continue;
+        notes.push(`mint failed for "${name}": ${e.message}`);
+        unresolved.push(name);
       }
-      const url = `https://newsletterfit.com/api/click?lt=${token}`;
-      lines[i] = raw.replaceAll('[TRACKED_LINK]', url);
-      urlsInOrder.push(url);
-      minted.push({ name: resolved.name || namePart, slug: resolved.slug, token, url });
-      changed = true;
     }
     text = lines.join('\n');
   }
-
-  // The same bullets in an existing html body, in the same order.
   if (htmlPlaceholders) {
-    let n = 0;
-    html = html.replace(/\[TRACKED_LINK\]/g, () => (n < urlsInOrder.length ? urlsInOrder[n++] : '[TRACKED_LINK]'));
-    if (n) changed = true;
+    const stripped = html.replace(/\s*[—–-]?\s*:?\s*\[TRACKED_LINK\]/g, '');
+    if (stripped !== html) { html = stripped; changed = true; }
   }
 
-  // The signature: every draft should carry the site link, attributed to this lead —
-  // the older drafts carry it alongside their publication links. Decided from the
-  // attribution store rather than from the text, because an anchor whose *text* is
-  // "newsletterfit.com" is already tracked and must not be minted again.
+  // ---- 2. signature: the brand link, anchored on the brand ------------------------
   const base = cfg.baseUrl.replace(/\/$/, '');
-  const present = [...`${text}\n${html}`.matchAll(/api\/click\?lt=([A-Za-z0-9_-]{20,40})/g)].map((m) => m[1]);
+  const present = [...`${text}\n${html}`.matchAll(ANY_TRACKED_RE)].map((m) => m[1]);
   const byToken = new Map(readStore(cfg.storePath).clicks.map((c) => [c.token, c]));
-  const hasSignature = present.some((t) => {
-    const row = byToken.get(t);
-    return row && String(row.dest || '').replace(/\/$/, '') === base;
-  });
-  if (cfg.token && !hasSignature && /newsletterfit\.com/.test(`${text}\n${html}`)) {
+  const homeRow = (() => {
+    for (const t of present) {
+      const row = byToken.get(t);
+      if (row && String(row.dest || '').replace(/\/$/, '') === base) return t;
+    }
+    return null;
+  })();
+  let signatureUrl = homeRow ? `https://newsletterfit.com/api/click?lt=${homeRow}` : null;
+  if (cfg.token && !signatureUrl && /newsletterfit\.com/.test(`${text}\n${html}`)) {
     try {
       const row = await mintLink(cfg, leadId, base, 'site-nf', campaign);
       rawMints.push(row);
-      const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
-      text = trackSignature(text, url);
-      if (html.trim()) html = trackSignature(html, url);
-      minted.push({ name: 'NewsletterFIT (signature)', slug: null, token: row.token, url });
+      signatureUrl = `https://newsletterfit.com/api/click?lt=${row.token}`;
+      minted.push({ name: 'NewsletterFIT (signature)', slug: null, token: row.token, url: signatureUrl });
       changed = true;
     } catch (e) {
       notes.push(`signature mint failed: ${e.message}`);
     }
   }
 
-  // [Name] -> the sender's own name, taken from the draft's From header.
+  // ---- 3. [Name] -> the sender -----------------------------------------------------
   let nameFilled = null;
   if (text.includes('[Name]') || html.includes('[Name]')) {
     const who = displayName(draft.from) || 'Ian Hinga';
@@ -254,16 +280,37 @@ async function prepareDraft(draft, cfg) {
     changed = true;
   }
 
-  // Anchors: build html from the text when there is none, then wrap bare URLs so the
-  // tracked link is clickable in both parts. Any placeholder still left stays visible
-  // on purpose — the send path refuses it, and masking it here would hide the problem.
-  if (changed) {
-    html = linkifyHtml(html.trim() ? html : textToHtml(text));
+  // ---- 4. text: no visible tracking URLs ------------------------------------------
+  const detok = detokenText(text);
+  if (detok !== text) { text = detok; changed = true; }
+
+  // ---- 5. html: build when missing, anchor the names, clean raw-URL anchors --------
+  if (!html.trim()) {
+    html = textToHtml(text);
+    changed = true;
   }
+  for (const p of published) {
+    const nameEsc = esc(p.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const inBlock = new RegExp(`(<p>(?:(?!</p>)[\\s\\S])*?)(${nameEsc})((?:(?!</p>)[\\s\\S])*?</p>)`);
+    if (inBlock.test(html)) html = html.replace(inBlock, `$1<a href="${p.url}">$2</a>$3`);
+    else html = html.replace(esc(p.name), `<a href="${p.url}">${esc(p.name)}</a>`);
+  }
+  if (signatureUrl) {
+    const sigRe = /(Founder,\s*NewsletterFIT[^<]*—\s*)(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?/;
+    if (sigRe.test(html)) html = html.replace(sigRe, `$1<a href="${signatureUrl}">newsletterfit.com</a>`);
+    else if (!TOKEN_IN_BODY_RE.test(html) && /newsletterfit\.com/.test(html)) {
+      html = html.replace(/newsletterfit\.com/, `<a href="${signatureUrl}">newsletterfit.com</a>`);
+    }
+  }
+  const beforeAnchors = html;
+  html = anchorifyHtml(html);
+  if (html !== beforeAnchors) changed = true;
 
   const mirrored = mirrorMinted(cfg, rawMints);
-
   return { text, html, minted, unresolved, nameFilled, changed, mirrored, notes };
 }
 
-module.exports = { prepareDraft, resolvePublication, unfilled, textToHtml, displayName, TOKEN_IN_BODY_RE };
+module.exports = {
+  prepareDraft, resolvePublication, unfilled, displayName,
+  anchorifyHtml, detokenText, bulletName, textToHtml, TOKEN_IN_BODY_RE,
+};
