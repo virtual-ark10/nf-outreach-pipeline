@@ -452,10 +452,16 @@ const server = http.createServer((req, res) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'same-origin');
   res.setHeader('Content-Security-Policy',
-    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; " +
-    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; " +
-    "img-src 'self' data: https:; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com; " +
-    "frame-ancestors 'none'; base-uri 'self'");
+    // GA4 on this page needs exactly two openings: the gtag.js loader (script-src) and the
+    // measurement endpoints it posts to (connect-src). Nothing else is widened.
+    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdn.tailwindcss.com "
+    + "https://www.googletagmanager.com; "
+    + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
+    + "img-src 'self' data: https://www.google-analytics.com https:; "
+    + "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com "
+    + "https://*.analytics.google.com https://www.googletagmanager.com; "
+    + "font-src 'self' data: https://fonts.gstatic.com; "
+    + "frame-ancestors 'none'; base-uri 'self'");
 
   // ---- API routes ----
   if (url.startsWith('/api/')) {

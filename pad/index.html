@@ -4,7 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NewsletterFIT — Email Pad</title>
-<!-- v2 self-contained: zero external CDNs, zero clipboard deps, hand-rolled CSS/JS -->
+<!-- GA4 — same NewsletterFIT property as the public site, so pad usage lands in one place.
+     The two hosts this needs (googletagmanager.com for the loader, google-analytics.com for
+     the measurement posts) are the only ones allowed through this page's CSP.
+     No integrity/crossorigin attribute: gtag.js is served versionless and monitored by
+     Google, so it cannot be pinned to a hash — the same loader the public site already uses. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5G1E8DSK7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-C5G1E8DSK7', { page_title: 'NewsletterFIT Email Pad' });
+</script>
+<!-- v2 self-contained: zero external CDNs, zero clipboard deps, hand-rolled CSS/JS (GA4 aside) -->
 <style>
   :root {
     --brand: #0E7A66;
