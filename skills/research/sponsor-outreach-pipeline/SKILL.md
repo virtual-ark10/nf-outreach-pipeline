@@ -195,7 +195,11 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
 - Pasted links carry ONLY the tracking token (`https://newsletterfit.com/api/click?lt=<TOKEN>`)
   — no UTM, no external URL, no `dest=` param. The destination is resolved
   server-side from the token record, so no external URL appears in the email
-  link (keeps it from looking like an open redirect / spammy wrapped URL).
+  link (keeps it from looking like an open redirect / spammy wrapped URL). The
+  GA campaign params are added at the REDIRECT, not in the email: `/api/click`
+  302s to the destination with `utm_source=newsletterfit&utm_medium=email` plus
+  `utm_campaign` / `utm_content` from the token record, so emailed visits land in
+  GA as an email campaign instead of direct/referral (and no token needs re-minting).
 - Requires the click route + visit middleware deployed in the Express backend
   (see `examples/express-integration.js`). Dest on YOUR site (`/pricing`,
   your own article) also tracks repeat visits via cookie.
