@@ -132,6 +132,25 @@ with open(EXPORT_CSV, newline="", encoding="utf-8", errors="replace") as fh:
         export[norm(row.get("sponsor"))] = row
 print(f"  export: {len(export)} sponsors")
 
+# A draft already in the queue with its links minted is left alone: re-seeding it would send
+# empty html through the seeder's UPDATE and destroy the tokens, and the next link pass cannot
+# always recreate them in a burst. Composing is the job here, not rewriting.
+def queue_index():
+    try:
+        req = urllib.request.Request("http://127.0.0.1:3001/api/drafts",
+                                     headers={"X-Pad-Token": PAD_TOKEN})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            body = json.loads(r.read().decode())
+        rows = body.get("data") if isinstance(body, dict) else body
+        rows = rows if isinstance(rows, list) else []
+        return {str(x.get("id")): x for x in rows if isinstance(x, dict)}
+    except Exception:
+        return {}
+
+
+EXISTING = queue_index()
+print(f"  queue already holds {len(EXISTING)} draft(s)")
+
 con = sqlite3.connect(f"file:{PAD_DB}?mode=ro", uri=True)
 con.row_factory = sqlite3.Row
 leads = [dict(r) for r in con.execute(
@@ -247,7 +266,14 @@ for score, quality, l, e in ranked:
         f"Want me to pull the reader profiles and momentum behind {'these' if len(recs) > 1 else 'it'}?\n\n"
         "[Name], Founder, NewsletterFIT"
     )
-    batch.append({"id": re.sub(r"[^a-z0-9]+", "-", company.lower()).strip("-"),
+    draft_id = re.sub(r"[^a-z0-9]+", "-", company.lower()).strip("-")
+    held = EXISTING.get(draft_id)
+    held_html = str((held or {}).get("html") or "")
+    held_text = str((held or {}).get("text") or "")
+    if held and "lt=" in held_html and "[TRACKED_LINK]" not in (held_html + held_text):
+        skipped.append((company, "already queued with its links minted, left as it is"))
+        continue
+    batch.append({"id": draft_id,
                   "lead_id": l.get("id"), "company": company, "to": to, "subject": subject,
                   "text": text, "html": "", "from": FROM_EMAIL, "campaign": "outbound"})
 

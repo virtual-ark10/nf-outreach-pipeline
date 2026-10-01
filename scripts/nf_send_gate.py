@@ -36,9 +36,34 @@ LEDGER = "/home/boxed/newsletterfit/attribution/attribution.json"
 CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
 # The intake export is the corpus's article-level sponsorship record; see Corpus.placements.
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
-# Sends per run. A file, not a constant, so the daily volume is one number to change.
+# Sends per run. A file, not a constant, so the daily volume is one number to change. A dated
+# ramp file beats it while the domain is young: pick the newest entry that is not in the future.
 CAP_FILE = "/home/boxed/nf-outreach-pipeline/data/send-cap.txt"
+RAMP_FILE = "/home/boxed/nf-outreach-pipeline/data/send-ramp.txt"
 DEFAULT_CAP = 50
+
+
+def cap_for_date(day):
+    """(cap, where it came from): the ramp's entry for this date, else the cap file."""
+    newest = None
+    try:
+        for line in open(RAMP_FILE):
+            parts = line.split("#")[0].split()
+            if len(parts) >= 2 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", parts[0]):
+                try:
+                    n = int(parts[1])
+                except ValueError:
+                    continue
+                if parts[0] <= day and (newest is None or parts[0] > newest[0]):
+                    newest = (parts[0], n)
+    except OSError:
+        pass
+    if newest:
+        return newest[1], f"ramp {newest[0]}"
+    try:
+        return int(open(CAP_FILE).read().strip()), "cap file"
+    except (OSError, ValueError):
+        return DEFAULT_CAP, "default"
 
 # --- language that must never ship to a prospect -----------------------------------------
 BACK_REFERENCE = re.compile(
@@ -499,11 +524,9 @@ def main():
         # is a conversation already in flight, so it outranks a cold open; inside first touches
         # the CRM's own score decides who is worth the slot.
         cap = args.cap
+        cap_src = "--cap"
         if cap is None:
-            try:
-                cap = int(open(CAP_FILE).read().strip())
-            except (OSError, ValueError):
-                cap = DEFAULT_CAP
+            cap, cap_src = cap_for_date(datetime.date.today().isoformat())
 
         def kind_and_score(r):
             d = next((x for x in drafts if str(x.get("id")) == str(r["id"])), {})
@@ -516,6 +539,7 @@ def main():
             return (0 if contacted else 1, -score)
 
         queue = sorted([r for r in results if r["verdict"] == "PASS"], key=kind_and_score)
+        print(f"  cap {cap} ({cap_src}); {len(queue)} clean draft(s) eligible")
         for r in queue[:cap]:
             code, body = pad_call("POST", f"/api/drafts/{urllib.parse.quote(str(r['id']))}/send", {})
             r["sent"] = code == 200

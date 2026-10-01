@@ -98,12 +98,17 @@ async function resolvePublication(name, cfg) {
   let best = null;
   for (const query of queries) {
     let payload = null;
-    try {
-      payload = await httpJson(`${cfg.apiBase}${sep}search?q=${encodeURIComponent(query)}`, {
-        headers: { Authorization: `Bearer ${cfg.token}` },
-      });
-    } catch (e) {
-      continue;
+    // A burst of bullets hits the search endpoint back to back; a single throttle or timeout
+    // used to leave a bullet unminted for good, which blocks the draft at the send gate.
+    for (let attempt = 0; attempt < 3 && !payload; attempt += 1) {
+      try {
+        payload = await httpJson(`${cfg.apiBase}${sep}search?q=${encodeURIComponent(query)}`, {
+          headers: { Authorization: `Bearer ${cfg.token}` },
+        });
+      } catch (e) {
+        if (attempt === 2) payload = null;
+        else await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+      }
     }
     const results = (((payload || {}).data || {}).newsletters) || [];
     for (const r of results) {
