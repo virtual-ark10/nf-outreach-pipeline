@@ -11,6 +11,11 @@
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
+# The store is opened by two processes (this pad and its leads engine) at the same
+# moment, so migrations have to survive the race. Offline and fast.
+echo "== store: two processes opening one database at the same instant =="
+node tests/migration_race_test.cjs || exit 1
+
 DB=${TEST_DB:-/tmp/e2e.db}
 PAD_PORT=${TEST_PAD_PORT:-3997}
 CRM_PORT=${TEST_CRM_PORT:-3998}

@@ -29,12 +29,28 @@ function open() {
   if (_db) return _db;
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
   const db = new DatabaseSync(DB_PATH);
-  db.exec('PRAGMA journal_mode = WAL');
+  // This pad and its leads engine open one store, sometimes in the same instant (a
+  // reboot, or a deploy restarting both). Switching the journal mode and applying
+  // the schema both want a write lock, and SQLite refuses rather than queueing while
+  // the other process holds it — so the loser used to die at boot and be brought
+  // back by the watchdog, which looks like a service restarting itself for no
+  // reason. The lock clears in milliseconds, so wait for it.
+  const sleep = (ms) => { try { Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms); } catch (e) { /* older node */ } };
+  const withRetry = (label, fn, attempts = 60) => {
+    for (let i = 1; ; i += 1) {
+      try { return fn(); } catch (err) {
+        if (!/locked|busy/i.test(String(err && err.message)) || i >= attempts) throw err;
+        if (i === 1) console.warn(`[DB] ${label}: waiting for the other process to release the write lock`);
+        sleep(250);
+      }
+    }
+  };
+  db.exec('PRAGMA busy_timeout = 15000');
+  withRetry('journal_mode', () => db.exec('PRAGMA journal_mode = WAL'));
   db.exec('PRAGMA foreign_keys = ON');
-  db.exec('PRAGMA busy_timeout = 5000');
   db.exec('PRAGMA synchronous = NORMAL');
-  db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));   // idempotent: every object is IF NOT EXISTS
-  migrate(db);                                     // then the columns CREATE TABLE cannot add
+  withRetry('schema', () => db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8')));   // idempotent: every object is IF NOT EXISTS
+  withRetry('migrate', () => migrate(db));                                   // then the columns CREATE TABLE cannot add
   _db = db;
   return _db;
 }
@@ -45,18 +61,37 @@ function open() {
 // that depend on it.
 function migrate(db) {
   const cols = (t) => db.prepare(`PRAGMA table_info(${t})`).all().map((r) => r.name);
+  // The pad and its leads engine open this store at the same moment and both run
+  // this migration, so both can decide the same column or view is missing. The loser
+  // gets "duplicate column name" / "already exists", which means the thing is there —
+  // the migration is done. Without this the loser dies at boot and the watchdog
+  // restarts it, which looks like a service that restarts itself for no reason. The
+  // product kit carries the same fix plus a test that reproduces the race
+  // (resend-pad: tests/migration_race_test.cjs).
+  const raced = (err) => /duplicate column name|already exists/i.test(String(err && err.message));
   const add = (t, name, decl) => {
-    if (!cols(t).includes(name)) db.exec(`ALTER TABLE ${t} ADD COLUMN ${name} ${decl}`);
+    if (cols(t).includes(name)) return;
+    try {
+      db.exec(`ALTER TABLE ${t} ADD COLUMN ${name} ${decl}`);
+    } catch (err) {
+      if (!raced(err)) throw err;
+    }
   };
   add('events', 'processed_at', 'TEXT');
   add('events', 'attempts', 'INTEGER NOT NULL DEFAULT 0');
   add('events', 'last_error', 'TEXT');
   // The index only exists once the column does, which is why it is not in schema.sql.
   db.exec('CREATE INDEX IF NOT EXISTS ix_events_pending ON events(processed_at, id)');
+  // Dropped and recreated so a changed definition takes effect; the other process may
+  // get there first, in which case the view is already the one we wanted.
   db.exec('DROP VIEW IF EXISTS v_events_pending');
-  db.exec(`CREATE VIEW v_events_pending AS
+  try {
+    db.exec(`CREATE VIEW v_events_pending AS
     SELECT id, entity, entity_id, type, payload, at, actor, attempts, last_error
       FROM events WHERE processed_at IS NULL ORDER BY id`);
+  } catch (err) {
+    if (!raced(err)) throw err;
+  }
   // Messages the operator has cleared out of the Sent / Received tabs. The lists
   // themselves come from Resend (which has no delete for already-sent or received
   // mail), so "delete" here means "keep it out of this pad", and it is reversible.

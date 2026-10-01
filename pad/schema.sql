@@ -271,7 +271,7 @@ END;
 -- ---------------------------------------------------------------- views
 -- Per lead: where it stands and how it is actually going.
 DROP VIEW IF EXISTS v_lead_pipeline;
-CREATE VIEW v_lead_pipeline AS
+CREATE VIEW IF NOT EXISTS v_lead_pipeline AS
 SELECT
   l.id,
   l.company,
@@ -299,7 +299,7 @@ WHERE l.deleted_at IS NULL AND l.archived_at IS NULL;
 
 -- One chronological stream: mail out, mail in, stage moves.
 DROP VIEW IF EXISTS v_lead_timeline;
-CREATE VIEW v_lead_timeline AS
+CREATE VIEW IF NOT EXISTS v_lead_timeline AS
   SELECT
     e.lead_id,
     'email'              AS kind,
@@ -344,7 +344,7 @@ UNION ALL
 
 -- NF-specific: who is due a touch right now (the day 3 / 7 / 14 cadence).
 DROP VIEW IF EXISTS v_followups_due;
-CREATE VIEW v_followups_due AS
+CREATE VIEW IF NOT EXISTS v_followups_due AS
 SELECT
   p.*,
   CAST(julianday('now') - julianday(p.next_follow_up_at) AS INTEGER) AS days_overdue
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS redraft_notes (
 CREATE INDEX IF NOT EXISTS ix_redraft_lead ON redraft_notes(lead_id, created_at);
 
 DROP VIEW IF EXISTS v_redraft_reasons;
-CREATE VIEW v_redraft_reasons AS
+CREATE VIEW IF NOT EXISTS v_redraft_reasons AS
 SELECT COALESCE(NULLIF(reason, ''), 'unspecified') AS reason,
        COUNT(*)      AS n,
        MAX(created_at) AS last_at
@@ -388,7 +388,7 @@ ORDER BY n DESC;
 -- (never from a stored counter): how much engagement per day, which links earn
 -- the clicks, and how a single lead is engaging.
 DROP VIEW IF EXISTS v_engagement_daily;
-CREATE VIEW v_engagement_daily AS
+CREATE VIEW IF NOT EXISTS v_engagement_daily AS
 SELECT substr(at, 1, 10) AS day,
        kind,
        COUNT(*)                        AS n,
@@ -398,7 +398,7 @@ FROM email_engagements
 GROUP BY day, kind;
 
 DROP VIEW IF EXISTS v_top_links;
-CREATE VIEW v_top_links AS
+CREATE VIEW IF NOT EXISTS v_top_links AS
 SELECT COALESCE(link_host, '(unknown)') AS host,
        url,
        COUNT(*)                AS clicks,
@@ -411,7 +411,7 @@ GROUP BY url
 ORDER BY clicks DESC;
 
 DROP VIEW IF EXISTS v_engagement_by_lead;
-CREATE VIEW v_engagement_by_lead AS
+CREATE VIEW IF NOT EXISTS v_engagement_by_lead AS
 SELECT lead_id,
        SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
        SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS email_clicks,
@@ -425,7 +425,7 @@ GROUP BY lead_id;
 
 -- Per message: what the Sent tab shows beside a mail ("opened 3x, clicked once").
 DROP VIEW IF EXISTS v_email_engagement;
-CREATE VIEW v_email_engagement AS
+CREATE VIEW IF NOT EXISTS v_email_engagement AS
 SELECT resend_id,
        SUM(CASE WHEN kind = 'open'  THEN 1 ELSE 0 END) AS opens,
        SUM(CASE WHEN kind = 'click' THEN 1 ELSE 0 END) AS clicks,
