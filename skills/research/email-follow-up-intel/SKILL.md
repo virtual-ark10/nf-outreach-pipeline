@@ -15,7 +15,7 @@ metadata:
 ## When to Use
 - Preparing day-3 / day-7 / day-14 follow-up emails for NewsletterFIT prospects.
 - Digging for a unique, verified data point / angle to make a follow-up land.
-- Running the scheduled daily follow-up-intel scan on the lead sheet.
+- Running the scheduled daily follow-up-intel scan on the CRM.
 
 Prepares follow-up emails for NewsletterFIT prospects by mining the newsletter corpus,
 last30days, and trusted web sources for UNIQUE, VERIFIED data about each prospect's product,
@@ -74,7 +74,7 @@ whose topic-mentions are rising, which pubs are gaining momentum across the news
 - NEVER call a brand a lead's "direct competitor" from memory or a fuzzy category guess. A wrong competitor claim destroys trust. Real failure: Wispr Flow was drafted as Granola's "direct competitor" — but Wispr is a voice-DICTATION app, only ADJACENT to Granola's actual lane ("the AI notepad for back-to-back meetings", uses computer audio, no meeting bot). Verify the lead's real product (their own site) AND the would-be rival's real product before claiming overlap.
 - Sweep the corpus for the TRUE direct competitors' sponsor placements before asserting any competitor buy. If zero confirmed placements, say so honestly and pivot to a defensible angle (e.g. open/uncontested sponsor lane while category coverage rises).
 - When a draft cites "proof of discussion", anchor it to a REAL, dated article title from the corpus (pub + date + headline) and quote what it says. Never gesture at coverage without a concrete citation.
-- Keep a competitor log per lead (see /home/boxed/lead_competitors.md). It is staged to be mirrored into the lead Google Sheet once OAuth write is wired.
+- Keep a competitor log per lead (see /home/boxed/lead_competitors.md). It is staged to be mirrored into the CRM once the write path is wired.
 
 ## HARD RULE — NEVER INVENT DATA
 - Do not fabricate numbers, subscribers, sponsor placements, trends, quotes, articles, or
@@ -91,9 +91,11 @@ whose topic-mentions are rising, which pubs are gaining momentum across the news
 - Same test applies to the lead-insight article: if the fresh "proof of discussion" piece isn't in the prospect's stated lane, find one that is (e.g. a crypto-security piece for a hardware wallet), or drop it.
 
 ## Input
-- Lead sheet: `/home/boxed/lead_tracking_sheet.csv` (columns: Company Name, Contact Emails,
-  Title, Status, email body). Companions: `/home/boxed/sponsor_evidence.json`,
-  `/home/boxed/sponsor_legit_class.json`, `hunter-contacts.csv`.
+- Lead source of truth: the CRM (leads engine on :3002, store
+  `pad/data/outreach.db`). Never a CSV. `python3 scripts/crm_lead_state.py` prints who is due
+  now, who is due later, and whose window has closed, straight from the CRM's stages.
+  Companion evidence files: `/home/boxed/sponsor_evidence.json`,
+  `/home/boxed/sponsor_legit_class.json`, `hunter-contacts.csv`. The old lead sheet is retired.
 - Only follow up STATUSES in flight: First Email → Follow 2 → Follow 3 → Follow 4.
   Replied / Won / No = stop.
 - Cadence per `sponsor-outreach-pipeline`: day 3 bump (FOLLOW-UP 2), day 7 new evidence
@@ -140,10 +142,11 @@ Write: opening tying to their product/industry, the unique data with its source,
 NewsletterFIT lens, and a low-friction ask (send the articles / shortlist / debrief). Never
 include an unsourced number. Plain text, no markdown.
 
-### 7. Update the lead sheet
-Write the angle + framing to `/home/boxed/lead_tracking_sheet.csv` (the Follow N cell / a data
-column) and advance Status to next touch, so the next run doesn't duplicate. Mirror to the
-Google Sheet (google-workspace) when OAuth is up.
+### 7. Record the touch in the CRM
+The CRM is the only record. The draft goes into the pad queue (which the send gate reads) and
+the CRM advances the lead's stage on send, which is what makes the next run idempotent. Do not
+write a CSV: the lead sheet is retired because it drifted while the CRM held the truth. Mirror
+to a Google Sheet only if OAuth is ever wired, and never as the source.
 
 ## Delivery (to the follow-up-intel channel)
 Plain prose, no markdown symbols / no boxes. One block per prospect, under 1750 chars:

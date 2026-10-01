@@ -19,7 +19,7 @@ sponsor, using observed behavior not subscriber-count vanity."
 - Enriching a sponsor list with contacts.
 - Verifying whether a corpus "sponsor" is a real ad buyer or a false positive.
 - Building follow-up sequences.
-- Syncing/reading the lead-tracking Google Sheet.
+- Reading lead state from the CRM (leads engine on :3002; never a CSV).
 
 ## Golden rule — VERIFY SPONSORS BEFORE EMAILING
 The `all-sponsors.json` export (reports/sponsor-outreach/) OVER-CLAIMS. It lists
@@ -374,8 +374,10 @@ stage moves in one chronological stream), plus `v_followups_due` for the touch
 cadence. Commit a state snapshot with
 `/home/boxed/nf-outreach-pipeline/scripts/snapshot-state.sh` after a batch.
 
-## Reusable artifacts (built 2026-08-26)
-- `/home/boxed/lead_tracking_sheet.csv`
+## Reusable artifacts
+- Lead state lives in the CRM: `pad/data/outreach.db` behind the leads engine on
+  :3002. `scripts/crm_lead_state.py` prints in-flight, due and expired leads. The old
+  `/home/boxed/lead_tracking_sheet.csv` is RETIRED and must not be read.
 - `/home/boxed/sponsor_evidence.json`
 - `/home/boxed/sponsor_legit_class.json`
 - `/home/boxed/hunter_emails.json`, `/home/boxed/emails_out/*.md`,
@@ -383,7 +385,7 @@ cadence. Commit a state snapshot with
   `/home/boxed/combine_contacts.json`.
 - Click/visit attribution: `/home/boxed/newsletterfit/attribution`
   (`utils/generate-links.js` -> token-tagged links; `utils/export-visits.js` ->
-  per-lead visit/click CSVs for the lead sheet; zero-dep JSON store, vanilla JS).
+  per-lead visit/click data for the CRM; zero-dep JSON store, vanilla JS).
 
 ## Pitfalls
 - Hunter `company=` unreliable for ambiguous names → pass confirmed `domain=`.

@@ -28,3 +28,6 @@ attic/
 node_modules/
 __pycache__/
 *.pyc
+
+# VACUUM INTO snapshots taken before CRM writes: data, not source
+pad/snapshots/
