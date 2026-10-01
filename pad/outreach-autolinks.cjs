@@ -7,10 +7,12 @@
 //    nothing filled them — a draft sat in the queue with no link (no attribution) and the
 //    placeholder text itself would have gone to the prospect.
 //
-// 2. Never show a raw tracking URL. A visible `https://…/api/click?lt=<token>` reads as
-//    spam and does not get clicked, so the html anchors the NAME: the publication on its
-//    bullet, the brand on the signature. The plain-text part keeps names as names (text
-//    has no anchors), which also keeps a token-laden URL out of a text-only reader's view.
+// 2. Never show a raw tracking URL, and never repeat a name just to host one. A visible
+//    `https://…/api/click?lt=<token>` reads as spam and does not get clicked, so the html
+//    puts the link ON the first mention of the name — "- <a>Pub</a> — est. 169K", not
+//    "- Pub — est. 169K: <a>Pub</a>" — and the brand anchor reads "NewsletterFIT" rather
+//    than the bare domain. The plain-text part keeps names as names (text has no anchors),
+//    which also keeps a token-laden URL out of a text-only reader's view.
 //
 // Conventions, matching what the outreach scripts already produce: dest is the
 // publication's NewsletterFIT page (/app/publications/<slug>), ref is pub-<slug>-nf, the
@@ -157,25 +159,132 @@ function bulletName(line) {
   return String(line).replace(/^\s*[-*•]\s*/, '').split(/\s+—\s+|\s+-\s+|\s+\|\s+|:/)[0].trim();
 }
 
+/** Decode the entities esc() writes, so html text and labels can be compared as people read them. */
+function decodeEntities(s) {
+  return String(s || '')
+    .replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+}
+
+/** Visible text of an anchor's inner html, with the entities esc() writes decoded. */
+function visibleText(inner) {
+  return decodeEntities(String(inner || '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
+}
+
+/** [start, end) of every <a …>…</a> in s. */
+function anchorSpans(s) {
+  const spans = [];
+  for (const m of String(s).matchAll(/<a\s+[^>]*>[\s\S]*?<\/a>/gi)) spans.push([m.index, m.index + m[0].length]);
+  return spans;
+}
+
+/** How a decoded label can be written in html — a name with "&" or "'" is escaped in the source. */
+function labelNeedles(label) {
+  const variants = new Set([label]);
+  if (label.includes('&')) {
+    variants.add(label.replace(/&/g, '&amp;'));
+    variants.add(label.replace(/&/g, '&#38;'));
+  }
+  if (label.includes("'")) variants.add(label.replace(/'/g, '&#39;'));
+  if (label.includes('"')) variants.add(label.replace(/"/g, '&quot;'));
+  return [...variants].filter(Boolean);
+}
+
+/**
+ * The earliest occurrence of `label` in s that is NOT already inside an anchor.
+ * @returns {{index: number, length: number}|null} — length is the matched spelling,
+ *          so an escaped occurrence ("Greg &amp; Taylor") is replaced at its real width.
+ */
+function plainMatch(s, label) {
+  const spans = anchorSpans(s);
+  const hay = String(s).toLowerCase();
+  let best = null;
+  for (const needle of labelNeedles(label)) {
+    const low = needle.toLowerCase();
+    let from = 0;
+    for (;;) {
+      const i = hay.indexOf(low, from);
+      if (i === -1) break;
+      if (!spans.some(([a, b]) => i >= a && i < b)) {
+        if (!best || i < best.index) best = { index: i, length: needle.length };
+        break;
+      }
+      from = i + 1;
+    }
+  }
+  return best;
+}
+
+/** Start of the line (bullet) the offset sits on — a link never migrates out of its bullet. */
+function lineStartBefore(src, index) {
+  return Math.max(
+    src.lastIndexOf('<p>', index - 1),
+    src.lastIndexOf('<br', index - 1),
+    src.lastIndexOf('\n', index - 1),
+  );
+}
+
+/** Apply offset-ordered edits (descending) so earlier offsets stay valid; skips overlaps. */
+function applyEdits(src, edits) {
+  let out = String(src);
+  let floor = Infinity;
+  for (const e of [...edits].sort((a, b) => b.from - a.from)) {
+    if (e.to > floor) continue;
+    out = out.slice(0, e.from) + e.text + out.slice(e.to);
+    floor = e.from;
+  }
+  return out;
+}
+
 /** What a link's visible text should be: the publication on its bullet, else the brand. */
 function anchorLabel(html, index) {
   const before = html.slice(0, Math.max(0, index));
-  const segStart = Math.max(before.lastIndexOf('<p>'), before.lastIndexOf('<br>'), before.lastIndexOf('\n'));
-  const segment = before.slice(segStart).replace(/<[^>]*>/g, ' ').trim();
-  if (/Founder|NewsletterFIT\s*—?\s*$/i.test(segment) || !segment.includes('—')) return 'newsletterfit.com';
-  return bulletName(segment.replace(/^[>\s]+/, '')) || 'newsletterfit.com';
+  const segStart = Math.max(before.lastIndexOf('<p>'), before.lastIndexOf('<br'), before.lastIndexOf('\n'));
+  const segment = decodeEntities(before.slice(segStart).replace(/<[^>]*>/g, ' ')).trim();
+  if (/Founder|NewsletterFIT\s*—?\s*$/i.test(segment) || !segment.includes('—')) return 'NewsletterFIT';
+  return bulletName(segment.replace(/^[>\s]+/, '')) || 'NewsletterFIT';
 }
 
-/** Rewrite any anchor whose visible text is a raw tracking URL into its context label. */
+/**
+ * Put every tracked link on the FIRST mention of the name it carries, and never repeat the
+ * name to host it: "- <a>Pub</a> — est. 169K", not "- Pub — est. 169K: <a>Pub</a>". A link
+ * whose visible text is still a raw tracking URL is relabelled (there is nothing to move to),
+ * and the brand anchor reads "NewsletterFIT", not the bare domain.
+ * Idempotent: once the link sits on the first mention there is no later copy left to move.
+ */
 function anchorifyHtml(html) {
   const src = String(html);
-  return src.replace(ANCHOR_RE, (whole, url, visible, offset) => {
-    if (!/newsletterfit\.com\/api\/click/.test(visible)) return whole;
-    // The label comes out of the html, so it is already entity-encoded: strip anything
-    // that could break the attribute, but do not re-escape its &amp; into &amp;amp;.
-    const label = anchorLabel(src, offset).replace(/[<>"]/g, '').trim();
-    return `<a href="${url}">${label}</a>`;
-  });
+  const edits = [];
+  for (const m of src.matchAll(new RegExp(ANCHOR_RE.source, 'g'))) {
+    const [whole, url, inner] = m;
+    const isRawUrl = /newsletterfit\.com\/api\/click/.test(inner);
+    const shown = visibleText(inner);
+    // A brand link written as its bare domain should name the brand, so the same
+    // first-mention rule applies to it as to a publication.
+    const label = (isRawUrl ? anchorLabel(src, m.index)
+      : (/^newsletterfit\.com\/?$/i.test(shown) ? 'NewsletterFIT' : shown))
+      .replace(/[<>"]/g, '').trim();
+    if (!label) continue;
+
+    const lineStart = lineStartBefore(src, m.index);
+    const head = src.slice(lineStart + 1, m.index);
+    const hit = plainMatch(head, label);
+    if (!hit) {
+      // Nothing earlier on this line to move the link to: name the anchor itself.
+      if (isRawUrl) {
+        edits.push({ from: m.index, to: m.index + whole.length, text: `<a href="${url}">${esc(label)}</a>` });
+      }
+      continue;
+    }
+    // The name is already written earlier on this line: the link moves there, the copy goes.
+    const abs = lineStart + 1 + hit.index;
+    edits.push({ from: abs, to: abs + hit.length, text: `<a href="${url}">${src.slice(abs, abs + hit.length)}</a>` });
+    const tail = src.slice(abs + hit.length, m.index);
+    const keep = /^([\s\S]*?)[\s]*(?:[:—–-]\s*)?$/.exec(tail);
+    edits.push({ from: abs + hit.length + (keep ? keep[1].length : 0), to: m.index + whole.length, text: '' });
+  }
+  return applyEdits(src, edits);
 }
 
 /** Plain-text part: names stay names; no token-laden URL for a reader to see. */
@@ -296,10 +405,13 @@ async function prepareDraft(draft, cfg) {
     else html = html.replace(esc(p.name), `<a href="${p.url}">${esc(p.name)}</a>`);
   }
   if (signatureUrl) {
-    const sigRe = /(Founder,\s*NewsletterFIT[^<]*—\s*)(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?/;
-    if (sigRe.test(html)) html = html.replace(sigRe, `$1<a href="${signatureUrl}">newsletterfit.com</a>`);
-    else if (!TOKEN_IN_BODY_RE.test(html) && /newsletterfit\.com/.test(html)) {
-      html = html.replace(/newsletterfit\.com/, `<a href="${signatureUrl}">newsletterfit.com</a>`);
+    // The brand link sits on the FIRST mention of the brand, and the trailing domain goes
+    // away: "Ian Hinga, Founder, <a …>NewsletterFIT</a>" — never "… NewsletterFIT — newsletterfit.com".
+    const brandRe = /(Founder,\s*)(?:<a[^>]*>)?NewsletterFIT(?:<\/a>)?(\s*(?:[—–-]\s*)?(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?)?/i;
+    if (brandRe.test(html)) {
+      html = html.replace(brandRe, (_whole, lead) => `${lead}<a href="${signatureUrl}">NewsletterFIT</a>`);
+    } else if (!TOKEN_IN_BODY_RE.test(html) && /newsletterfit\.com/i.test(html)) {
+      html = html.replace(/(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?/i, `<a href="${signatureUrl}">NewsletterFIT</a>`);
     }
   }
   const beforeAnchors = html;

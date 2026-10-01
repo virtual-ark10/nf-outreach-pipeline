@@ -186,11 +186,12 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   contains `[TRACKED_LINK]` or `[Name]` is REFUSED at send, so an unfilled template
   can never reach a prospect. `python3 /home/boxed/outreach_internalize.py` (below) is
   still the tool for rewriting publication links that are already in a draft.
-- **Never let a raw tracking URL be the visible text of a link** — anchor the NAME:
-  the publication on its bullet, `newsletterfit.com` on the signature. A visible
-  `https://…/api/click?lt=<token>` reads as spam and does not get clicked. The pad's
-  link pass enforces this in the html part and keeps token URLs out of the plain-text
-  part, so a draft it has touched conforms.
+- **Never let a raw tracking URL be the visible text of a link, and never repeat a name to
+  host one** — the link goes on the FIRST mention: the publication at the head of its bullet
+  (`- <a>Pub</a> — est. 169K`), the brand on the signature (`Founder, <a>NewsletterFIT</a>`,
+  not `… — newsletterfit.com`). A visible `https://…/api/click?lt=<token>` reads as spam and
+  does not get clicked. The pad's pass moves the link to the first mention, drops the
+  repeated copy, and keeps token URLs out of the plain-text part.
 - Pasted links carry ONLY the tracking token (`https://newsletterfit.com/api/click?lt=<TOKEN>`)
   — no UTM, no external URL, no `dest=` param. The destination is resolved
   server-side from the token record, so no external URL appears in the email
