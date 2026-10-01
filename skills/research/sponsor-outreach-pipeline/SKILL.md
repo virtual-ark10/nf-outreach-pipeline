@@ -175,8 +175,17 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   `python3 /home/boxed/outreach_internalize.py` — the queue is SQLite behind the
   pad API, so `drafts.json` is retired; use `--dry-run` first, `--pad <url>` to
   point it elsewhere.
-- Paste the returned `link` URLs into the email lines below (Outlook auto-links
-  pasted URLs).
+- **The pad fills the links in itself — you do not paste URLs into drafts.**
+  Write each bullet as `<Pub> — est. <subs>: [TRACKED_LINK]`. The pad resolves the
+  publication named on that line to its NewsletterFIT page, mints a token for it, and
+  replaces the placeholder: on save over the API, before every send, and in a sweep
+  every couple of minutes — so drafts written straight into the SQLite store (seeders,
+  generators) are covered too. `[Name]` is replaced with the sender from the draft's
+  From header. Check a whole queue with `POST /api/drafts/prepare-links` (pad token);
+  it reports what it minted and anything it could not resolve. A draft that still
+  contains `[TRACKED_LINK]` or `[Name]` is REFUSED at send, so an unfilled template
+  can never reach a prospect. `python3 /home/boxed/outreach_internalize.py` (below) is
+  still the tool for rewriting publication links that are already in a draft.
 - Pasted links carry ONLY the tracking token (`https://newsletterfit.com/api/click?lt=<TOKEN>`)
   — no UTM, no external URL, no `dest=` param. The destination is resolved
   server-side from the token record, so no external URL appears in the email

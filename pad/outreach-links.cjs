@@ -168,4 +168,4 @@ function linkifyHtml(html) {
   return masked.replace(/\u0000(\d+)\u0000/g, (_, i) => masks[Number(i)]);
 }
 
-module.exports = { internalize, linkifyHtml, InternalizeError, isApiToken };
+module.exports = { internalize, linkifyHtml, mintLink, isApiToken, InternalizeError };

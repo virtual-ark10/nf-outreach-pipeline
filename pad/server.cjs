@@ -55,6 +55,9 @@ function filterBrand(body, side) {
 
 // Outreach link minting (send-time internalization) — see outreach-links.cjs.
 const outreach = require('./outreach-links.cjs');
+// Fills the drafts' tracked links in (and the [TRACKED_LINK]/[Name] placeholders the
+// first-email templates ship with) before a draft can be sent — see outreach-autolinks.cjs.
+const autoLinks = require('./outreach-autolinks.cjs');
 const OUTREACH_CONF = {
   apiBase: process.env.NEWSLETTERFIT_API || 'http://127.0.0.1:3000/api/v1',
   token: process.env.API_BEARER_TOKEN || '',
@@ -141,6 +144,28 @@ function draftToApi(r) {
 }
 function readDrafts() {
   return db.all("SELECT * FROM drafts WHERE status = 'draft' ORDER BY created_at DESC").map(draftToApi);
+}
+
+/** The link pass (see outreach-autolinks.cjs) over a set of drafts. Sequential: each
+ *  mint is an API call, and a burst at the corpus API is not kind to anyone. */
+async function prepareQueue(drafts) {
+  const report = { checked: drafts.length, updated: 0, minted: 0, name_filled: 0, unresolved: [], details: [] };
+  for (const d of drafts) {
+    const r = await autoLinks.prepareDraft({
+      id: d.id, text: d.text, html: d.html, from: d.from, campaign: d.campaign, leadId: d.lead_id || d.id,
+    }, OUTREACH_CONF);
+    if (r.changed) {
+      db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [r.text, r.html, db.nowISO(), d.id]);
+      report.updated += 1;
+    }
+    report.minted += r.minted.length;
+    if (r.nameFilled) report.name_filled += 1;
+    for (const u of r.unresolved) report.unresolved.push(`${d.id}: ${u}`);
+    if (r.minted.length || r.unresolved.length) {
+      report.details.push({ id: d.id, minted: r.minted.map((m) => m.name), unresolved: r.unresolved });
+    }
+  }
+  return report;
 }
 function getDraft(id) {
   return db.one('SELECT * FROM drafts WHERE id = ?', [id]);
@@ -929,6 +954,25 @@ function handleApi(req, res, url, ip) {
     return sendJson(res, 200, { data: readDrafts() });
   }
 
+  // POST /api/drafts/prepare-links — fill every queued draft's tracked links in one go.
+  // Same pass as on save and before a send, exposed so the whole queue can be prepared
+  // (and so drafts written before this existed get fixed). Sequential on purpose: the
+  // mint goes out to the API one call at a time rather than in a burst.
+  if (req.method === 'POST' && p === '/api/drafts/prepare-links') {
+    return readBody(req, res, () => {
+      const drafts = readDrafts();
+      return prepareQueue(drafts).then((report) => {
+        console.log(`[DRAFT] prepare-links: ${report.updated}/${report.checked} updated, ${report.minted} link(s) minted`
+          + (report.name_filled ? `, ${report.name_filled} name(s) filled` : '')
+          + (report.unresolved.length ? `, ${report.unresolved.length} unresolved` : ''));
+        return sendJson(res, 200, { ok: true, ...report });
+      }).catch((e) => {
+        db.logFailure({ entity: 'draft', entity_id: null, op: 'prepare_links', error: e, status: 500, actor: 'pad' });
+        return sendJson(res, 500, { error: `prepare-links failed: ${e.message}` });
+      });
+    });
+  }
+
   if ((req.method === 'PUT' || req.method === 'POST') && p.startsWith('/api/drafts/')) {
     const rawId = p.slice('/api/drafts/'.length);
     const isSendRoute = rawId.endsWith('/send');
@@ -978,23 +1022,50 @@ function handleApi(req, res, url, ip) {
         const rawText = payload.text || '';
         const rawHtml = payload.html || '';
         if (!rawText.trim() && !rawHtml.trim()) return doSendDraft();
-        // Send-time internalization: re-mint dead old-format tokens server-side
-        // and block external links (policy). NEVER send broken/leaky links.
-        outreach.internalize(rawText, rawHtml, draftId, OUTREACH_CONF).then((out) => {
-          const finalHtml = outreach.linkifyHtml(out.html); // bare URL -> <a href>
-          payload.text = out.text;
-          payload.html = finalHtml;
-          if (out.minted.length) {
-            console.log(`[DRAFT] Internalized ${out.minted.length} link(s) for ${draftId} at send time`);
-            // Persist the rewritten draft so the queue shows the final links
-            // even if Resend rejects the send.
-            db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [out.text, finalHtml, db.nowISO(), draftId]);
+        // A template placeholder must never reach a recipient. Fill the links first
+        // (idempotent), then refuse the send if anything is still unfilled, then hand
+        // over to the internalize pass below.
+        autoLinks.prepareDraft({
+          id: draftId,
+          text: rawText,
+          html: rawHtml,
+          from: draft.from || (stored && stored.from_addr),
+          campaign: (stored && stored.campaign) || null,
+          leadId: (stored && stored.lead_id) || draftId,
+        }, OUTREACH_CONF).then((prep) => {
+          const left = autoLinks.unfilled(prep.text, prep.html);
+          if (left.length) {
+            const why = `the draft still contains ${left.join(' and ')}`;
+            console.log(`[DRAFT] BLOCKED ${draftId}: ${why}`);
+            db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_placeholder', error: new Error(why), status: 400, actor: 'pad', extra: { placeholders: left } });
+            return sendJson(res, 400, { error: `Not sent: ${why}. Fix the draft or run the link pass first.` });
           }
-          doSendDraft();
+          if (prep.changed) {
+            db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [prep.text, prep.html, db.nowISO(), draftId]);
+            console.log(`[DRAFT] ${draftId}: filled ${prep.minted.length} tracked link(s) before sending`);
+          }
+          // Send-time internalization: re-mint dead old-format tokens server-side
+          // and block external links (policy). NEVER send broken/leaky links.
+          return outreach.internalize(prep.text, prep.html, draftId, OUTREACH_CONF).then((out) => {
+            const finalHtml = outreach.linkifyHtml(out.html); // bare URL -> <a href>
+            payload.text = out.text;
+            payload.html = finalHtml;
+            if (out.minted.length) {
+              console.log(`[DRAFT] Internalized ${out.minted.length} link(s) for ${draftId} at send time`);
+              // Persist the rewritten draft so the queue shows the final links
+              // even if Resend rejects the send.
+              db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [out.text, finalHtml, db.nowISO(), draftId]);
+            }
+            doSendDraft();
+          }).catch((e) => {
+            console.log(`[DRAFT] BLOCKED ${draftId}: ${e.message}`);
+            db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_send_blocked', error: e, status: 400, actor: 'pad' });
+            sendJson(res, 400, { error: `Not sent: ${e.message}` });
+          });
         }).catch((e) => {
-          console.log(`[DRAFT] BLOCKED ${draftId}: ${e.message}`);
-          db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_send_blocked', error: e, status: 400, actor: 'pad' });
-          sendJson(res, 400, { error: `Not sent: ${e.message}` });
+          console.log(`[DRAFT] ${draftId}: link pass failed: ${e.message}`);
+          db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_link_pass', error: e, status: 500, actor: 'pad' });
+          sendJson(res, 500, { error: `Could not prepare the draft's links: ${e.message}` });
         });
       });
     }
@@ -1033,7 +1104,37 @@ function handleApi(req, res, url, ip) {
           subject: m.subject, text: m.text, html: m.html, campaign: m.campaign,
           created_at: stored.created_at,
         });
-        return sendJson(res, 200, { ok: true, id });
+        // Fill the tracked links in before anything can be sent: publications named in
+        // the body get their NewsletterFIT page minted, the signature gets the site
+        // link, and [Name]/[TRACKED_LINK] placeholders are replaced. Idempotent, and a
+        // failure here never loses the save that just happened.
+        const saved = getDraft(id);
+        return autoLinks.prepareDraft({
+          id,
+          text: saved.body_text,
+          html: saved.body_html,
+          from: saved.from_addr,
+          campaign: saved.campaign,
+          leadId: saved.lead_id || id,
+        }, OUTREACH_CONF).then((r) => {
+          if (r.changed) {
+            db.run('UPDATE drafts SET body_text = ?, body_html = ?, updated_at = ? WHERE id = ?', [r.text, r.html, db.nowISO(), id]);
+            console.log(`[DRAFT] ${id}: filled ${r.minted.length} tracked link(s)` + (r.nameFilled ? `, [Name] -> ${r.nameFilled}` : '') + (r.unresolved.length ? ` — unresolved: ${r.unresolved.join(', ')}` : ''));
+          }
+          return sendJson(res, 200, {
+            ok: true,
+            id,
+            links: {
+              minted: r.minted.map((x) => ({ name: x.name, slug: x.slug, url: x.url })),
+              unresolved: r.unresolved,
+              name_filled: r.nameFilled,
+              changed: r.changed,
+            },
+          });
+        }).catch((e) => {
+          console.log(`[DRAFT] ${id}: link pass failed: ${e.message}`);
+          return sendJson(res, 200, { ok: true, id, links: { error: e.message } });
+        });
       });
     }
     return sendJson(res, 405, { error: 'Method not allowed' });
@@ -1064,8 +1165,39 @@ function safeJson(raw) {
   try { return JSON.parse(raw); } catch { return { raw }; }
 }
 
+// ---- the link sweep (runs on a timer; see the note under server.listen)
+const SWEEP_MS = Math.max(5000, parseInt(process.env.DRAFT_LINK_SWEEP_MS || '120000', 10) || 120000);
+let sweeping = false;
+async function sweepDraftLinks(why) {
+  if (sweeping) return;
+  sweeping = true;
+  try {
+    const needing = readDrafts().filter((d) => {
+      const both = `${d.text || ''}\n${d.html || ''}`;
+      return both.includes('[TRACKED_LINK]') || !/api\/click\?lt=/.test(both);
+    });
+    if (!needing.length) return;
+    const report = await prepareQueue(needing);
+    console.log(`[DRAFT] link sweep (${why}): ${report.updated}/${report.checked} filled, ${report.minted} link(s) minted`
+      + (report.name_filled ? `, ${report.name_filled} name(s) filled` : '')
+      + (report.unresolved.length ? ` — unresolved: ${report.unresolved.join(', ')}` : ''));
+  } catch (e) {
+    console.log(`[DRAFT] link sweep failed: ${e.message}`);
+  } finally {
+    sweeping = false;
+  }
+}
+
 server.listen(PORT, () => {
   console.log(`✓ Resend Pad running on http://127.0.0.1:${PORT}`);
   console.log(`  db: ${db.DB_PATH}`);
-  console.log(`  POST /api/send | GET /api/domains | GET /api/sent | GET /api/received | POST /api/webhook | GET /api/archive | GET /api/drafts | POST /api/drafts/:id/send | PUT/DELETE /api/drafts/:id`);
+  console.log(`  POST /api/send | GET /api/domains | GET /api/sent | GET /api/received | POST /api/webhook | GET /api/archive | GET /api/drafts | POST /api/drafts/prepare-links | POST /api/drafts/:id/send | PUT/DELETE /api/drafts/:id`);
+  console.log(`  draft links: filled on save, before every send, and swept every ${Math.round(SWEEP_MS / 1000)}s`);
 });
+
+// Drafts do not only arrive through this pad's HTTP surface: a seeder or a generator can
+// write straight into the store. So the link pass also runs on its own, and fills any
+// placeholder or missing link it finds. It is a genuine no-op — no API call at all — when
+// every queued draft already carries a tracked link. DRAFT_LINK_SWEEP_MS tunes it.
+setInterval(() => { sweepDraftLinks('timer'); }, SWEEP_MS);
+setTimeout(() => { sweepDraftLinks('boot'); }, 5000).unref();
