@@ -214,23 +214,38 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   your own article) also tracks repeat visits via cookie.
 
 ```
-Hi {First},
+{Greeting},
 
-Quick one — I track newsletter sponsorships closely and saw {Company} is running
-in {real pubs, comma-sep}.
+{N} {Company} placements in the newsletters I track — most recently {Pub1}, plus
+{Pub2} and {Pub3}.
 
-I'm building NewsletterFIT — a corpus of newsletters, reading who sponsors
-whom, what each audience reacts to, and which pubs are rising. Goal: help sponsors
-find fits for the audiences they already pay for, on observed behavior.
+I'm building NewsletterFIT: a corpus of newsletters that reads who sponsors whom and
+which pubs are rising, so sponsors find fits for audiences they already pay for.
 
-From that signal these matched the work you're already doing:
-- {Pub} — est. {subs}: {TRACKED_LINK}
+Same themes you already buy — {themes}:
+
+- {Pub1} — est. {subs}: {TRACKED_LINK}
 - {Pub2} — est. {subs}: {TRACKED_LINK}
 - {Pub3} — est. {subs}: {TRACKED_LINK}
 
-Want me to pull reader profiles + momentum + their booked sponsorships?
-[Name], Founder, NewsletterFIT — newsletterfit.com
+Want me to pull the reader profiles + momentum behind these three?
+
+[Name], Founder, NewsletterFIT
 ```
+
+**Craft in force (from the `cold-email` skill, MIT — merged with our grounding rules).**
+The opener leads with the finding, never with us: the placement count and the newest
+publication ARE the personalization, and they are the same facts the subject names. Then one
+sentence of what NewsletterFIT is, then the match, then one low-friction ask. Keep it peer
+voiced (contractions, read it aloud); "you/your" should outweigh "I/we"; no "I hope this
+finds you well", no "leverage"/"synergy"/"best-in-class", no feature dumps, no meeting
+request in a first touch, no "just checking in" follow-ups.
+
+Two places we deliberately differ from that skill's defaults, because grounding is the
+product: **tracked links stay** (it advises one link for deliverability; per-publication
+attribution is the whole point), and **the measurement detail stays** ("7 placements",
+"est. 169K", the theme list) even though it costs words — it is the proof this is not a
+mail merge. Every number in the email must come from the corpus, never from memory.
 
 **Never state a corpus size.** The number is small and moves every few minutes
 (3,500+ newsletters and climbing), so `1,500+` is both stale and a needless
