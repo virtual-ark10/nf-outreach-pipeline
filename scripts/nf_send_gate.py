@@ -336,10 +336,13 @@ def main():
     args = ap.parse_args()
 
     st, payload = pad_call("GET", "/api/drafts")
-    drafts = payload.get("data") or payload
-    if not isinstance(drafts, list):
-        print(json.dumps({"error": f"could not read drafts: {payload}"}))
-        return 2
+    drafts = payload.get("data") if isinstance(payload, dict) else payload
+    # An empty queue answers {"data": []}; `payload or ...` would turn that into the wrapper
+    # dict and the loop would iterate its keys, so unwrap explicitly and treat [] as empty.
+    drafts = drafts if isinstance(drafts, list) else []
+    if not drafts:
+        print("  queue empty, nothing to gate")
+        return 0
 
     con = crm()
     leads = {str(r["company"]).lower(): dict(r) for r in con.execute("SELECT * FROM leads")}
