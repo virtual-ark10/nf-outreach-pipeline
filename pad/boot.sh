@@ -2,6 +2,17 @@
 # Resend Pad boot script — loads .env and starts the server on 127.0.0.1:3001
 cd /home/boxed/resend-pad || exit 1
 
+# Pin a Node runtime that has node:sqlite (db.cjs needs it; Node >= 22).
+# Cron runs with a minimal PATH and used to pick /usr/bin/node (v20), which
+# crashed the pad AND the leads engine on startup with ERR_UNKNOWN_BUILTIN_MODULE.
+if [ -x /home/boxed/.local/bin/node ]; then
+  export PATH="/home/boxed/.local/bin:$PATH"
+fi
+if ! node -e "require('node:sqlite')" >/dev/null 2>&1; then
+  echo "$(date '+%F %T') boot.sh: no node with node:sqlite on PATH; refusing to start" >> /home/boxed/resend-pad/pad.log
+  exit 1
+fi
+
 if [ -f .env ]; then
   set -a
   . ./.env

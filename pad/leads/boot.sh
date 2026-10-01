@@ -7,6 +7,17 @@ set -u
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 cd "$ROOT" || exit 1
 
+# Pin a Node runtime that has node:sqlite (the engine's db layer needs Node >= 22).
+# Cron's minimal PATH used to resolve `node` to /usr/bin/node (v20), which made the
+# engine die on startup with ERR_UNKNOWN_BUILTIN_MODULE and left :3002 dark.
+if [ -x /home/boxed/.local/bin/node ]; then
+  export PATH="/home/boxed/.local/bin:$PATH"
+fi
+if ! node -e "require('node:sqlite')" >/dev/null 2>&1; then
+  echo "$(date '+%F %T') boot.sh: no node with node:sqlite on PATH; refusing to start" >> "$ROOT/watchdog.log"
+  exit 1
+fi
+
 # The engine authenticates callers with the same token the pad uses, and shares
 # its branding, so it lifts a few keys from the pad's .env (override with PAD_ENV).
 # NB: it deliberately does NOT source that file wholesale — it holds PORT=3001

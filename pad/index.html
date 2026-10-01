@@ -546,6 +546,17 @@ document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () 
 // ---------- connect ----------
 async function connectPad(raw) {
   const typed = String(raw || "").trim();
+  if (!typed) {
+    // Nothing typed: only a session cookie can let us in. Check it here so an
+    // empty Connect click says "enter the token" instead of "unauthorized",
+    // which reads like a wrong token and sends people hunting for the bug.
+    try {
+      const s = await fetch("api/session", { method: "GET", credentials: "same-origin" });
+      if (!s.ok) return setStatus("Enter the pad token above, then click Connect.", false);
+    } catch (e) {
+      return setStatus("Could not reach the pad: " + e.message, false);
+    }
+  }
   if (typed) {
     token = typed;
     saveToken(token);
