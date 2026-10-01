@@ -30,7 +30,7 @@ and the golden VERIFY rule. Combine with `newsletterfit-corpus` (corpus creds) a
 ## CORE POSITIONING — YOU SELL NEWSLETTER INTELLIGENCE FROM OUR CORPUS, NOT THE CLIENT'S OWN NEWS
 This is the #1 rule for every pitch. The product we sell is "newsletter intelligence" — context
 the client is blind to, derived from OUR data (what newsletters are writing, who sponsors whom,
-whose topic-mentions are rising, which pubs are gaining momentum across 800K+ newsletters).
+whose topic-mentions are rising, which pubs are gaining momentum across the newsletters in our corpus).
 - NEVER lead with news about the client's own company. They already know their own product,
   launches, funding, and press. Restating it adds zero value and wastes the conversation.
 - EVERY finding must tie back to our corpus. The value we provide is the gap between their world

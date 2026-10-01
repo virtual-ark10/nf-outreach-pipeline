@@ -282,7 +282,7 @@ sponsor's per-sponsor brief (`reports/sponsor-outreach/sponsors/<key>.md`):
   going headless" — show you noticed the cadence, not just one placement.
 - Topic-fit line: name the specific themes the sponsored pub covers (vertical
   SaaS + AI, AI search, AI agents, markets/culture) and why that maps to
-  THEIR product, not the generic 800K+ line.
+  THEIR product, not the generic subscriber-count line.
 - Momentum per recommended pub: use `recentActivity` + `Momentum` to CHOOSE and
   rank the recommendations — never to print a figure (see the rule above).
 - Sponsor-booked proof: cite a KNOWN SPONSOR of a recommended pub (e.g.
