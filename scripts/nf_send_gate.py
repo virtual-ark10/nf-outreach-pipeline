@@ -19,6 +19,7 @@ Usage
 Exit code 0 if nothing is on HOLD, 1 otherwise, so a cron job can tell the difference.
 """
 import argparse
+import csv
 import datetime
 import json
 import os
@@ -33,6 +34,8 @@ PAD = "http://127.0.0.1:3001"
 CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
 LEDGER = "/home/boxed/newsletterfit/attribution/attribution.json"
 CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
+# The intake export is the corpus's article-level sponsorship record; see Corpus.placements.
+EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
 
 # --- language that must never ship to a prospect -----------------------------------------
 BACK_REFERENCE = re.compile(
@@ -92,6 +95,7 @@ class Corpus:
         self.api = env.get("NEWSLETTERFIT_API", "https://newsletterfit.com/api/v1")
         self.token = env.get("API_BEARER_TOKEN", "")
         self.cache = {}
+        self._placements = None
 
     def search(self, q):
         if q in self.cache:
@@ -113,6 +117,34 @@ class Corpus:
             if str(s.get("name", "")).strip().lower() == company.strip().lower():
                 return s.get("count")
         return None
+
+    def placements(self, company):
+        """The house placement count: distinct articles in the corpus where the company was
+        logged as a sponsor.
+
+        The intake export builds it from sponsor-typed article mentions plus confirmed
+        sponsored articles, bucketed by article, so it is a strict superset of the search
+        rollup's sponsors[].count wherever the two disagree (Brex 34 vs 14, Tracksuit 24 vs
+        15, Unblocked 9 vs 8, HubSpot 10 vs 5, and equal where the sponsor is small: Stacker
+        5, Profound 3). A subset can never be the fuller measure, so the article-level count
+        is the source of truth and the rollup is not quoted. Returns None when the export has
+        no grounded count for the company, which means the copy should not state one.
+        """
+        if self._placements is None:
+            self._placements = {}
+            try:
+                with open(EXPORT_CSV, newline="", encoding="utf-8", errors="replace") as fh:
+                    for row in csv.DictReader(fh):
+                        key = norm(row.get("sponsor"))
+                        if not key:
+                            continue
+                        try:
+                            self._placements[key] = int(float(row.get("placements") or 0))
+                        except (TypeError, ValueError):
+                            continue
+            except OSError:
+                self._placements = {}
+        return self._placements.get(norm(company))
 
     def publication(self, name):
         """Exact-match a publication by name, trying several query shapes.
@@ -287,8 +319,11 @@ def gate(draft, ctx):
         except Exception:
             pass
     for n in set(claimed):
-        real = ctx["corpus"].sponsor_count(company)
-        if real is not None and n != real:
+        real = ctx["corpus"].placements(company)
+        if real is None:
+            soft(f"states {n} {company} placements but the corpus export has no grounded count "
+                 f"for {company}: keep the number out of the copy")
+        elif n != real:
             hard(f"states {n} {company} placements, the corpus logs {real}",
                  kind="count", claimed=n, real=real,
                  pattern=r"(?<!\d)" + str(n) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))")

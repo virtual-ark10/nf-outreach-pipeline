@@ -277,8 +277,16 @@ held.
 Subscriber labels drift by a percent or two as the corpus grows, and a figure that was right
 when the draft was written can be wrong by send day. Re-read each one from the corpus
 (`/search?q=<name>`, exact name match, `subscribersLabel`) and re-read each company's
-placement count (`sponsors[].count`) before sending. The corpus is the source of truth, not
-the draft, and not the recollection that a number was checked earlier.
+placement count before sending. The corpus is the source of truth, not the draft, and not the
+recollection that a number was checked earlier.
+
+**Placement counts have one house measure, and it is the export's.** `/srv/newsletterfit/
+reports/sponsor-outreach/sponsor-leads.csv` carries the article-level count (sponsor-typed
+mentions and confirmed sponsored articles, bucketed by article). The `/search` rollup
+(`sponsors[].count`) is a subset of it and must never be quoted: Brex reads 34 in the export
+and 14 in the rollup, Tracksuit 24 against 15, HubSpot 10 against 5. The product's own draft
+generator quotes the export measure, and the send gate enforces it. Full evidence and method
+in `docs/PLACEMENT-COUNT.md`. Where the export has no count for a company, state no count.
 
 **No stale time references.** Anything anchored to "now" ages badly in a queue: "last
 week (Aug 27, the FIVESTACK trade piece)", "twice this month, most recently Aug 28",
