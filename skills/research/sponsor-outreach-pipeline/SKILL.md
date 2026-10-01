@@ -186,6 +186,13 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   contains `[TRACKED_LINK]` or `[Name]` is REFUSED at send, so an unfilled template
   can never reach a prospect. `python3 /home/boxed/outreach_internalize.py` (below) is
   still the tool for rewriting publication links that are already in a draft.
+- **The subject says what you saw, never what stage it is.** A first touch's subject is
+  `Spotted <Company> in <Publication>`, where the publication is the NEWEST placement in the
+  corpus for that sponsor — `GET $NEWSLETTERFIT_API/directory/sponsors/<slug>` → newest
+  `placements[].publishedAt` → `placement.publication.name`. `scripts/first_email_subject.py
+  "<Company>"` prints the subject plus the placement's evidence string, and
+  `--all-first-emails [--apply]` fixes a whole queue of drafts still labelled `First Email`.
+  A subject that is just the cadence label (`First Email`) reads as a template and gets ignored.
 - **Never let a raw tracking URL be the visible text of a link, and never repeat a name to
   host one** — the link goes on the FIRST mention: the publication at the head of its bullet
   (`- <a>Pub</a> — est. 169K`), the brand on the signature (`Founder, <a>NewsletterFIT</a>`,
@@ -198,8 +205,10 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   link (keeps it from looking like an open redirect / spammy wrapped URL). The
   GA campaign params are added at the REDIRECT, not in the email: `/api/click`
   302s to the destination with `utm_source=newsletterfit&utm_medium=email` plus
-  `utm_campaign` / `utm_content` from the token record, so emailed visits land in
-  GA as an email campaign instead of direct/referral (and no token needs re-minting).
+  `utm_campaign=outbound` (the default for all outreach — set `OUTREACH_UTM_CAMPAIGN`
+  on the API to change it) and `utm_content` from the token's `link_ref`, so emailed
+  visits land in GA as an email campaign instead of direct/referral and no token needs
+  re-minting. The token's own campaign slug stays in the attribution record.
 - Requires the click route + visit middleware deployed in the Express backend
   (see `examples/express-integration.js`). Dest on YOUR site (`/pricing`,
   your own article) also tracks repeat visits via cookie.
