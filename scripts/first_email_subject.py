@@ -18,6 +18,7 @@ Environment: reads NEWSLETTERFIT_API + API_BEARER_TOKEN from
 from __future__ import annotations
 
 import json
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -87,21 +88,55 @@ def newest_placement(data: dict) -> dict | None:
     return max(placements, key=lambda p: str(p["publishedAt"])) if placements else None
 
 
-def subject_for(company: str) -> tuple[str | None, dict]:
-    """("<subject>", detail) — subject is None when the corpus cannot ground one."""
+def body_pubs(text: str) -> dict:
+    """Publication names a draft's body actually writes: the 'in our corpus: A, B and C'
+    list plus every bullet head, keyed by a punctuation-free form for matching."""
+    pubs = {}
+    for m in re.finditer(r"corpus:\s*([^.\n]*)", text or ""):
+        for part in re.split(r",|\band\b", m.group(1)):
+            name = part.strip().strip(".")
+            if name:
+                pubs[norm(name)] = name
+    for m in re.finditer(r"^\s*-\s*(.+?)\s+—\s+est\.", text or "", re.M):
+        pubs[norm(m.group(1))] = m.group(1).strip()
+    return pubs
+
+
+def norm(s: object) -> str:
+    return re.sub(r"[^a-z0-9]+", "", str(s or "").lower())
+
+
+def subject_for(company: str, body_text: str | None = None) -> tuple[str | None, dict]:
+    """("<subject>", detail) — subject is None when the corpus cannot ground one.
+
+    With `body_text`, the publication is chosen from the ones the BODY already names (the
+    newest placement among those) so subject and body never point at different newsletters;
+    without it, or when the body names none of the sponsor's publications, the newest
+    placement overall is used.
+    """
     slug, data = sponsor(company)
     if not data:
         return None, {"reason": "no corpus sponsor found", "company": company}
-    newest = newest_placement(data)
-    if not newest:
+    placements = [p for p in (data.get("placements") or []) if p.get("publishedAt")]
+    if not placements:
         return None, {"reason": "sponsor has no placements", "company": company}
+    placements.sort(key=lambda p: str(p["publishedAt"]), reverse=True)
+
+    chosen, aligned = placements[0], False
+    if body_text:
+        named = body_pubs(body_text)
+        for p in placements:
+            if norm((p.get("publication") or {}).get("name")) in named:
+                chosen, aligned = p, True
+                break
+
     name = (data.get("name") or company).strip()
-    pub = ((newest.get("publication") or {}).get("name") or "?").strip()
+    pub = ((chosen.get("publication") or {}).get("name") or "?").strip()
     return f"Spotted {name} in {pub}", {
         "company": name, "slug": slug, "publications": data.get("publications"),
-        "placements": len(data.get("placements") or []),
-        "newest_at": str(newest.get("publishedAt"))[:10], "publication": pub,
-        "evidence": str(newest.get("evidence"))[:160],
+        "placements": len(placements), "newest_at": str(chosen.get("publishedAt"))[:10],
+        "publication": pub, "aligned_to_body": aligned,
+        "evidence": str(chosen.get("evidence"))[:160],
     }
 
 
@@ -111,16 +146,19 @@ def main() -> int:
     if "--all-first-emails" in sys.argv:
         _, payload = pad("GET", "/api/drafts")
         drafts = payload.get("data") or payload
-        targets = [d for d in drafts if str(d.get("subject", "")).strip().lower() in STAGE_LABELS]
-        print(f"{len(targets)} draft(s) still labelled with a stage name\n")
+        targets = [d for d in drafts
+                   if str(d.get("subject", "")).strip().lower() in STAGE_LABELS
+                   or str(d.get("subject", "")).startswith("Spotted ")]
+        print(f"{len(targets)} draft(s) with a stage label or a Spotted subject\n")
         for draft in targets:
-            subject, detail = subject_for(draft.get("company") or "")
+            subject, detail = subject_for(draft.get("company") or "", draft.get("text") or "")
+            same = subject == draft.get("subject")
             print(f"  {draft['id']}\n    {json.dumps(detail)}")
             if subject is None:
                 print("    -> left alone")
             else:
-                print(f"    -> {subject!r}")
-                if apply_:
+                print(f"    -> {subject!r}" + ("  (already aligned)" if same else ""))
+                if apply_ and not same:
                     status, body = pad("PUT", f"/api/drafts/{urllib.parse.quote(draft['id'])}", {"subject": subject})
                     print(f"    write: HTTP {status} {str(body)[:80]}")
             print()

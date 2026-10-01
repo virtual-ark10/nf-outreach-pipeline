@@ -219,7 +219,7 @@ Hi {First},
 Quick one — I track newsletter sponsorships closely and saw {Company} is running
 in {real pubs, comma-sep}.
 
-I'm building NewsletterFIT — a corpus of 1,500+ newsletters, reading who sponsors
+I'm building NewsletterFIT — a corpus of newsletters, reading who sponsors
 whom, what each audience reacts to, and which pubs are rising. Goal: help sponsors
 find fits for the audiences they already pay for, on observed behavior.
 
@@ -232,6 +232,16 @@ Want me to pull reader profiles + momentum + their booked sponsorships?
 [Name], Founder, NewsletterFIT — newsletterfit.com
 ```
 
+**Never state a corpus size.** The number is small and moves every few minutes
+(3,500+ newsletters and climbing), so `1,500+` is both stale and a needless
+anchor — write "a corpus of newsletters". Same reasoning for any other
+count-of-everything figure that a reader could hold you to.
+
+**Never put momentum percentages in the email.** `Momentum: +12% / 90d` is what
+the CTA is offering — printed in the body it spends the reason to reply and, as
+three bare fragments per draft, it reads like leftover debug output. Momentum is
+the thing they click through for, not the thing you hand over first.
+
 ### 3b. DRAFT DIFFERENTIATION (avoid template-identical emails)
 Every draft in a batch must differ beyond the company name. Pull from the
 sponsor's per-sponsor brief (`reports/sponsor-outreach/sponsors/<key>.md`):
@@ -240,14 +250,17 @@ sponsor's per-sponsor brief (`reports/sponsor-outreach/sponsors/<key>.md`):
 - Topic-fit line: name the specific themes the sponsored pub covers (vertical
   SaaS + AI, AI search, AI agents, markets/culture) and why that maps to
   THEIR product, not the generic 800K+ line.
-- Momentum per recommended pub: use `recentActivity` + `Momentum` (e.g.
-  "+57% subscriber growth in 90 days").
+- Momentum per recommended pub: use `recentActivity` + `Momentum` to CHOOSE and
+  rank the recommendations — never to print a figure (see the rule above).
 - Sponsor-booked proof: cite a KNOWN SPONSOR of a recommended pub (e.g.
   "already carries Stata and DeleteMe") — shows the list is ad-proven.
 - Vary the subject line per lead; reference the last relevant article title
   when it's specific (e.g. Eli Schwartz's "Reddit should stop feeding Google").
 
-Subject: `Saw {Co} in {Pub1} + {Pub2}` or a differentiated variant. Fill [Name] before sending.
+Subject: `Spotted {Co} in {Pub}`, where {Pub} is a publication the BODY already names —
+the newest placement the corpus holds for that company among those pubs, so subject and
+body never point at different newsletters. `scripts/first_email_subject.py "<Company>"`
+resolves it (and `--all-first-emails [--apply]` fixes a queue). Fill [Name] before sending.
 
 ### 4. Follow-up sequence (proof-first, adopted from lead-gen)
 Touches: day 3, day 7, day 14, then stop (4 touches = no).
