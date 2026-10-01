@@ -57,6 +57,39 @@ function migrate(db) {
   db.exec(`CREATE VIEW v_events_pending AS
     SELECT id, entity, entity_id, type, payload, at, actor, attempts, last_error
       FROM events WHERE processed_at IS NULL ORDER BY id`);
+  // Messages the operator has cleared out of the Sent / Received tabs. The lists
+  // themselves come from Resend (which has no delete for already-sent or received
+  // mail), so "delete" here means "keep it out of this pad", and it is reversible.
+  db.exec(`CREATE TABLE IF NOT EXISTS hidden_messages (
+    id TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    subject TEXT,
+    from_addr TEXT,
+    to_addr TEXT,
+    hidden_at TEXT NOT NULL,
+    hidden_by TEXT,
+    PRIMARY KEY (id, kind)
+  )`);
+  db.exec('CREATE INDEX IF NOT EXISTS ix_hidden_kind ON hidden_messages(kind, hidden_at)');
+}
+
+// ------------------------------------------------------- hidden (cleared) mail
+function hiddenIds(kind) {
+  return new Set(all('SELECT id FROM hidden_messages WHERE kind = ?', [kind]).map((r) => r.id));
+}
+function hiddenMessages(kind) {
+  return all('SELECT * FROM hidden_messages WHERE kind = ? ORDER BY hidden_at DESC', [kind]);
+}
+function hideMessage({ id, kind, subject, from_addr, to_addr, by }) {
+  if (!id || !kind) throw new Error('hideMessage needs id and kind');
+  return run(
+    `INSERT INTO hidden_messages (id, kind, subject, from_addr, to_addr, hidden_at, hidden_by)
+     VALUES (?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(id, kind) DO UPDATE SET hidden_at = excluded.hidden_at, hidden_by = excluded.hidden_by`,
+    [String(id), String(kind), subject || null, from_addr || null, to_addr || null, nowISO(), by || 'pad']);
+}
+function unhideMessage(id, kind) {
+  return run('DELETE FROM hidden_messages WHERE id = ? AND kind = ?', [String(id), String(kind)]);
 }
 
 // STRICT tables reject booleans and undefined, so every bound value goes through
@@ -407,6 +440,7 @@ module.exports = {
   logEvent, logFailure, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
   recordEngagement, engagementTotals, engagementSeries, engagementByLead, topLinks, engagementForLead,
   processEvents, pendingEvents, recentEvents, recordRedraft, redraftGuidance, migrate,
+  hiddenIds, hiddenMessages, hideMessage, unhideMessage,
 };
 
 if (require.main === module) {

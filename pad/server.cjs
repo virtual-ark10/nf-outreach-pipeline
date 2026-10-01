@@ -263,6 +263,64 @@ function rateCheck(ip) {
   return b.count <= API_LIMIT;
 }
 
+// ---------------------------------------------------------------- pad session
+// The browser gets a signed, HttpOnly cookie instead of keeping the pad token in
+// localStorage: the token is typed once, and the cookie outlives the storage
+// eviction that clears script-written storage (Safari's ITP drops it after about
+// a week, which is exactly the "I have to keep entering the key" symptom). The
+// cookie value is NOT the token — it is an expiry plus an HMAC over that expiry,
+// keyed by the token, so a leaked cookie reveals nothing about the token itself.
+const SESSION_COOKIE = 'pad_session';
+const SESSION_TTL_DAYS = 365;
+const SESSION_TTL_MS = SESSION_TTL_DAYS * 24 * 60 * 60 * 1000;
+
+function signSession(exp) {
+  const mac = crypto.createHmac('sha256', PAD_TOKEN).update(String(exp)).digest('hex');
+  return `${exp}.${mac}`;
+}
+function sessionValid(req) {
+  if (!PAD_TOKEN) return false;
+  const raw = String(req.headers.cookie || '').split(';').map((c) => c.trim())
+    .find((c) => c.startsWith(SESSION_COOKIE + '='));
+  if (!raw) return false;
+  const val = decodeURIComponent(raw.slice(SESSION_COOKIE.length + 1));
+  const dot = val.lastIndexOf('.');
+  if (dot < 1) return false;
+  const exp = val.slice(0, dot);
+  const mac = val.slice(dot + 1);
+  const want = crypto.createHmac('sha256', PAD_TOKEN).update(String(exp)).digest('hex');
+  if (mac.length !== want.length) return false;
+  if (!crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(want))) return false;
+  return Number(exp) > Date.now();
+}
+function setSessionCookie(res, req, clear) {
+  const proto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const secure = proto === 'https' ? '; Secure' : '';
+  const val = clear ? '' : signSession(Date.now() + SESSION_TTL_MS);
+  res.setHeader('Set-Cookie',
+    `${SESSION_COOKIE}=${encodeURIComponent(val)}; Path=/; HttpOnly; SameSite=Lax; ` +
+    `Max-Age=${clear ? 0 : Math.floor(SESSION_TTL_MS / 1000)}${secure}`);
+}
+
+// "Delete" on the Sent / Received tabs. Resend has no delete for mail that has
+// already gone out or already arrived, so the pad keeps its ids in hidden_messages
+// and filters them out of the lists; the X is reversible from the same tab.
+// Cursors are read from the raw page (before any hiding), or paging would skip.
+function applyHidden(body, kind, showHidden) {
+  const items = body && Array.isArray(body.data) ? body.data : null;
+  if (!items) return body;
+  const hidden = db.hiddenIds(kind);
+  const kept = [];
+  let onPage = 0;
+  for (const m of items) {
+    if (hidden.has(String(m.id))) {
+      onPage++;
+      if (showHidden) kept.push(Object.assign({}, m, { hidden: true }));
+    } else kept.push(m);
+  }
+  return Object.assign({}, body, { data: kept, hidden_on_page: onPage });
+}
+
 function sendJson(res, status, obj) {
   const body = JSON.stringify(obj);
   console.log(`  -> ${status} ${String(res.reqPath || '?')}`);
@@ -487,9 +545,37 @@ function handleApi(req, res, url, ip) {
     });
   }
 
-  // Everything else requires PAD_TOKEN
+  // ---- pad session -------------------------------------------------------
+  // The browser's way in: type the token once, get a signed HttpOnly cookie back.
+  if (p === '/api/session') {
+    if (req.method === 'GET') {
+      const ok = sessionValid(req);
+      return sendJson(res, ok ? 200 : 401, { ok, via: ok ? 'cookie' : null });
+    }
+    if (req.method === 'DELETE') {
+      setSessionCookie(res, req, true);
+      return sendJson(res, 200, { ok: true, cleared: true });
+    }
+    if (req.method === 'POST') {
+      return readBody(req, res, (body) => {
+        let data = {};
+        try { data = JSON.parse(body || '{}'); } catch (e) { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+        const given = String(data.token || '').trim();
+        if (!PAD_TOKEN || given !== PAD_TOKEN) {
+          console.log(`[SESSION-DENY] ${req.socket.remoteAddress || '?'}`);
+          return sendJson(res, 401, { error: 'Unauthorized — wrong pad token' });
+        }
+        setSessionCookie(res, req, false);
+        return sendJson(res, 200, { ok: true, expires_in_days: SESSION_TTL_DAYS });
+      });
+    }
+  }
+
+  // Everything else requires PAD_TOKEN — as the header (scripts, cron jobs) or as
+  // the signed session cookie the browser collected above.
   const auth = req.headers['x-pad-token'];
-  if (!PAD_TOKEN || auth !== PAD_TOKEN) {
+  const viaCookie = sessionValid(req);
+  if (!PAD_TOKEN || (auth !== PAD_TOKEN && !viaCookie)) {
     const mask = (s) => s ? s.slice(0, 4) + '…' + s.slice(-4) : '(none)';
     console.log(`[AUTH-FAIL] ${req.method} ${url} got=${mask(auth)} expected=${mask(PAD_TOKEN)}`);
     db.logFailure({ entity: 'system', op: 'auth', error: new Error(PAD_TOKEN ? 'token mismatch' : 'PAD_TOKEN not configured'), status: 401, actor: 'pad', extra: { route: `${req.method} ${url}` } });
@@ -723,30 +809,83 @@ function handleApi(req, res, url, ip) {
   }
 
   if (req.method === 'GET' && p.startsWith('/api/sent')) {
-    const page = new URL(url, 'http://x').searchParams.get('page') || '1';
-    return resendRequest('GET', `/emails?page=${encodeURIComponent(page)}`, null, (err, status, rbody) => {
+    const q = new URL(url, 'http://x');
+    // Resend's sent list takes `limit` (max 100) and returns has_more — it has no
+    // page/offset and ignores cursors here, so this fetches one window and the
+    // client pages through it.
+    const limit = Math.min(Math.max(parseInt(q.searchParams.get('limit') || '100', 10) || 100, 1), 100);
+    const showHidden = q.searchParams.get('show_hidden') === '1';
+    return resendRequest('GET', `/emails?limit=${limit}`, null, (err, status, rbody) => {
       if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
-      const body = safeJson(rbody);
-      const f = filterBrand(body, 'from');   // only this brand's senders
-      sendJson(res, status, f.body);
+      const f = filterBrand(safeJson(rbody), 'from');   // only this brand's senders
+      const raw = (f.body && Array.isArray(f.body.data)) ? f.body.data : [];
+      const out = applyHidden(f.body, 'sent', showHidden);
+      sendJson(res, status, Object.assign(out, {
+        limit,
+        fetched: raw.length,
+        hidden_total: db.hiddenMessages('sent').length,
+        has_more: Boolean(f.body && f.body.has_more),
+      }));
     });
   }
 
   // Phase 2: received emails
   if (req.method === 'GET' && p === '/api/received') {
     const q = new URL(url, 'http://x');
-    const limit = q.searchParams.get('limit') || '50';
+    const limit = Math.min(Math.max(parseInt(q.searchParams.get('limit') || '50', 10) || 50, 1), 100);
     const after = q.searchParams.get('after') || '';
     const before = q.searchParams.get('before') || '';
-    let p = `/emails/receiving?limit=${encodeURIComponent(limit)}`;
-    if (after) p += `&after=${encodeURIComponent(after)}`;
-    if (before) p += `&before=${encodeURIComponent(before)}`;
-    return resendRequest('GET', p, null, (err, status, rbody) => {
+    const showHidden = q.searchParams.get('show_hidden') === '1';
+    let rp = `/emails/receiving?limit=${limit}`;
+    if (after) rp += `&after=${encodeURIComponent(after)}`;
+    if (before) rp += `&before=${encodeURIComponent(before)}`;
+    return resendRequest('GET', rp, null, (err, status, rbody) => {
       if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
-      const body = safeJson(rbody);
-      const f = filterBrand(body, 'to');     // only mail addressed to this brand
-      sendJson(res, status, f.body);
+      const f = filterBrand(safeJson(rbody), 'to');     // only mail addressed to this brand
+      // Cursors come from the page BEFORE hiding, so walking pages cannot skip
+      // rows when something on the page was cleared.
+      const raw = (f.body && Array.isArray(f.body.data)) ? f.body.data : [];
+      const out = applyHidden(f.body, 'received', showHidden);
+      sendJson(res, status, Object.assign(out, {
+        limit,
+        page_len: raw.length,
+        first_id: raw.length ? raw[0].id : null,
+        last_id: raw.length ? raw[raw.length - 1].id : null,
+        hidden_total: db.hiddenMessages('received').length,
+      }));
     });
+  }
+
+  // ---- cleared mail: what the X buttons took out of the two lists ----------
+  if (req.method === 'GET' && p === '/api/hidden') {
+    const kind = new URL(url, 'http://x').searchParams.get('kind') || 'sent';
+    return sendJson(res, 200, { kind, data: db.hiddenMessages(kind) });
+  }
+  if (req.method === 'POST' && p === '/api/hidden') {
+    return readBody(req, res, (body) => {
+      let data = {};
+      try { data = JSON.parse(body || '{}'); } catch (e) { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+      const kind = String(data.kind || '');
+      if (kind !== 'sent' && kind !== 'received') {
+        return sendJson(res, 400, { error: 'kind (sent|received) is required' });
+      }
+      // One id, or a batch of them, so a screenful of junk is one request.
+      const ids = Array.isArray(data.ids) ? data.ids.map(String).filter(Boolean).slice(0, 500)
+        : (data.id ? [String(data.id)] : []);
+      if (!ids.length) return sendJson(res, 400, { error: 'id or ids[] is required' });
+      for (const id of ids) {
+        db.hideMessage({ id, kind, subject: data.subject, from_addr: data.from_addr, to_addr: data.to_addr, by: 'pad-ui' });
+        db.logEvent({ entity: 'email', entity_id: id, type: 'email.hidden', actor: 'pad',
+                      payload: { kind, subject: data.subject || null, from: data.from_addr || null } });
+      }
+      return sendJson(res, 200, { ok: true, kind, hidden: ids.length, hidden_total: db.hiddenMessages(kind).length });
+    });
+  }
+  if (req.method === 'DELETE' && p.startsWith('/api/hidden/')) {
+    const id = decodeURIComponent(p.slice('/api/hidden/'.length));
+    const kind = new URL(url, 'http://x').searchParams.get('kind') || 'sent';
+    db.unhideMessage(id, kind);
+    return sendJson(res, 200, { ok: true, kind, hidden_total: db.hiddenMessages(kind).length });
   }
 
   if (req.method === 'GET' && p.startsWith('/api/received/')) {
