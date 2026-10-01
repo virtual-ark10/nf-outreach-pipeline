@@ -176,7 +176,7 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
   pad API, so `drafts.json` is retired; use `--dry-run` first, `--pad <url>` to
   point it elsewhere.
 - **The pad fills the links in itself — you do not paste URLs into drafts.**
-  Write each bullet as `<Pub> — est. <subs>: [TRACKED_LINK]`. The pad resolves the
+  Write each bullet as `<Pub> (est. <subs>): [TRACKED_LINK]`. The pad resolves the
   publication named on that line to its NewsletterFIT page, mints a token for it, and
   replaces the placeholder: on save over the API, before every send, and in a sweep
   every couple of minutes — so drafts written straight into the SQLite store (seeders,
@@ -216,22 +216,30 @@ nf-attribution package (`/home/boxed/newsletterfit/attribution`). This answers
 ```
 {Greeting},
 
-{N} {Company} placements in the newsletters I track — most recently {Pub1}, plus
+{N} {Company} placements in the newsletters I track. Most recently {Pub1}, plus
 {Pub2} and {Pub3}.
 
 I'm building NewsletterFIT: a corpus of newsletters that reads who sponsors whom and
 which pubs are rising, so sponsors find fits for audiences they already pay for.
 
-Same themes you already buy — {themes}:
+Same themes you already buy: {themes}.
 
-- {Pub1} — est. {subs}: {TRACKED_LINK}
-- {Pub2} — est. {subs}: {TRACKED_LINK}
-- {Pub3} — est. {subs}: {TRACKED_LINK}
+- {Pub1} (est. {subs}): {TRACKED_LINK}
+- {Pub2} (est. {subs}): {TRACKED_LINK}
+- {Pub3} (est. {subs}): {TRACKED_LINK}
 
 Want me to pull the reader profiles + momentum behind these three?
 
 [Name], Founder, NewsletterFIT
 ```
+
+**No em-dashes.** Prose em-dashes are a recognised tell that a machine wrote the email;
+the first emails shipped with five each (opener, theme line, every bullet) and it read
+badly. Use a period, a comma, or a colon instead — "18 Brex placements in the newsletters I
+track. Most recently Core Memory, plus Sourcery and The Generalist." Bullets carry the
+subscriber count in parentheses, `- TheSequence (est. 169K)`, which `bulletName()` in
+`pad/outreach-autolinks.cjs` parses (it strips a trailing parenthetical), so the pad can
+still resolve the publication and mint the link.
 
 **Craft in force (from the `cold-email` skill, MIT — merged with our grounding rules).**
 The opener leads with the finding, never with us: the placement count and the newest

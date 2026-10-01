@@ -154,9 +154,14 @@ function textToHtml(text) {
     .join('');
 }
 
-/** The publication named on a bullet: "- Tech Scoop — 155K subs …" -> "Tech Scoop". */
+/** The publication named on a bullet: "- Tech Scoop — 155K subs …" -> "Tech Scoop".
+ *  Handles the separator-free form the copy now uses, "- TheSequence (est. 169K)". */
 function bulletName(line) {
-  return String(line).replace(/^\s*[-*•]\s*/, '').split(/\s+—\s+|\s+-\s+|\s+\|\s+|:/)[0].trim();
+  const first = String(line)
+    .replace(/^\s*[-*•]\s*/, '')
+    .split(/\s+—\s+|\s+-\s+|\s+\|\s+|:/)[0]
+    .trim();
+  return first.replace(/\s*\(([^)]*)\)\s*$/, '').trim();
 }
 
 /** Decode the entities esc() writes, so html text and labels can be compared as people read them. */
