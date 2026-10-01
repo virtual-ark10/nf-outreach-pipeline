@@ -233,6 +233,53 @@ Want me to pull the reader profiles + momentum behind these three?
 [Name], Founder, NewsletterFIT
 ```
 
+## The send gate is the only way out
+
+Nothing leaves without clearing `scripts/nf_send_gate.py` (cron job "NF daily outreach gate",
+09:00 daily, script `nf-daily-outreach-gate.sh`). It reads the pad queue and the CRM and
+holds a draft on any of:
+
+- a figure the corpus contradicts: company placement counts, publication subscriber labels
+  (an exact match is required, a loose name match is never treated as the publication, since
+  a wrong "correction" is worse than an unresolved figure)
+- a publication the corpus does not have at all
+- a duplicate first touch (two drafts, same company) or a greeting that does not match the
+  CRM's verified contact name, which is how a guessed first name shows up
+- a lead who already received a first touch, or replied, or is unsubscribed/bounced
+- apology, correction or back-reference language ("I made a mistake", "my earlier email
+  said", "following up", "circling back", "to be transparent") — a cold sequence can never
+  contain one, whichever direction the mistake went
+- a stale date, an em-dash, a corpus-size claim, a broken or off-site tracked link
+- cadence: a follow-up whose lead is not due yet waits in the queue
+
+Placement counts are refreshed rather than held (`--fix-counts`), because the corpus ingests
+continuously and the number is a live figure, not a claim that can be wrong. Everything else
+is held and reported.
+
+## Never send a correction or an apology
+
+The register that damages a B2B reputation fastest is an email admitting the previous one was
+wrong: "I made a mistake in the last email", "my original email flagged X but I went back
+through the corpus and found zero...". If a draft is wrong, fix it before it goes, or drop it.
+Once a wrong claim is out, do not send a correction email: correct the record with the
+prospect only if they reply and ask, and never volunteer a mea culpa in a cold sequence.
+
+## One contact per company
+
+One live draft per company, addressed to the verified contact, not the first plausible
+address found. Prefer the go-to-market or growth-marketing person (that is who buys
+sponsorship intelligence). The CRM's `contact_name`/`contact_title` is the evidence: a draft
+whose greeting does not match it, or whose address has no CRM record, is a guess and gets
+held.
+
+## Fact-check every figure at send time
+
+Subscriber labels drift by a percent or two as the corpus grows, and a figure that was right
+when the draft was written can be wrong by send day. Re-read each one from the corpus
+(`/search?q=<name>`, exact name match, `subscribersLabel`) and re-read each company's
+placement count (`sponsors[].count`) before sending. The corpus is the source of truth, not
+the draft, and not the recollection that a number was checked earlier.
+
 **No stale time references.** Anything anchored to "now" ages badly in a queue: "last
 week (Aug 27, the FIVESTACK trade piece)", "twice this month, most recently Aug 28",
 "5 placements since Aug 3", "in the last 30 days", "last issue yesterday", "recent issue
