@@ -38,6 +38,13 @@ function addrList(v) {
 function isBrandAddr(addr) {
   return BRAND_DOMAINS.some((d) => addr.endsWith('@' + d));
 }
+// The API surface this pad actually serves, used to tell an unauthenticated probe
+// (a scanner asking for /_next/server or /api/meta) from a real request carrying a
+// stale token. Keep in step with the route table in handleApi().
+const PAD_API_SEGMENTS = [
+  'send', 'sent', 'received', 'drafts', 'config', 'session', 'hidden', 'tracking',
+  'archive', 'events', 'redraft-guidance', 'health', 'webhook', 'domains', 'email', 'crm',
+];
 // The From picker is filtered to BRAND_DOMAINS, but the API is the last line of
 // defence: this pad must never send as another brand on the shared Resend account.
 // Observed 2026-10-07 — a reply to a NewsletterFIT prospect left as
@@ -712,7 +719,19 @@ function handleApi(req, res, url, ip) {
   if (!PAD_TOKEN || (auth !== PAD_TOKEN && !viaCookie)) {
     const mask = (s) => s ? s.slice(0, 4) + '…' + s.slice(-4) : '(none)';
     console.log(`[AUTH-FAIL] ${req.method} ${url} got=${mask(auth)} expected=${mask(PAD_TOKEN)}`);
-    db.logFailure({ entity: 'system', op: 'auth', error: new Error(PAD_TOKEN ? 'token mismatch' : 'PAD_TOKEN not configured'), status: 401, actor: 'pad', extra: { route: `${req.method} ${url}` } });
+    // An internet scanner probing /api/meta, /api/env or /api/pipeline gets the same
+    // 401 a stale browser token does, and both land in the events table. They are
+    // separated here (kind: 'probe') because a probe is not an operational failure:
+    // on 2026-10-07 all 298 recorded 'auth' errors were scanner traffic, which buried
+    // the 9 real ones. Keep this list in step with the route table in handleApi().
+    const seg = String(url).split('?')[0].split('/')[2] || '';
+    const isPadRoute = String(url).indexOf('/api/') === 0 && PAD_API_SEGMENTS.includes(seg);
+    db.logFailure({
+      entity: 'system', op: 'auth',
+      error: new Error(PAD_TOKEN ? 'token mismatch' : 'PAD_TOKEN not configured'),
+      status: 401, actor: 'pad',
+      extra: { route: `${req.method} ${url}`, kind: isPadRoute ? 'token' : 'probe' },
+    });
     return sendJson(res, 401, { error: 'Unauthorized — missing or invalid token' });
   }
 
@@ -800,7 +819,11 @@ function handleApi(req, res, url, ip) {
       clicked_messages: eng.clicked_messages || 0,
       opened_leads: eng.opened_leads || 0,
       clicked_leads: eng.clicked_leads || 0,
-      errors: db.val("SELECT COUNT(*) FROM events WHERE type = 'error'") || 0,
+      // Operational failures only. Unauthenticated probes (scanner traffic on paths
+      // this pad does not serve) are counted apart: they are noise, and 289 of them
+      // would drown the real failures.
+      errors: db.val("SELECT COUNT(*) FROM events WHERE type = 'error' AND COALESCE(json_extract(payload, '$.kind'), '') <> 'probe'") || 0,
+      unauthenticated_probes: db.val("SELECT COUNT(*) FROM events WHERE type = 'error' AND json_extract(payload, '$.kind') = 'probe'") || 0,
     };
     // Rates are per DELIVERED message — the denominator the funnel is built on.
     const pct = (n, d) => (d ? Math.round((Number(n) / Number(d)) * 1000) / 10 : null);
@@ -835,12 +858,23 @@ function handleApi(req, res, url, ip) {
 
     const errorOps = db.all(
       `SELECT json_extract(payload, '$.op') AS op, COUNT(*) AS n, MAX(at) AS last_at
-         FROM events WHERE type = 'error' GROUP BY op ORDER BY n DESC LIMIT 12`);
+         FROM events WHERE type = 'error' AND COALESCE(json_extract(payload, '$.kind'), '') <> 'probe'
+        GROUP BY op ORDER BY n DESC LIMIT 12`);
 
     const recentErrors = db.all(
       `SELECT entity, entity_id, payload, at, actor FROM events
-        WHERE type = 'error' ORDER BY at DESC LIMIT 20`)
+        WHERE type = 'error' AND COALESCE(json_extract(payload, '$.kind'), '') <> 'probe'
+        ORDER BY at DESC LIMIT 20`)
       .map((r) => Object.assign({ entity: r.entity, entity_id: r.entity_id, at: r.at, actor: r.actor }, db.pj(r.payload, {}) || {}));
+
+    // The probes are still visible, just not in the failures: a stale token on a real
+    // route is worth knowing about, a scanner asking for /etc/passwd is not.
+    const probeErrors = db.all(
+      `SELECT COUNT(*) AS n, MAX(at) AS last_at FROM events
+        WHERE type = 'error' AND json_extract(payload, '$.kind') = 'probe'`)[0] || { n: 0, last_at: null };
+    const tokenErrors = db.all(
+      `SELECT COUNT(*) AS n, MAX(at) AS last_at FROM events
+        WHERE type = 'error' AND json_extract(payload, '$.kind') = 'token'`)[0] || { n: 0, last_at: null };
 
     return sendJson(res, 200, {
       generated_at: db.nowISO(),
@@ -852,6 +886,7 @@ function handleApi(req, res, url, ip) {
       leads: perLead,
       error_ops: errorOps,
       recent_errors: recentErrors,
+      auth: { probes: Number(probeErrors.n) || 0, probes_last_at: probeErrors.last_at || null, token_mismatches: Number(tokenErrors.n) || 0, token_last_at: tokenErrors.last_at || null },
       top_links: topLinks,
       engagement: {
         opens: eng.opens || 0,

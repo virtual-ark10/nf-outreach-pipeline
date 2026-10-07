@@ -381,11 +381,11 @@
       <div class="card"><h3>Top leads by sends</h3><div class="cbox tall"><canvas id="ch_leads"></canvas></div></div>
       <div class="card"><h3>By campaign</h3><div class="cbox"><canvas id="ch_campaigns"></canvas></div></div>
       <div class="card"><h3>Top clicked links</h3><div class="cbox tall"><canvas id="ch_top_links"></canvas></div></div>
-      <div class="card"><h3>Failures by operation</h3><div class="cbox"><canvas id="ch_errors"></canvas></div></div>
+      <div class="card"><h3>Failures by operation <span style="font-weight:400;color:var(--muted)">(unauthenticated probes excluded)</span></h3><div class="cbox"><canvas id="ch_errors"></canvas></div></div>
     </div>
-    <div class="card" style="margin-top:12px"><h3>Recent failures &mdash; events where type = 'error'</h3><div id="tr_errors"></div></div>
     <div class="card" style="margin-top:12px"><h3>Leads &mdash; sends, replies, opens, clicks</h3><div id="tr_leads"></div></div>
     <div class="card" style="margin-top:12px"><h3>Links &mdash; what got clicked</h3><div id="tr_toplinks"></div></div>
+    <div class="card" style="margin-top:12px"><h3>Failures &mdash; events where type = 'error'</h3><div id="tr_errors"></div></div>
     <div id="tr_sources" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
   </section>
 
@@ -1329,14 +1329,26 @@ function renderTracking(d) {
     });
   }
 
-  // ---- the failure list: the events backbone, read back
+  // ---- the failure list: the events backbone, read back. Bot probes of paths this
+  // pad does not serve are counted and explained, never listed: they are not
+  // failures, and a wall of them was hiding the rows that are.
   const recent = d.recent_errors || [];
-  $("tr_errors").innerHTML = recent.length ? (
+  const authInfo = d.auth || {};
+  const authNotes =
+    (authInfo.probes ? '<div style="font-size:12px;color:var(--muted);margin-bottom:6px">' + num(authInfo.probes) +
+      " unauthenticated probe" + (Number(authInfo.probes) === 1 ? "" : "s") + " (scanners asking for paths this pad does not serve) are excluded from this list and from the chart above. Last one " +
+      esc(String(authInfo.probes_last_at || "").replace("T", " ").slice(0, 16)) + ".</div>" : "") +
+    (authInfo.token_mismatches ? '<div style="font-size:12px;color:var(--muted);margin-bottom:6px">' + num(authInfo.token_mismatches) +
+      " request" + (Number(authInfo.token_mismatches) === 1 ? "" : "s") + " to a real pad route carried a stale token. A device is holding a token that has changed since; re-enter it there.</div>" : "");
+  // Every interpolated value below goes through esc() (and num() for counts), which
+  // is why this innerHTML assignment is safe: the table is built from our own store's
+  // rows, and each field is escaped before it is concatenated.
+  $("tr_errors").innerHTML = authNotes + (recent.length ? (
     '<table class="small"><tr><th>When</th><th>Entity</th><th>Operation</th><th>Status</th><th>Message</th></tr>' +
     recent.map((e) => "<tr><td>" + esc(String(e.at || "").replace("T", " ").slice(0, 19)) + "</td><td>" + esc(e.entity || "") +
       (e.entity_id ? " / " + esc(e.entity_id) : "") + "</td><td>" + esc(e.op || "") + "</td><td>" + esc(e.status == null ? "" : e.status) +
       "</td><td>" + esc(String(e.message || "").slice(0, 160)) + "</td></tr>").join("") + "</table>"
-  ) : '<div class="empty" style="font-size:12px">Nothing has failed. Every route records its failures here (entity, operation, HTTP status and message), so a quiet list is a real signal, not a missing feature.</div>';
+  ) : '<div class="empty" style="font-size:12px">Nothing has failed. Every route records its failures here (entity, operation, HTTP status and message), so a quiet list is a real signal, not a missing feature.</div>');
 
   // ---- per-lead table
   const rows = d.leads || [];
