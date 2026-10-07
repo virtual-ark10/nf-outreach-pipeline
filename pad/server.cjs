@@ -903,7 +903,22 @@ function handleApi(req, res, url, ip) {
   if (req.method === 'GET' && p === '/api/domains') {
     return resendRequest('GET', '/domains', null, (err, status, rbody) => {
       if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
-      sendJson(res, status, safeJson(rbody));
+      const payload = safeJson(rbody);
+      // Shared account: /domains lists EVERY brand on this Resend key, and the client
+      // builds its "send as" picker from that list. Offering another brand's domain
+      // is how a brand ends up sending as someone else (observed 2026-10-07: a
+      // NewsletterFIT reply to a prospect went out as ian@starterlens.com, then
+      // vanished from this pad's Sent tab because the sent list filters by brand).
+      // Same fix as pad-kit bba4308; this instance had forked before it landed.
+      if (payload && Array.isArray(payload.data) && BRAND_DOMAINS.length) {
+        const mine = payload.data.filter((d) => {
+          const name = String((d && d.name) || '').toLowerCase();
+          return BRAND_DOMAINS.some((b) => name === b || name.endsWith('.' + b));
+        });
+        payload.hidden_other_brand = payload.data.length - mine.length;
+        payload.data = mine;
+      }
+      sendJson(res, status, payload);
     });
   }
 
