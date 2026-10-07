@@ -385,6 +385,60 @@ function resendRequest(method, apiPath, body, cb) {
   req.end();
 }
 
+// ---- inbound body hydration -------------------------------------------
+// Resend's `email.received` webhook is METADATA ONLY: from, to, subject, ids. No
+// text, no html. A reply recorded straight from it therefore landed as a row with
+// a subject and an empty body — the pad showed a blank message and the intel loop
+// had nothing to read. The body lives on GET /emails/receiving/:id; fetch it and
+// write it in. Two rules: only ever fill an EMPTY column (so a re-delivered
+// webhook can never overwrite a body already stored), and never let a failed
+// fetch lose the message (the row is already saved; the failure is logged and
+// heals later via the backfill tool or on view in the pad).
+function fetchReceivedBody(resendId, cb) {
+  if (!resendId) return cb(new Error('no email_id on the event'));
+  return resendRequest('GET', `/emails/receiving/${encodeURIComponent(resendId)}`, null, (err, status, rbody) => {
+    if (err) return cb(err);
+    if (status >= 400) return cb(new Error('Resend returned ' + status));
+    const j = safeJson(rbody) || {};
+    if (!j.text && !j.html) return cb(new Error('received email has no text/html part'));
+    return cb(null, { text: j.text || null, html: j.html || null });
+  });
+}
+
+function hydrateReplyBody(replyId, body) {
+  const sets = [];
+  const vals = [];
+  if (body && body.text) { sets.push("body_text = COALESCE(NULLIF(body_text,''), ?)"); vals.push(body.text); }
+  if (body && body.html) { sets.push("body_html = COALESCE(NULLIF(body_html,''), ?)"); vals.push(body.html); }
+  if (!replyId || !sets.length) return { reply_id: replyId || null, updated: 0, email_updated: 0 };
+  // The WHERE guard is what makes `updated` honest: a row whose body is already
+  // stored matches nothing, so a redundant hydrate reports 0 rather than reporting
+  // a match it did not change.
+  const guard = "((body_text IS NULL OR body_text = '') OR (body_html IS NULL OR body_html = ''))";
+  const r = db.run(`UPDATE replies SET ${sets.join(', ')} WHERE id = ? AND ${guard}`, vals.concat(replyId));
+  // The inbound emails row carries the same body so the pad's message view and the
+  // CRM timeline tell one story.
+  const em = db.run(`UPDATE emails SET ${sets.join(', ')} WHERE id = (SELECT email_id FROM replies WHERE id = ?) AND ${guard}`, vals.concat(replyId));
+  return { reply_id: replyId, updated: r.changes, email_updated: em.changes };
+}
+
+// Runs after the reply row exists. A duplicate delivery (same message_id) reports
+// no reply_id, so fall back to looking the row up by message_id: a retry is a
+// second chance to fill a body the first attempt could not fetch.
+function hydrateInbound(event, stored, done) {
+  const d = (event && event.data) || {};
+  const replyId = (stored && stored.reply_id)
+    || (d.message_id ? db.val('SELECT id FROM replies WHERE message_id = ?', [d.message_id]) : null);
+  if (!replyId) return done(null, { skipped: 'no reply row to hydrate' });
+  if (d.text || d.html) return done(null, { reply_id: replyId, skipped: 'event carried the body' });
+  return fetchReceivedBody(d.email_id || null, (err, body) => {
+    if (err) return done(err, { reply_id: replyId, email_id: d.email_id || null });
+    let out;
+    try { out = hydrateReplyBody(replyId, body); } catch (e) { return done(e, { reply_id: replyId }); }
+    return done(null, out);
+  });
+}
+
 // ---- Svix webhook signature verification (Resend webhooks) ----
 function verifyWebhook(rawBody, headers) {
   if (!WEBHOOK_SECRET) {
@@ -553,6 +607,28 @@ function handleApi(req, res, url, ip) {
       try {
         const r = handleWebhook(event, new Date().toISOString());
         console.log(`[WEBHOOK] ${r.type} stored=${JSON.stringify(r.stored)}${r.skipped ? ' skipped=' + r.skipped : ''}`);
+        // An inbound reply arrives as metadata only, so its body has to be fetched
+        // and written into the row the intel loop reads BEFORE we acknowledge.
+        // Respond later, not sooner: a body that lands after the 200 is a body the
+        // next reader of the CRM may miss. A failed fetch is logged and answered
+        // 200 anyway (the message itself is on record); a Resend retry then hits
+        // the duplicate guard and gets one more try at the body.
+        if (event && event.type === 'email.received') {
+          return hydrateInbound(event, r.stored, (herr, hres) => {
+            if (herr) {
+              console.warn('[WEBHOOK] body fetch failed:', herr.message);
+              db.logFailure({
+                entity: 'reply', entity_id: String((hres && hres.reply_id) || (event.data && event.data.email_id) || ''),
+                op: 'reply_body_fetch', error: herr, status: 502, actor: 'resend',
+                extra: { email_id: (event.data && event.data.email_id) || null, subject: (event.data && event.data.subject) || null },
+              });
+            } else if (hres && hres.updated) {
+              console.log(`[WEBHOOK] hydrated reply ${hres.reply_id}: ${hres.updated} reply / ${hres.email_updated} email row`);
+            }
+            drainEvents('after-webhook');
+            return sendJson(res, 200, { ok: true, type: r.type, stored: r.stored, skipped: r.skipped, body: hres || null });
+          });
+        }
         // React now rather than waiting for the next request: a reply or a bounce is
         // exactly the case where nothing else may arrive for hours.
         drainEvents('after-webhook');
@@ -923,7 +999,21 @@ function handleApi(req, res, url, ip) {
     const id = p.slice('/api/received/'.length);
     return resendRequest('GET', `/emails/receiving/${encodeURIComponent(id)}`, null, (err, status, rbody) => {
       if (err) return sendJson(res, 502, { error: 'Failed to contact Resend', details: err.message });
-      sendJson(res, status, safeJson(rbody));
+      const j = safeJson(rbody) || {};
+      // Passive heal: this message may already be a reply row whose body was never
+      // captured (stored before the webhook learned to hydrate, or a fetch that
+      // failed at the time). Reading it here is reason enough to write it down, so
+      // opening the message in the pad also repairs the CRM row.
+      try {
+        if (j.message_id && (j.text || j.html)) {
+          const rid = db.val("SELECT id FROM replies WHERE message_id = ? AND (body_text IS NULL OR body_text = '')", [j.message_id]);
+          if (rid) {
+            const h = hydrateReplyBody(rid, { text: j.text || null, html: j.html || null });
+            if (h.updated) console.log(`[PAD] healed reply ${rid} body on view`);
+          }
+        }
+      } catch (e) { /* best effort: a heal must never break the read */ }
+      sendJson(res, status, j);
     });
   }
 
