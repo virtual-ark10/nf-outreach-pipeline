@@ -66,9 +66,25 @@ con.close()
 
 def due_for(lead):
     stage = str(lead.get("stage") or "")
+    # A suppressed lead is never due: a bounce or an unsubscribe means the address is
+    # closed, whatever rung the ladder is on. Without this the scan drafted a Touch 2 for
+    # a bounced lead on 2026-10-07 (adobe-acrobat-follow-up-2); the send gate then held it,
+    # so nothing went out, but the queue carried a draft that could never be sent.
+    if lead.get("unsubscribed") or lead.get("bounced"):
+        return None
     wait = DUE_DAYS.get(stage)
-    anchor = lead.get("next_follow_up_at") or lead.get("last_contact_at")
-    if not wait or not anchor:
+    if not wait:
+        return None
+    # next_follow_up_at is stamped on send and IS the date the next touch is due
+    # (db.cjs derive(): `const due = lead.next_follow_up_at || computed`). The
+    # cadence wait below is only the fallback for rows that predate it; anchoring
+    # on next_follow_up_at and then adding the wait again counts the interval
+    # twice and pushes every later rung a full touch late.
+    nfu = lead.get("next_follow_up_at")
+    if nfu:
+        return datetime.datetime.fromisoformat(str(nfu).replace("Z", "+00:00")).date()
+    anchor = lead.get("last_contact_at")
+    if not anchor:
         return None
     d = datetime.datetime.fromisoformat(str(anchor).replace("Z", "+00:00")).date()
     return d + datetime.timedelta(days=wait)
