@@ -21,6 +21,7 @@ Exit code 0 if nothing is on HOLD, 1 otherwise, so a cron job can tell the diffe
 import argparse
 import csv
 import datetime
+import html as html_mod
 import json
 import os
 import re
@@ -371,12 +372,16 @@ def gate(draft, ctx):
     anchored = {}
     for m in re.finditer(r"<a[^>]*lt=([A-Za-z0-9_-]{20,40})[^>]*>([\s\S]*?)</a>", html, re.I):
         label = re.sub(r"<[^>]*>", " ", m.group(2))
-        label = re.sub(r"\s+", " ", label).strip()
+        # The anchor's text is HTML, so an ampersand in a publication name arrives as
+        # '&amp;'. norm() keeps letters, so '&amp;' used to normalize to '...amp...'
+        # and never matched the plain-text bullet ('Greg & Taylor'), which flagged a
+        # correctly linked bullet as unresolved. Decode entities before comparing.
+        label = html_mod.unescape(re.sub(r"\s+", " ", label)).strip()
         dest = str((known.get(m.group(1)) or {}).get("dest") or "")
         if label and "/app/publications/" in dest:
             anchored[norm(label)] = dest.rsplit("/", 1)[-1]
     for raw in pubs_named:
-        name = raw.strip(" -")
+        name = html_mod.unescape(raw).strip(" -")
         slug = anchored.get(norm(name))
         if not slug:
             soft(f"bullet names {name!r} with no tracked link, so the publication was never "
