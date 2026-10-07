@@ -38,6 +38,33 @@ function addrList(v) {
 function isBrandAddr(addr) {
   return BRAND_DOMAINS.some((d) => addr.endsWith('@' + d));
 }
+// The From picker is filtered to BRAND_DOMAINS, but the API is the last line of
+// defence: this pad must never send as another brand on the shared Resend account.
+// Observed 2026-10-07 — a reply to a NewsletterFIT prospect left as
+// ian@starterlens.com, Resend accepted it, and it then vanished from this pad's
+// Sent tab because that list filters by brand. The check below uses the SAME rule
+// as the filter (isBrandAddr), so anything allowed here is also visible in Sent.
+// An unparseable or empty From is left to Resend's own validation.
+function offBrandFrom(from) {
+  if (!BRAND_DOMAINS.length) return null;
+  const addrs = addrList(from);
+  if (!addrs.length) return null;
+  const off = addrs.filter((a) => !isBrandAddr(a));
+  return off.length ? off : null;
+}
+function blockOffBrandFrom(res, ctx, from) {
+  const off = offBrandFrom(from);
+  if (!off) return false;
+  const msg = `Not sent: this pad sends only as ${BRAND_DOMAINS.join(' or ')} (the From was ${off.join(', ')}).`;
+  console.warn('[SEND] BLOCKED off-brand From:', off.join(', '));
+  db.logFailure({
+    entity: (ctx && ctx.entity) || 'email', entity_id: (ctx && ctx.entity_id) || null,
+    op: 'send_wrong_identity', error: new Error(msg), status: 400, actor: 'pad',
+    extra: { from: String(from || ''), allowed: BRAND_DOMAINS },
+  });
+  sendJson(res, 400, { error: msg });
+  return true;
+}
 // side: 'from' (sent mail) or 'to' (received mail). Items without a usable
 // address are kept — better to show a mystery than to hide a real message.
 function filterBrand(body, side) {
@@ -859,6 +886,7 @@ function handleApi(req, res, url, ip) {
       try { data = JSON.parse(body); } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
       if (!data.from) return sendJson(res, 400, { error: 'from is required' });
       const leadId = 'manual-' + (String((Array.isArray(data.to) ? data.to[0] : data.to) || 'unknown').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'unknown');
+      if (blockOffBrandFrom(res, { entity: 'email', entity_id: leadId }, data.from)) return;
       const doSend = () => resendRequest('POST', '/emails', JSON.stringify(data), (err, status, rbody) => {
         if (err) {
           db.logFailure({ entity: 'email', entity_id: leadId, op: 'send', error: err, status: 502, actor: 'pad', extra: { to: data.to, subject: data.subject || '' } });
@@ -1114,6 +1142,7 @@ function handleApi(req, res, url, ip) {
           db.logFailure({ entity: 'draft', entity_id: draftId, op: 'draft_incomplete', error: new Error('from/to/subject required'), status: 400, actor: 'pad' });
           return sendJson(res, 400, { error: 'Draft is incomplete (from/to/subject required)' });
         }
+        if (blockOffBrandFrom(res, { entity: 'draft', entity_id: draftId }, payload.from)) return;
         const doSendDraft = () => resendRequest('POST', '/emails', JSON.stringify(payload), (err, status, rbody) => {
           if (err) {
             db.run('UPDATE drafts SET send_error = ?, updated_at = ? WHERE id = ?', [err.message, db.nowISO(), draftId]);
