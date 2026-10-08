@@ -3,12 +3,19 @@
 # One domain per line. Sections set the segment, which drives the industry_fit score:
 #   [signal_data]  a data/signal product is the company (score 3)
 #   [enrichment]   contact/company enrichment data (score 2)
-#   [infra]        scraping / talent data infrastructure (score 1)
+#   [infra]        scraping / data-acquisition infrastructure, talent data (score 1)
 #
 # Prefix a domain with "!" to keep it in the scan but never import it as a lead
 # (anchor / reference account, or a company already spoken for elsewhere).
 #
 # Duplicates across sections are de-duplicated; the first section wins.
+#
+# Every domain here was verified to resolve to the intended company (homepage title check).
+# A domain that yields no contacts is skipped by the scanner and NOT cached, so a provider
+# gap or a saturated run simply retries next time instead of sticking for the cache TTL.
+#
+# This is a curated list, not autonomous discovery: the scanner only ever looks at what is
+# written here. See the note on discovery in the pipeline skill.
 
 [signal_data]
 !evertrace.ai
@@ -41,6 +48,34 @@ similarweb.com
 builtwith.com
 wappalyzer.com
 lusha.com
+apptopia.com
+mobileaction.co
+appfollow.io
+splitmetrics.com
+semrush.com
+ahrefs.com
+spyfu.com
+serpapi.com
+tavily.com
+jina.ai
+indexbox.io
+importgenius.com
+sayari.com
+kharon.com
+nansen.ai
+dune.com
+messari.io
+kaiko.com
+amberdata.io
+glassnode.com
+yipitdata.com
+eaglealpha.com
+northdata.de
+theorg.com
+hockeystack.com
+openmart.com
+fiber.ai
+nubela.co
 
 [enrichment]
 apollo.io
@@ -57,6 +92,13 @@ juicebox.work
 persana.ai
 cognism.com
 explorium.ai
+uplead.com
+seamless.ai
+leadiq.com
+snov.io
+anymailfinder.com
+enrichlayer.com
+companyenrich.com
 
 [infra]
 apify.com
@@ -64,3 +106,13 @@ firecrawl.dev
 brightdata.com
 hireez.com
 seekout.com
+webz.io
+datarade.ai
+kadoa.com
+scrapfly.io
+zyte.com
+oxylabs.io
+zenrows.com
+scraperapi.com
+browserbase.com
+crawlbase.com

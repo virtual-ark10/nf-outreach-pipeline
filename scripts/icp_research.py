@@ -188,6 +188,12 @@ def scan(seeds, refresh: bool):
         if domain in cache:
             continue
         people = fetch_domain(domain)
+        if not people:
+            # Never cache an empty scan: treg saturates (503 "retry in a moment") and a
+            # provider gap looks identical to a company with no contacts. Caching the miss
+            # would serve nothing for the full TTL; leaving it out retries next run.
+            print(f"  scanned {domain:<22} 0 contact(s) (not cached, will retry)", flush=True)
+            continue
         cache[domain] = people
         print(f"  scanned {domain:<22} {len(people)} contact(s)", flush=True)
         OUT.mkdir(parents=True, exist_ok=True)
