@@ -1,0 +1,110 @@
+{
+  "icp_name": "Mid-market data/signal intelligence company (Evertrace lookalike)",
+  "derived_from": "anchor company evertrace.ai (Evertrace) public footprint + lookalike account scan; NOT closed customers",
+  "note": "Analyst-driven ICP (source skill: ideal-customer-profile, Step 1-ALT anchor-company mode). Provisional; refresh quarterly or after 10 real customers.",
+  "anchor": "evertrace.ai",
+  "segments": {
+    "signal_data": 3,
+    "enrichment": 2,
+    "infra": 1
+  },
+  "dimensions": {
+    "firmographics": {
+      "defined": true,
+      "specific": true,
+      "industry": "B2B data & intelligence software (alt-data, signal/intent data, sales-intelligence, private-market intelligence)",
+      "size_band_ee": "11-200 (core 11-100; stretch to 250)",
+      "revenue_band": "$1M-$20M ARR (core $2M-$10M)",
+      "funding_stage": "Seed to Series A/B, total raised $0.5M-$30M",
+      "geography": "US + Western/Northern Europe primary; global-English secondary",
+      "age": "Founded 2018-2024",
+      "exclusions": [
+        "Legacy record systems at scale (>$50M ARR or PE-owned)",
+        "Generic web-scraping infra with no data product",
+        "Sub-5-person bootstrapped API wrappers with no funded GTM",
+        "Agencies and consultancies",
+        "Consumer data brokers / adtech identity"
+      ]
+    },
+    "tech_stack": {
+      "defined": true,
+      "signals": [
+        "Ships an API and/or MCP server",
+        "Ingests frontier web data (registries, repos, job posts, domains, patents, SERP)",
+        "Cloud warehouse + Python",
+        "CRM Attio/HubSpot/Affinity/Salesforce",
+        "Docs-first site; modern web stack (Webflow/Framer/Next.js)"
+      ],
+      "disqualifying": [
+        "No public product/data endpoint (services-only)",
+        "Closed enterprise-only suite with no self-serve or API signal"
+      ]
+    },
+    "buyer_persona": {
+      "defined": true,
+      "title": "Head of Growth / Founding Growth Marketer; secondary VP Marketing, Head of Revenue Ops; founder-CEO below ~40 EE",
+      "level": "Head/Director or founder",
+      "team_size": "0-5 marketers",
+      "tenure": "0-18 months (often first GTM hire)",
+      "note": "Standing rule: GTM/go-to-market person first, founder-CEO backup."
+    },
+    "jtbd": {
+      "defined": true,
+      "statement": "When [we need pipeline for our data/signal product], I want to [reach a precise niche audience that already cares about data signals], so I can [get qualified leads without a heavy outbound function]."
+    },
+    "existing_alternatives": {
+      "defined": true,
+      "list": [
+        "Doing nothing / founder-led LinkedIn posting",
+        "Generic cold email via Apollo/Instantly",
+        "LinkedIn Sales Navigator manual outbound",
+        "Paid social/search and SEO content",
+        "Sponsoring data and VC newsletters",
+        "Community seeding"
+      ]
+    },
+    "trigger_events": {
+      "defined": true,
+      "list": [
+        "Seed/Series A or new round closed",
+        "First GTM/growth hire",
+        "New product surface: API, MCP server, coverage expansion",
+        "New exec (CTO/Head of Data) hired",
+        "Category news wave (stealth founders, MCP, alt-data)",
+        "Coverage/freshness milestone announced"
+      ]
+    },
+    "budget_authority": {
+      "defined": true,
+      "level": "Founder-CEO approves; growth head recommends",
+      "typical_deal_size": "$1K-$10K ACV campaign; $2K-$25K data/API contract"
+    },
+    "reachability": {
+      "defined": true,
+      "channels": [
+        "Outbound via free people-search lanes + LinkedIn",
+        "Data/VC/GTM newsletters and communities",
+        "LinkedIn (founder + head-of-growth posts)",
+        "X / data-Twitter and MCP/agent communities",
+        "Events (TechBBQ, Slush, SaaStr)"
+      ],
+      "list_size": 400
+    }
+  },
+  "disqualification_criteria_present": true,
+  "scoring_weights": {
+    "industry_fit": 15,
+    "size_fit": 15,
+    "geography": 10,
+    "tech_stack_fit": 15,
+    "buyer_role_match": 15,
+    "trigger_event_present": 15,
+    "budget_authority": 10,
+    "timeline": 5
+  },
+  "bands": {
+    "import": ["strong", "workable"],
+    "strong_min": 80,
+    "workable_min": 60
+  }
+}

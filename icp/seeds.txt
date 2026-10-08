@@ -1,0 +1,66 @@
+# ICP seed domains for scripts/icp_research.py
+#
+# One domain per line. Sections set the segment, which drives the industry_fit score:
+#   [signal_data]  a data/signal product is the company (score 3)
+#   [enrichment]   contact/company enrichment data (score 2)
+#   [infra]        scraping / talent data infrastructure (score 1)
+#
+# Prefix a domain with "!" to keep it in the scan but never import it as a lead
+# (anchor / reference account, or a company already spoken for elsewhere).
+#
+# Duplicates across sections are de-duplicated; the first section wins.
+
+[signal_data]
+!evertrace.ai
+harmonic.ai
+tryspecter.com
+crustdata.com
+predictleads.com
+theirstack.com
+coresignal.com
+diffbot.com
+exa.ai
+peopledatalabs.com
+dealroom.co
+tracxn.com
+sourcescrub.com
+grata.com
+sumble.com
+salesmotion.io
+gtm.dev
+commonroom.io
+ocean.io
+opencorporates.com
+appfigures.com
+thinknum.com
+rb2b.com
+usergems.com
+warmly.ai
+sensortower.com
+similarweb.com
+builtwith.com
+wappalyzer.com
+lusha.com
+
+[enrichment]
+apollo.io
+clay.com
+fullenrich.com
+findymail.com
+leadmagic.io
+prospeo.io
+hunter.io
+tomba.io
+icypeas.com
+dropleads.io
+juicebox.work
+persana.ai
+cognism.com
+explorium.ai
+
+[infra]
+apify.com
+firecrawl.dev
+brightdata.com
+hireez.com
+seekout.com
