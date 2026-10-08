@@ -211,6 +211,13 @@ today = datetime.date.today().isoformat()
 batch, skipped = [], []
 for score, quality, l, e in ranked:
     company = (l.get("company") or "").strip()
+    # Two ladders, one per lead_source. This script is the corpus one: it quotes the sponsor
+    # export, which has no row for an ICP lead, so those are named and left to the ladder that
+    # owns them (scripts/seed_icp_drafts.py) rather than falling through to a "no publication
+    # to recommend" skip that looks like a supply problem.
+    if str(l.get("lead_source") or "") == "icp_research":
+        skipped.append((company, "ICP lead, drafted by the ICP ladder (seed_icp_drafts.py)"))
+        continue
     to = (l.get("email") or "").strip()
     name = (l.get("contact_name") or "").strip()
     greeting = name.split()[0] if name else ""

@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS leads (
   city               TEXT,
   region             TEXT,
   country            TEXT,
-  source             TEXT,                          -- pad_batch|intake|manual|import|backfill
+  source             TEXT,                          -- pad_batch|intake|manual|import|backfill|icp_research
+  lead_source        TEXT,                          -- corpus|icp_research: WHICH SEQUENCE drafts this lead
   stage              TEXT NOT NULL DEFAULT 'leads',
   stage_changed_at   TEXT,
   priority           TEXT,                          -- high|medium|low
@@ -276,6 +277,7 @@ SELECT
   l.id,
   l.company,
   l.domain,
+  l.lead_source,
   l.stage,
   l.converted,
   l.priority,

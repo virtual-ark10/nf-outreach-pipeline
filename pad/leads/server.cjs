@@ -90,6 +90,7 @@ const EDIT_COLS = {
  extra_emails: 'emails', emails: 'emails',
   priority: 'priority', quality: 'priority', score: 'score', owner: 'owner',
   industry: 'industry', city: 'city', region: 'region', country: 'country', source: 'source',
+  lead_source: 'lead_source',
   campaign: 'campaign', angle: 'angle', subscriber_range: 'subscriber_range',
   next_follow_up_at: 'next_follow_up_at', next_action_at: 'next_follow_up_at',
   converted: 'converted', converted_at: 'converted_at', value_cents: 'value_cents', currency: 'currency',
@@ -99,12 +100,15 @@ const EDIT_COLS = {
 };
 const JSON_COLS = new Set(['emails', 'notes', 'tags', 'sponsored_pubs', 'recommended_pubs', 'meta']);
 const BIT_COLS = new Set(['converted', 'unsubscribed', 'bounced']);
+// The two sequences a lead can be drafted by (see db.leadSourceFor). Anything else the API is
+// handed is ignored rather than stored, so a typo cannot create a third sequence nobody drafts.
+const LEAD_SOURCES = ['corpus', 'icp_research'];
 
 // Columns a new lead is created with. Placeholders are derived from this list so a
 // hand-counted VALUES() list can never drift out of step with it.
 const NEW_LEAD_COLS = [
   'id', 'company', 'domain', 'website', 'contact_name', 'contact_title', 'contact_role',
-  'email', 'emails', 'industry', 'city', 'region', 'country', 'source', 'stage',
+  'email', 'emails', 'industry', 'city', 'region', 'country', 'source', 'lead_source', 'stage',
   'priority', 'score', 'owner', 'tags', 'notes', 'campaign', 'sponsored_pubs',
   'recommended_pubs', 'angle', 'subscriber_range', 'meta', 'currency', 'created_at', 'updated_at',
 ];
@@ -195,6 +199,10 @@ const server = http.createServer(async (req, res) => {
         region: b.region || null,
         country: b.country || null,
         source: b.source || 'manual',
+        // WHICH SEQUENCE drafts this lead. An explicit value wins (the importer can state it),
+        // otherwise it is derived from the legacy source so a caller that only knows `source`
+        // still lands on the right ladder.
+        lead_source: LEAD_SOURCES.includes(String(b.lead_source || '')) ? b.lead_source : db.leadSourceFor(b.source),
         stage: STAGE_KEYS.includes(b.stage) ? b.stage : 'leads',
         priority: b.priority || b.quality || null,
         score: db.int(b.score),

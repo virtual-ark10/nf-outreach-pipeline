@@ -80,6 +80,24 @@ function migrate(db) {
   add('events', 'processed_at', 'TEXT');
   add('events', 'attempts', 'INTEGER NOT NULL DEFAULT 0');
   add('events', 'last_error', 'TEXT');
+  // Which SEQUENCE drafts this lead (`corpus` or `icp_research`). The corpus sequence quotes
+  // the sponsor export, where the company was seen buying placements; the ICP sequence has no
+  // export row to quote (the lookalike scan found the company, not a placement) and pitches
+  // the lists its lane already validated instead. Derived from the legacy `source` in one
+  // place so the pad, the leads engine and the backfill cannot disagree about a lead.
+  add('leads', 'lead_source', 'TEXT');
+  db.exec(`UPDATE leads SET lead_source = CASE
+             WHEN lower(COALESCE(source, '')) = 'icp_research' THEN 'icp_research'
+             ELSE 'corpus' END
+           WHERE COALESCE(lead_source, '') = ''`);
+  // Views are created IF NOT EXISTS, so a store that already exists keeps the older shape.
+  // Rather than duplicating the DDL here, detect the stale definition, drop it, and re-apply
+  // schema.sql, which recreates every object idempotently.
+  const pipelineView = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'view' AND name = 'v_lead_pipeline'").get();
+  if (pipelineView && !String(pipelineView.sql || '').includes('lead_source')) {
+    try { db.exec('DROP VIEW v_lead_pipeline'); } catch (err) { if (!raced(err)) throw err; }
+    db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  }
   // The index only exists once the column does, which is why it is not in schema.sql.
   db.exec('CREATE INDEX IF NOT EXISTS ix_events_pending ON events(processed_at, id)');
   // Dropped and recreated so a changed definition takes effect; the other process may
@@ -469,9 +487,18 @@ function derive(lead) {
   };
 }
 
+// The one rule that maps a row to the sequence that drafts it. Legacy rows carry only
+// `source` ('intake' from the corpus export, 'icp_research' from the lookalike scan), so the
+// mapping lives here and every caller reads it: the engine on create and edit, the backfill,
+// and (via the API field) the drafting scripts.
+function leadSourceFor(source) {
+  return String(source || '').trim().toLowerCase() === 'icp_research' ? 'icp_research' : 'corpus';
+}
+
 module.exports = {
   DB_PATH, SCHEMA_PATH, open, all, one, run, exec, val, tx, plain, bind,
   nowISO, j, pj, bit, int, csvList, addressesOf, findLeadByAddress,
+  leadSourceFor,
   logEvent, logFailure, stageEvent, setStage, derive, EMAIL_RE, DUE_DAYS,
   recordEngagement, engagementTotals, engagementSeries, engagementByLead, topLinks, engagementForLead,
   processEvents, pendingEvents, recentEvents, recordRedraft, redraftGuidance, migrate,

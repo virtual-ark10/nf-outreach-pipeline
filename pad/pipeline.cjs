@@ -81,6 +81,7 @@ function rowToLead(r) {
     extra_emails: jget(r.emails, []), emails: jget(r.emails, []),
     industry: r.industry, city: r.city, region: r.region, country: r.country,
     source: r.source, stage: r.stage, stage_changed_at: r.stage_changed_at,
+    lead_source: r.lead_source || db.leadSourceFor(r.source),
     quality: r.priority, priority: r.priority, score: r.score, owner: r.owner,
     tags: jget(r.tags, []), notes: jget(r.notes, []), campaign: r.campaign,
     sponsored_pubs: jget(r.sponsored_pubs, []), recommended_pubs: jget(r.recommended_pubs, []),
