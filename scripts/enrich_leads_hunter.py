@@ -24,6 +24,9 @@ import urllib.parse
 import urllib.request
 
 CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
+# Lead quality preference lives in one place (scripts/_lead_rank.py).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _lead_rank import quality_rank                    # noqa: E402
 CRM_API = "http://127.0.0.1:3002"
 HUNTER = "https://api.hunter.io/v2"
 ROLE_BY_DEPARTMENT = {
@@ -84,9 +87,13 @@ print(f"  Hunter plan {acct.get('plan_name')}: {remaining} request(s) remaining"
 con = sqlite3.connect(f"file:{CRM_DB}?mode=ro", uri=True)
 con.row_factory = sqlite3.Row
 leads = [dict(r) for r in con.execute(
-    "SELECT id, company, domain FROM leads WHERE stage='leads' AND COALESCE(email,'') = '' "
-    "AND deleted_at IS NULL AND COALESCE(domain,'') <> '' ORDER BY company")]
+    "SELECT id, company, domain, priority FROM leads WHERE stage='leads' "
+    "AND COALESCE(email,'') = '' AND deleted_at IS NULL AND COALESCE(domain,'') <> ''")]
 con.close()
+# Rank here rather than in SQL so the preference rule lives in exactly one place
+# (scripts/_lead_rank.py) instead of being restated as a CASE. The tier column is "priority";
+# the engine serves it to the API under the alias "quality" (leads/server.cjs: quality:'priority').
+leads.sort(key=lambda l: (quality_rank(l), str(l.get("company") or "")))
 print(f"  {len(leads)} lead(s) with a domain and no address")
 
 if remaining < len(leads[: args.max]) + 2:

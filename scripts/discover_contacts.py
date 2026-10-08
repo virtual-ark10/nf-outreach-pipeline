@@ -59,6 +59,10 @@ except ImportError as e:                               # fail closed: never scra
     sys.exit(1)
 finder.USAGE_FILE = USAGE_FILE                         # NF's spend stays in NF's ledger
 
+# Lead quality preference lives in one place (scripts/_lead_rank.py).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _lead_rank import quality_rank                    # noqa: E402
+
 
 def load_token() -> str:
     try:
@@ -121,8 +125,10 @@ def targets_from(leads, limit: int) -> list:
         if has_email and has_name:
             continue
         out.append(l)
-    # Address-less leads first: an address is what makes a lead sendable at all.
-    out.sort(key=lambda l: (bool(str(l.get("email") or "").strip()), str(l.get("company") or "")))
+    # Address-less leads first: an address is what makes a lead sendable at all. Inside that
+    # split the preferred tier goes first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py).
+    out.sort(key=lambda l: (bool(str(l.get("email") or "").strip()), quality_rank(l),
+                            str(l.get("company") or "")))
     return out[:limit]
 
 

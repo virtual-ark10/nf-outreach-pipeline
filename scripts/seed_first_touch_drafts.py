@@ -6,9 +6,10 @@ the send gate still verifies every figure afterwards, so the generator can be fa
 being loose: it never invents a number, never quotes the discarded search rollup, and omits a
 figure it cannot ground.
 
-Ranking: the export's sponsor score and quality first (that is the corpus's own view of who is
-worth talking to), then the CRM's score. Existing drafts are updated in place by the seeder,
-which is idempotent by id, and leads already contacted are skipped by the CRM query.
+Ranking: the preferred lead tier first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py), then
+the export's sponsor score (the corpus's own view of who is worth talking to), then the CRM's
+score. Existing drafts are updated in place by the seeder, which is idempotent by id, and leads
+already contacted are skipped by the CRM query.
 
 Dry run unless --apply. Writes the batch file either way so the copy can be reviewed.
 """
@@ -25,6 +26,9 @@ import urllib.parse
 import urllib.request
 
 REPO = "/home/boxed/nf-outreach-pipeline"
+# Lead quality preference lives in one place (scripts/_lead_rank.py).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _lead_rank import quality_rank                    # noqa: E402
 PAD_DB = f"{REPO}/pad/data/outreach.db"
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
 CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
@@ -191,7 +195,11 @@ for l in leads:
     except (TypeError, ValueError):
         score = 0
     ranked.append((score, str(e.get("outreachQuality") or "").upper(), l, e))
-ranked.sort(key=lambda t: (-t[0], t[1] != "HIGH", str(t[2].get("company"))))
+# The preferred tier goes first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py), then the
+# corpus score, then the name. min() of the two tier sources so a CRM row missing its tier
+# still uses the export's.
+ranked.sort(key=lambda t: (min(quality_rank(t[2]), quality_rank(t[1])), -t[0],
+                           str(t[2].get("company"))))
 
 if args.company:
     want = {norm(c) for c in args.company}

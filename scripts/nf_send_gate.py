@@ -31,6 +31,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+# Lead quality preference lives in one place (scripts/_lead_rank.py).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _lead_rank import quality_rank                    # noqa: E402
+
 PAD = "http://127.0.0.1:3001"
 CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
 LEDGER = "/home/boxed/newsletterfit/attribution/attribution.json"
@@ -525,9 +529,10 @@ def main():
                   f"({bad / total:.0%}). Sending nothing until that is looked at.")
             return 1
 
-        # Priority: the ladder first, then first touches by how good the lead is. A follow-up
-        # is a conversation already in flight, so it outranks a cold open; inside first touches
-        # the CRM's own score decides who is worth the slot.
+        # Priority: the ladder first, then first touches by tier. A follow-up is a conversation
+        # already in flight, so it outranks a cold open; inside first touches the preferred
+        # tier goes first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py) and the CRM's own
+        # score decides within a tier.
         cap = args.cap
         cap_src = "--cap"
         if cap is None:
@@ -541,7 +546,7 @@ def main():
                 score = int(lead.get("score") or 0)
             except (TypeError, ValueError):
                 score = 0
-            return (0 if contacted else 1, -score)
+            return (0 if contacted else 1, quality_rank(lead), -score)
 
         queue = sorted([r for r in results if r["verdict"] == "PASS"], key=kind_and_score)
         print(f"  cap {cap} ({cap_src}); {len(queue)} clean draft(s) eligible")

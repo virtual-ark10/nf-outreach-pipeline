@@ -18,6 +18,10 @@ The free guess-and-check path stays as a fallback for when the search route is u
 Nothing is invented: every field comes from the export row (score, quality, placements,
 publications, angle, categories) or from the corpus's own all-sponsors.json (the slug).
 
+Ordering: candidates are imported preferred tier first (MEDIUM ahead of HIGH, see
+scripts/_lead_rank.py), then by placement count. --min-quality is a threshold, not an order:
+"MEDIUM" means MEDIUM or better.
+
   python3 scripts/import_candidates.py                        # dry run, print the plan
   python3 scripts/import_candidates.py --apply --limit 40
   python3 scripts/import_candidates.py --apply --recheck       # correct guessed domains
@@ -51,6 +55,14 @@ SERP_ROUTE = "treg.google.serp.organic"
 SERP_EXCLUDE = os.environ.get("TREG_EXCLUDE", "serpapi")
 SERP_MAX_COST = os.environ.get("TREG_MAX_COST", "0.01")
 
+# Lead quality preference lives in one place (scripts/_lead_rank.py). The intake leads with the
+# preferred tier too, so the unimported pool does not fill HIGH-first while every downstream
+# queue works MEDIUM-first.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _lead_rank import quality_rank                    # noqa: E402
+
+# Threshold scale only (LOW < MEDIUM < HIGH), used by --min-quality and the "or better" floor.
+# This is NOT the work order: quality_rank() decides which tier is imported first.
 QUALITY_ORDER = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
 # Only used when the search route is unavailable: a brand's site is reached by its own name
 # far more often than by a prefix or a suffix.
@@ -338,7 +350,10 @@ def main() -> int:
         if norm(name) in have_companies:
             continue
         candidates.append((placements, q, name, r))
-    candidates.sort(key=lambda t: (-QUALITY_ORDER.get(t[1], -1), -t[0], t[2].lower()))
+    # Preferred tier first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py), then the most
+    # placements, then the name. QUALITY_ORDER is the threshold scale above and must not be used
+    # here: it ranks HIGH above MEDIUM, which is the order this sort exists to invert.
+    candidates.sort(key=lambda t: (quality_rank(t[1]), -t[0], t[2].lower()))
     print(f"  export: {len(rows)} row(s); {len(candidates)} qualified candidate(s) not in "
           f"the CRM at {args.min_quality}+ with {args.min_placements}+ placement(s)")
 
