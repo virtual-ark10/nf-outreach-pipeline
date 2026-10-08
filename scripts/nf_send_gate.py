@@ -405,10 +405,15 @@ def gate(draft, ctx):
                     hard(f"{name}: draft says {frag.group(1)}, corpus says {rec.get('subscribersLabel')}")
         # "carries X" sponsor-book claim
         for m in re.finditer(re.escape(name) + r"[^\n]{0,60}?(?:carries|sponsored by|books?)\s+([A-Z][\w&.'-]+(?:,? (?:and )?[A-Z][\w&.'-]+)?)", text):
-            mentioned = [x.strip() for x in re.split(r",| and ", m.group(1)) if x.strip()]
+            # The capture ends where the regex stopped, which can be mid-list and mid-punctuation
+            # ("Delta and Cube." arrives as "Delta" + "Cube."). A trailing period is not a
+            # different company, so compare on letters and digits only: otherwise correct copy
+            # comes back as a sponsor the corpus does not list.
+            mentioned = [re.sub(r"[^a-z0-9]+$", "", x.strip().lower())
+                         for x in re.split(r",| and ", m.group(1)) if x.strip()]
             recent = [str(s).lower() for s in (rec.get("recentSponsors") or [])]
             for sp in mentioned:
-                if recent and sp.lower() not in " ".join(recent):
+                if recent and sp not in " ".join(recent):
                     soft(f"{name}: draft says it carries {sp}, corpus lists {rec.get('recentSponsors')}")
 
     # 5. subject/body alignment

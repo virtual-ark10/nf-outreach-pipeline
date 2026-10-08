@@ -350,15 +350,48 @@ the newest placement the corpus holds for that company among those pubs, so subj
 body never point at different newsletters. `scripts/first_email_subject.py "<Company>"`
 resolves it (and `--all-first-emails [--apply]` fixes a queue). Fill [Name] before sending.
 
+### 3c. TWO LADDERS — `lead_source` picks the sequence
+
+Every lead row carries `lead_source` (`corpus` or `icp_research`), derived from `source` by
+`db.leadSourceFor` in the pad's db layer and backfilled by the CRM migration. Drafting branches
+on it, because the two supplies support different claims.
+
+`corpus` (source intake/import/pad_batch): we HAVE seen the company sponsor. Its copy quotes the
+company's own export row (placement count, sponsored pubs, lookalike pubs). Drafted by
+`scripts/seed_first_touch_drafts.py`; follow-ups by the 08:00 agent dig (4b).
+
+`icp_research` (the lookalike scan): we have NOT seen the company sponsor. Of the first 84 such
+leads exactly one appears in the sponsor export at all, so "saw you in X" would be fabricated and
+there is no count to quote. Drafted by `scripts/seed_icp_drafts.py`, deterministically and on the
+same 3/7/14 clock: the lists taking sponsors in the company's lane, the sponsors the corpus logs
+running in them, and the reader profile behind each. No model drafts it, because there is no
+prospect-specific dig to do.
+
+The ICP copy must never state a placement count (the gate looks one up against the lead's own
+export row, which does not exist, and returns a review), never claim the prospect appears
+anywhere, and never use back-reference or apology wording. The lane map is data in `LANES` inside
+that script and is expected to be tuned as lanes prove out.
+
+The ladder is OFF until `data/icp-drafts.enabled` exists in the repo. The 08:30 job runs the
+script either way; while the flag is absent it prints why and exits 0, so approving the copy is
+creating one file. Preview it with `python3 scripts/seed_icp_drafts.py --sample 3` (and
+`--touch 2 --sample 1` for a follow-up rung). `tests/test_icp_sequence.py` pins the selection and
+runs the composed copy through the real send gate.
+
 ### 4. Follow-up sequence (proof-first, adopted from lead-gen)
 Touches: day 3, day 7, day 14, then stop (4 touches = no).
 - Touch 1: outreach email above.
-- Touch 2 (day 3): one short bump, no re-pitch. "Bumping this — happy to send the
-  lookalike numbers."
+- Touch 2 (day 3): one short line of NEW information, never a nudge. The gate HARD-holds
+  back-reference wording ("bumping this", "following up", "circling back", "as I mentioned"),
+  so a bump cannot be written as a bump: attach one more list, the audience behind one they
+  have not seen, or the sponsors running in it.
 - Touch 3 (day 7): add ONE new corpus evidence — a newly-grounded sponsorship,
   competitor buying similar pubs, or momentum for a recommended pub.
 - Touch 4 (day 14): one final note — a concrete recent datapoint (competitor just
   bought a similar placement).
+- These four are the CORPUS ladder. ICP leads run the same clock on a different, deterministic
+  sequence (3c): the 08:00 intel job must not draft a follow-up for a `lead_source=icp_research`
+  lead, or the two sequences mix and the buyer gets the wrong proof.
 - Stop after 4. DROP below 2% after 200 sends → fix niche or evidence, not copy.
 
 ### 4b. Follow-up INTEL generation (the wow layer)

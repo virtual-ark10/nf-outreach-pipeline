@@ -183,5 +183,59 @@ class TheGateWouldNotHoldThisCopy(unittest.TestCase):
             self.assertEqual(leftovers, [])
 
 
+class TheRealGateWouldSendAnIcpDraft(unittest.TestCase):
+    """Run the actual gate over the composed copy, with the pad's transformations applied.
+
+    The regex assertions above are cheap; this is the real check. The gate decides whether a
+    draft may leave the building, so an ICP touch is put through it here, with the tracked links
+    the pad would mint and the corpus stub answering for the publications it names.
+    """
+    TOKEN = "bQ7fZ2mK4pRs9tVx1yA3"          # 20 chars, the shape the mint produces
+
+    class Corpus:
+        def placements(self, company):
+            return None                       # an ICP lead has no export row: never claim one
+
+        def publication(self, name):
+            for p in PUBS:
+                if p["name"].lower() == str(name).lower():
+                    return {"subscribers": p["subscribers"],
+                            "subscribersLabel": p["subscribersLabel"],
+                            "recentSponsors": p["recentSponsors"]}
+            return None
+
+    def draft_for(self, picks, touch):
+        lead = dict(LEAD, email="wei@crustdata.com", stage="leads", first_contact_at=None)
+        subject, text = icp.compose(lead, touch, picks)
+        text = re.sub(r"\s*:\s*\[TRACKED_LINK\]", "", text).replace("[Name]", "Ian Hinga")
+        html = "<p>" + "</p><p>".join(
+            f'<a href="https://newsletterfit.com/api/click?lt={self.TOKEN}">{p["name"]}</a>'
+            f' (est. {p["label"]})' for p in picks) + "</p>"
+        draft = {"id": icp.draft_id(lead, touch), "company": "Crustdata", "to": "wei@crustdata.com",
+                 "from": "ian@newsletterfit.com", "subject": subject, "text": text, "html": html}
+        ctx = {"ledger": {self.TOKEN: {"dest": "https://newsletterfit.com/app/publications/refactoring"}},
+               "leads": {"crustdata": lead}, "sent": {}, "replied": {},
+               "by_company": {"crustdata": [draft]}, "corpus": self.Corpus()}
+        return draft, ctx
+
+    def test_every_touch_passes_the_gate(self):
+        picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+        for touch in (1, 2, 3, 4):
+            draft, ctx = self.draft_for(picks if touch != 4 else picks[:1], touch)
+            verdict, findings = gate.gate(draft, ctx)
+            self.assertEqual(verdict, "PASS",
+                             f"touch {touch} came back {verdict}: {[f['message'] for f in findings]}")
+
+    def test_a_placement_count_would_be_the_one_thing_it_holds(self):
+        # Pins why the copy must never state one: the gate looks the number up against the
+        # lead's own export row, which an ICP lead does not have, and returns a REVIEW.
+        picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+        draft, ctx = self.draft_for(picks, 1)
+        draft["text"] += "\n\nWe logged 2 placements there.\n"
+        verdict, findings = gate.gate(draft, ctx)
+        self.assertEqual(verdict, "REVIEW")
+        self.assertIn("placements", " ".join(f["message"] for f in findings))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
