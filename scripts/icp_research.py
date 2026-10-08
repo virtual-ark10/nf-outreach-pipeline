@@ -434,15 +434,25 @@ def main() -> int:
     have = {norm(l.get("company")) for l in (payload.get("leads") or payload.get("data") or [])}
     print(f"  CRM holds {len(have)} lead(s)")
 
-    added = skipped = failed = 0
-    for c in importable[: args.limit]:
+    added = skipped = failed = attempted = 0
+    for c in importable:
         if norm(c["company"]) in have:
             skipped += 1
             continue
+        # --limit caps NEW leads attempted this run, so it is counted against attempts, not
+        # against the position in the list. Slicing (importable[:limit]) let accounts already
+        # in the CRM eat the whole budget: of 88 importable where 49 were present, only 11
+        # slots were left and everything below them was never examined at all.
+        if attempted >= args.limit:
+            print(f"  limit of {args.limit} new lead(s) reached; "
+                  f"{len(importable) - skipped - attempted} left unexamined")
+            break
         if not args.apply:
             print(f"  would import {c['company'][:26]:<26} {c['score']:>5} {c['band']:<9} "
                   f"{c['domain']}")
+            attempted += 1
             continue
+        attempted += 1
         code, resp = crm_call("POST", "/api/leads", token, lead_body(c))
         if code == 201:
             added += 1
