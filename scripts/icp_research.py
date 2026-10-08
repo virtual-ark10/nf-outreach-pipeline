@@ -1,30 +1,46 @@
 #!/usr/bin/env python3
-"""icp_research.py — the repeatable ICP-research pass: scan lookalike accounts, score them
-against the ICP rubric, and (with --apply) import the strong + workable ones as CRM leads
-for the existing enrichment + outreach chain to pick up.
+"""icp_research.py — the repeatable ICP-research pass: DISCOVER lookalike accounts
+from the Diffbot Knowledge Graph by the ICP bands, score them against the ICP
+rubric, and (with --apply) import the strong + workable ones as CRM leads for the
+existing enrichment + outreach chain to pick up.
 
-This is the automated form of the one-off Evertrace lookalike study. It is a company-first
-intake, exactly like scripts/import_candidates.py: a lead enters at stage 'leads' the moment
-its domain is known, and the address is found afterwards by the free site scrape / treg
-(scripts/discover_contacts.py) and Hunter (scripts/enrich_leads_hunter.py).
+Seeding is automated. The old hand-curated icp/seeds.txt is gone: candidates come
+from a type:Organization DQL query built from icp/icp_spec.json's `discovery` block
+(employee band, founding-date window, funding band, geography, and the category set
+per segment). The Diffbot firmographics (employees, funding, founding date, country,
+category) also drive the scoring, so a candidate is scored on the KG record rather
+than on whatever the people-search lanes happened to return.
 
-Data comes only from treg's FREE people lanes (quickenrich.people.search by company_url and
-dropleads.people.search by companyDomains). No paid route is called, so a daily run costs $0.
-Those lanes return real names, titles, LinkedIn URLs and firmographics, but no email — which is
-why the lead lands with an empty address and the Hunter step fills it.
+Entity-resolution rules, pinned here (they are the difference between a right answer
+and a confident wrong one):
+  * Never query by domain alone. In discovery the record IS linked, but any org
+    lookup elsewhere must constrain name AND domain (see the diffbot skills).
+  * Never surface Diffbot's free-text `summary`/`description`. It is not requested
+    and not written to any artifact. Headline/numeric fields only.
+  * Sort and rank; never take the first row. Candidates are ranked by `importance`
+    then `nbEmployees` (the KG holds stale dupes and regional sub-entities).
+  * Optionally gate on the NLP resolver confidence (`--verify`): `db entities`
+    returns a 0-1 Confidence; entities with no Diffbot ID are treated as unlinked.
+
+Contacts still come only from treg's FREE people lanes (quickenrich, dropleads) plus
+ONE free-tier Diffbot DQL call for discovery, so a daily run stays at $0. The lanes
+return real names, titles, LinkedIn URLs and firmographics but no email, which is why
+the lead lands with an empty address and Hunter fills it.
 
 Config:
-  icp/seeds.txt        seed domains, one per line, grouped by [segment]; "!" = never import
-  icp/icp_spec.json    ICP dimensions, scoring weights and the import bands
+  icp/icp_spec.json    ICP dimensions, scoring weights, import bands, and the
+                       `discovery` block (bands, geo, per-segment categories)
+  icp/names.json       optional display-name overrides (keyed by domain)
 
 Artifacts (rewritten each run) under --out (default /home/boxed/icp-research):
   leads_aggregated.json, leads_gtm_contacts.csv, icp_score_report.md, LEADS_brief.md
-  (The narrative ICP.md is authored once and kept alongside; it is not regenerated.)
 
 Usage
-  python3 scripts/icp_research.py                    # scan + score + write artifacts, plan only
-  python3 scripts/icp_research.py --apply --limit 40 # also import strong+workable as leads
-  python3 scripts/icp_research.py --refresh          # ignore the 20h raw cache and re-scan
+  python3 scripts/icp_research.py                    # discover + score, plan only
+  python3 scripts/icp_research.py --apply --limit 40 # also import strong+workable
+  python3 scripts/icp_research.py --pool 20          # cap how many candidates to pull
+  python3 scripts/icp_research.py --verify           # add the NLP confidence gate
+  python3 scripts/icp_research.py --refresh          # ignore the 20h contact cache
 """
 import argparse
 import csv
@@ -41,18 +57,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SEEDS = Path(os.environ.get("ICP_SEEDS", REPO / "icp" / "seeds.txt"))
 SPEC = Path(os.environ.get("ICP_SPEC", REPO / "icp" / "icp_spec.json"))
 NAMES = Path(os.environ.get("ICP_NAMES", REPO / "icp" / "names.json"))
 OUT = Path(os.environ.get("ICP_OUT", "/home/boxed/icp-research"))
 TREG = Path(os.environ.get("TREG_BIN", "/home/boxed/.local/bin/treg"))
+DB = Path(os.environ.get("DIFFBOT_BIN", Path.home() / ".diffbot/venv/bin/db"))
+DIFFBOT_CREDS = Path(os.environ.get("DIFFBOT_CREDENTIALS", Path.home() / ".diffbot/credentials"))
 ENV_FILE = Path(os.environ.get("NF_ENV_FILE", "/home/boxed/resend-pad/.env"))
 CRM = os.environ.get("NF_CRM_URL", "http://127.0.0.1:3002")
 CACHE_TTL_H = float(os.environ.get("ICP_CACHE_TTL_H", "20"))
+DQL_URL = "https://kg.diffbot.com/kg/v3/dql"
+DQL_FIELDS = ("name,homepageUri,nbEmployees,foundingDate,totalInvestment,"
+              "categories,location,importance")
 
 SIZE_CORE = (11, 200)
-WEST = re.compile(r"(US|DK|UK|NL|DE|FR|EU|EE|CZ|AU|IL|CA|SE|NO|FI|ES|IT|IE|London|Copenhagen|"
-                  r"Amsterdam|Tallinn|San Francisco|Palo Alto|New York)", re.I)
 GTM_RE = re.compile(r"(growth|marketing|demand gen|revenue|gtm|go.to.market|sales|"
                     r"partnership|founder|ceo|chief executive|business development)", re.I)
 NONGTM_RE = re.compile(r"(engineer|engineering|scientist|research|backend|frontend|devops|sre|"
@@ -67,37 +85,12 @@ ROLE_PATTERNS = [
 
 # --- config ----------------------------------------------------------------------
 
-def parse_seeds(path: Path):
-    """-> list of (domain, segment, importable)."""
-    rows, segment = [], "signal_data"
-    for raw in path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if not line:
-            continue
-        m = re.match(r"^\[(\w+)\]$", line)
-        if m:
-            segment = m.group(1)
-            continue
-        if line.startswith("#"):
-            continue
-        anchor = line.startswith("!")
-        domain = line.lstrip("!").strip().lower()
-        if domain:
-            rows.append((domain, segment, not anchor))
-    seen, uniq = set(), []
-    for d, s, imp in rows:
-        if d in seen:
-            continue
-        seen.add(d)
-        uniq.append((d, s, imp))
-    return uniq
-
-
 def load_spec(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def load_token() -> str:
+    """CRM token from the pad's .env."""
     try:
         for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
             line = line.strip()
@@ -114,6 +107,160 @@ def norm(v) -> str:
 
 def kebab(v) -> str:
     return re.sub(r"[^a-z0-9]+", "-", str(v or "").lower()).strip("-")
+
+
+# --- Diffbot discovery -----------------------------------------------------------
+
+def load_diffbot_token() -> str:
+    env = os.environ.get("DIFFBOT_API_TOKEN")
+    if env:
+        return env.strip()
+    try:
+        for line in DIFFBOT_CREDS.read_text(encoding="utf-8").splitlines():
+            if line.startswith("DIFFBOT_API_TOKEN="):
+                return line.split("=", 1)[1].strip()
+    except OSError:
+        pass
+    return ""
+
+
+def build_discovery_query(spec: dict) -> str:
+    """type:Organization DQL from the spec's discovery bands + per-segment categories."""
+    d = spec["discovery"]
+    b = d["bands"]
+    cats = [c for seg in d["segments"].values() for c in seg]
+    q = "type:Organization categories.name:or(" + ",".join(json.dumps(c) for c in cats) + ")"
+    q += f' range:nbEmployees:{b["employees"][0]}-{b["employees"][1]}'
+    q += " location.country.name:or(" + ",".join(json.dumps(c) for c in d["geo_countries"]) + ")"
+    q += f' foundingDate>="{b["founded"][0]}" foundingDate<="{b["founded"][1]}"'
+    q += f' totalInvestment.value>={b["funding_usd"][0]} totalInvestment.value<={b["funding_usd"][1]}'
+    return q
+
+
+def normalize_domain(uri) -> str:
+    if not uri:
+        return ""
+    u = str(uri).strip().lower()
+    u = re.sub(r"^https?://", "", u)
+    u = u.split("/", 1)[0]
+    u = u.split("?", 1)[0]
+    u = re.sub(r"^www\.", "", u)
+    return u if "." in u and len(u) >= 4 else ""
+
+
+def segment_of(categories, spec: dict) -> str:
+    """Map a record's Diffbot categories to an ICP segment. Highest score wins
+    (signal_data 3 > enrichment 2 > infra 1); default signal_data."""
+    seg_map = spec["discovery"]["segments"]
+    names = {str(c.get("name") if isinstance(c, dict) else c) for c in (categories or [])}
+    best, best_score = "signal_data", -1
+    for seg, cats in seg_map.items():
+        score = spec["segments"].get(seg, 0)
+        if names & set(cats) and score > best_score:
+            best, best_score = seg, score
+    return best
+
+
+def _diffbot_dql(dql: str, size: int, token: str):
+    url = DQL_URL + "?" + urllib.parse.urlencode(
+        {"token": token, "query": dql, "size": str(size), "get": DQL_FIELDS})
+    req = urllib.request.Request(url, headers={"accept": "application/json",
+                                               "User-Agent": "curl/8"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        return json.loads(r.read().decode())
+
+
+def entity_confidence(name: str) -> float:
+    """NLP-resolver confidence (0-1) for a name, or -1 when unavailable/unlinked.
+    Uses the diffbot CLI (`db entities`). Best-effort; never raises."""
+    if not DB.exists() or not name:
+        return -1.0
+    try:
+        p = subprocess.run([str(DB), "entities", name, "-f", "json"],
+                           capture_output=True, text=True, timeout=60)
+        d = json.loads(p.stdout or "{}")
+    except Exception:
+        return -1.0
+    ents = d.get("entities") or d.get("data") or []
+    best = -1.0
+    for e in ents:
+        if not isinstance(e, dict):
+            continue
+        if str(e.get("type") or "").lower() != "organization":
+            continue
+        if not (e.get("diffbotUri") or e.get("id")):  # unlinked -> not a KG record
+            continue
+        c = e.get("confidence")
+        if isinstance(c, (int, float)):
+            best = max(best, float(c))
+    return best
+
+
+def discover(spec: dict, pool: int, verify: bool = False):
+    """-> (seeds, firm). seeds = [(domain, segment, True)]; firm = {domain: {..}}.
+
+    One DQL call, ranked by importance then employees, deduped by domain, with the
+    free-text summary never requested. Returns ([], {}) on any API failure so the
+    caller can report it plainly instead of importing nothing silently.
+    """
+    token = load_diffbot_token()
+    if not token:
+        print("  no Diffbot token (~/.diffbot/credentials) - cannot discover")
+        return [], {}
+    dql = build_discovery_query(spec)
+    try:
+        d = _diffbot_dql(dql, max(1, min(pool, 250)), token)
+    except Exception as e:
+        print(f"  Diffbot discovery failed: {e}")
+        return [], {}
+    recs = []
+    for row in (d.get("data") or []):
+        e = row.get("entity") or {}
+        domain = normalize_domain(e.get("homepageUri"))
+        name = str(e.get("name") or "").strip()
+        if not domain or not name:
+            continue
+        cats = [c.get("name") if isinstance(c, dict) else c for c in (e.get("categories") or [])]
+        imp = e.get("importance")
+        recs.append({
+            "domain": domain,
+            "company": name,
+            "segment": segment_of(cats, spec),
+            "employee_count": e.get("nbEmployees"),
+            "country": ((e.get("location") or {}).get("country") or {}).get("name"),
+            "city": ((e.get("location") or {}).get("city") or {}).get("name"),
+            "industry": (cats[0] if cats else None),
+            "funding": (e.get("totalInvestment") or {}).get("value"),
+            "founded": (e.get("foundingDate") or {}).get("str", "").lstrip("d"),
+            "importance": imp if isinstance(imp, (int, float)) else 0.0,
+        })
+    # rank: importance, then headcount; never take the first row blindly
+    recs.sort(key=lambda r: (-r["importance"], -(r["employee_count"] or 0)))
+    seen, out = set(), []
+    for r in recs:
+        if r["domain"] in seen:
+            continue
+        seen.add(r["domain"])
+        out.append(r)
+    if verify:
+        keep = []
+        minc = spec["discovery"].get("min_entity_confidence", 0.6)
+        for r in out:
+            c = entity_confidence(r["company"])
+            if c < 0 or c >= minc:      # unlinked -1 keeps the record (KG already matched it)
+                keep.append(r)
+            else:
+                print(f"  drop {r['company']:<28} confidence {c:.2f} < {minc}")
+            time.sleep(13)              # free tier: 5 requests/minute
+        out = keep
+    seeds = [(r["domain"], r["segment"], True) for r in out]
+    firm = {r["domain"]: {
+        "company": r["company"], "employee_count": r["employee_count"],
+        "country": r["country"], "city": r["city"], "industry": r["industry"],
+        "funding": r["funding"], "founded": r["founded"], "importance": r["importance"],
+        "segment": r["segment"],
+    } for r in out}
+    return seeds, firm
 
 
 # --- treg free lanes -------------------------------------------------------------
@@ -155,7 +302,6 @@ def fetch_domain(domain: str) -> list:
             "domain": domain, "employee_count": r.get("companySize"), "revenue": None,
             "industry": r.get("industry"), "city": None, "country": None, "src": "dropleads",
         })
-    # merge by linkedin / name|title
     merged = {}
     for p in people:
         k = (p.get("linkedin") or "").rstrip("/").lower() or \
@@ -184,7 +330,8 @@ def scan(seeds, refresh: bool):
                       f"{len(cache)} domain(s)")
         except Exception:
             cache = {}
-    for domain, _seg, _imp in seeds:
+    for entry in seeds:
+        domain = entry[0]
         if domain in cache:
             continue
         people = fetch_domain(domain)
@@ -228,44 +375,58 @@ def role_of(title: str = "") -> str:
     return "other"
 
 
-def build(seeds, raw, spec, names=None):
+def build(seeds, raw, spec, names=None, firm=None):
     names = names or {}
+    firm = firm or {}
     seg_score = spec.get("segments", {})
+    geo = {c.lower() for c in spec.get("discovery", {}).get("geo_countries", [])}
     companies = []
-    for domain, seg, importable in seeds:
+    for entry in seeds:
+        domain, seg, importable = entry[0], entry[1], entry[2]
         people = raw.get(domain, [])
         if not people:
             continue
-        firm = {}
-        for p in people:
-            for k in ("employee_count", "revenue", "industry", "city", "country"):
-                if p.get(k) and not firm.get(k):
-                    firm[k] = p[k]
+        f = firm.get(domain, {})
+
+        def pick(k):
+            """Diffbot firmographic first (the KG record), then the people lanes."""
+            v = f.get(k)
+            if v not in (None, "", [], {}):
+                return v
+            return next((p.get(k) for p in people if p.get(k)), None)
+
+        employee_count = pick("employee_count")
+        revenue = pick("revenue")
+        industry = pick("industry")
+        country = pick("country")
+        city = pick("city")
+        funding = f.get("funding")
         gtm = [p for p in people
                if GTM_RE.search(p.get("title") or "") and not NONGTM_RE.search(p.get("title") or "")]
         gtm.sort(key=lambda p: ({"growth": 0, "marketing": 1, "cro": 2, "founder": 3}.get(
             role_of(p.get("title")), 4), str(p.get("full_name") or "")))
-        name = names.get(domain) or next((p.get("company") for p in people if p.get("company")),
-                                         domain)
+        name = f.get("company") or names.get(domain) or \
+            next((p.get("company") for p in people if p.get("company")), domain)
         ind = seg_score.get(seg, 2)
         top = gtm[0].get("title") if gtm else ""
         buyer = 3 if re.search(r"growth|marketing|demand|gtm|go.to.market", top, re.I) else \
             2 if re.search(r"founder|ceo|chief exec|owner", top, re.I) else 1 if gtm else 0
         has_founder = any(re.search(r"founder|ceo|chief exec", (p.get("title") or ""), re.I)
                           for p in gtm)
-        hq = ", ".join(x for x in (firm.get("city"), firm.get("country")) if x)
+        hq = ", ".join(x for x in (city, country) if x)
         acc = {
             "domain": domain, "company": name, "segment": seg, "importable": importable,
-            "hq": hq, "employee_count": firm.get("employee_count"), "revenue": firm.get("revenue"),
-            "industry": firm.get("industry"), "people_found": len(people),
+            "hq": hq, "employee_count": employee_count, "revenue": revenue,
+            "industry": industry, "people_found": len(people),
+            "funding": funding, "founded": f.get("founded"),
             "gtm_contacts": gtm[:3],
             "scores": {
                 "industry_fit": ind,
-                "size_fit": size_score(firm.get("employee_count")),
-                "geography": 3 if WEST.search(hq or "") else 2,
+                "size_fit": size_score(employee_count),
+                "geography": 3 if (country or "").lower() in geo else 2,
                 "tech_stack_fit": 3 if ind == 3 else 2,
                 "buyer_role_match": buyer,
-                "trigger_event_present": 3 if firm.get("revenue") else 2,
+                "trigger_event_present": 3 if funding else 2,
                 "budget_authority": 3 if (buyer == 3 or has_founder) else 2,
                 "timeline": 2,
             },
@@ -296,16 +457,17 @@ def write_artifacts(companies, spec):
                    indent=2), encoding="utf-8")
     with open(OUT / "leads_gtm_contacts.csv", "w", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["company", "domain", "hq", "employee_count", "revenue", "segment",
+        w.writerow(["company", "domain", "hq", "employee_count", "funding", "founded", "segment",
                     "icp_score", "band", "contact_name", "contact_title", "linkedin"])
         for c in companies:
             if not c["gtm_contacts"]:
                 w.writerow([c["company"], c["domain"], c["hq"], c["employee_count"],
-                            c["revenue"], c["segment"], c["score"], c["band"], "", "", ""])
+                            c.get("funding"), c.get("founded"), c["segment"], c["score"],
+                            c["band"], "", "", ""])
             for p in c["gtm_contacts"]:
                 w.writerow([c["company"], c["domain"], c["hq"], c["employee_count"],
-                            c["revenue"], c["segment"], c["score"], c["band"],
-                            p.get("full_name"), p.get("title"), p.get("linkedin")])
+                            c.get("funding"), c.get("founded"), c["segment"], c["score"],
+                            c["band"], p.get("full_name"), p.get("title"), p.get("linkedin")])
     lines = [f"# ICP score report — {spec['icp_name']}", "",
              f"_generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}_", "",
              "| Company | Domain | Score | Band | Segment | People |",
@@ -321,7 +483,7 @@ def write_artifacts(companies, spec):
 
     brief = [f"# Lead list — accounts matching the Evertrace-type ICP", "",
              f"_generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}; source: "
-             f"free treg people-search lanes (quickenrich, dropleads)_", "",
+             f"Diffbot KG discovery by ICP bands + free treg people-search lanes_", "",
              f"{len(companies)} companies with at least one person found; "
              f"{sum(c['people_found'] for c in companies)} people.", "",
              "Contact rule: GTM/go-to-market person first, founder/CEO as backup.", "",
@@ -379,28 +541,44 @@ def lead_body(c):
         "contact_title": top.get("title") or None,
         "contact_role": role,
         "tags": ["icp-research", c["band"], c["segment"]],
-        "angle": f"data/signal company matching the Evertrace-type ICP ({c['band']})",
+        "angle": f"data/signal company matched to the Evertrace-type ICP ({c['band']})",
         "notes": [f"ICP research {time.strftime('%Y-%m-%d')}: {c['band']} ({c['score']}/100), "
-                  f"segment {c['segment']}, {c['people_found']} contact(s) found via free "
-                  f"people-search lanes; address to be filled by Hunter."],
+                  f"segment {c['segment']}, discovered via Diffbot KG by the ICP bands "
+                  f"(emp {c.get('employee_count')}, funding {c.get('funding')}), "
+                  f"{c['people_found']} contact(s) via free people-search lanes; "
+                  f"address to be filled by Hunter."],
     }
 
 
+def _band_ok(band, floor):
+    order = {"strong": 2, "workable": 1, "marginal": 0, "disqualify": -1}
+    return order.get(band, -1) >= order.get(floor, 1)
+
+
 def main() -> int:
-    ap = argparse.ArgumentParser(description="ICP lookalike research -> CRM leads")
+    ap = argparse.ArgumentParser(description="ICP lookalike discovery (Diffbot) -> CRM leads")
     ap.add_argument("--apply", action="store_true", help="import to the CRM (default: plan only)")
-    ap.add_argument("--limit", type=int, default=60, help="max leads to import this run")
+    ap.add_argument("--limit", type=int, default=60, help="max NEW leads to import this run")
+    ap.add_argument("--pool", type=int, default=0, help="max candidates to discover (0 = spec pool)")
+    ap.add_argument("--verify", action="store_true", help="gate candidates on NLP-resolver confidence")
     ap.add_argument("--refresh", action="store_true", help="ignore the raw cache and re-scan")
     ap.add_argument("--min-band", default="workable", choices=["strong", "workable", "marginal"],
                     help="import this band or better (default workable)")
     args = ap.parse_args()
 
-    if not SEEDS.exists() or not SPEC.exists():
-        print(f"missing config: {SEEDS} or {SPEC} - aborting")
+    if not SPEC.exists():
+        print(f"missing config: {SPEC} - aborting")
         return 1
-    seeds = parse_seeds(SEEDS)
     spec = load_spec(SPEC)
-    print(f"  {len(seeds)} seed domain(s); import bands {spec['bands']['import']}")
+    pool = args.pool or int(spec.get("discovery", {}).get("pool", 250))
+    print(f"  discovering candidates from the Diffbot KG (pool {pool}); "
+          f"import bands {spec['bands']['import']}")
+
+    seeds, firm = discover(spec, pool, verify=args.verify)
+    print(f"  discovered {len(seeds)} candidate domain(s)")
+    if not seeds:
+        print("  nothing discovered (Diffbot returned no candidates) - aborting")
+        return 1
 
     raw = scan(seeds, args.refresh)
     names = {}
@@ -410,7 +588,7 @@ def main() -> int:
                      if not k.startswith("_")}
         except Exception:
             names = {}
-    companies = build(seeds, raw, spec, names)
+    companies = build(seeds, raw, spec, names, firm)
     write_artifacts(companies, spec)
     bands = {}
     for c in companies:
@@ -468,11 +646,6 @@ def main() -> int:
     print(f"\n  imported {added} | already present {skipped} | failed {failed}"
           f"{' | DRY RUN - nothing written' if not args.apply else ''}")
     return 0
-
-
-def _band_ok(band, floor):
-    order = {"strong": 2, "workable": 1, "marginal": 0, "disqualify": -1}
-    return order.get(band, -1) >= order.get(floor, 1)
 
 
 if __name__ == "__main__":

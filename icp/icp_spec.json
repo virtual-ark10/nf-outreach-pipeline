@@ -1,12 +1,45 @@
 {
   "icp_name": "Mid-market data/signal intelligence company (Evertrace lookalike)",
-  "derived_from": "anchor company evertrace.ai (Evertrace) public footprint + lookalike account scan; NOT closed customers",
+  "derived_from": "anchor company evertrace.ai (Evertrace) public footprint; candidates now discovered from the Diffbot Knowledge Graph by the ICP bands below, NOT a hand-curated seed list",
   "note": "Analyst-driven ICP (source skill: ideal-customer-profile, Step 1-ALT anchor-company mode). Provisional; refresh quarterly or after 10 real customers.",
   "anchor": "evertrace.ai",
   "segments": {
     "signal_data": 3,
     "enrichment": 2,
     "infra": 1
+  },
+  "discovery": {
+    "source": "diffbot",
+    "note": "type:Organization DQL built from these bands. The entity-resolution rules (name+domain, rank by importance/nbEmployees, never surface summary) live in scripts/icp_research.py and the diffbot skills.",
+    "bands": {
+      "employees": [11, 200],
+      "founded": ["2018-01-01", "2024-12-31"],
+      "funding_usd": [500000, 30000000]
+    },
+    "geo_countries": [
+      "United States", "United Kingdom", "Germany", "France", "Netherlands",
+      "Denmark", "Sweden", "Norway", "Finland", "Ireland", "Spain", "Italy",
+      "Estonia", "Czechia", "Canada", "Australia", "Israel"
+    ],
+    "segments": {
+      "signal_data": [
+        "Market Intelligence Software", "Sales Intelligence Software", "Data Analytics Software",
+        "Business Intelligence Software", "Analytics Platforms", "Data Science and Machine Learning Platforms",
+        "Market Research Services", "Financial Data Vendors", "Social Media Analytics Software",
+        "Content Analytics Software", "Predictive Analytics Software", "Data Visualization Tools",
+        "Data Management Platforms"
+      ],
+      "enrichment": [
+        "Data Quality Tools", "Data Management Software", "Data Integration Software",
+        "Data Labeling Software", "Provider Data Management Software", "Data Privacy Software"
+      ],
+      "infra": [
+        "Data Extraction Software", "Data Warehouse Solutions", "Database Software",
+        "Data Migration Software"
+      ]
+    },
+    "pool": 250,
+    "min_entity_confidence": 0.6
   },
   "dimensions": {
     "firmographics": {
