@@ -38,7 +38,7 @@
         "Data Migration Software"
       ]
     },
-    "pool": 250,
+    "pool": 80,
     "min_entity_confidence": 0.6
   },
   "dimensions": {

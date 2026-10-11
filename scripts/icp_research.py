@@ -40,7 +40,7 @@ Usage
   python3 scripts/icp_research.py --apply --limit 40 # also import strong+workable
   python3 scripts/icp_research.py --pool 20          # cap how many candidates to pull
   python3 scripts/icp_research.py --verify           # add the NLP confidence gate
-  python3 scripts/icp_research.py --refresh          # ignore the 20h contact cache
+  python3 scripts/icp_research.py --refresh          # ignore the 20h contact + discovery caches
 """
 import argparse
 import csv
@@ -66,6 +66,19 @@ DIFFBOT_CREDS = Path(os.environ.get("DIFFBOT_CREDENTIALS", Path.home() / ".diffb
 ENV_FILE = Path(os.environ.get("NF_ENV_FILE", "/home/boxed/resend-pad/.env"))
 CRM = os.environ.get("NF_CRM_URL", "http://127.0.0.1:3002")
 CACHE_TTL_H = float(os.environ.get("ICP_CACHE_TTL_H", "20"))
+# Discovery is a KG export, and the free plan meters those by credits (25 per record), so
+# the pool is pulled in small chunks that fit the plan's allowance and the result is
+# cached like the contact scan is: a morning with no credits left still imports from the
+# last good pool instead of importing nothing.
+DISCOVERY_CACHE = OUT / "discovery_cache.json"
+# A WEEK, not the 20h of the contact cache, and the difference is a credit budget, not a
+# taste: the cron fires every 24h, so a 20h TTL expires before every single run and the full
+# pool would be re-exported daily. KG records are metered at 25 credits each on the free
+# plan, so 80/day is roughly 2,400 records a month against a plan worth about 400. At a week
+# the pool costs about 340 a month, discovery stays fresh, and every daily run still imports
+# from the cached pool instead of importing nothing.
+DISCOVERY_TTL_H = float(os.environ.get("ICP_DISCOVERY_TTL_H", "168"))
+DQL_CHUNK = max(1, int(os.environ.get("ICP_DQL_CHUNK", "25")))
 DQL_URL = "https://kg.diffbot.com/kg/v3/dql"
 DQL_FIELDS = ("name,homepageUri,nbEmployees,foundingDate,totalInvestment,"
               "categories,location,importance")
@@ -161,13 +174,98 @@ def segment_of(categories, spec: dict) -> str:
     return best
 
 
-def _diffbot_dql(dql: str, size: int, token: str):
-    url = DQL_URL + "?" + urllib.parse.urlencode(
-        {"token": token, "query": dql, "size": str(size), "get": DQL_FIELDS})
-    req = urllib.request.Request(url, headers={"accept": "application/json",
-                                               "User-Agent": "curl/8"})
-    with urllib.request.urlopen(req, timeout=90) as r:
-        return json.loads(r.read().decode())
+class DiffbotError(RuntimeError):
+    """A DQL call the API refused, carrying the API's own words.
+
+    Diffbot answers a spent credit pool with HTTP 401 too, so the status line alone cannot
+    tell a bad token from a thin plan. The body can ("Insufficient credits. Requested=250,
+    allowed=36"), and `allowed` is the size the plan would still accept.
+    """
+
+    def __init__(self, code: int, message: str, allowed=None, wait=None):
+        super().__init__(f"HTTP {code}: {message}")
+        self.code = code
+        self.message = message
+        self.allowed = allowed
+        self.wait = wait          # seconds the API asked us to wait, when it says so
+
+
+def credit_allowance(message: str):
+    """Records the plan would allow, from 'Insufficient credits. ... allowed=N'."""
+    m = re.search(r"Insufficient credits.*?allowed\s*=\s*(\d+)", str(message or ""), re.I)
+    return int(m.group(1)) if m else None
+
+
+def retry_after_seconds(message: str, headers=None):
+    """Seconds the API asked us to wait, from the Retry-After header or its body text."""
+    try:
+        raw = str((headers or {}).get("Retry-After") or "").strip()
+    except Exception:
+        raw = ""
+    if raw.isdigit():
+        return float(raw)
+    m = re.search(r"Retry-After\s*\[([^\]]+)\]", str(message or ""))
+    if not m:
+        return None
+    units = {"day": 86400, "hour": 3600, "minute": 60, "second": 1}
+    total = sum(float(v) * units[u.lower()]
+                for v, u in re.findall(r"(\d+(?:\.\d+)?)\s*(day|hour|minute|second)",
+                                       m.group(1), re.I))
+    return total or None
+
+
+def _diffbot_dql(dql: str, size: int, token: str, offset: int = 0):
+    """One DQL call: prints the API's body on any refusal, retries only what can pass.
+
+    A 401 here is not proof of a bad token. The daily run died on "HTTP Error 401:
+    Unauthorized" on 2026-10-10 and again on 2026-10-11 while the same token and the same
+    query answered 200 minutes later; the body said why: "Insufficient credits.
+    Requested=250, allowed=36". Retrying the same size cannot fit, so a credit refusal is
+    raised immediately with `allowed` intact and the caller re-asks at the allowed size. A
+    bare credential or 5xx refusal keeps the one 20s retry, which is what a real blip
+    looks like.
+    """
+    params = {"token": token, "query": dql, "size": str(size), "get": DQL_FIELDS}
+    if offset:
+        params["from"] = str(offset)
+    url = DQL_URL + "?" + urllib.parse.urlencode(params)
+    transient = {408, 429, 500, 502, 503, 504}
+    last = None
+    for attempt in (1, 2):
+        req = urllib.request.Request(url, headers={"accept": "application/json",
+                                                   "User-Agent": "curl/8"})
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                return json.loads(r.read().decode())
+        except urllib.error.HTTPError as e:
+            try:
+                body = e.read().decode("utf-8", "replace")
+            except Exception:
+                body = ""
+            msg = body.strip()[:300] or str(getattr(e, "reason", "") or "")
+            allowed = credit_allowance(msg)
+            wait = retry_after_seconds(msg, e.headers)
+            print(f"  Diffbot DQL HTTP {e.code}: {msg}")     # the reason, not just the code
+            last = DiffbotError(e.code, msg, allowed, wait)
+            if allowed is not None:
+                raise last
+            if wait and wait > 3600:
+                print(f"  Diffbot DQL quota: the plan is out of records for another "
+                      f"{wait / 86400:.1f} day(s); not retrying")
+                raise last
+            if attempt == 1 and e.code in (transient | {401, 403}):
+                print(f"  Diffbot DQL HTTP {e.code}; retrying once in 20s")
+                time.sleep(20)
+                continue
+            raise last
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
+            last = e
+            if attempt == 1:
+                print(f"  Diffbot DQL {type(e).__name__}; retrying once in 20s")
+                time.sleep(20)
+                continue
+            raise
+    raise last if last else RuntimeError("Diffbot DQL failed")
 
 
 def entity_confidence(name: str) -> float:
@@ -196,25 +294,125 @@ def entity_confidence(name: str) -> float:
     return best
 
 
-def discover(spec: dict, pool: int, verify: bool = False):
+def discovery_cache_read(refresh: bool):
+    """The last good candidate pool and its age in hours, or (None, None)."""
+    if refresh or not DISCOVERY_CACHE.exists():
+        return None, None
+    try:
+        blob = json.loads(DISCOVERY_CACHE.read_text(encoding="utf-8"))
+    except Exception:
+        return None, None
+    recs = blob.get("records") or []
+    age = (time.time() - float(blob.get("_ts") or 0)) / 3600
+    return (recs, age) if recs else (None, None)
+
+
+def discovery_cache_write(rows):
+    try:
+        DISCOVERY_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        DISCOVERY_CACHE.write_text(json.dumps({"_ts": time.time(), "records": rows}, indent=2),
+                                   encoding="utf-8")
+    except OSError:
+        pass
+
+
+def fetch_candidates(dql: str, want: int, token: str):
+    """Pull up to `want` KG records in chunks, asking for what the plan will allow.
+
+    One call asking for 250 is how the daily job died: the free KG plan meters records (25
+    credits each), so a request bigger than the remaining allowance is refused outright
+    ("Insufficient credits. Requested=250, allowed=36") and the run imported nothing.
+    Chunks of 25 keep every call inside the allowance, and the `allowed` figure the API
+    returns is remembered: it sizes that retry and every ask after it, so the plan is asked
+    once rather than once per chunk. Paging uses `from`; a chunk that returns only domains
+    we already hold ends the loop, so a plan that ignores `from` cannot spend credits on the
+    same rows twice. Returns (rows, note).
+    """
+    rows, seen, note = [], set(), ""
+    ceiling = None                     # the plan's own figure, once it has told us
+    while len(rows) < want:
+        size = min(DQL_CHUNK, want - len(rows))
+        if ceiling:
+            size = min(size, ceiling)
+        try:
+            d = _diffbot_dql(dql, size, token, offset=len(rows))
+        except DiffbotError as e:
+            if e.allowed is None:
+                note = (f"the KG plan is out of records for another {e.wait / 86400:.0f} day(s)"
+                        if (e.wait or 0) > 3600 else f"the API refused the call ({e.message})")
+                break
+            if e.allowed < 1:
+                note = f"the plan has no records left to give ({e.message})"
+                break
+            ceiling = e.allowed
+            ask = min(e.allowed, want - len(rows))
+            print(f"  credit allowance is {e.allowed} record(s); asking for {ask} instead")
+            try:
+                d = _diffbot_dql(dql, ask, token, offset=len(rows))
+                size = ask
+            except Exception as e2:
+                note = f"the allowed-size retry failed ({e2})"
+                break
+        except Exception as e:
+            note = f"the DQL call failed ({e})"
+            break
+        got = d.get("data") or []
+        fresh = []
+        for row in got:
+            dom = normalize_domain(((row.get("entity") or {}).get("homepageUri")))
+            if dom and dom not in seen:
+                seen.add(dom)
+                fresh.append(row)
+        rows += fresh
+        if len(got) < size:
+            break                      # the KG has nothing more for this query
+        if not fresh:
+            note = "the KG repeated rows it had already returned; stopping"
+            break
+    return rows, note
+
+
+def discover(spec: dict, pool: int, verify: bool = False, refresh: bool = False):
     """-> (seeds, firm). seeds = [(domain, segment, True)]; firm = {domain: {..}}.
 
-    One DQL call, ranked by importance then employees, deduped by domain, with the
-    free-text summary never requested. Returns ([], {}) on any API failure so the
-    caller can report it plainly instead of importing nothing silently.
+    Discovery is a KG export and the free plan meters it, so the pool is pulled inside the
+    plan's allowance and cached on disk: a run that finds the plan empty imports from the
+    last good pool rather than importing nothing. Ranked by importance then employees,
+    deduped by domain, with the free-text summary never requested. Returns ([], {}) only
+    when there is neither a record nor a cache to work from.
     """
     token = load_diffbot_token()
     if not token:
         print("  no Diffbot token (~/.diffbot/credentials) - cannot discover")
         return [], {}
     dql = build_discovery_query(spec)
-    try:
-        d = _diffbot_dql(dql, max(1, min(pool, 250)), token)
-    except Exception as e:
-        print(f"  Diffbot discovery failed: {e}")
-        return [], {}
+    want = max(1, min(pool, 250))
+    cached, age = discovery_cache_read(refresh)
+    if cached is not None and age is not None and age < DISCOVERY_TTL_H:
+        print(f"  discovery cache is {age:.1f}h old (< {DISCOVERY_TTL_H:g}h): reusing "
+              f"{len(cached)} record(s)")
+        rows = cached[:want]
+    else:
+        try:
+            rows, note = fetch_candidates(dql, want, token)
+        except Exception as e:               # a bad pool must not crash the run
+            rows, note = [], f"the API call failed ({e})"
+        if note:
+            print(f"  discovery stopped early: {note}")
+        if rows:
+            discovery_cache_write(rows)
+            print(f"  discovered {len(rows)} KG record(s) of {want} asked for")
+        elif cached is not None:
+            print(f"  no records available from the KG right now; reusing the cached pool "
+                  f"from {age:.1f}h ago ({len(cached)} record(s))")
+            rows = cached[:want]
+        else:
+            print("  Diffbot discovery failed: no records returned and no cached pool")
+            if note:
+                print(f"  reason: {note}")
+            return [], {}
     recs = []
-    for row in (d.get("data") or []):
+    for row in rows:
         e = row.get("entity") or {}
         domain = normalize_domain(e.get("homepageUri"))
         name = str(e.get("name") or "").strip()
@@ -561,7 +759,8 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=60, help="max NEW leads to import this run")
     ap.add_argument("--pool", type=int, default=0, help="max candidates to discover (0 = spec pool)")
     ap.add_argument("--verify", action="store_true", help="gate candidates on NLP-resolver confidence")
-    ap.add_argument("--refresh", action="store_true", help="ignore the raw cache and re-scan")
+    ap.add_argument("--refresh", action="store_true",
+                    help="ignore the 20h contact and discovery caches and refetch both")
     ap.add_argument("--min-band", default="workable", choices=["strong", "workable", "marginal"],
                     help="import this band or better (default workable)")
     args = ap.parse_args()
@@ -574,10 +773,10 @@ def main() -> int:
     print(f"  discovering candidates from the Diffbot KG (pool {pool}); "
           f"import bands {spec['bands']['import']}")
 
-    seeds, firm = discover(spec, pool, verify=args.verify)
+    seeds, firm = discover(spec, pool, verify=args.verify, refresh=args.refresh)
     print(f"  discovered {len(seeds)} candidate domain(s)")
     if not seeds:
-        print("  nothing discovered (Diffbot returned no candidates) - aborting")
+        print("  nothing discovered (no KG records and no cached pool) - aborting")
         return 1
 
     raw = scan(seeds, args.refresh)

@@ -14,10 +14,15 @@ Two things are pinned here:
    the free-text summary is never requested, and a bad domain is dropped.
 """
 import io
+import json
 import os
 import sys
+import tempfile
+import urllib.error
+import time
 import unittest
 from contextlib import redirect_stdout
+from pathlib import Path
 from unittest import mock
 
 NF_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -70,8 +75,9 @@ class ImportLimit(unittest.TestCase):
                 mock.patch.object(icp, "load_token", lambda: "t"), \
                 mock.patch.object(icp, "load_spec", lambda p: SPEC_MIN), \
                 mock.patch.object(icp, "discover",
-                                  lambda spec, pool, verify=False: ([("d.com", "signal_data", True)],
-                                                                    {"d.com": {"company": "D"}})), \
+                                  lambda spec, pool, verify=False, refresh=False:
+                                  ([("d.com", "signal_data", True)],
+                                   {"d.com": {"company": "D"}})), \
                 mock.patch.object(icp, "scan", lambda seeds, refresh: {}), \
                 mock.patch.object(icp, "build",
                                   lambda seeds, raw, spec, names=None, firm=None: list(accounts)), \
@@ -119,7 +125,8 @@ class ImportLimit(unittest.TestCase):
     def test_discovery_failure_aborts_cleanly(self):
         argv = ["icp_research.py"]
         with mock.patch.object(icp, "load_spec", lambda p: SPEC_MIN), \
-                mock.patch.object(icp, "discover", lambda spec, pool, verify=False: ([], {})), \
+                mock.patch.object(icp, "discover",
+                                  lambda spec, pool, verify=False, refresh=False: ([], {})), \
                 mock.patch.object(sys, "argv", argv):
             out = io.StringIO()
             with redirect_stdout(out):
@@ -130,6 +137,26 @@ class ImportLimit(unittest.TestCase):
 
 class Discovery(unittest.TestCase):
     """The Diffbot discovery path, with the DQL call stubbed."""
+
+    def setUp(self):
+        """Point the discovery cache at a temp file.
+
+        ICP_OUT is the live artifact dir, so an unisolated cache lets a real run's pool
+        shadow the stubs below and makes the result depend on the wall clock.
+        """
+        self.tmp = tempfile.mkdtemp(prefix="icp_test_")
+        self.cache = Path(self.tmp) / "discovery_cache.json"
+        self._saved_cache = icp.DISCOVERY_CACHE
+        icp.DISCOVERY_CACHE = self.cache
+
+    def tearDown(self):
+        icp.DISCOVERY_CACHE = self._saved_cache
+
+    def _age_cache(self, hours: float):
+        """Make the cache look `hours` old, so the API path is actually exercised."""
+        blob = json.loads(self.cache.read_text(encoding="utf-8"))
+        blob["_ts"] = time.time() - hours * 3600
+        self.cache.write_text(json.dumps(blob), encoding="utf-8")
 
     def test_query_uses_the_spec_bands(self):
         q = icp.build_discovery_query(SPEC_MIN)
@@ -176,7 +203,7 @@ class Discovery(unittest.TestCase):
         ]}
         seen = {}
 
-        def fake_dql(dql, size, token):
+        def fake_dql(dql, size, token, offset=0):
             seen["dql"] = dql
             seen["get"] = icp.DQL_FIELDS
             return payload
@@ -191,8 +218,119 @@ class Discovery(unittest.TestCase):
         self.assertEqual(firm["high.com"]["country"], "Germany")
         self.assertNotIn("summary", seen["get"])                            # rule: never request it
 
+    def test_credit_refusal_is_read_from_the_body(self):
+        """The daily run called this 401 "Unauthorized" and blamed the token for two days."""
+        self.assertEqual(icp.credit_allowance("Insufficient credits. Requested=250, allowed=36"), 36)
+        self.assertEqual(icp.credit_allowance("Insufficient credits. Requested=100, allowed=11"), 11)
+        self.assertIsNone(icp.credit_allowance('{"error":"Unauthorized"}'))
+        self.assertIsNone(icp.credit_allowance(""))
+
+    def test_thin_plan_is_asked_for_what_it_allows(self):
+        """A 250-record pull cannot fit a 36-record allowance, so the ask is resized."""
+        asks = []
+
+        def fake_dql(dql, size, token, offset=0):
+            asks.append(size)
+            if size > 7:
+                raise icp.DiffbotError(
+                    401, f"Insufficient credits. Requested={size}, allowed=7", 7)
+            return {"data": [{"entity": {"name": f"N{offset + i}",
+                                         "homepageUri": f"d{offset + i}.com"}}
+                             for i in range(size)]}
+
+        with mock.patch.object(icp, "_diffbot_dql", fake_dql):
+            rows, note = icp.fetch_candidates("q", 40, "t")
+        self.assertEqual(asks[0], icp.DQL_CHUNK)        # chunked: never 40 in one call
+        self.assertIn(7, asks)                          # re-asked at the allowed size
+        self.assertEqual(asks.count(icp.DQL_CHUNK), 1)  # the refusal is learned, not repeated
+        self.assertEqual(len(rows), 40)                 # the pool asked for, filled at 7 a call
+        self.assertEqual(len({r["entity"]["homepageUri"] for r in rows}), 40)   # no double spend
+        self.assertEqual(note, "")
+
+    def test_empty_plan_imports_from_yesterdays_pool(self):
+        """Morning with no credits left: the cached pool is the supply, not an empty run."""
+        payload = {"data": [{"entity": {"name": "Cached Co", "homepageUri": "cached.com",
+                                        "importance": 5,
+                                        "categories": [{"name": "Sales Intelligence Software"}]}}]}
+
+        with mock.patch.object(icp, "load_diffbot_token", lambda: "t"), \
+                mock.patch.object(icp, "_diffbot_dql", lambda *a, **k: payload):
+            seeds, _ = icp.discover(SPEC_MIN, pool=10)
+        self.assertEqual([s[0] for s in seeds], ["cached.com"])
+        self.assertTrue(self.cache.exists())            # the good pool is kept for tomorrow
+
+        self._age_cache(30)                             # yesterday's pool
+
+        def refused(dql, size, token, offset=0):
+            raise icp.DiffbotError(401, "Insufficient credits. Requested=10, allowed=0", 0)
+
+        with mock.patch.object(icp, "load_diffbot_token", lambda: "t"), \
+                mock.patch.object(icp, "_diffbot_dql", refused):
+            seeds, _ = icp.discover(SPEC_MIN, pool=10)
+        self.assertEqual([s[0] for s in seeds], ["cached.com"])
+
+    def test_the_discovery_ttl_outlives_the_daily_cron(self):
+        """A TTL shorter than the cron period re-exports the whole pool every single day."""
+        self.assertGreater(icp.DISCOVERY_TTL_H, 24)
+
+    def test_refresh_ignores_a_fresh_discovery_cache(self):
+        """--refresh is the escape hatch: it must refetch, not replay the cache."""
+        calls = []
+
+        def fake_dql(dql, size, token, offset=0):
+            calls.append(size)
+            return {"data": [{"entity": {"name": "Fresh Co", "homepageUri": "fresh.com",
+                                         "importance": 5, "categories": []}}]}
+
+        with mock.patch.object(icp, "load_diffbot_token", lambda: "t"), \
+                mock.patch.object(icp, "_diffbot_dql", fake_dql):
+            icp.discover(SPEC_MIN, pool=10)             # writes a fresh cache
+            self.assertEqual(len(calls), 1)
+            icp.discover(SPEC_MIN, pool=10)             # cache is used
+            self.assertEqual(len(calls), 1)
+            icp.discover(SPEC_MIN, pool=10, refresh=True)
+        self.assertEqual(len(calls), 2)
+
+    def test_retry_after_is_read_from_the_body_or_the_header(self):
+        self.assertEqual(icp.retry_after_seconds('"Retry-After [28 days, 05:33:57]"'),
+                         28 * 86400)
+        self.assertEqual(icp.retry_after_seconds("Retry-After [2 hours]"), 7200)
+        self.assertEqual(icp.retry_after_seconds("x", {"Retry-After": "30"}), 30)
+        self.assertIsNone(icp.retry_after_seconds("Insufficient credits. allowed=11"))
+        self.assertIsNone(icp.retry_after_seconds(""))
+
+    def test_a_month_long_quota_wall_is_not_slept_on(self):
+        """A 28-day Retry-After is a dead plan: two 20s retries only delay the report."""
+        body = (b'{"code":429,"message":"Too many requests. '
+                b'Retry-After [28 days, 05:33:57]"}')
+        err = urllib.error.HTTPError("https://kg.diffbot.com/kg/v3/dql", 429,
+                                     "Too Many Requests", {}, io.BytesIO(body))
+
+        def boom(*a, **k):
+            raise err
+
+        with mock.patch.object(icp.urllib.request, "urlopen", boom), \
+                mock.patch.object(icp.time, "sleep",
+                                  side_effect=AssertionError("slept on a 28-day wall")):
+            with self.assertRaises(icp.DiffbotError) as cm:
+                icp._diffbot_dql("q", 25, "t")
+        self.assertGreater(cm.exception.wait, 3600)
+
+    def test_an_exhausted_plan_says_so_instead_of_reading_as_a_rate_limit(self):
+        def refused(dql, size, token, offset=0):
+            raise icp.DiffbotError(429, "Too many requests. Retry-After [28 days, 05:33:57]",
+                                   None, 28 * 86400)
+
+        with mock.patch.object(icp, "load_diffbot_token", lambda: "t"), \
+                mock.patch.object(icp, "_diffbot_dql", refused):
+            out = io.StringIO()
+            with redirect_stdout(out):
+                seeds, firm = icp.discover(SPEC_MIN, pool=10)
+        self.assertEqual((seeds, firm), ([], {}))
+        self.assertIn("out of records for another 28 day", out.getvalue())
+
     def test_discovery_returns_empty_on_api_failure(self):
-        def boom(dql, size, token):
+        def boom(dql, size, token, offset=0):
             raise RuntimeError("HTTP 500")
 
         with mock.patch.object(icp, "load_diffbot_token", lambda: "t"), \
