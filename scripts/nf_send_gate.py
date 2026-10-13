@@ -27,6 +27,7 @@ import os
 import re
 import sqlite3
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -34,6 +35,7 @@ import urllib.request
 # Lead quality preference lives in one place (scripts/_lead_rank.py).
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _lead_rank import quality_rank                    # noqa: E402
+import icp_fit                                          # noqa: E402
 
 PAD = "http://127.0.0.1:3001"
 CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
@@ -46,6 +48,11 @@ EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
 CAP_FILE = "/home/boxed/nf-outreach-pipeline/data/send-cap.txt"
 RAMP_FILE = "/home/boxed/nf-outreach-pipeline/data/send-ramp.txt"
 DEFAULT_CAP = 50
+# Seconds between sends. The pad throttles its own API at 60 requests a minute per IP, and
+# Resend's own limit is around two a second, so firing the whole cap as fast as the socket
+# takes it throws the tail away: the 2026-10-12 run sent 31 of 50 and got 429 on the rest.
+# At 1.3s a run of 50 takes about a minute and stays inside both limits.
+SEND_PACE_S = float(os.environ.get("NF_SEND_PACE", "1.3"))
 
 
 def cap_for_date(day):
@@ -124,6 +131,11 @@ def pad_call(method, path, payload=None):
             return r.status, json.loads(r.read().decode() or "{}")
     except urllib.error.HTTPError as e:
         return e.code, {"error": e.read().decode()[:200]}
+    except (urllib.error.URLError, ConnectionError, TimeoutError, OSError) as e:
+        # The pad restarts under its watchdog — one was restarted mid-run on 2026-10-12 by a
+        # health probe its own rate limiter had answered 429. A refused connection is a state
+        # to report, not a traceback: the drafts stay in the queue and the next run sends them.
+        return 0, {"error": f"pad unreachable: {e}"}
 
 
 # --- corpus facts ---------------------------------------------------------------------------
@@ -330,7 +342,13 @@ def gate(draft, ctx):
         if "reply" in str(lead.get("stage") or "").lower():
             hard(f"lead is in stage {lead.get('stage')!r}: an active conversation, do not cold-send")
     sent, replied = ctx["sent"], ctx["replied"]
-    hist = sent.get(company.lower(), [])
+    # History is keyed by the CRM lead's own id, not by the company string. The two usually
+    # coincide, but a draft whose company name happens to equal another lead's id must not
+    # inherit that lead's history: Profound (the AI search platform) was held as "already
+    # emailed in this campaign" because an unrelated lead for the Dutch monitoring-equipment
+    # maker of the same name carried the id "profound" and had taken two touches.
+    hist_key = str((lead or {}).get("id") or company).lower()
+    hist = sent.get(hist_key, [])
     contacted = bool((lead or {}).get("first_contact_at")) or bool(hist)
     stage = str((lead or {}).get("stage") or "").lower()
     if contacted:
@@ -345,8 +363,35 @@ def gate(draft, ctx):
             soft("no due date on the lead; confirm the cadence before this goes out")
         if stage in ("lead", "leads") and hist:
             hard(f"already emailed in this campaign ({hist[0] or 'first touch'})")
-    if replied.get(company.lower()):
-        hard(f"prospect replied already: {replied[company.lower()][:2]}")
+    # A first touch for a lead outside the ICP does not send, whichever script drafted it. The
+    # intake and the drafter both check (scripts/icp_fit.py), but a draft can predate the rule
+    # and this is the last word before an inbox. A follow-up on a conversation already in
+    # flight is not re-judged: those leads are in the pipeline whatever their size.
+    if not contacted:
+        fit, why, detail = icp_fit.verdict(
+            company, (lead or {}).get("domain") or (lead or {}).get("website"))
+        if not fit:
+            hard(f"off-ICP: {detail}")
+    if replied.get(hist_key):
+        hard(f"prospect replied already: {replied[hist_key][:2]}")
+
+    # 3b. the address has to belong to the company the corpus has evidence for. A corpus lead
+    # imported before the domain-resolution pass carries no domain at all, so its sponsor export
+    # row was matched on the company name alone. That is how a lead for "Profound" (the AI search
+    # platform) came to hold almar@profound.nl (a Dutch monitoring-equipment maker) and took two
+    # touches meant for the platform. With no recorded domain there is nothing to match an
+    # address against, so a first touch waits until the domain is resolved. A follow-up on a
+    # conversation already in flight is not re-judged, the same way the off-ICP rule is not.
+    if lead and not contacted:
+        lead_dom = icp_fit.norm_domain(str(lead.get("domain") or lead.get("website") or ""))
+        to_dom = icp_fit.norm_domain(to.split("@")[-1] if "@" in to else "")
+        if not lead_dom:
+            hard("no domain recorded on the lead: the address cannot be matched against its "
+                 "sponsor export row (resolve the domain before sending)")
+        elif to_dom and to_dom != lead_dom and not to_dom.endswith("." + lead_dom) \
+                and not lead_dom.endswith("." + to_dom):
+            soft(f"address is on {to_dom}, the lead's recorded domain is {lead_dom}: confirm "
+                 f"this is the same company before sending")
 
     # 4. corpus facts: placement count, publications, subscriber labels
     claimed = []
@@ -438,6 +483,9 @@ def main():
     args = ap.parse_args()
 
     st, payload = pad_call("GET", "/api/drafts")
+    if st == 0:
+        print(f"  {payload.get('error', 'pad unreachable')} — nothing was gated or sent")
+        return 1
     drafts = payload.get("data") if isinstance(payload, dict) else payload
     # An empty queue answers {"data": []}; `payload or ...` would turn that into the wrapper
     # dict and the loop would iterate its keys, so unwrap explicitly and treat [] as empty.
@@ -555,11 +603,18 @@ def main():
 
         queue = sorted([r for r in results if r["verdict"] == "PASS"], key=kind_and_score)
         print(f"  cap {cap} ({cap_src}); {len(queue)} clean draft(s) eligible")
-        for r in queue[:cap]:
+        for i, r in enumerate(queue[:cap]):
+            if i:
+                time.sleep(SEND_PACE_S)          # pace the burst; see SEND_PACE_S
             code, body = pad_call("POST", f"/api/drafts/{urllib.parse.quote(str(r['id']))}/send", {})
             r["sent"] = code == 200
             r["send_response"] = body if code != 200 else "queued"
             print(f"  send {r['id']}: HTTP {code} {json.dumps(body)[:160]}")
+            if code == 0:
+                left = len(queue[:cap]) - i - 1
+                print(f"  the pad went away mid-run; stopping here. "
+                      f"{left} clean draft(s) stay queued for the next run")
+                break
         if len(queue) > cap:
             print(f"  {len(queue) - cap} clean draft(s) held for capacity this run (cap {cap}); "
                   f"they go out on the next run")

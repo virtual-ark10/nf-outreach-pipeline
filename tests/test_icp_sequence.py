@@ -36,7 +36,10 @@ PUBS = [
 
 LEAD = {"id": "crustdata", "company": "Crustdata", "contact_name": "Wei Zhang",
         "contact_title": "Head of Growth", "industry": "Software Development",
-        "lead_source": "icp_research", "email": "wei@crustdata.com", "score": 98}
+        "lead_source": "icp_research", "email": "wei@crustdata.com", "score": 98,
+        # Every live ICP lead carries the domain its lane resolved (0 of 104 lack one), and the
+        # gate holds a first touch whose lead has no domain to match the address against.
+        "domain": "crustdata.com"}
 
 
 def search_of(pubs):
