@@ -71,10 +71,10 @@ LANES = (
 )
 
 # A generic mailbox is not a person: the composer greets a human and the finder works from a
-# name. Only person-shaped addresses are allowed to fill an empty email column.
-ROLE_LOCAL = re.compile(
-    r"^(info|hello|contact|team|sales|admin|support|hi|ask|help|enquiries|enquiry|inquiries|"
-    r"office|mail|general|care|hr|jobs|press|billing|no-?reply|noreply|service|marketing)$", re.I)
+# name. Only person-shaped addresses are allowed to fill an empty email column. The list lives
+# in one place now (scripts/_address_rules.py) so the gate, the discovery pass and this pass
+# cannot disagree about what a queue address is.
+from _address_rules import is_role_address              # noqa: E402  (path set just above)
 
 STOPWORDS = {"the", "inc", "llc", "ltd", "limited", "group", "co", "corp", "corporation", "ai",
              "io", "com", "hq", "app", "labs", "lab", "technologies", "technology", "company"}
@@ -238,7 +238,7 @@ def people_of(data) -> list:
             "role": role_of(title),
             "company": str(r.get("company_name") or r.get("companyName") or "").strip(),
             "domain": str(r.get("company_url") or "").strip(),
-            "email": email if "@" in email and not ROLE_LOCAL.match(email.split("@")[0]) else "",
+            "email": email if "@" in email and not is_role_address(email) else "",
         })
     return out
 
@@ -433,9 +433,13 @@ def main() -> int:
                     "contact_title": best["title"] or None,
                     "contact_role": best["role"]}
             src = f"{best['lane']} (free)"
-            if not str(lead.get("email") or "").strip() and best["email"]:
+            # A stored shared mailbox is not an address either: a person's own address from the
+            # lanes is strictly better, so it replaces support@/info@ rather than deferring to it.
+            stored_email = str(lead.get("email") or "").strip()
+            if best["email"] and (not stored_email or is_role_address(stored_email)):
                 body["email"] = best["email"]
-                src += f"; address {best['email']}"
+                src += (f"; address {best['email']}"
+                        + (f" replacing the shared mailbox {stored_email}" if stored_email else ""))
             if not args.apply:
                 print(f"  plan      {company:<30} {domain:<26} {best['name']:<24} "
                       f"{best['role']:<13} {best['title'][:34]:<34} [{best['lane']}] "

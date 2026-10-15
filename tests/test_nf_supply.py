@@ -95,23 +95,32 @@ class BrandRulesAreShared(unittest.TestCase):
 
 class Targets(unittest.TestCase):
     LEADS = [
-        {"id": "a", "company": "No Address", "domain": "a.com", "stage": "leads", "email": None},
+        {"id": "a", "company": "No Address", "domain": "a.com", "stage": "leads",
+         "email": None, "priority": "MEDIUM"},
         {"id": "b", "company": "Address No Name", "domain": "b.com", "stage": "leads",
-         "email": "info@b.com", "contact_name": None},
+         "email": "jane@b.com", "contact_name": None, "priority": "HIGH"},
         {"id": "c", "company": "Complete", "domain": "c.com", "stage": "leads",
-         "email": "info@c.com", "contact_name": "Jane Doe"},
+         "email": "jane@c.com", "contact_name": "Jane Doe", "priority": "HIGH"},
         {"id": "d", "company": "Already Emailed", "domain": "d.com", "stage": "first_email",
-         "email": "info@d.com"},
+         "email": "jane@d.com"},
         {"id": "e", "company": "Unsubscribed", "domain": "e.com", "stage": "leads",
-         "email": "info@e.com", "unsubscribed": 1},
+         "email": "jane@e.com", "unsubscribed": 1},
         {"id": "f", "company": "No Domain", "domain": None, "stage": "leads", "email": None},
         {"id": "g", "company": "Bounced", "domain": "g.com", "stage": "leads",
-         "email": "info@g.com", "bounced": 1},
+         "email": "jane@g.com", "bounced": 1},
+        # Holds a shared mailbox and a name: complete on paper, unsendable in fact, because the
+        # draft would greet Jane and land in the support queue.
+        {"id": "h", "company": "Queue Mailbox", "domain": "h.com", "stage": "leads",
+         "email": "support@h.com", "contact_name": "Jane Doe", "priority": "HIGH"},
     ]
 
     def test_every_lead_that_cannot_be_drafted_yet_is_a_target(self):
         ids = [l["id"] for l in dc.targets_from(self.LEADS, 20)]
-        self.assertEqual(ids, ["a", "b"])          # no address first, then no name
+        self.assertEqual(ids, ["a", "h", "b"])   # no usable address, then no name
+
+    def test_a_shared_mailbox_does_not_count_as_an_address(self):
+        ids = [l["id"] for l in dc.targets_from(self.LEADS, 20)]
+        self.assertIn("h", ids)
 
     def test_contacted_suppressed_and_domainless_leads_are_left_alone(self):
         ids = [l["id"] for l in dc.targets_from(self.LEADS, 20)]

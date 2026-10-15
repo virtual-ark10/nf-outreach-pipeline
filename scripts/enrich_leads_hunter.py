@@ -27,6 +27,7 @@ CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
 # Lead quality preference lives in one place (scripts/_lead_rank.py).
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _lead_rank import quality_rank                    # noqa: E402
+from _address_rules import is_role_address             # noqa: E402
 CRM_API = "http://127.0.0.1:3002"
 HUNTER = "https://api.hunter.io/v2"
 ROLE_BY_DEPARTMENT = {
@@ -86,15 +87,30 @@ print(f"  Hunter plan {acct.get('plan_name')}: {remaining} request(s) remaining"
 
 con = sqlite3.connect(f"file:{CRM_DB}?mode=ro", uri=True)
 con.row_factory = sqlite3.Row
+# A lead needs this pass when it has no usable address: an empty column, or one holding a
+# shared role mailbox (support@/info@), which reaches a queue rather than the buyer. Both are
+# read here and the role-mailbox test is applied in Python (scripts/_address_rules.py), so the
+# definition of "a queue address" stays in one place.
 leads = [dict(r) for r in con.execute(
-    "SELECT id, company, domain, priority FROM leads WHERE stage='leads' "
-    "AND COALESCE(email,'') = '' AND deleted_at IS NULL AND COALESCE(domain,'') <> ''")]
+    "SELECT id, company, domain, priority, lead_source, email FROM leads WHERE stage='leads' "
+    "AND deleted_at IS NULL AND COALESCE(domain,'') <> ''")]
 con.close()
+leads = [l for l in leads
+         if not str(l.get("email") or "").strip() or is_role_address(l.get("email"))]
 # Rank here rather than in SQL so the preference rule lives in exactly one place
 # (scripts/_lead_rank.py) instead of being restated as a CASE. The tier column is "priority";
 # the engine serves it to the API under the alias "quality" (leads/server.cjs: quality:'priority').
-leads.sort(key=lambda l: (quality_rank(l), str(l.get("company") or "")))
-print(f"  {len(leads)} lead(s) with a domain and no address")
+# The ICP pool goes first: it is the supply the pipeline is actually short of (104 leads, 90 of
+# them addressless on 2026-10-12: a lead with no address cannot be drafted at all), while the
+# corpus intake has a sponsor row for every lead it holds and can always be drafted. Inside
+# each supply the house tier preference still decides (MEDIUM ahead of HIGH).
+ICP_FIRST = os.environ.get("NF_HUNTER_ICP_FIRST", "1") not in ("0", "false", "no")
+leads.sort(key=lambda l: ((0 if (ICP_FIRST and str(l.get("lead_source") or "") == "icp_research")
+                           else 1),
+                          quality_rank(l), str(l.get("company") or "")))
+n_icp = sum(1 for l in leads if str(l.get("lead_source") or "") == "icp_research")
+print(f"  {len(leads)} lead(s) with a domain and no address "
+      f"({n_icp} ICP, {len(leads) - n_icp} corpus{' — ICP first' if ICP_FIRST else ''})")
 
 if remaining < len(leads[: args.max]) + 2:
     print(f"  budget guard: {remaining} left is not enough for {args.max} lookups plus headroom. "

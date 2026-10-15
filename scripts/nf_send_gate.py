@@ -35,6 +35,7 @@ import urllib.request
 # Lead quality preference lives in one place (scripts/_lead_rank.py).
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _lead_rank import quality_rank                    # noqa: E402
+from _address_rules import is_role_address              # noqa: E402
 import icp_fit                                          # noqa: E402
 
 PAD = "http://127.0.0.1:3001"
@@ -393,11 +394,28 @@ def gate(draft, ctx):
             soft(f"address is on {to_dom}, the lead's recorded domain is {lead_dom}: confirm "
                  f"this is the same company before sending")
 
+    # 3c. a role mailbox is not a person, whoever the draft greets. Sponsorship intelligence is
+    # bought by a named GTM, growth or marketing person: `to=support@` reaches a ticket queue at
+    # best and nobody at worst. The 2026-10-15 batch sent thirteen first touches that way
+    # (support@anam.ai, hello@factor.ai, info@cakewallet.com, media@f2.com) while the CRM held
+    # the buyer's own name for nearly all of them, and Anam's helpdesk auto-acknowledged one
+    # within twenty seconds. The address comes from the site scrape, which returns whatever the
+    # site publishes; scripts/discover_contacts.py no longer stores one and looks for the
+    # person's own address instead. This is the last word before an inbox, so it holds whichever
+    # stage drafted the mail (a real reply moves the lead to Replied, which holds on its own).
+    if to and is_role_address(to):
+        hard(f"addressed to the shared role mailbox {to}, not the person who buys sponsorship "
+             f"intelligence: find the buyer's own address first")
+
     # 4. corpus facts: placement count, publications, subscriber labels
+    # The count token has to stand alone. `(?<!\d)` let a digit INSIDE a company name be read as
+    # the count, and the --fix-counts substitution then hit both: F2's opener went out today as
+    # "8 F8 placements" (claimed 2, real 8, so "2 F2" became "8 F8"). `(?<![\w])` requires the
+    # number to start a token, so "F2 placements" is no longer a claim and cannot be rewritten.
     claimed = []
-    for m in re.finditer(r"(\d+)\s+placements?", text):
+    for m in re.finditer(r"(?<![\w])(\d+)\s+placements?", text):
         claimed.append(int(m.group(1)))
-    for m in re.finditer(r"(\d+)\s+(?:[A-Za-z0-9.'&\s]{0,24}?)(?:placements|sponsorships)", text):
+    for m in re.finditer(r"(?<![\w])(\d+)\s+(?:[A-Za-z0-9.'&\s]{0,24}?)(?:placements|sponsorships)", text):
         try:
             claimed.append(int(m.group(1)))
         except Exception:
@@ -410,7 +428,7 @@ def gate(draft, ctx):
         elif n != real:
             hard(f"states {n} {company} placements, the corpus logs {real}",
                  kind="count", claimed=n, real=real,
-                 pattern=r"(?<!\d)" + str(n) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))")
+                 pattern=r"(?<![\w])" + str(n) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))")
 
     pubs_named = re.findall(r"-\s+([^\n:()]{3,60}?)(?:\s*\(est\.|\s*:\s|\n|$)", text)
     # A publication is verified by the link that was minted onto it: the pad's link pass only
@@ -525,11 +543,11 @@ def main():
                 continue
             text, html = d.get("text") or "", d.get("html") or ""
             for x in holds:
-                # a single, auditable integer substitution; nothing else in the body moves
-                text = re.sub(r"(?<!\d)" + str(x["claimed"]) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))",
-                              str(x["real"]), text)
-                html = re.sub(r"(?<!\d)" + str(x["claimed"]) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))",
-                              str(x["real"]), html)
+                # a single, auditable integer substitution; nothing else in the body moves.
+                # The pattern comes from the gate and starts at a token boundary, so a digit
+                # inside the company name (F2's "F2") can never be the thing that gets rewritten.
+                text = re.sub(x["pattern"], str(x["real"]), text)
+                html = re.sub(x["pattern"], str(x["real"]), html)
             if html.count("lt=") != (d.get("html") or "").count("lt="):
                 print(f"  fix-counts {r['id']}: refused, tracked-link count changed")
                 continue
