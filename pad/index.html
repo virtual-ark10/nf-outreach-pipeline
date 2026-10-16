@@ -508,6 +508,9 @@ function clearToken() {
   try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
 }
 let token = readToken();
+// True once this page is actually let in — by a typed token OR by the signed session
+// cookie (the cookie path leaves `token` empty, so a `!token` guard is NOT an auth check).
+let padAuthed = false;
 let attachments = [];
 let editorHTML = "";
 
@@ -601,6 +604,7 @@ async function connectPad(raw) {
     });
     if (doms.length === 0) setStatus("Connected, but no verified sender domains in Resend yet.", true);
     else setStatus("Connected — leads and email are live.", true);
+    padAuthed = true;
     loadDrafts(); loadSent(); loadReceived(); loadCRM();
   } catch (e) {
     setStatus("Connection failed: " + e.message, false);
@@ -1033,7 +1037,10 @@ function ago(ts) {
 }
 
 async function loadCRM() {
-  if (!token) return;
+  // NOT `if (!token)`: with the signed session cookie the token is intentionally empty in
+  // memory, and that guard made the Leads tab sit on "Loading leads…" forever for every
+  // cookie-signed-in browser (clicking away and back did not help — same empty token).
+  if (!padAuthed) return;
   try {
     const qs = crm.stage ? "?stage=" + encodeURIComponent(crm.stage) : "";
     const [m, l] = await Promise.all([crmApi("/meta"), crmApi("/leads" + qs)]);

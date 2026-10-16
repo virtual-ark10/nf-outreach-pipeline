@@ -95,6 +95,9 @@ const autoLinks = require('./outreach-autolinks.cjs');
 const OUTREACH_CONF = {
   apiBase: process.env.NEWSLETTERFIT_API || 'http://127.0.0.1:3000/api/v1',
   token: process.env.API_BEARER_TOKEN || '',
+  // POST /outreach/links is requireAdmin: the bearer alone answers 401 Invalid admin key and
+  // nothing is minted (the four-day mint outage that pinned the queue at the gate).
+  adminKey: process.env.ADMIN_API_KEY || '',
   storePath: process.env.ATTRIBUTION_STORE || '/home/boxed/newsletterfit/attribution/attribution.json',
   baseUrl: 'https://newsletterfit.com',
 };
@@ -181,8 +184,12 @@ function readDrafts() {
 }
 
 /** The link pass (see outreach-autolinks.cjs) over a set of drafts. Sequential: each
- *  mint is an API call, and a burst at the corpus API is not kind to anyone. */
+ *  mint is an API call, and a burst at the corpus API is not kind to anyone.
+ *  The resolve budget is per pass: the corpus API allows 90 requests/min for the whole
+ *  host, so one pass spends at most LINK_RESOLVE_MAX_CALLS of them and the next pass
+ *  continues from its cache instead of re-asking for names it already resolved. */
 async function prepareQueue(drafts) {
+  autoLinks.resetResolveBudget();
   const report = { checked: drafts.length, updated: 0, minted: 0, name_filled: 0, unresolved: [], details: [] };
   for (const d of drafts) {
     const r = await autoLinks.prepareDraft({
@@ -529,6 +536,36 @@ function readBody(req, res, cb) {
   req.on('error', () => { /* client aborted */ });
 }
 
+// ---- Static surface: an explicit allowlist ----
+// The pad's directory is also the checkout, so it holds .env, .env.bak-* backups,
+// the SQLite store, logs and sources. This handler is reachable from the internet,
+// which is how an exposed-credential crawler read /.env on 2026-09-18 and then used
+// the key it took to send a foreign campaign on 2026-09-24. Only files named here
+// (plus /vendor/ assets) are ever served; everything else is refused.
+const PUBLIC_FILES = new Set([
+  '/index.html', '/landing.html', '/favicon.svg', '/apple-touch-icon.png',
+  '/icon-192.png', '/icon-512.png', '/og-image.png', '/robots.txt',
+  '/sitemap.xml', '/manifest.webmanifest',
+]);
+const PUBLIC_ASSET_EXT = ['.js', '.css', '.svg', '.png', '.ico', '.woff', '.woff2',
+  '.jpg', '.jpeg', '.webp'];
+
+function isPublicAsset(reqPath) {
+  if (typeof reqPath !== 'string' || !reqPath.startsWith('/') || reqPath.includes('\0')) return false;
+  let p;
+  try { p = decodeURIComponent(reqPath); } catch (_) { return false; }
+  if (p.includes('\0') || p.includes('..') || !p.startsWith('/')) return false;
+  const segs = p.split('/').filter(Boolean);
+  if (!segs.length) return false;
+  if (segs.some((s) => s.startsWith('.'))) return false;   // .env, .env.bak, .git, .DS_Store
+  if (segs.length === 1) return PUBLIC_FILES.has('/' + segs[0]);
+  if (segs.length === 2 && segs[0] === 'vendor') {
+    const lower = segs[1].toLowerCase();
+    return PUBLIC_ASSET_EXT.some((e) => lower.endsWith(e));
+  }
+  return false;
+}
+
 const server = http.createServer((req, res) => {
   const url = req.url || '/';
   const ip = req.socket.remoteAddress || 'unknown';
@@ -542,7 +579,13 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Security-Policy',
     // GA4 on this page needs exactly two openings: the gtag.js loader (script-src) and the
     // measurement endpoints it posts to (connect-src). Nothing else is widened.
-    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdn.tailwindcss.com "
+    // 'unsafe-inline' is REQUIRED and is not a leftover: this pad's whole UI is one inline
+    // <script> plus inline on* attributes (onclick/oninput), so without it the browser
+    // silently refuses to run the pad at all — the page renders, every list stays on
+    // "Loading leads…", and only the console says why. Dropping it broke the NF pad's UI from
+    // 2026-10-01 to 2026-10-16 (sends kept working because cron drives the API, not the page).
+    // Script hashes cannot replace it: hashes cover <script> blocks but never inline handlers.
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com "
     + "https://www.googletagmanager.com; "
     + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
     + "img-src 'self' data: https://www.google-analytics.com https:; "
@@ -563,10 +606,13 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // ---- Static files ----
-  let filePath = url === '/' ? '/index.html' : url;
-  filePath = path.join(__dirname, filePath);
-  const realPath = path.resolve(filePath);
+  // ---- Static files (named public assets only — see isPublicAsset) ----
+  const reqPath = url.split('?')[0] === '/' ? '/index.html' : url.split('?')[0];
+  if (!isPublicAsset(reqPath)) {
+    console.log('[SECURITY] static path denied:', url);
+    return forbidden(res, 'Forbidden');
+  }
+  const realPath = path.resolve(path.join(__dirname, reqPath));
   const baseDir = path.resolve(__dirname);
   if (!realPath.startsWith(baseDir)) {
     console.log('[SECURITY] Directory traversal blocked:', url);
@@ -616,8 +662,17 @@ function proxyCrm(req, res, targetPath) {
 
 function handleApi(req, res, url, ip) {
   const p = url.split('?')[0]; // path without query string
-  // Rate limit all API routes
-  if (!rateCheck(ip)) return sendJson(res, 429, { error: 'Rate limit exceeded — slow down' });
+  // Two routes are not client traffic and must never be throttled by the IP bucket:
+  //   /api/health — the watchdog probes it once a minute, and a 429 from it reads as "the
+  //     pad is down", so the watchdog kills and restarts a pad that was merely busy. That
+  //     is what restarted the pad mid-send on 2026-10-12.
+  //   /api/webhook — authenticated by Svix signature, and Resend sends two or three events
+  //     per message from this same loopback address, so charging them to the bucket makes a
+  //     sending run throttle the delivery events of its own mail (31 of 50 sends got 429).
+  const exempt = (req.method === 'GET' && p === '/api/health')
+    || (req.method === 'POST' && p === '/api/webhook');
+  // Rate limit all other API routes
+  if (!exempt && !rateCheck(ip)) return sendJson(res, 429, { error: 'Rate limit exceeded — slow down' });
 
   // Health (no auth — used by watchdog)
   if (req.method === 'GET' && p === '/api/health') {
@@ -717,8 +772,12 @@ function handleApi(req, res, url, ip) {
   const auth = req.headers['x-pad-token'];
   const viaCookie = sessionValid(req);
   if (!PAD_TOKEN || (auth !== PAD_TOKEN && !viaCookie)) {
-    const mask = (s) => s ? s.slice(0, 4) + '…' + s.slice(-4) : '(none)';
-    console.log(`[AUTH-FAIL] ${req.method} ${url} got=${mask(auth)} expected=${mask(PAD_TOKEN)}`);
+    // Fingerprint, never characters: this line used to print the first and last four
+    // characters of the REAL pad token into pad.log (a file that lives in the served
+    // checkout), which narrows an attacker's search to 35 unguessable characters. A
+    // short digest still lets you tell a stale token from a scanner probe, and leaks nothing.
+    const fp = (s) => s ? 'sha:' + crypto.createHash('sha256').update(String(s)).digest('hex').slice(0, 8) : '(none)';
+    console.log(`[AUTH-FAIL] ${req.method} ${url} got=${fp(auth)} expected=${fp(PAD_TOKEN)}`);
     // An internet scanner probing /api/meta, /api/env or /api/pipeline gets the same
     // 401 a stale browser token does, and both land in the events table. They are
     // separated here (kind: 'probe') because a probe is not an operational failure:
