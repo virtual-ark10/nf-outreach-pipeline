@@ -8,6 +8,7 @@ rules, because the gate is what stands between a draft and an inbox.
 """
 import os
 import re
+import json
 import sys
 import unittest
 
@@ -178,6 +179,69 @@ class DataFirstLadder(unittest.TestCase):
         # If the product gains tools, this test is the reminder to re-read both before the
         # number goes back into an email.
         self.assertEqual(icp.MCP_TOOLS, 17)
+
+
+class ResearchedFirstTouch(unittest.TestCase):
+    """A hand-written first touch wins over the lane template, and only for touch 1."""
+
+    def setUp(self):
+        import tempfile
+        self.tmp = tempfile.mkdtemp()
+        self.old = icp.CUSTOM_DIR
+        icp.CUSTOM_DIR = self.tmp
+        with open(os.path.join(self.tmp, "crustdata.json"), "w") as fh:
+            json.dump({"subject": "A newsletter corpus for your fund customers",
+                       "body": "Your docs describe a workflow's source as the set of URLs it "
+                               "extracts from.\n\nWould a sample be useful?"}, fh)
+        self.picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+
+    def tearDown(self):
+        import shutil
+        icp.CUSTOM_DIR = self.old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_touch_one_uses_the_researched_copy_verbatim(self):
+        subject, text = icp.compose(LEAD, 1, self.picks)
+        self.assertEqual(subject, "A newsletter corpus for your fund customers")
+        self.assertIn("Your docs describe a workflow's source", text)
+        self.assertIn("Would a sample be useful?", text)
+
+    def test_the_greeting_signature_and_one_tracked_link_stay_generated(self):
+        # The gate checks the greeting against the CRM contact and refuses a mail with no
+        # tracked link, so neither may be baked into the JSON file.
+        _, text = icp.compose(LEAD, 1, self.picks)
+        self.assertTrue(text.startswith("Hi Wei,"))
+        self.assertTrue(text.rstrip().endswith("[Name], Founder, NewsletterFIT"))
+        self.assertEqual(text.count("[TRACKED_LINK]"), 1)
+
+    def test_follow_ups_still_come_from_the_ladder(self):
+        subject, text = icp.compose(LEAD, 2, self.picks)
+        self.assertEqual(subject, f"who reads {self.picks[0]['name']}")
+        self.assertNotIn("Would a sample be useful?", text)
+
+    def test_a_missing_file_falls_back_to_the_lane_template(self):
+        lead = dict(LEAD, id="nobody")
+        subject, text = icp.compose(lead, 1, self.picks)
+        self.assertIn("Notion is buying in Refactoring", text)
+
+    def test_the_stored_researched_copies_pass_the_gate_s_language_rules(self):
+        # data/icp-custom is hand-written, so it is the one place a banned phrase can slip in:
+        # "a field you cannot fill today" sat in the Icypeas draft until this caught it. The
+        # gate bans "today" because a queued draft sends days after it was written.
+        import glob
+        files = sorted(glob.glob(os.path.join(self.old, "*.json")))
+        self.assertTrue(files, "no researched copies found")
+        for path in files:
+            d = json.load(open(path))
+            blob = d["subject"] + "\n" + d["body"]
+            self.assertNotIn(gate.EM_DASH, blob, path)
+            for rx, label in ((gate.BACK_REFERENCE, "back-reference"),
+                              (gate.STALE_DATE, "stale date"),
+                              (gate.STALE_RELATIVE, "stale relative date"),
+                              (gate.CORPUS_SIZE, "corpus size"),
+                              (gate.UNVERIFIABLE_FIGURE, "unverifiable figure")):
+                m = rx.search(blob)
+                self.assertIsNone(m, f"{label} in {path}: {m.group(0) if m else ''}")
 
 
 class Ladder(unittest.TestCase):

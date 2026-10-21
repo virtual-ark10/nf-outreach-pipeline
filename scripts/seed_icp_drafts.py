@@ -59,6 +59,8 @@ CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
 BATCH = "/home/boxed/.hermes/cache/scratch/nf_icp_batch.json"
 # The ladder is off until this file exists: a new sequence is reviewed before it can send.
 FLAG = f"{REPO}/data/icp-drafts.enabled"
+# Researched first-touch copy per lead id, written by hand, used instead of the lane template.
+CUSTOM_DIR = f"{REPO}/data/icp-custom"
 PAD = "http://127.0.0.1:3001"
 
 # Which lists to search for, by the lead's industry. The industry is a coarse firmographic label
@@ -333,6 +335,20 @@ def follow_up(lead, touch, picks):
 
 def compose(lead, touch, picks):
     if touch == 1:
+        custom = custom_copy(lead)
+        if custom:
+            # A researched, hand-written first touch beats the lane template: it says something
+            # only that account could be told. The ladder still owns touches 2 to 4, and the
+            # greeting and signature stay generated so the gate's contact check keeps working.
+            # One lane list is appended because the gate refuses a mail with no tracked link
+            # (attribution would be lost), and a data buyer judges a sample by a row anyway.
+            bullet = ""
+            if picks:
+                p = picks[0]
+                bullet = ("\n\nOne list from your lane, if a sample is easier to judge with it:"
+                          f"\n\n- {p['name']} (est. {p['label']}): [TRACKED_LINK]")
+            return custom["subject"], (f"Hi {_greeting(lead)},\n\n" + custom["body"].strip()
+                                       + bullet + "\n\n[Name], Founder, NewsletterFIT")
         return first_touch(lead, picks)
     return follow_up(lead, touch, picks)
 
@@ -340,6 +356,25 @@ def compose(lead, touch, picks):
 def draft_id(lead, touch):
     slug = re.sub(r"[^a-z0-9]+", "-", str(lead.get("company") or "").lower()).strip("-")
     return slug if touch == 1 else f"{slug}-follow-up-{touch}"
+
+
+def custom_copy(lead):
+    """The researched first touch for this lead, if one has been written down.
+
+    data/icp-custom/<lead id>.json holds {"subject": ..., "body": ...}. It exists because the
+    lane template can only say what the corpus knows about a segment, while a researched account
+    (a gap confirmed in its docs, a buyer named, an integration surface read) deserves copy that
+    only that account could receive. Body excludes the greeting and the signature: those are
+    generated, so a stale name can never be baked into a JSON file.
+    """
+    path = os.path.join(CUSTOM_DIR, f"{lead.get('id')}.json")
+    try:
+        with open(path) as fh:
+            d = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    subject, body = str(d.get("subject") or "").strip(), str(d.get("body") or "").strip()
+    return {"subject": subject, "body": body} if subject and body else None
 
 
 # --- CRM + corpus I/O (only ever reached from main) -----------------------------------------
