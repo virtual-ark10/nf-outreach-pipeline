@@ -41,6 +41,11 @@ LEAD = {"id": "crustdata", "company": "Crustdata", "contact_name": "Wei Zhang",
         # gate holds a first touch whose lead has no domain to match the address against.
         "domain": "crustdata.com"}
 
+# The same lead as the ICP research scored it for a data company: the segment is what routes it
+# to the feed-first ladder, so the copy offers the API and the MCP server as well as the lists.
+DATA_LEAD = dict(LEAD, notes='["ICP research 2026-10-08: strong (98.3/100), segment signal_data, '
+                             '37 contact(s) found via free people-search lanes."]')
+
 
 def search_of(pubs):
     def search(q):
@@ -109,14 +114,70 @@ class FirstTouch(unittest.TestCase):
     def test_the_hook_is_a_sponsor_the_corpus_actually_logged_in_that_list(self):
         self.assertIn("Notion is buying in Refactoring", self.text)
         self.assertIn("Notion", self.subject)
+        # The company rides in the subject too, so a batch of lookalikes is not a batch of
+        # identical subject lines.
+        self.assertIn("Crustdata", self.subject)
 
     def test_it_never_claims_the_prospect_buys_anything(self):
-        self.assertNotIn("Crustdata", self.subject)
+        # The company's own name is allowed (it is the personalisation); a claim that they
+        # sponsor, or that we saw them anywhere, is not.
         for word in ("you sponsor", "you ran", "saw you", "your placement", "placements in"):
             self.assertNotIn(word, self.text)
+            self.assertNotIn(word, self.subject)
 
     def test_the_signature_stays_the_placeholder_the_pad_fills(self):
         self.assertTrue(self.text.rstrip().endswith("[Name], Founder, NewsletterFIT"))
+
+
+class DataFirstLadder(unittest.TestCase):
+    """A company that sells data gets the feed offered beside the lists, not instead of them."""
+
+    def setUp(self):
+        self.picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+
+    def test_the_segment_in_the_icp_note_routes_the_lead_to_the_feed_ladder(self):
+        self.assertTrue(icp.data_first(DATA_LEAD))
+        self.assertFalse(icp.data_first(LEAD))
+
+    def test_the_industry_label_is_the_fallback_when_no_segment_was_recorded(self):
+        self.assertTrue(icp.data_first({"industry": "Data Infrastructure and Analytics"}))
+        self.assertFalse(icp.data_first({"industry": "Transportation, Logistics and Storage"}))
+
+    def test_touch_one_offers_the_api_and_mcp_in_one_sentence(self):
+        subject, text = icp.first_touch(DATA_LEAD, self.picks)
+        self.assertIn("REST API and an MCP server", text)
+        self.assertIn("queried inside Crustdata", text)
+        # The lists are still the proof: the offer adds a surface, it does not replace the hook.
+        self.assertIn("Notion is buying in Refactoring", text)
+        for p in self.picks:
+            self.assertIn(f"- {p['name']} (est. {p['label']}): [TRACKED_LINK]", text)
+
+    def test_touch_two_offers_the_same_fields_as_rows(self):
+        _, text = icp.follow_up(DATA_LEAD, 2, self.picks)
+        self.assertIn("If rows are easier to test than a profile", text)
+        self.assertIn("API returns the same fields", text)
+
+    def test_touch_three_names_the_tool_count_the_docs_and_the_endpoint(self):
+        subject, text = icp.follow_up(DATA_LEAD, 3, self.picks)
+        self.assertIn(f"{icp.MCP_TOOLS} tools", text)
+        self.assertIn(icp.MCP_URL, text)
+        self.assertIn(icp.API_DOCS, text)
+        self.assertIn("trial key", text)
+        # Still one tracked link, so the send carries attribution and the gate has a bullet it
+        # can resolve against the corpus.
+        self.assertEqual(text.count("[TRACKED_LINK]"), 1)
+
+    def test_touch_four_asks_for_a_trial_key_rather_than_lists(self):
+        _, text = icp.follow_up(DATA_LEAD, 4, self.picks[:1])
+        self.assertIn("trial key and a sample export", text)
+        self.assertEqual(text.count("[TRACKED_LINK]"), 1)
+
+    def test_the_quoted_tool_count_is_the_one_the_product_publishes(self):
+        # 17 was read from services/mcp/tools.js (TOOLS length) and from
+        # newsletterfit.com/.well-known/agent.json (capabilities.actions length) on 2026-10-21.
+        # If the product gains tools, this test is the reminder to re-read both before the
+        # number goes back into an email.
+        self.assertEqual(icp.MCP_TOOLS, 17)
 
 
 class Ladder(unittest.TestCase):
@@ -207,18 +268,18 @@ class TheRealGateWouldSendAnIcpDraft(unittest.TestCase):
                             "recentSponsors": p["recentSponsors"]}
             return None
 
-    def draft_for(self, picks, touch):
-        lead = dict(LEAD, email="wei@crustdata.com", stage="leads", first_contact_at=None)
+    def draft_for(self, picks, touch, lead=None):
+        lead = dict(lead or LEAD, stage="leads", first_contact_at=None)
         subject, text = icp.compose(lead, touch, picks)
         text = re.sub(r"\s*:\s*\[TRACKED_LINK\]", "", text).replace("[Name]", "Ian Hinga")
         html = "<p>" + "</p><p>".join(
             f'<a href="https://newsletterfit.com/api/click?lt={self.TOKEN}">{p["name"]}</a>'
             f' (est. {p["label"]})' for p in picks) + "</p>"
-        draft = {"id": icp.draft_id(lead, touch), "company": "Crustdata", "to": "wei@crustdata.com",
+        draft = {"id": icp.draft_id(lead, touch), "company": lead["company"], "to": lead["email"],
                  "from": "ian@newsletterfit.com", "subject": subject, "text": text, "html": html}
         ctx = {"ledger": {self.TOKEN: {"dest": "https://newsletterfit.com/app/publications/refactoring"}},
-               "leads": {"crustdata": lead}, "sent": {}, "replied": {},
-               "by_company": {"crustdata": [draft]}, "corpus": self.Corpus()}
+               "leads": {lead["id"]: lead}, "sent": {}, "replied": {},
+               "by_company": {lead["id"]: [draft]}, "corpus": self.Corpus()}
         return draft, ctx
 
     def test_every_touch_passes_the_gate(self):
@@ -228,6 +289,17 @@ class TheRealGateWouldSendAnIcpDraft(unittest.TestCase):
             verdict, findings = gate.gate(draft, ctx)
             self.assertEqual(verdict, "PASS",
                              f"touch {touch} came back {verdict}: {[f['message'] for f in findings]}")
+
+    def test_the_feed_ladder_passes_the_gate_too(self):
+        # The API and MCP sentence is exactly the kind of copy the gate could read as an
+        # unverifiable claim, so the data ladder is put through it rather than assumed safe.
+        picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+        for touch, chosen in ((1, picks), (2, picks), (3, picks[:1]), (4, picks[:1])):
+            draft, ctx = self.draft_for(chosen, touch, DATA_LEAD)
+            verdict, findings = gate.gate(draft, ctx)
+            self.assertEqual(verdict, "PASS",
+                             f"data touch {touch} came back {verdict}: "
+                             f"{[f['message'] for f in findings]}")
 
     def test_a_placement_count_would_be_the_one_thing_it_holds(self):
         # Pins why the copy must never state one: the gate looks the number up against the

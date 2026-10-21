@@ -32,12 +32,48 @@ ROLE_WORDS = (
     "inquiry", "accounts", "billing", "careers", "office", "general", "contact", "info",
     "press", "media", "sales", "admin", "team", "mail", "email", "help", "sponsor",
     "partners", "partner", "editor", "events", "jobs", "care", "pr", "ask", "hi", "outreach",
+    # chat@ and legal@ are the same failure as info@ under another name: a shared inbox that
+    # nobody buys from. Both turned up as the only address two ICP leads had.
+    "chat", "legal",
 )
 # Digits are dropped before the match: `support1` and `accounts2` are still the queue.
 ROLE_LOCAL = re.compile(r"^(" + "|".join(ROLE_WORDS) + r")$", re.I)
 # no-reply and its spellings only make sense as one token, so they are matched on the raw local.
 ROLE_RAW = re.compile(r"^(no-?reply|donotreply|do-not-reply|postmaster|webmaster|noreply)$", re.I)
 _WORDS_BY_LENGTH = sorted(set(ROLE_WORDS), key=len, reverse=True)
+
+
+def address_domain(address: "str | None") -> str:
+    """The registrable host an address sits on, lowercased, without a leading www."""
+    addr = str(address or "").strip().lower()
+    if "@" not in addr:
+        return ""
+    host = addr.rsplit("@", 1)[-1].strip().strip(".")
+    return host[4:] if host.startswith("www.") else host
+
+
+def belongs_to_domain(address: "str | None", domain: "str | None") -> bool:
+    """True when the address is on the lead's own host, or a subdomain of it.
+
+    A shared mailbox is not the only way an address can be the wrong person: a namesake
+    provider record is another. Asking the free lanes about alphasense.com returned a person
+    whose address was sensors.alphasense@ametek.com, and the name pass wrote it into the CRM
+    and queued a stranger's mailbox. So an address may only fill a lead's contact column when
+    its host IS the lead's host. With no domain recorded there is nothing to match against and
+    the address is refused rather than guessed; a free-mail address never matches either.
+    """
+    host = address_domain(address)
+    dom = str(domain or "").strip().lower()
+    if "//" in dom:
+        dom = dom.split("//", 1)[-1]
+    dom = dom.split("/", 1)[0].split(":", 1)[0].strip().strip(".")
+    if dom.startswith("www."):
+        dom = dom[4:]
+    if not host or "." not in host or not dom or "." not in dom:
+        return False
+    # Both directions, exactly as the send gate compares them: an address at the parent host of
+    # a subdomain lead (aws.amazon.com and someone@amazon.com) is still the same company.
+    return host == dom or host.endswith("." + dom) or dom.endswith("." + host)
 
 
 def is_role_address(address: "str | None") -> bool:

@@ -19,6 +19,17 @@ the corpus record it stands next to.
   3  follow_up_2   two more lists, from the other side of the lane
   4  follow_up_3   the close, one list attached so the mail still carries a tracked link
 
+Data and intelligence companies run the same clock on a feed-first sequence, because for them the
+corpus is a supply conversation as much as a sponsorship one (segment signal_data, enrichment or
+infra in the ICP note, or a data industry label):
+
+  1  adds one sentence: the same records come through the REST API and an MCP server
+  2  adds the API fields beside the reader profile
+  3  the technical touch: MCP tool count, docs URL, endpoint, offer of a trial key and export
+  4  the close asks for a trial key and a sample export instead of two or three lists
+
+The MCP count is MCP_TOOLS below and is verified against the product before it is quoted.
+
 Composing is inert (a draft in the pad queue, which the 09:00 send gate then verifies), but the
 ladder stays OFF until data/icp-drafts.enabled exists, so a new sequence gets read before it can
 reach an inbox. Nothing here sends mail: the gate is the only send path.
@@ -38,6 +49,9 @@ import subprocess
 import sys
 import urllib.parse
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _address_rules import is_role_address  # noqa: E402  (one definition, shared with the gate)
 
 REPO = "/home/boxed/nf-outreach-pipeline"
 PAD_DB = f"{REPO}/pad/data/outreach.db"
@@ -63,6 +77,22 @@ LANES = [
      "software and data tooling", ["developer tools", "software engineering", "product analytics"]),
 ]
 DEFAULT_LANE = ("data and software", ["data engineering", "product analytics", "developer tools"])
+
+# Verified 2026-10-21: services/mcp/tools.js TOOLS holds 17 entries and
+# newsletterfit.com/.well-known/agent.json publishes the same 17 names. Re-count both before
+# changing the number: a count in an email the product contradicts is the one claim a data
+# company will check first.
+MCP_TOOLS = 17
+MCP_URL = "https://newsletterfit.com/mcp"
+API_DOCS = "https://newsletterfit.com/docs/api"
+
+# Segments whose buyer sells data or intelligence: for them the corpus is a supply conversation
+# (licence, API, MCP) as much as a sponsorship one, so the ladder offers both. The segment comes
+# from the ICP research note; the industry label is the fallback for rows imported without one.
+DATA_SEGMENTS = {"signal_data", "enrichment", "infra"}
+DATA_INDUSTRY = re.compile(
+    r"data |analytics|business intelligence|market research|information service"
+    r"|machine learning|data warehouse|data labeling", re.I)
 
 # The touch number as the ladder names it, and the CRM stage that touch belongs to.
 TOUCH_STAGES = {1: "leads", 2: "first_email", 3: "follow_up_1", 4: "follow_up_2"}
@@ -91,6 +121,23 @@ def lane_for(lead):
         if re.search(pattern, industry, re.I):
             return label, queries
     return DEFAULT_LANE
+
+
+def segment_of(lead):
+    """The ICP research segment ('signal_data', 'enrichment', 'infra') from the lead's note."""
+    m = re.search(r"segment ([a-z_]+)", str((lead or {}).get("notes") or ""))
+    return m.group(1) if m else ""
+
+
+def data_first(lead):
+    """True when the prospect sells data or intelligence, so the ladder offers the feed too.
+
+    Those buyers can license the corpus, call the API, or point an agent at the MCP server; a
+    sponsorship-list pitch alone undersells it. Everyone else gets the lists-only ladder.
+    """
+    if segment_of(lead) in DATA_SEGMENTS:
+        return True
+    return bool(DATA_INDUSTRY.search(str((lead or {}).get("industry") or "")))
 
 
 def accepts_sponsors(pub):
@@ -185,8 +232,15 @@ def first_touch(lead, picks):
     peer_pick = next((p for p in picks if p["sponsors"]), None)
     peer = (f"{peer_pick['sponsors'][0]} is buying in {peer_pick['name']}, one of them."
             if peer_pick else "")
-    subject = (f"{peer_pick['sponsors'][0]} is buying in {peer_pick['name']}"
-               if peer_pick else f"the {lane} lists taking sponsors")
+    # The subject carries the company so forty drafts in one morning are not forty identical
+    # subjects, and carries the sponsor so it still says what was seen rather than what stage
+    # the mail is at.
+    subject = (f"{company}: {peer_pick['sponsors'][0]} is buying in {peer_pick['name']}"
+               if peer_pick else f"{lane} lists taking sponsors for {company}")
+    # For a data company the feed is the same purchase seen from the other side, so it gets one
+    # sentence in the first touch, not a paragraph. The number of tools waits for touch 3.
+    feed = ("The same records are available through a REST API and an MCP server, so they can be "
+            f"queried inside {company} rather than read in an inbox.\n\n") if data_first(lead) else ""
     text = (
         f"Hi {first},\n\n"
         "I run NewsletterFIT. We track sponsorships across newsletters and watch which lists "
@@ -194,7 +248,8 @@ def first_touch(lead, picks):
         + (f"{peer}\n\n" if peer else "")
         + f"{_lead_in(lane, picks)}\n\n"
         + f"{_bullets(picks)}\n\n"
-        f"Reader profiles and momentum behind any of them are in the corpus. Happy to pull the "
+        + feed
+        + f"Reader profiles and momentum behind any of them are in the corpus. Happy to pull the "
         f"two or three that fit {company}.\n\n"
         "[Name], Founder, NewsletterFIT"
     )
@@ -222,6 +277,25 @@ def follow_up(lead, touch, picks):
             f"{p['name']} {reach}{runs}.\n\n"
             "If a list with that audience is worth a look, I can send the reader profile behind "
             "it: who they are, what they click, and how the list is trending.\n\n"
+            + (f"If rows are easier to test than a profile, the API returns the same fields for "
+               f"{company}.\n\n" if data_first(lead) else "")
+            + "[Name], Founder, NewsletterFIT"
+        )
+        return subject, text
+    if touch == 3 and data_first(lead):
+        # The technical touch: a data buyer judges a feed by the surface it arrives on, so this
+        # one names the endpoint, the docs and the tools an agent would actually call.
+        subject = f"querying {lane} newsletters from an agent"
+        text = (
+            f"Hi {first},\n\n"
+            f"The same {lane} coverage, delivered as a feed rather than a list. Our MCP server "
+            f"exposes {MCP_TOOLS} tools, so an agent can ask which newsletters wrote about a "
+            "company, which sponsors run in a publication, and which lists are rising, without an "
+            "integration project on your side.\n\n"
+            f"Docs are at {API_DOCS} and the endpoint is {MCP_URL}. A trial key comes with a "
+            "sample export for a sector you pick.\n\n"
+            "One list from the lane, if a sample is easier to judge with it:\n\n"
+            + f"- {p['name']} (est. {p['label']}): [TRACKED_LINK]\n\n"
             "[Name], Founder, NewsletterFIT"
         )
         return subject, text
@@ -243,10 +317,13 @@ def follow_up(lead, touch, picks):
     # Touch 4, the close. One list stays attached so the mail still carries a tracked link,
     # and nothing here apologises or points back at an earlier message: the gate holds both.
     subject = "leaving it here"
+    ask = ("reply and I will send a trial key and a sample export for a sector you pick"
+           if data_first(lead) else
+           "reply and I will pull the two or three lists that fit your buyers best")
     text = (
         f"Hi {first},\n\n"
-        f"I will leave it here. If newsletter placements make it onto the roadmap at {company}, "
-        "reply and I will pull the two or three lists that fit your buyers best.\n\n"
+        f"I will leave it here. If newsletter coverage makes it onto the roadmap at {company}, "
+        f"{ask}.\n\n"
         "The one I would start with:\n\n"
         + f"- {p['name']} (est. {p['label']}): [TRACKED_LINK]\n\n"
         "[Name], Founder, NewsletterFIT"
@@ -291,7 +368,11 @@ def pending_leads(today, require_email=True):
     con.row_factory = sqlite3.Row
     where = ("WHERE COALESCE(lead_source,'') = 'icp_research' "
              "AND deleted_at IS NULL AND archived_at IS NULL "
-             "AND COALESCE(unsubscribed,0) = 0 AND COALESCE(bounced,0) = 0")
+             "AND COALESCE(unsubscribed,0) = 0 AND COALESCE(bounced,0) = 0 "
+             # A lead a human has taken out of prospecting is out, whatever its stage: the note
+             # rides in the event log, which is where the decision was recorded.
+             "AND id NOT IN (SELECT entity_id FROM events WHERE entity = 'lead' "
+             "AND lower(COALESCE(payload,'')) LIKE '%do not draft%')")
     if require_email:
         where += " AND COALESCE(email,'') <> ''"
     rows = [dict(r) for r in con.execute(f"SELECT * FROM leads {where}")]
@@ -374,6 +455,12 @@ def main():
         subject, text = compose(lead, touch, picks)
         if not _greeting(lead):
             skipped.append((lead.get("company"), "no contact name, a greeting would be invented"))
+            continue
+        if is_role_address(lead.get("email")):
+            # The gate holds a role mailbox outright, so composing one only fills the queue with
+            # a draft that can never leave. A named buyer's address is the fix, not better copy.
+            skipped.append((lead.get("company"),
+                            f"{lead.get('email')} is a shared mailbox, not a buyer"))
             continue
         batch.append({
             "id": draft_id(lead, touch), "lead_id": lead.get("id"), "company": lead.get("company"),

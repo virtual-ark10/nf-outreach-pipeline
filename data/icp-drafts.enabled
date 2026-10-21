@@ -1,0 +1,22 @@
+ICP ladder switched on 2026-10-21.
+
+What this file does: the 08:30 first-touch job runs scripts/seed_icp_drafts.py --apply, which
+composes the four-touch ICP sequence for leads whose lead_source is icp_research. While this
+file was absent the script printed why and exited 0, so nothing was drafted.
+
+The sequence, per touch:
+  1  the sponsor-taking lists in the lead's lane, who is already buying in one, and for data
+     and intelligence companies one sentence offering the same records through the REST API and
+     the MCP server
+  2  the reader profile behind the list touch one led on (and, for data companies, the API
+     fields beside it)
+  3  for data companies: the MCP tool count (17, verified against services/mcp/tools.js and
+     .well-known/agent.json), the docs URL, the endpoint, and a trial key offer; for everyone
+     else the other end of the lane
+  4  the close, one tracked link attached, trial key and sample export for data companies
+
+Composing only fills the pad queue. Nothing sends unless the 09:00 gate passes it, so this file
+does not open a send path: it opens the drafting one.
+
+Who is skipped at compose time: leads whose event log says "do not draft" (Hunter, the contact
+supplier), and any lead whose address is a shared mailbox (the gate would hold it outright).

@@ -42,7 +42,7 @@ class TheRule(unittest.TestCase):
     def test_compound_and_suffixed_queues_still_match(self):
         for addr in ("support.team@x.com", "hello.info@x.com", "accounts2@x.com",
                      "marketing+europe@x.com", "no-reply@x.com", "donotreply@x.com",
-                     "postmaster@x.com"):
+                     "postmaster@x.com", "chat@orbifold.ai", "legal@zyte.com"):
             self.assertTrue(is_role_address(addr), addr)
 
     def test_a_person_s_address_is_never_refused(self):
@@ -132,6 +132,22 @@ class TheGateHoldsAQueueAddress(unittest.TestCase):
                                         company="Claude", subject="Claude in the corpus"))
         self.assertEqual(verdict, "HOLD")
         self.assertIn("role mailbox", messages(findings))
+
+    def test_chat_and_legal_boxes_are_held_like_any_other_queue(self):
+        # Two ICP leads had no address but a footer inbox: Orbifold publishes chat@ and Zyte
+        # publishes legal@. Neither is a person, and the gate must not treat "not literally
+        # support@" as an exception, because a shared inbox is read by whoever watches it.
+        for to, company, domain, name in (
+                ("chat@orbifold.ai", "Orbifold AI", "orbifold.ai", "Enoch Zhu"),
+                ("legal@zyte.com", "Zyte", "zyte.com", "Daniel Cave")):
+            with self.subTest(to=to):
+                row = lead(company=company, id=company.lower().replace(" ", "-"),
+                           domain=domain, contact_name=name, email=to)
+                d = draft(to=to, id=f"{row['id']}--first-email", company=company,
+                          subject=f"{company} in the corpus")
+                verdict, findings = run(row, d=d)
+                self.assertEqual(verdict, "HOLD", messages(findings))
+                self.assertIn("role mailbox", messages(findings))
 
 
 class TheCountTokenStandsAlone(unittest.TestCase):
