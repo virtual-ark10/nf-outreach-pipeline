@@ -471,7 +471,10 @@ def gate(draft, ctx):
                  kind="count", claimed=n, real=real,
                  pattern=r"(?<![\w,])" + str(n) + r"(?![\d,])(?=\s+[A-Za-z0-9.'&,\s]{0,24}?(?:placements|sponsorships))")
 
-    pubs_named = re.findall(r"-\s+([^\n:()]{3,60}?)(?:\s*\(est\.|\s*:\s|\n|$)", text)
+    # The whole bullet label, colons included: a publication whose name carries a subtitle
+    # ("Linear: A Vertical Software & Vertical AI Newsletter") is anchored under that full name,
+    # so stopping at the colon made a correctly linked bullet look unlinked.
+    pubs_named = re.findall(r"-\s+([^\n(]{3,90}?)(?:\s*\(est\.|\s*\n|\s*$)", text)
     # A publication is verified by the link that was minted onto it: the pad's link pass only
     # mints for a name it resolved to a corpus slug, and the anchor text is that resolved name.
     # Re-matching display names against the search endpoint is flaky (the result window shifts
@@ -670,7 +673,19 @@ def main():
                 score = 0
             return (0 if contacted else 1, quality_rank(lead), -score)
 
-        queue = sorted([r for r in results if r["verdict"] == "PASS"], key=kind_and_score)
+        # A REVIEW whose only finding is the unverified-gap advisory is not a defect: the copy is
+        # in offer form, the founder ruled that we pitch without a proven gap and let the prospect
+        # correct us, and holding those drafts stalls leads the gate has already cleared on every
+        # hard rule. Every other soft finding keeps the draft out of the send.
+        sendable_soft = re.compile(r"researched copy .* rests on an unverified gap", re.I)
+
+        def sendable(r):
+            if r["verdict"] == "PASS":
+                return True
+            return (r["verdict"] == "REVIEW"
+                    and all(sendable_soft.search(str(x.get("message") or "")) for x in r["findings"]))
+
+        queue = sorted([r for r in results if sendable(r)], key=kind_and_score)
         print(f"  cap {cap} ({cap_src}); {len(queue)} clean draft(s) eligible")
         for i, r in enumerate(queue[:cap]):
             if i:

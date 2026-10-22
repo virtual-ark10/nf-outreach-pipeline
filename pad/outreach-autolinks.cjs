@@ -457,6 +457,12 @@ async function prepareDraft(draft, cfg) {
         rawMints.push(row);
         const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
         lines[i] = raw.replace(/\s*[—–-]?\s*:?\s*\[TRACKED_LINK\]\s*$/, '').trimEnd();
+        // Use the corpus's own name for the bullet, so the plain text and the anchor agree and a
+        // subtitle the corpus does not carry cannot make the gate think the bullet is unlinked.
+        if (resolved.name && norm(resolved.name) !== norm(name)) {
+          const tail = (/\s*\(([^)]*)\)\s*$/.exec(raw) || [null, null])[1];
+          lines[i] = `- ${resolved.name}${tail ? ` (${tail})` : ''}`;
+        }
         published.push({ name: resolved.name || name, url });
         minted.push({ name: resolved.name || name, slug: resolved.slug, token: row.token, url });
         changed = true;
@@ -487,12 +493,65 @@ async function prepareDraft(draft, cfg) {
       const row = await mintLink(cfg, leadId, `${base}${spec.path}`, spec.ref, campaign);
       const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
       docMinted.push({ pretty, url });
+      rawMints.push(row);   // the local mirror is the send gate's ledger: an unmirrored token
+                            // cannot be resolved there and the draft is held
       text = text.split(ph).join(pretty);
       minted.push({ name: pretty, slug: null, token: row.token, url });
       changed = true;
     } catch (e) {
       notes.push(`mint failed for ${ph}: ${e.message}`);
       unresolved.push(ph);
+    }
+  }
+
+  // ---- 1c. a bullet with no link is a claim the gate can only hold ------------------
+  // A publication the resolver cannot place must not stay in the copy as an unlinked name. Try
+  // once more (a label carrying a subtitle, "Linear: A Vertical Software ...", resolves on its
+  // short name), and drop the bullet when it still cannot be placed, correcting the lead-in so
+  // "Three lists" does not become a lie.
+  {
+    const linkedNames = new Set();
+    for (const m of html.matchAll(/<a\s+[^>]*>([\s\S]*?)<\/a>/gi)) {
+      linkedNames.add(norm(visibleText(m[1])));
+    }
+    for (const p of published) linkedNames.add(norm(p.name));
+    const keep = [];
+    let dropped = 0;
+    for (const line of text.split('\n')) {
+      if (!/^\s*[-*•]\s+/.test(line) || line.includes('[TRACKED_LINK]')) { keep.push(line); continue; }
+      const name = bulletName(line);
+      if (!name || linkedNames.has(norm(name))) { keep.push(line); continue; }
+      let resolved = null;
+      try { resolved = await resolvePublication(name, cfg); } catch (e) { resolved = null; }
+      if (resolved && cfg.token) {
+        try {
+          const row = await mintLink(cfg, leadId, `${base}/app/publications/${resolved.slug}`,
+            `pub-${resolved.slug}-nf`, campaign);
+          rawMints.push(row);
+          const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
+          published.push({ name: resolved.name || name, url });
+          linkedNames.add(norm(resolved.name || name));
+          minted.push({ name: resolved.name || name, slug: resolved.slug, token: row.token, url });
+          // The bullet keeps the canonical name and drops a subtitle the corpus does not use:
+          // "Linear: A Vertical Software & Vertical AI Newsletter (est. 10K)" -> "Linear (est. 10K)".
+          // The gate matches the bullet to the anchor by name, so both sides must spell it the same.
+          const tail = (/\s*\(([^)]*)\)\s*$/.exec(line) || [null, null])[1];
+          const label = resolved.name || name;
+          keep.push(`- ${label}${tail ? ` (${tail})` : ''}`);
+          changed = true;
+          continue;
+        } catch (e) { notes.push(`mint failed for "${name}": ${e.message}`); }
+      }
+      dropped += 1;
+    }
+    if (dropped) {
+      text = keep.join('\n');
+      const n = keep.filter((l) => /^\s*[-*•]\s+/.test(l)).length;
+      const word = { 1: 'One', 2: 'Two', 3: 'Three' }[n] || String(n);
+      text = text.replace(/(One|Two|Three|\d+) ([a-z][\w\s-]*?) lists taking sponsors:/i,
+        (_m, _w, lane) => `${word} ${lane} lists taking sponsors:`);
+      notes.push(`dropped ${dropped} bullet(s) the corpus could not place`);
+      changed = true;
     }
   }
 

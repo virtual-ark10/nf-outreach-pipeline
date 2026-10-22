@@ -219,6 +219,11 @@ def candidates(search, lane_queries, exclude=()):
         for pub in (body.get("newsletters") or []):
             if not accepts_sponsors(pub):
                 continue
+            # A name carrying a subtitle ("Linear: A Vertical Software ...") is anchored under
+            # the full string, and a bullet label the pad shortens at the colon then reads as an
+            # unlinked claim at send. Skip those rather than ship a link the gate cannot match.
+            if any(sep in str(pub.get("name") or "") for sep in (":", " | ", " — ")):
+                continue
             p = pick(pub, q)
             if not usable(p) or p["slug"].lower() in seen or norm(p["name"]) in exclude:
                 continue
@@ -272,7 +277,8 @@ def first_touch(lead, picks):
     # The finding is the subject. The company prefix is there so forty drafts in one morning are
     # not forty identical lines, but it is dropped when it pushes the line past what an inbox
     # preview shows: a subject has to read in one gulp.
-    finding = (f"{peer_pick['sponsors'][0]} is buying in {peer_pick['name']}" if peer_pick
+    short_pub = str(peer_pick['name']).split(':')[0].strip() if peer_pick else ''
+    finding = (f"{peer_pick['sponsors'][0]} is buying in {short_pub}" if peer_pick
                else f"{lane} lists taking sponsors")
     prefixed = f"{company}: {finding}"
     subject = prefixed if len(prefixed) <= 58 else finding
