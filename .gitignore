@@ -42,3 +42,6 @@ data/name-cache/
 # Employee-count lookups behind the off-ICP filter (scripts/icp_fit.py): re-derivable
 # provider responses, same reasoning as data/name-cache.
 data/icp-size-cache.json
+
+# Fetched-page cache for the gap verifier (scripts/icp_gap_verify.py): re-fetchable, the report is not.
+data/icp-gap/pages/
