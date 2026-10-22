@@ -26,6 +26,11 @@ scripts/_lead_rank.py), then by placement count. --min-quality is a threshold, n
   python3 scripts/import_candidates.py --apply --limit 40
   python3 scripts/import_candidates.py --apply --recheck       # correct guessed domains
   python3 scripts/import_candidates.py --min-quality HIGH --min-placements 2
+
+Operator escapes, for a domain the search gets wrong or cannot settle:
+  --skip "Liberty Capital"                    leave a candidate out of this run
+  --pin-domain "Affinity=affinity.co"          import at a domain a human confirmed
+  data/intake-hold.txt                        durable holds, every run (default --hold-file)
 """
 import argparse
 import csv
@@ -48,6 +53,7 @@ ALL_SPONSORS = Path(os.environ.get(
     "NF_ALL_SPONSORS", "/srv/newsletterfit/reports/sponsor-outreach/all-sponsors.json"))
 ENV_FILE = Path(os.environ.get("NF_ENV_FILE", "/home/boxed/resend-pad/.env"))
 USAGE_FILE = Path(os.environ.get("NF_TREG_USAGE", REPO / "data" / "treg-usage.json"))
+HOLD_FILE = Path(os.environ.get("NF_INTAKE_HOLD", REPO / "data" / "intake-hold.txt"))
 CRM = os.environ.get("NF_CRM_URL", "http://127.0.0.1:3002")
 
 TREG = Path(os.environ.get("TREG_BIN", "/home/boxed/.local/bin/treg"))
@@ -72,6 +78,33 @@ DOMAIN_PREFIXES = ("get", "try", "use")
 DOMAIN_SUFFIX_WORDS = ("hq", "app")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/120 Safari/537.36")
+
+# Free host lookup, OFF by default and deliberately so. The local SearXNG looked like the
+# right free rung, but its aggregate route returns zero results on this host and its bing
+# engine, under load, returned unrelated adult sites for a mattress brand ("VelaSleep" ->
+# xhamster.com, 2026-10-22). A wrong domain is worse than a missing address, so a search
+# result is only trusted from the paid SERP route until that instance is proven sane. Set
+# NF_SEARXNG_URL to opt in after checking it by hand.
+#
+# The paid route is capped at $1.00 a month (serp_usd). A lookup is about $0.00015, so a
+# 40-candidate weekday run is roughly $0.20 a month and the rest covers the contact finder.
+# The cap was $0.25 and got spent by other consumers part-way through October, which turned
+# search off for everyone and left intake guessing (1 of 60 resolved, 2026-10-22).
+SEARXNG_URL = os.environ.get("NF_SEARXNG_URL", "")
+# SearXNG suspends an engine for minutes after a burst, so lookups are paced.
+SEARXNG_MIN_INTERVAL = float(os.environ.get("NF_SEARXNG_MIN_INTERVAL", "1.5"))
+
+# Words that are not a brand: the export's scraper leaves fragments like this in the sponsor
+# column ("State", "One", "Built", "In Today's Issue"). Their obvious domains belong to
+# somebody else, so even a search-confirmed host is not trusted for them, and a lead is
+# imported only when a readable page names the brand.
+GENERIC_NAMES = {
+    "one", "state", "built", "america", "today", "todays", "issue", "news", "shop",
+    "store", "home", "group", "digital", "media", "health", "life", "daily", "weekly",
+    "the", "this", "that", "here", "now", "new", "best", "top", "more", "all", "local",
+    "national", "global", "thebrand", "unknown", "none", "other", "misc",
+    "in", "a", "an", "of", "for", "and", "on", "at", "to", "by", "with", "your", "our",
+}
 
 # The brand/page/host matching rules live in the local-SEO pipeline's site_match.py and are
 # imported rather than reimplemented: that module is already the one place either pipeline
@@ -107,6 +140,128 @@ def norm(value) -> str:
 
 def kebab(value) -> str:
     return re.sub(r"[^a-z0-9]+", "-", str(value or "").lower()).strip("-")
+
+
+def hold_file_names(path) -> list:
+    """Company names in the durable hold list, one per line, `#` comments allowed.
+
+    A hold is different from --skip: --skip is this run, the file is every run until someone
+    edits it. It exists for a candidate whose identity is genuinely unresolved (an ambiguous
+    name, an unreachable site), where importing a plausible-looking domain would put a wrong
+    company into the queue and every downstream stage would treat it as confirmed.
+    """
+    try:
+        lines = Path(path).read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+    names = []
+    for line in lines:
+        line = line.split("#", 1)[0].strip()
+        if line:
+            names.append(line)
+    return names
+
+
+def drop_held(candidates, spec: str):
+    """Candidates the operator asked to leave alone this run (--skip).
+
+    A human call, not a rule: some resolved domains are plausible but not certain
+    ("Affinity" -> affinity.studio, when the CRM company of that name is affinity.co), and
+    importing one costs more to undo than to postpone. Matching is by normalised company
+    name, so case, spacing and punctuation in the argument do not matter.
+    """
+    held = {norm(n) for n in str(spec or "").split(",") if n.strip()}
+    if not held:
+        return candidates, 0
+    kept = [c for c in candidates if norm(c[2]) not in held]
+    return kept, len(candidates) - len(kept)
+
+
+def pinned_domains(spec: str) -> dict:
+    """Operator-confirmed company=domain pairs, keyed by normalised company name.
+
+    The search has the last word on a domain this pipeline has never seen, but it can rank a
+    namesake first: "Affinity" comes back affinity.studio (Canva's design software) while the
+    corpus sponsor is Affinity the private-capital CRM at affinity.co. A human who has read
+    both pages settles it. A pin only skips the *resolution*; the ICP check still runs.
+    """
+    pins = {}
+    for pair in str(spec or "").split(","):
+        if "=" not in pair:
+            continue
+        name, _, domain = pair.partition("=")
+        name, domain = norm(name), norm_domain(domain.strip())
+        if name and domain and "." in domain:
+            pins[name] = domain
+    return pins
+
+
+def brand_host(host: str, name: str, slug: str = "") -> bool:
+    """Is this host the brand's own domain? site_match's rule, plus the dotted-name case.
+
+    label_is_brand compares the registrable LABEL to the brand, which is right for a name
+    like "Anam" (anam.ai) and wrong for a brand that carries its own TLD. Two real export
+    rows fail it while their pages plainly name the brand:
+
+      Name.com  -> name.com    label "name" vs brand "namecom"
+      GroundNews -> ground.news label "ground" vs brand "groundnews"
+
+    So a whole-host match counts too: squash the registrable domain and the brand name
+    together and compare. That is an exact test, not a looser one, so it cannot turn a
+    namesake into a match (a sponsor called Apollo still does not own apolloglobal.com).
+    """
+    if label_is_brand(host, name, slug):
+        return True
+    reg = registrable(host)
+    want = norm(slug or name)
+    return bool(reg and want) and norm(reg) == want
+
+
+def exact_brand_host(host: str, name: str, slug: str = "") -> bool:
+    """The host is the brand's OWN domain, not a get/try/hq variant or a carrier of the word.
+
+    Used only as the evidence bar for accepting a domain whose page could not be fetched:
+    the label has to be the brand itself (converse.com for Converse), or the whole host has
+    to be the brand (name.com for Name.com). getconverse.com is a namesake until its page
+    says otherwise, and that is the case this keeps out.
+    """
+    reg = registrable(host)
+    want = norm(slug or name)
+    if not reg or not want:
+        return False
+    return norm(reg.split(".")[0]) == want or norm(reg) == norm(name)
+
+
+def name_is_specific(name: str) -> bool:
+    """Is this sponsor name a brand rather than a scraped fragment?
+
+    Used only for the weaker evidence path (a search result whose page cannot be read).
+    "Converse" and "Masterclass" are brands. "State", "One", "Built" and "In Today's Issue"
+    are not, and their domains belong to a government, a registrar, a lender or nobody.
+    """
+    words = [w for w in re.split(r"\s+", str(name or "").strip()) if w]
+    if not words:
+        return False
+    key = norm(name)
+    if key in GENERIC_NAMES:
+        return False
+    if len(words) == 1:
+        # A one-word name needs enough letters to be a brand, unless it is an acronym.
+        return len(key) >= 4 or (len(key) == 3 and str(name).isupper())
+    # A multi-word name is specific unless every word is a generic one.
+    return any(norm(w) not in GENERIC_NAMES for w in words)
+
+
+def looks_like_domain(name: str) -> str:
+    """-> the host, when the sponsor name is already a domain ("FastSpring.gg").
+
+    The export writes a handful of sponsors that way. Guessing "fastspringgg.com" from that
+    name is a wasted fetch, so the literal host is tried first.
+    """
+    text = str(name or "").strip().strip(".")
+    if re.fullmatch(r"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}", text.lower()):
+        return text.lower()
+    return ""
 
 
 def crm_call(method: str, path: str, token: str, body=None, tries: int = 3):
@@ -174,6 +329,55 @@ def fetch(url: str, timeout: int = 12) -> str:
         return ""
 
 
+_LAST_SEARCH = 0.0
+
+
+def _pace_search() -> None:
+    """Keep lookups at least SEARXNG_MIN_INTERVAL apart: a burst suspends the engine."""
+    global _LAST_SEARCH
+    wait = SEARXNG_MIN_INTERVAL - (time.time() - _LAST_SEARCH)
+    if wait > 0:
+        time.sleep(wait)
+    _LAST_SEARCH = time.time()
+
+
+def _searx_once(query: str, engines: str) -> list:
+    params = {"q": query, "format": "json"}
+    if engines:
+        params["engines"] = engines
+    req = urllib.request.Request(f"{SEARXNG_URL.rstrip('/')}/search?"
+                                 f"{urllib.parse.urlencode(params)}",
+                                 headers={"User-Agent": UA})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            payload = json.loads(r.read().decode("utf-8", "ignore") or "{}")
+    except Exception:
+        return []
+    return payload.get("results") or []
+
+
+def searx_hosts(name: str, limit: int = 8) -> list:
+    """-> hosts in rank order from the local SearXNG, or [] when it cannot answer.
+
+    Free and keyless, which is why it is asked before the paid route. A dead instance is
+    not an error: the caller moves on to the SERP.
+    """
+    if not SEARXNG_URL:
+        return []
+    _pace_search()
+    results = _searx_once(name, "bing")
+    if not results:
+        results = _searx_once(name, "")           # the aggregate, when the engine is dry
+    hosts = []
+    for item in results[:limit * 2]:
+        host = registrable(urllib.parse.urlparse(str(item.get("url") or "")).netloc)
+        if host and host not in hosts:
+            hosts.append(host)
+        if len(hosts) >= limit:
+            break
+    return hosts
+
+
 def serp_hosts(name: str, limit: int = 8) -> tuple:
     """-> (hosts in rank order, cost) from the search route. Never raises."""
     body = {"q": name, "gl": "us", "hl": "en", "limit": limit}
@@ -194,49 +398,93 @@ def serp_hosts(name: str, limit: int = 8) -> tuple:
         return [], cost
     hosts = []
     for r in results:
-        host = registrable(urllib.parse.urlparse(str(r.get("link") or "")).netloc)
-        if host and host not in hosts:
-            hosts.append(host)
-    return hosts, cost
+        hosts.append(_host_of(r))
+    return [h for h in dict.fromkeys(hosts) if h], cost
+
+
+def _host_of(result: dict) -> str:
+    """-> the registrable host of a search result, whatever shape the route answers in.
+
+    This used to read only r["link"], and the treg SERP route answers with r["url"] and
+    r["domain"]. Every paid lookup therefore came back as "no hosts", the resolver fell
+    through to guessing, and the spend was recorded ($0.2638 in October, 878 lookups) while
+    the results were thrown away. That is why 54 of 60 candidates came back unresolved
+    (2026-10-22).
+    """
+    for key in ("url", "link", "domain", "displayed_url"):
+        raw = str(result.get(key) or "").strip()
+        if not raw:
+            continue
+        if "//" not in raw:
+            raw = "https://" + raw
+        host = registrable(urllib.parse.urlparse(raw).netloc)
+        if host:
+            return host
+    return ""
 
 
 def guesses_for(name: str, slug: str = "") -> list:
+    literal = looks_like_domain(name) or looks_like_domain(slug)
     base = re.sub(r"[^a-z0-9]", "", (slug or kebab(name)).lower())
-    if not base:
-        return []
-    out = [f"{base}.{s}" for s in DOMAIN_SUFFIXES]
-    out += [f"{p}{base}.com" for p in DOMAIN_PREFIXES]
-    out += [f"{base}{w}.com" for w in DOMAIN_SUFFIX_WORDS]
+    out = [literal] if literal else []
+    if base:
+        out += [f"{base}.{s}" for s in DOMAIN_SUFFIXES]
+        out += [f"{p}{base}.com" for p in DOMAIN_PREFIXES]
+        out += [f"{base}{w}.com" for w in DOMAIN_SUFFIX_WORDS]
     seen, uniq = set(), []
     for d in out:
-        if d not in seen:
+        if d and d not in seen:
             seen.add(d)
             uniq.append(d)
     return uniq
 
 
 def resolve_domain(name: str, slug: str, budget: dict) -> tuple:
-    """-> (domain, evidence). Search first; guess-and-check only when the route is dry.
+    """-> (domain, evidence). Free search first, then the paid route, then guess-and-check.
 
-    The guess fallback runs only when the search returned no host that carries the brand's
-    own name. If the search answered and named the brand's sites but none of them passed the
-    page check, guessing further is how a namesake gets imported, so it stops there.
+    The guess fallback runs only when no search named a host that carries the brand's own
+    name: guessing further after that is how a namesake gets imported.
+
+    One case is new (2026-10-22). A brand whose site refuses the fetcher used to be thrown
+    away even when the search had put its own domain first: converse.com, sap.com,
+    adobe.com and masterclass.com all answer the SERP and then hand back zero bytes. When
+    the single most-branded host is an exact whole-host match and the name is specific
+    enough to be a brand, that host is accepted with the unreadable page stated as the
+    evidence, so the note on the lead says exactly how it was resolved. Anything vaguer
+    ("State") still needs a readable page.
     """
-    if budget.get("serps_left", 0) > 0:
+    branded, blocked = [], []
+    hosts = searx_hosts(name)
+    if not hosts and budget.get("serps_left", 0) > 0:
         budget["serps_left"] -= 1
         budget["calls"] = budget.get("calls", 0) + 1
         hosts, cost = serp_hosts(name)
         budget["cost"] = budget.get("cost", 0.0) + cost
         record_serps(cost, 1)               # spend is recorded as it happens, not at the end
-        branded = [h for h in hosts if label_is_brand(h, name, slug)]
-        for host in branded:
-            if page_names_brand(fetch(f"https://{host}/"), name):
-                return host, f"search result {host} names the brand"
-        if branded:
-            return "", ""
+    for host in hosts:
+        if not brand_host(host, name, slug):
+            continue
+        # Only the best-ranked branded host is considered. Walking further down the results
+        # is how a namesake gets picked: "Converse" ranks converse.com first (unreadable to
+        # the fetcher) and converse.edu second, and a university page happily names
+        # "Converse", so the second choice would have been imported as the shoe brand.
+        branded.append(host)
+        html = fetch(f"https://{host}/")
+        if page_names_brand(html, name):
+            return host, f"search result {host} names the brand"
+        if not html:
+            blocked.append(host)
+        break
+    if blocked and name_is_specific(name):
+        exact = [h for h in blocked if exact_brand_host(h, name, slug)]
+        if len(exact) == 1:
+            return exact[0], (f"search result {exact[0]} is the brand's own domain; the page "
+                              f"could not be fetched, so the name is all the evidence")
+    if branded:
+        return "", ""
     for domain in guesses_for(name, slug)[:5]:
         html = fetch(f"https://{domain}/", timeout=8)
-        if html and label_is_brand(domain, name, slug) and page_names_brand(html, name):
+        if html and brand_host(domain, name, slug) and page_names_brand(html, name):
             return domain, f"guessed {domain} names the brand"
         time.sleep(0.3)
     return "", ""
@@ -252,8 +500,17 @@ def main() -> int:
                     help="corpus placements a candidate must have (default 1)")
     ap.add_argument("--limit", type=int, default=40, help="candidates to import this run")
     ap.add_argument("--max-serps", type=int, default=120, help="name lookups this run")
-    ap.add_argument("--serp-monthly-cap", type=float, default=0.25,
+    ap.add_argument("--serp-monthly-cap", type=float, default=1.00,
                     help="stop searching once this month's search spend reaches this")
+    ap.add_argument("--skip", default="",
+                    help="comma-separated company names to leave out of this run, e.g. "
+                         "\"Affinity,Liberty Capital\" - for a domain that needs a human eye")
+    ap.add_argument("--pin-domain", default="",
+                    help="company=domain pairs that skip resolution, e.g. \"Affinity=affinity.co\"; "
+                         "for a domain a human has confirmed and the search ranks wrongly")
+    ap.add_argument("--hold-file", default=str(HOLD_FILE),
+                    help="durable hold list, one company name per line; applies to every run "
+                         "(pass '' to ignore it)")
     ap.add_argument("--recheck", action="store_true",
                     help="re-resolve the domains of untouched intake leads already imported")
     ap.add_argument("--apply", action="store_true", help="write to the CRM (default: plan only)")
@@ -354,14 +611,29 @@ def main() -> int:
     # Preferred tier first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py), then the most
     # placements, then the name. QUALITY_ORDER is the threshold scale above and must not be used
     # here: it ranks HIGH above MEDIUM, which is the order this sort exists to invert.
+    candidates, skip_count = drop_held(candidates, args.skip)
+    if skip_count:
+        print(f"  held back by --skip: {skip_count} candidate(s)")
+    if args.hold_file:
+        file_held_names = hold_file_names(args.hold_file)
+        candidates, file_held = drop_held(candidates, ",".join(file_held_names))
+        if file_held:
+            print(f"  held back by {args.hold_file}: {file_held} candidate(s)")
     candidates.sort(key=lambda t: (quality_rank(t[1]), -t[0], t[2].lower()))
     print(f"  export: {len(rows)} row(s); {len(candidates)} qualified candidate(s) not in "
           f"the CRM at {args.min_quality}+ with {args.min_placements}+ placement(s)")
 
+    pins = pinned_domains(args.pin_domain)
+    if pins:
+        print(f"  pinned by --pin-domain: {', '.join(sorted(pins))}")
+
     added, unresolved, failed, off_icp = [], [], [], []
     for placements, quality, name, r in candidates[: args.limit]:
         slug = slugs.get(norm(name), "")
-        domain, evidence = resolve_domain(name, slug, budget)
+        if norm(name) in pins:
+            domain, evidence = pins[norm(name)], "domain pinned by the operator"
+        else:
+            domain, evidence = resolve_domain(name, slug, budget)
         if not args.apply:
             print(f"  would import {name:<28} ({quality}, {placements} placement(s))")
             print(f"      domain {domain or 'UNRESOLVED':<28} {evidence or 'no match'}")

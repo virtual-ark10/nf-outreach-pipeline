@@ -1,0 +1,12 @@
+# Intake holds — companies the importer must not add, one name per line.
+# A hold is for a candidate whose IDENTITY is unresolved, not one that failed the ICP gate:
+# a plausible-looking domain for the wrong company is worse than no lead, because contact
+# discovery and the draft job treat the row as confirmed.
+#
+# Remove a line when the identity is settled, or import it deliberately with
+# --pin-domain "Company=corrected.com".
+
+# Sponsored "Liberty's Highlights" (30K, Technology) alongside AI newsletters. The search
+# answers libertycapital.bank — a Texas community bank — and the site returns nothing. Neither
+# the export row nor the web settles which "Liberty Capital" this is. Held 2026-10-22.
+Liberty Capital
