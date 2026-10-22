@@ -52,6 +52,9 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _address_rules import is_role_address  # noqa: E402  (one definition, shared with the gate)
+# The researched copy is only as good as the research behind it: one module decides whether a
+# custom file's evidence was verified, so the seeder cannot send a claim the verifier refuted.
+from _gap_verdict import GapGate           # noqa: E402
 
 REPO = "/home/boxed/nf-outreach-pipeline"
 PAD_DB = f"{REPO}/pad/data/outreach.db"
@@ -61,6 +64,11 @@ BATCH = "/home/boxed/.hermes/cache/scratch/nf_icp_batch.json"
 FLAG = f"{REPO}/data/icp-drafts.enabled"
 # Researched first-touch copy per lead id, written by hand, used instead of the lane template.
 CUSTOM_DIR = f"{REPO}/data/icp-custom"
+# The research records and the verifier's report that the copy stands on (see the skill's
+# references/icp-gap-research.md). Env-overridable so a test can point them at a fixture.
+GAP_DIR = os.environ.get("ICP_GAP_DIR") or f"{REPO}/data/icp-gap"
+GAP_RESEARCH = os.path.join(GAP_DIR, "research")
+GAP_REPORT = os.path.join(GAP_DIR, "verify-report.json")
 PAD = "http://127.0.0.1:3001"
 
 # Which lists to search for, by the lead's industry. The industry is a coarse firmographic label
@@ -500,8 +508,16 @@ def main():
             work = [(t, l) for t, l in work if t == args.touch]
     print(f"  {len(work)} ICP lead(s) owed a touch")
 
-    pools, batch, skipped = {}, [], []
+    gate = GapGate(CUSTOM_DIR, GAP_RESEARCH, GAP_REPORT)
+    pools, batch, skipped, held_gap = {}, [], [], []
     for i, (touch, lead) in enumerate(work[: args.count]):
+        # Researched copy has to clear its own research before it is used. A blocked verdict is a
+        # hold, not a fallback to the lane template: the template would still email the account,
+        # just without the claim, and someone needs to look at why the evidence did not hold.
+        gv = gate.check(lead, touch)
+        if gv and gv["status"] in ("blocked", "unresearched", "unchecked"):
+            held_gap.append((lead.get("company"), gv["status"], gv["reason"]))
+            continue
         lane, queries = lane_for(lead)
         if lane not in pools:
             pools[lane] = candidates(search, queries)
@@ -526,6 +542,13 @@ def main():
             "campaign": "outbound", "touch": touch,
         })
 
+    # Say what the researched copy did, not just what composed: a run that held four accounts
+    # because their quotes did not verify is a different day from one that had no research at all.
+    gap_counts = gate.summary()
+    if gap_counts:
+        print("  researched copy: " + ", ".join(f"{k} {v}" for k, v in sorted(gap_counts.items())))
+    for co, status, why in held_gap:
+        print(f"    held {str(co)[:26]:<26} {status}: {str(why)[:110]}")
     print(f"  composed {len(batch)} draft(s)   (skipped {len(skipped)})")
     for co, why in skipped[:8]:
         print(f"    skip {str(co)[:26]:<26} {why}")
