@@ -130,6 +130,9 @@ Touch 4: the commercial close. Sample export for a segment they pick, or a scope
 - Subject: three to seven words, one idea, specific to the lead. Name what they get or the
   surface they would use it on. Never a cadence label, never two ideas joined by "and", never an
   abstraction ("provenance, and the text question" became "What one newsletter record contains").
+  When the prospect publishes a count, use it: "Newsletters as your 76th signal" against their 75,
+  "The 16th signal" against their documented 15. Vague gestures at the same idea ("Beyond the 75
+  signals") do not count. The full playbook is the `subject-lines` skill.
 - The first line is the second hook, so it is the pitch and never a description of the prospect's
   own product. They know what they sell. Open with the signal we derive, picked for their gap.
 - The competitor comparison is that lead's own peer set, read from their docs and from the graph.
