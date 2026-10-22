@@ -178,6 +178,36 @@ class MatchingTheBody(unittest.TestCase):
         self.assertIsNone(gv.custom_body_hit(self.custom, "tiny", "Hi Wei,\n\nNewsletter mentions."))
 
 
+class RetiredCopy(unittest.TestCase):
+    """A withdrawn copy file is a record, not an input."""
+
+    def setUp(self):
+        import json
+        import tempfile
+        self.dir = tempfile.mkdtemp()
+        self.custom = os.path.join(self.dir, "custom")
+        os.makedirs(self.custom)
+        body = ("Your sourcing is enumerated as ATS, job boards, open web and partner databases, "
+                "which is a candidate-side inventory rather than an editorial one.")
+        with open(os.path.join(self.custom, "hireez.retired.json"), "w") as fh:
+            json.dump({"subject": "s", "body": body,
+                       "retired": {"retired_at": "2026-10-22", "reason": "not a prospect"}}, fh)
+        with open(os.path.join(self.custom, "crustdata.json"), "w") as fh:
+            json.dump({"subject": "s", "body": "A sixth dataset beside companies, people and jobs."}, fh)
+        self.body = body
+
+    def test_a_retired_file_is_not_an_active_stem(self):
+        self.assertEqual(gv.custom_stems(self.custom), {"crustdata"})
+
+    def test_a_retired_body_is_not_matched_against_a_draft(self):
+        text = "Hi Dubzee,\n\n" + self.body
+        self.assertIsNone(gv.custom_body_hit(self.custom, "hireez", text))
+
+    def test_the_retired_lead_has_no_custom_copy_to_draft(self):
+        gate = gv.GapGate(self.custom, os.path.join(self.dir, "research"), os.path.join(self.dir, "r.json"))
+        self.assertIsNone(gate.check({"id": "hireez", "company": "HireEZ"}))
+
+
 class SendPath(unittest.TestCase):
     """The gate holds a queued draft whose researched body has lost its evidence."""
 

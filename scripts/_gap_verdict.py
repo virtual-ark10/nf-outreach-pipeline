@@ -157,6 +157,19 @@ def verdict(record, report_entry=None):
     return dict(base, status=BLOCKED, reason=f"gap_status is {gap or 'missing'}, which is not a verdict")
 
 
+def custom_stems(custom_dir):
+    """Active custom-copy stems (`<id>` and `<id>.touchN`).
+
+    A `*.retired.json` is the record of a copy that was withdrawn (the lead was archived as not a
+    prospect, say). It stays in the tree so the decision is auditable, but it is not an input: it
+    must not be drafted, matched against a draft, or counted as blocked copy in a report.
+    """
+    if not os.path.isdir(custom_dir):
+        return set()
+    return {name[:-5] for name in os.listdir(custom_dir)
+            if name.endswith(".json") and not name.endswith(".retired.json")}
+
+
 def custom_body_hit(custom_dir, lead_id_, text, min_probe=40):
     """The custom-copy file stem whose body appears in this draft, or None.
 

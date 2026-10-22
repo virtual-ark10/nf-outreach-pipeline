@@ -1,4 +1,0 @@
-{
- "subject": "A ready newsletter corpus instead of a collection project",
- "body": "Zyte API already auto-extracts article content from any URL, so the question for a newsletter corpus is not whether it can be scraped but whether it is worth building and maintaining 26,000 publication pipelines.\n\nWe have done that part: more than 27,000 public newsletter publications, 143,000 articles, with company, people, topic, guest and sponsor extraction and the article URL and date on each record. If your managed data team wants to offer newsletter coverage to customers, licensing ours is faster than collecting it.\n\nHappy to send a sample and a coverage summary. If it duplicates work you already run, tell me and that answer is useful too."
-}

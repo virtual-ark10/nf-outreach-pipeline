@@ -84,10 +84,11 @@ def report(research_dir, report_path, custom_dir, apply_):
         v = gv.verdict(rec, rep.get(str(company).strip().lower()))
         rows.append({"lead_id": kid, "company": company, **v})
     # A custom file with no record at all is the other half of the picture.
+    retired = 0
     if os.path.isdir(custom_dir):
         known = {r["lead_id"] for r in rows}
-        have = {f[:-5] for f in os.listdir(custom_dir)
-                if f.endswith(".json") and ".touch" not in f}
+        have = {s for s in gv.custom_stems(custom_dir) if ".touch" not in s}
+        retired = sum(1 for f in os.listdir(custom_dir) if f.endswith(".retired.json"))
         for kid in sorted(have - known):
             rows.append({"lead_id": kid, "company": kid,
                          **gv.verdict(None, None), "custom_file": True})
@@ -102,6 +103,8 @@ def report(research_dir, report_path, custom_dir, apply_):
         counts[r["status"]] = counts.get(r["status"], 0) + 1
     print(f"\n  {len(rows)} researched account(s): " +
           ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
+    if retired:
+        print(f"  {retired} retired copy file(s): withdrawn, not counted")
 
     blocked = [r for r in rows if r["status"] in (gv.BLOCKED, gv.UNRESEARCHED)]
     if apply_:
