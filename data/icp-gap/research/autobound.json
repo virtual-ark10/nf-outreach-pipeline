@@ -1,0 +1,58 @@
+{
+ "company": "Autobound",
+ "official_website": "https://www.autobound.ai/",
+ "product_summary": "B2B signal-intelligence platform delivering 700+ signals from 35+ public sources via REST API, MCP server, file push and OEM licensing, plus AI-personalized sales content generated from those signals.",
+ "current_data_sources": [
+  "SEC EDGAR filings and earnings call transcripts",
+  "LinkedIn and job boards (hiring surges, job changes)",
+  "patent databases and GitHub",
+  "Glassdoor",
+  "Reddit and social posts",
+  "news feeds",
+  "podcast transcripts"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://autobound-api.readme.io/docs",
+   "quote": "Autobound delivers B2B buying signals \u2014 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies"
+  },
+  {
+   "url": "https://www.autobound.ai/platform",
+   "quote": "REST API (sub-200ms), GCS push (daily/weekly), S3 push (daily/weekly), flat file (JSONL, Parquet, CSV), or OEM licensing."
+  },
+  {
+   "url": "https://www.autobound.ai/integrations",
+   "quote": "Native MCP support for Claude Code and Cursor."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Their platform architecture names the sources they monitor and newsletters are absent: \"We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more.\" Podcast transcripts are extracted, but no newsletter publications. Searched: /platform, /integrations, autobound-api.readme.io docs, site-restricted 'newsletter' searches (results were only their blog posts about email marketing).",
+ "verified_gap": "No newsletter source in the documented 35+ source list, so no newsletter-derived signals: no publication-level topics, no sponsor relationships, no article timestamps. Their closest documented analogue is podcast transcripts, which shows the extraction pipeline could accept long-form newsletter text but does not currently ingest it.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.autobound.ai/platform",
+   "quote": "We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more."
+  },
+  {
+   "url": "https://www.autobound.ai/platform",
+   "quote": "Proprietary AI/LLM models parse unstructured documents \u2014 200-page 10-K filings, podcast transcripts, social posts"
+  },
+  {
+   "url": "https://autobound-api.readme.io/docs",
+   "quote": "Autobound delivers B2B buying signals \u2014 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies"
+  },
+  {
+   "url": "https://www.autobound.ai/platform",
+   "quote": "OEM licensing lets you embed our signal data directly into your product with white-label support."
+  }
+ ],
+ "likely_buyer_role": "VP Product / Head of Signal Data and Partnerships, given their OEM licensing motion and platform-embedding delivery (REST, S3/GCS, MCP).",
+ "contact_route": {
+  "url": "https://autobound-api.readme.io/docs",
+  "value": "support@autobound.ai",
+  "note": "Support email published in their API docs; sales form at autobound.ai/contact-sales."
+ },
+ "confidence": "High",
+ "caveats": "'news feeds' and 'and more' leave room for newsletter content under a broader label, so this is a documented-list gap rather than a stated exclusion. Source count has changed recently (25 to 35+ in five weeks), so new sources may appear without doc updates."
+}

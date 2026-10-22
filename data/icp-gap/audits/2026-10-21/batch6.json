@@ -1,0 +1,281 @@
+[
+  {
+    "company": "Paved",
+    "official_website": "https://www.paved.com/",
+    "product_summary": "Newsletter ad network and sponsorship marketplace where advertisers book native placements across thousands of vetted newsletters, and publishers monetize inventory; includes programmatic ad network, self-serve campaign tooling, verified audience stats and an MCP connector.",
+    "current_data_sources": [
+      "Publisher-created marketplace listings (opt-in newsletters available for sponsorship)",
+      "ESP-verified subscriber counts, open rates and click rates (Paved Verified badge)",
+      "Advertiser reviews and recommendation scores per newsletter",
+      "Publisher-declared audience demographics, job titles and household income",
+      "First-party campaign delivery and click reporting from the Paved Ad Network"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.paved.com/reference/llms.txt",
+        "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting."
+      },
+      {
+        "url": "https://www.paved.com/help/articles/14441704-paved-mcp-guide",
+        "quote": "Search for newsletters, book sponsorships, submit creative, track campaigns, and handle billing"
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "Paved has deep first-party newsletter data, but only for newsletters listed for sponsorship in its own marketplace, with stats verified through publisher ESPs: \"Verified newsletter statistics, including subscriber count, open rates, and click rates.\" Its glossary defines the Marketplace as \"a directory where we list thousands of premium newsletters with available sponsorships\" - i.e. opt-in sponsor-ready inventory, not a cross-platform index.",
+    "verified_gap": "Coverage is limited to Paved's own opt-in marketplace inventory (thousands of sponsor-ready newsletters) plus point-in-time publisher/ESP stats. Nothing in their public docs describes indexing publications that never list on Paved (Substack, LinkedIn, Ghost, Mailchimp) or tracking publication growth/momentum over repeated snapshots.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.paved.com/",
+        "quote": "Target your ads across 253+ million subscribers"
+      },
+      {
+        "url": "https://www.paved.com/help/articles/8116455-email-sponsorship-glossary",
+        "quote": "it's a directory where we list thousands of premium newsletters with available sponsorships"
+      },
+      {
+        "url": "https://www.paved.com/help/articles/8120696-how-to-read-newsletter-profiles",
+        "quote": "Verified newsletter statistics, including subscriber count, open rates, and click rates."
+      },
+      {
+        "url": "https://docs.paved.com/reference/llms.txt",
+        "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting."
+      },
+      {
+        "url": "https://www.paved.com/help/articles/14441704-paved-mcp-guide",
+        "quote": "Search for newsletters, book sponsorships, submit creative, track campaigns, and handle billing"
+      }
+    ],
+    "likely_buyer_role": "Head of Ad Network / VP Marketplace Partnerships (advertiser-side data and inventory expansion)",
+    "contact_route": {
+      "url": "https://www.paved.com/contact",
+      "value": "hey@paved.com (published on the contact page)"
+    },
+    "confidence": "High",
+    "caveats": "Paved is simultaneously a prospect, a channel and a partial competitor: it already holds sponsor relationships and campaign performance for its own inventory, so NF must be sold as outside-in coverage (publications not on Paved, sponsor mentions read from article text) rather than as better marketplace stats. API docs are split advertiser/publisher and are thin on discovery endpoints."
+  },
+  {
+    "company": "beehiiv",
+    "official_website": "https://www.beehiiv.com/",
+    "product_summary": "All-in-one newsletter platform for publishing, growth and monetization, including a newsletter ad network, Boosts/Recommendations network, paid subscriptions, podcasts, websites and a public API for publication management.",
+    "current_data_sources": [
+      "First-party publication, subscriber and engagement data from its own platform (open rate, click rate, active subscriptions via API)",
+      "Ad Network impression, click and payout performance",
+      "Recommendation/Boosts network activity between publications",
+      "Advertiser campaign delivery and engagement reporting",
+      "Publisher-declared categories and publication descriptions used for ad targeting"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://developers.beehiiv.com/api-reference/publications/index.mdx",
+        "quote": "Retrieve all publications associated with your API key."
+      },
+      {
+        "url": "https://www.beehiiv.com/features/api-and-integrations",
+        "quote": "Trigger actions, manage subscribers, and update newsletter data automatically - no manual interaction required."
+      },
+      {
+        "url": "https://www.beehiiv.com/ad-network",
+        "quote": "Using our SSP (Supply-Side Platform) technology, we optimize placement and ensure every ad opportunity is valuable."
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "beehiiv holds the richest first-party newsletter data in the category, but scoped to its own platform: the API only lets you \"Retrieve all publications associated with your API key\", and its advertiser page sells access to \"Thousands of vetted newsletters\" inside beehiiv. Their own scale claims: \"135K+ publishers on beehiiv growing their content\" and \"400M+ unique readers every month on beehiiv\".",
+    "verified_gap": "No cross-platform discovery. Their documented API surface returns only publications tied to the caller's own API key, and Ad Network inventory is beehiiv-hosted publications only; nothing documents coverage of Substack, LinkedIn, Ghost or Mailchimp newsletters. Coverage of the open newsletter web sits outside their platform boundary.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.beehiiv.com/",
+        "quote": "The all-in-one platform helping the world's best newsletters publish, grow and earn."
+      },
+      {
+        "url": "https://developers.beehiiv.com/api-reference/publications/index.mdx",
+        "quote": "Retrieve all publications associated with your API key."
+      },
+      {
+        "url": "https://www.beehiiv.com/features/ad-network/brands",
+        "quote": "Our algorithm places your ads in the newsletters that are most likely to drive your desired business outcomes."
+      },
+      {
+        "url": "https://www.beehiiv.com/ad-network",
+        "quote": "Using our SSP (Supply-Side Platform) technology, we optimize placement and ensure every ad opportunity is valuable."
+      },
+      {
+        "url": "https://www.beehiiv.com/",
+        "quote": "135K+ publishers on beehiiv growing their content"
+      }
+    ],
+    "likely_buyer_role": "Head of Ad Network / VP Partnerships or Corporate Development (data or product partnership, not API procurement)",
+    "contact_route": {
+      "url": "https://www.beehiiv.com/support/article/18621437457303-ways-to-contact-beehiiv-support",
+      "value": null,
+      "note": "No public sales/partner email. Support doc states verbatim: \"Phone support and a direct email address for support are not currently available.\" Contact is via in-account ticket or the Knowledge Base chat widget; a partner-team address is referenced on /partners but is redacted in the public page."
+    },
+    "confidence": "High",
+    "caveats": "This is a platform partnership, not an API sale: beehiiv builds in-house (own SSP, MCP, API) so the pitch is cross-platform coverage they cannot see - publications on Substack/LinkedIn/Ghost and sponsor mentions outside their network. Note the asymmetry: NF indexes only 1,776 beehiiv publications against beehiiv's stated 135K publishers, so NF adds nothing to beehiiv's internal view of its own base. Also a partial competitor in newsletter ad inventory, which limits willingness to share data."
+  },
+  {
+    "company": "6sense",
+    "official_website": "https://6sense.com/",
+    "product_summary": "AI-driven B2B revenue and account intelligence platform that combines multi-source intent, web deanonymization, first-party signals and buying-stage prediction to tell sales and marketing teams which accounts are in-market.",
+    "current_data_sources": [
+      "Third-party intent from research and review sites (partner feeds including Bombora, TechTarget, TrustRadius, G2)",
+      "Native web deanonymization of anonymous traffic across devices, channels and locations",
+      "First-party CRM, marketing automation and website engagement signals",
+      "Content consumption patterns and auto-generated keyword recommendations",
+      "AI buying-stage and buying-group modeling (6AI)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://6sense.com/platform/",
+        "quote": "Every signal, yours and ours, flows into one context layer."
+      },
+      {
+        "url": "https://6sense.com/platform/intent-data/",
+        "quote": "Our native intent data capabilities are complemented by partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched 6sense.com/platform/intent-data/ and 6sense.com/platform/ for newsletter, publisher and subscription-content ingestion. Documented inputs are research-site intent, web deanonymization, first-party signals and content consumption; newsletters are not mentioned as a source. No newsletter signal is claimed either way - absence is an inference from their source list, not a stated exclusion.",
+    "verified_gap": "Newsletter discussion/topic activity is not among their documented intent inputs, which run on research and review sites, anonymous web traffic and first-party engagement. Whether newsletter content reaches them indirectly through partner co-ops is not disclosed.",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://6sense.com/platform/intent-data/",
+        "quote": "partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2"
+      },
+      {
+        "url": "https://6sense.com/platform/intent-data/",
+        "quote": "Matches anonymous web traffic and intent signals to B2B buyers and accounts across devices, channels, and locations."
+      },
+      {
+        "url": "https://6sense.com/platform/intent-data/",
+        "quote": "Understand content consumption patterns across accounts and generate keyword recommendations automatically."
+      },
+      {
+        "url": "https://6sense.com/platform/",
+        "quote": "Every signal, yours and ours, flows into one context layer."
+      }
+    ],
+    "likely_buyer_role": "VP/Director of Data Partnerships or Product Management, signal and data strategy",
+    "contact_route": {
+      "url": "https://6sense.com/contact/",
+      "value": null,
+      "note": "Web contact form only (demo / partner program links); no named data-partnership contact or public email on the page."
+    },
+    "confidence": "Medium",
+    "caveats": "Gap is unverified, not confirmed: 6sense aggregates many third-party feeds and their docs are marketing-level, so newsletter signals may arrive via partners (notably Bombora) without being named. They already claim intent coverage in 40+ languages and '10x the intent coverage of other B2B intent data providers', so NF must prove incremental lift on top of existing signals. Large vendor with long procurement - expect a data-validation pilot ask, and note their 'Contextual Intelligence (Coming Soon)' roadmap may absorb this need internally."
+  },
+  {
+    "company": "Bombora",
+    "official_website": "https://bombora.com/",
+    "product_summary": "B2B intent data company operating a Data Co-op of B2B media destinations, selling Company Surge intent scores, topic taxonomies, buying-group personas and digital audiences through APIs and 100+ GTM integrations.",
+    "current_data_sources": [
+      "Data Co-op of thousands of B2B media destinations (publishers, B2B brands, premium data providers)",
+      "Topic taxonomy of tens of thousands of topics mapped to millions of B2B domains",
+      "Domain-level research behavior measured over time (Company Surge models)",
+      "B2B persona/buying-group enrichment",
+      "Identity resolution and first-party site engagement enrichment"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://developer.bombora.com/apis",
+        "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data."
+      },
+      {
+        "url": "https://developer.bombora.com/apis",
+        "quote": "The Digital Audience Builder (DAB) API provides customers the ability to programmatically create and edit custom audiences."
+      },
+      {
+        "url": "https://bombora.com/all-partners/",
+        "quote": "More than one hundred integrations and partnerships make it possible to share data and insights"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched bombora.com/intent-data/, bombora.com/all-partners/ and developer.bombora.com for newsletter, email and subscription-content sourcing. Sources are described as media destinations and B2B websites with topic-level research behavior: \"Across the Co-op we track tens of thousands of topics (updated frequently) and millions of B2B domains.\" Newsletters are not named as a source type.",
+    "verified_gap": "Newsletter topic activity is not documented as a Co-op input; the Co-op is described in website/domain terms. Because membership is described broadly as \"media destinations (publishers, B2B brands, and premium data providers)\", newsletter publishers may already contribute indirectly via their web archives.",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://bombora.com/intent-data/",
+        "quote": "made up of thousands of media destinations (publishers, B2B brands, and premium data providers)"
+      },
+      {
+        "url": "https://bombora.com/intent-data/",
+        "quote": "Across the Co-op we track tens of thousands of topics (updated frequently) and millions of B2B domains."
+      },
+      {
+        "url": "https://bombora.com/intent-data/",
+        "quote": "Bombora uses patented AI-driven Intent models that measure real research behavior over time, not just keyword spikes."
+      },
+      {
+        "url": "https://developer.bombora.com/apis",
+        "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data."
+      }
+    ],
+    "likely_buyer_role": "VP Data Partnerships / GM Data Solutions (Co-op sourcing and data licensing)",
+    "contact_route": {
+      "url": "https://bombora.com/all-partners/",
+      "value": null,
+      "note": "Public partner-ecosystem inquiry ('Become a partner') is the only route found; contact page returned bot-blocked and no named data-partnership contact or public email was retrievable."
+    },
+    "confidence": "Medium",
+    "caveats": "The Co-op already includes publishers, so the honest framing is a data-licensing conversation - does newsletter open/mention data add topic coverage their web signals miss - not a capability gap claim. Bombora is also a supplier to 6sense, so approaching both risks channel conflict. Their docs are marketing-level; a definitive answer needs a direct data-co-op conversation."
+  },
+  {
+    "company": "SponsorUnited",
+    "official_website": "https://www.sponsorunited.com/",
+    "product_summary": "Sponsorship intelligence platform tracking brand-property deals across sports, entertainment and media, with pricing benchmarks, activation creative library, audience insights and AI proposal evaluation for brands, rights holders, agencies and media companies.",
+    "current_data_sources": [
+      "On-premise venue audits by a global scout team (venues, signage, assets)",
+      "In-media device scraping for sponsorship and advertising data (TV/streaming/audio)",
+      "Third-party individual profiles for demographic and affinity data",
+      "Transaction/deal data used to train pricing estimates ($45B+)",
+      "Sponsorship creative library and human-enriched deal records"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.sponsorunited.com/platform",
+        "quote": "Our global scout team and proprietary tech capture real-time sponsor activity—deal by deal, asset by asset."
+      },
+      {
+        "url": "https://www.sponsorunited.com/platform",
+        "quote": "Devices scraped for sponsorship & advertising data."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched sponsorunited.com, /platform, /contact and the podcast-network insight page for newsletter and email sponsorship coverage. Their documented capture methods are venue audits, device scraping, profile data and deal transactions - none of which read newsletter issues. Newsletters appear only as their own marketing newsletter signup, and podcast networks appear as a customer segment rather than tracked inventory.",
+    "verified_gap": "Newsletter sponsor and brand relationships are outside their documented capture stack (venue audits, device scraping, profiles, deal benchmarks). Their media coverage is device-scraped broadcast/streaming/audio, so email newsletter sponsorships - read from article text rather than a device - are the missing surface.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.sponsorunited.com/platform",
+        "quote": "Our global scout team and proprietary tech capture real-time sponsor activity—deal by deal, asset by asset."
+      },
+      {
+        "url": "https://www.sponsorunited.com/platform",
+        "quote": "Venues audited by 3,000 scouts, capturing offline data."
+      },
+      {
+        "url": "https://www.sponsorunited.com/platform",
+        "quote": "Devices scraped for sponsorship & advertising data."
+      },
+      {
+        "url": "https://www.sponsorunited.com/",
+        "quote": "Benchmark pricing and validate spend with $45B+ in verified deal data."
+      },
+      {
+        "url": "https://www.sponsorunited.com/insights/unlocking-sponsorship-opportunities-for-podcast-networks",
+        "quote": "Sponsorship intelligence—demographics, engagement levels, listener behavior data, and more—is critical"
+      }
+    ],
+    "likely_buyer_role": "VP of Data / Head of Product or Chief Revenue Officer (dataset expansion and media-company segment)",
+    "contact_route": {
+      "url": "https://www.sponsorunited.com/contact",
+      "value": null,
+      "note": "Contact form only ('Fill out this form to contact us and one of our team members will be in touch'); no public email or named data contact found."
+    },
+    "confidence": "Medium",
+    "caveats": "Highest overlap risk of the batch: they sell sponsorship intelligence to the same brand and media-company buyers, so NF could be seen as a competitor or as a cheap data feed. Their $45B deal benchmark and activation library are far deeper on sports/entertainment; newsletters are a thin slice of their market. Positive signal is that podcast networks are already a served segment, suggesting appetite for creator-media sponsorship data."
+  }
+]

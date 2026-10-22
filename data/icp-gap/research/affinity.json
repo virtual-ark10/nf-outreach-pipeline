@@ -1,0 +1,53 @@
+{
+ "company": "Affinity",
+ "official_website": "https://www.affinity.co/",
+ "product_summary": "AI-first CRM for private capital that auto-captures email and calendar activity, enriches company and contact records from 40+ sources, and scores relationship strength across 3,300+ firms.",
+ "current_data_sources": [
+  "Affinity proprietary enrichment engine (40M+ people, 8M+ companies)",
+  "PitchBook (integrated data partner)",
+  "Dealroom (including Twitter follower counts)",
+  "Crunchbase (view-only integrated data partner)",
+  "Firmographic providers and biographic data",
+  "Growth-signal feeds (headcount, hiring/departure trends)",
+  "The firm's own email, calendar and meeting activity"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://developer.affinity.co/pages/external-api-v2/introduction",
+   "quote": "This API provides a RESTful interface for building internal apps, automated workflows, 3rd party integrations"
+  },
+  {
+   "url": "https://www.affinity.co/product/affinity-data",
+   "quote": "Data can be used across the platform without restrictions including over API, within analytics reporting, and via export"
+  },
+  {
+   "url": "https://www.affinity.co/",
+   "quote": "Enriched with Affinity\u2019s proprietary data and 40+ sources, including Pitchbook, Preqin, and Grata"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the Affinity Data product page (which lists every enrichable data point by source: Affinity, Pitchbook, Crunchbase, Dealroom), the homepage and the developer docs. Data-point catalogue covers biographic, firmographic, funding, growth, social, sustainability and team fields; there is no newsletter or publication field of any kind. Affinity's 'social' coverage is limited to last-month Twitter follower metrics via Dealroom.",
+ "verified_gap": "No newsletter or newsletter-publication source appears anywhere in Affinity's documented enrichment stack: the source list runs 'PitchBook, Dealroom, and Crunchbase ... firmographic providers, biographic data, and growth signal feeds', and the data-point catalogue has no publication-level field.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.affinity.co/product/affinity-data",
+   "quote": "PitchBook, Dealroom, and Crunchbase sit alongside firmographic providers, biographic data, and growth signal feeds."
+  },
+  {
+   "url": "https://www.affinity.co/product/affinity-data",
+   "quote": "Affinity enriches every company and contact record from 40+ trusted sources."
+  },
+  {
+   "url": "https://developer.affinity.co/pages/external-api-v2/introduction",
+   "quote": "The Affinity APIs are only available on select license types."
+  }
+ ],
+ "likely_buyer_role": "Head of Data Partnerships / Product lead for Affinity Data",
+ "contact_route": {
+  "url": "https://www.affinity.co/contact",
+  "value": "info@affinity.co"
+ },
+ "confidence": "High",
+ "caveats": "Affinity's wedge is relationship strength from the firm's own email and calendar data, so any newsletter signal must attach to an existing company or person record to be useful - a standalone publication corpus would need mapping work. Many enrichments are partner-licensed and view-only (Crunchbase is explicitly view-only), which affects how a third-party feed could be redistributed. Buying is likely a data-partnership conversation, not a CRM seat sale."
+}

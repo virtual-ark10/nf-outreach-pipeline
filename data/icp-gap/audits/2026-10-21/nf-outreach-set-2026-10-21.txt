@@ -1,0 +1,164 @@
+NEWSLETTERFIT OUTREACH SET, ICP LADDER PLUS THE FIVE UNVERIFIED ACCOUNTS
+2026-10-21. Nine accounts with a draft each. Not sent. Hunter is excluded as a supplier.
+Harmonic is not here: it is already in the ladder sequence (follow_up_3, 4 sends, no reply), so a
+second pitch would land on top of a live thread.
+
+The framing is deliberate: offer the data, ask whether it is new to them. A yes is a sale, a no is
+evidence we did not have before. No draft claims a missing capability, because for six of these the
+public docs do not prove one.
+
+CONTACT STATUS, the real constraint
+  Icypeas    contact@icypeas.com published. CRM pairs Brice Carpentier with pierre.landoin@icypeas.com, a mismatch, so send to the published route.
+  Kadoa      support@kadoa.com published; CRM has Max Warren max@kadoa.com (VP Sales), unverified.
+  Orbifold   chat@orbifold.ai, the address in their footer; a shared inbox, not a person.
+  Dealroom   none published for a person; support@dealroom.co is the general route. Felix Ullmer, Head of Product Strategy, is the right buyer.
+  Grata      form only. Andrew Billiter, Director of Growth Marketing, is in the CRM with no address.
+  Bombora    no public email. Ryan Klekas, VP Partner Development, or Hannah Ashford, Senior Director Product.
+  HireEZ     form only. CRM record is dirty (name "Dubzee W"), address dubzee.w@hireez.com unverified.
+  Zyte       form only. CRM address legal@zyte.com is a legal inbox, not a buyer.
+  6sense     form only. Jason Telmos, VP Product Strategy, or Tom Paradis, Senior Director Product Management.
+Hunter has 1 search and 3 verifications left, resetting 2026-11-07, so most of these go by form, by
+LinkedIn, or wait for the reset.
+
+
+1. ICYPEAS   71/100  gap confirmed  contact: contact@icypeas.com
+To: Icypeas, co-founder or Head of Product
+Subject: Newsletter mentions as company fields
+
+Your homepage says the billion-plus record database is refreshed every month, and that 80% of your
+customers embed the Icypeas API in their own product. Your scope is person and domain records, so
+newsletter activity is a field you cannot fill today: which publications wrote about a company, in
+what context, and on what date.
+
+NewsletterFIT indexes 26,401 public newsletter publications and 141,392 articles, with company,
+people, topic, guest and sponsor extraction, each carrying the article URL and date.
+
+If that is a field your customers would pay for, I can send 1,000 enriched domains as a sample. If
+your road map already covers it, telling me that is just as useful.
+
+
+2. KADOA   66/100  gap confirmed  contact: support@kadoa.com, or max@kadoa.com unverified
+To: Kadoa, Head of Data Sourcing
+Subject: A newsletter corpus for your fund customers
+
+Your docs describe a workflow's source as the set of URLs it extracts from, with HTML, XML, RSS, JSON
+and PDF supported. That means a fund wanting newsletter coverage has to hand-build per-publication
+pipelines, one site at a time.
+
+NewsletterFIT already holds 26,401 public newsletter publications and 141,392 articles, with
+companies, people, topics, guests and 2,218 sponsors extracted, and the article URL and date on every
+record. It could land as a licensed input beside your own collection rather than something you build.
+
+Would a sample of 5,000 recent items for a sector you serve be useful? If you already ingest
+newsletters, say so and I will stop there.
+
+
+3. HIREEZ   47/100  gap confirmed but adjacent  contact: sales form only
+To: HireEZ, VP Product or Head of Data Partnerships
+Subject: Company-side newsletter signals beside your candidate data
+
+Your sourcing is described as ATS, job boards and the open web, and your blog puts the open-web
+figure at over a billion professional profiles. Newsletter coverage is outside that, and it points at
+companies rather than candidates: which publications wrote about a hiring brand, and who sponsors
+them.
+
+NewsletterFIT holds 26,401 publications and 141,392 articles with company, people, topic and sponsor
+extraction, each with source URL and date. It would sit beside your candidate data, not replace it,
+and I am not going to pretend we have resumes.
+
+If a company-level signal is useful to your product team, I can send a sample. If not, one line
+saying so closes it.
+
+
+4. ZYTE   45/100  gap unverified  contact: Talk to us form
+To: Zyte, Head of Data Acquisition or VP Product, Zyte Data
+Subject: A ready newsletter corpus instead of a collection project
+
+Zyte API already auto-extracts article content from any URL, so the question for a newsletter corpus
+is not whether it can be scraped but whether it is worth building and maintaining 26,000 publication
+pipelines.
+
+We have done that part: 26,401 public newsletter publications, 141,392 articles, with company,
+people, topic, guest and sponsor extraction and the article URL and date on each record. If your
+managed data team wants to offer newsletter coverage to customers, licensing ours is faster than
+collecting it.
+
+Happy to send a sample and a coverage summary. If it duplicates work you already run, tell me and
+that answer is useful too.
+
+
+5. ORBIFOLD AI   26/100  gap unverified, wrong domain  contact: chat@orbifold.ai
+To: Orbifold AI, Head of Data Partnerships
+Subject: Newsletter text as a text source
+
+Your site describes turning enterprise documents and email into schema-mapped, timestamped datasets
+for training and retrieval. Public newsletter issues are long-form business text with named companies
+in them, which is the same shape of input, sourced from outside a customer's own estate.
+
+NewsletterFIT holds 26,401 publications and 141,392 articles, with entity, topic and sponsor
+extraction, each record with URL and date. If a customer-facing dataset of that kind is useful, I can
+send a sample. If your roadmap is entirely customer-tenant data, a one-line no is fine and I will not
+follow up.
+
+
+6. DEALROOM   63/100  gap unverified  contact: support@dealroom.co, buyer Felix Ullmer
+To: Felix Ullmer, Head of Product Strategy, Dealroom
+Subject: Newsletter signals for company profiles
+
+Dealroom already attaches entity-level news and sentiment to companies, and people records enriched
+from 40+ sources. Public newsletters are a source class we hold in a structured form, and I do not
+know whether they are already inside your 40+.
+
+NewsletterFIT indexes 26,401 publications and 141,392 articles, with companies, people, topics,
+guests and 2,218 sponsors extracted, each with the article URL and date. It could add a newsletter
+mention field or an attention signal on company profiles.
+
+Two questions: is newsletter coverage new to you, and would a sample of 500 companies with dated
+mentions be worth a look?
+
+
+7. GRATA   60/100  gap unverified  contact: form only, buyer Andrew Billiter
+To: Andrew Billiter, Director of Growth Marketing, Grata
+Subject: Newsletter mentions beside private-company data
+
+Your data page lists AI-synthesized public data, private financials, executive contacts and trade
+show lists. Newsletter activity is not on that list, and I cannot tell from outside whether it is
+already inside your public-data pipeline.
+
+We hold 26,401 public newsletter publications and 141,392 articles, with company, people, topic and
+sponsor extraction, each with URL and date. For a private-company platform the useful slice is
+mention history on companies that have little news coverage elsewhere.
+
+If a sample of 500 companies with dated newsletter mentions is useful, I will send it. If it is
+duplicative, that is a useful answer too.
+
+
+8. BOMBORA   53/100  gap unverified, supply-side  contact: no public email, buyer Ryan Klekas
+To: Ryan Klekas, VP Partner Development, Bombora
+Subject: Newsletter topic activity for the Co-op
+
+Bombora's Co-op is described as thousands of media destinations including publishers, B2B brands and
+premium data providers, and topic-level research behaviour is modelled from that. Newsletters are
+publishers whose behaviour may already reach you through their web archives, or may not reach you at
+all, and I would rather ask than guess.
+
+NewsletterFIT holds 26,401 publications and 141,392 articles, with companies, people, topics, guests
+and 2,218 sponsors extracted, plus repeated snapshots of publication activity. If a newsletter
+source adds topic coverage your web signals miss, a licensing conversation is the right shape. If it
+does not, that answer is worth having.
+
+
+9. 6SENSE   53/100  gap unverified, evidence low  contact: form only, buyer Jason Telmos
+To: Jason Telmos, VP Product Strategy, 6sense
+Subject: Newsletter topic activity as an intent input
+
+6sense's documented inputs are research and review-site intent, web deanonymisation and first-party
+engagement, complemented by partners including Bombora, TechTarget, TrustRadius and G2. I could not
+find a public statement either way on newsletter content.
+
+NewsletterFIT holds 26,401 publications and 141,392 articles with company, topic, guest and sponsor
+extraction, and repeated snapshots of publication activity. The question is whether newsletter topic
+activity adds predictive context on top of the intent you already buy.
+
+If it is worth a test, I can send a matched sample against accounts you already score. If your
+partner feeds already cover it, one line closes the loop.

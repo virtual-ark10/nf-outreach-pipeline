@@ -1,0 +1,58 @@
+{
+ "company": "IndustryLens",
+ "official_website": "https://industry-lens.com/features/data-sources",
+ "product_summary": "Founder-led competitive-intelligence tool that monitors 350+ sources across 62 source types per tracked company and delivers weekly verified battlecards and briefings, priced from \u00a3149/month per company.",
+ "current_data_sources": [
+  "Company website pages, deep crawls, careers boards and campaign landing pages",
+  "Google News plus named outlets (TechCrunch, Forbes, Bloomberg, Reuters, VentureBeat, Wired, Business Insider, The Verge, Axios)",
+  "Industry newsletters and trade press",
+  "A tracked competitor's own email newsletter (forwarded or subscribed)",
+  "Review platforms (G2, Capterra, Trustpilot, Google Reviews, Gartner Peer Insights, Glassdoor, Clutch, TrustRadius, app stores)",
+  "Social (LinkedIn posts/profiles/exec posts, X, Reddit, YouTube, Instagram, Facebook, TikTok)",
+  "Ad libraries (Meta, Google, LinkedIn)",
+  "Hiring sources (LinkedIn Jobs, LinkedIn Events, Indeed)",
+  "Press-release wires (PR Newswire, Business Wire, GlobeNewswire)",
+  "SEC EDGAR, UK Companies House, EU TED procurement awards",
+  "Crunchbase funding data, podcasts, GitHub releases, Product Hunt, Google Patents",
+  "App marketplaces (Salesforce, HubSpot, Atlassian, Shopify, Chrome Web Store)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://industry-lens.com/pricing",
+   "quote": "API access"
+  },
+  {
+   "url": "https://industry-lens.com/pricing",
+   "quote": "MCP connector \u2014 query your intel from Claude, Cursor & any MCP-aware AI tool"
+  },
+  {
+   "url": "https://industry-lens.com/features/data-sources",
+   "quote": "Enterprise customers can add any custom source (a specific competitor URL, a private feed, a niche publication, your own data)"
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Newsletter coverage is already a named, sold feature, not a gap. The data-sources page lists 'Industry newsletters and trade press' as a news source type, and separately a custom/private source called 'Newsletter content' described as 'A competitor's own email newsletter, forwarded or subscribed.' The pricing page lists 'News & content \u2014 Google News, newsletters, blogs' as an included channel and 'Google News + newsletters' in the plan matrix. Coverage is per tracked company (10\u2013100 companies), not a searchable publication corpus.",
+ "verified_gap": "",
+ "gap_status": "disconfirmed",
+ "evidence": [
+  {
+   "url": "https://industry-lens.com/features/data-sources",
+   "quote": "A competitor\u2019s own email newsletter, forwarded or subscribed."
+  },
+  {
+   "url": "https://industry-lens.com/pricing",
+   "quote": "News & content \u2014 Google News, newsletters, blogs"
+  },
+  {
+   "url": "https://industry-lens.com/features/data-sources",
+   "quote": "350+ sources across 62 source types is the platform total."
+  }
+ ],
+ "likely_buyer_role": "Founder (Naveed Ratansi) \u2014 sole decision-maker in a founder-led, self-serve product",
+ "contact_route": {
+  "url": "https://industry-lens.com/contact",
+  "value": "Naveed Ratansi, Founder \u2014 contact form / 30-min call booking; no email published"
+ },
+ "confidence": "High",
+ "caveats": "Do not pitch newsletter coverage as missing - they already sell it. The real opening is breadth and structure: their newsletter coverage is per-competitor (a company's own email plus generic trade press), not an index of 26,401 publications with sponsor and guest relationships. Volume is small (10-100 tracked companies, \u00a3149/month), so an enterprise data licence would need a specific, cheap use case. Naveed is both buyer and contact, and he vets claims hard (the page publishes rejected claims and a 29-check pipeline), so evidence quality matters more than framing."
+}

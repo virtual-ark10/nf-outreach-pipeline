@@ -1,0 +1,61 @@
+{
+ "company": "Dealroom",
+ "official_website": "https://dealroom.co/products/api/",
+ "product_summary": "Startup and VC data platform: 3M+ companies, 336K+ funding rounds, investor and founder profiles, with a REST API, hosted MCP server and bulk feeds for sourcing and ecosystem analytics.",
+ "current_data_sources": [
+  "Company and investor profiles curated by analysts",
+  "Funding rounds, valuations and financials",
+  "Founder/operator profiles enriched from 40+ sources",
+  "Entity-level news and AI-synthesized sentiment",
+  "Hiring and web/app traction signals",
+  "Company filings and founder signals for stealth detection"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "REST with OAuth2, the hosted MCP server and bulk feeds, in production use by customers now"
+  },
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "mcp.dealroom.co/mcp"
+  },
+  {
+   "url": "https://docs.dealroom.co/",
+   "quote": "Dealroom API v1 host: https://api.dealroom.co/api/v1"
+  },
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "Bulk and incremental data delivery"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Not found. Searched dealroom.co/products/api/, dealroom.co/for-agents/ and docs.dealroom.co: documented signals are news, sentiment, filings, hiring, founder, web/app and stealth detection, with people data 'enriched from 40+ sources' left unnamed. No page mentions newsletters or email publications, but sources are not enumerated, so unverified rather than confirmed.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "Entity-level news, AI-synthesized sentiment and predictive signals \u2014 wired to the exact company or investor."
+  },
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "Newly founded and stealth companies surfaced from filings, hiring and founder signals"
+  },
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "Every company is linked to its founders, investors, rounds, sector and signals"
+  },
+  {
+   "url": "https://dealroom.co/products/api/",
+   "quote": "enriched from 40+ sources, with mafias and where talent goes next"
+  }
+ ],
+ "likely_buyer_role": "Head of Data / API Product Manager for the Dealroom data platform",
+ "contact_route": {
+  "url": "https://dealroom.co/contact/",
+  "value": "support@dealroom.co",
+  "note": "Published on the contact page for general inquiries; privacy@dealroom.co for privacy requests. Prefer support@ and ask to be routed to the data/API team."
+ },
+ "confidence": "Medium",
+ "caveats": "Gap unverified: Dealroom's 'entity-level news' may already sweep newsletter content without naming it. A new API is in closed beta, so data-model changes are in flight. Their positioning stresses completeness, so an external newsletter signal needs to be framed as net-new, not as coverage they lack."
+}

@@ -1,0 +1,264 @@
+[
+ {
+  "company": "Mention",
+  "official_website": "https://mention.com/en/media-monitoring-api/",
+  "product_summary": "Social listening and media monitoring platform, now delivered as Agorapulse Listening, with a streaming API that returns keyword mentions from web, news, blogs, forums and social platforms.",
+  "current_data_sources": [
+   "Web pages",
+   "News sites",
+   "Blogs",
+   "Forums",
+   "Reddit",
+   "YouTube",
+   "X (Twitter)",
+   "Facebook",
+   "Instagram",
+   "LinkedIn",
+   "TikTok"
+  ],
+  "api_or_integration_evidence": [
+   {
+    "url": "https://mention.com/en/media-monitoring-api/",
+    "quote": "We use a streaming API, so you’ll receive mentions as soon as they happen online."
+   },
+   {
+    "url": "https://mention.com/en/media-monitoring-api/",
+    "quote": "Mention’s API shows you when your keywords are used on websites, forums, blogs, the news, and social media."
+   }
+  ],
+  "newsletter_capability_status": "not_found_in_public_docs",
+  "newsletter_capability_detail": "Searched the media monitoring API page, homepage, and Mention/Agorapulse plans documentation for 'newsletter'. No email-newsletter ingestion appears; the documented source list is 'Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web.'",
+  "verified_gap": "No newsletter source in Mention's documented monitoring coverage (Web, News, Blogs, Forums, Reddit, social platforms) and no newsletter publication/author metadata or publication momentum signal.",
+  "gap_status": "confirmed",
+  "evidence": [
+   {
+    "url": "https://mention.com/en/media-monitoring-api/",
+    "quote": "Mention’s API shows you when your keywords are used on websites, forums, blogs, the news, and social media."
+   },
+   {
+    "url": "https://support.mention.com/en/articles/13354178-mention-plans-explained",
+    "quote": "track brand mentions and keywords across Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web"
+   },
+   {
+    "url": "https://support.mention.com/en/articles/13354178-mention-plans-explained",
+    "quote": "As of July 1, 2026, Mention is no longer sold as a standalone product."
+   }
+  ],
+  "likely_buyer_role": "Head of Product / API product manager for Agorapulse Listening (Mention’s successor product)",
+  "contact_route": {
+   "url": "https://support.mention.com/en/",
+   "value": null,
+   "note": "No public contact page on mention.com (mention.com/en/contact/ returns 404); only the help center. Mention is no longer sold standalone since July 1, 2026, so outreach should be routed to Agorapulse."
+  },
+  "confidence": "Medium",
+  "caveats": "Gap is well supported but the account is largely retired: Mention stopped standalone sales on 1 July 2026 and its capability is being absorbed into Agorapulse Listening. Its 'News' and 'Blogs' crawlers may surface some newsletter web archives, though no email-newsletter ingestion or publication metadata is documented. No named contact found."
+ },
+ {
+  "company": "People Data Labs",
+  "official_website": "https://www.peopledatalabs.com/",
+  "product_summary": "People and company data provider offering enrichment, search, IP enrichment and data-license feeds built on a large person dataset and 70M+ company profiles, plus job-posting signals.",
+  "current_data_sources": [
+   "Proprietary licensed data (HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech)",
+   "Publicly available data and open datasets",
+   "Governmental public records",
+   "Company career pages (job postings)"
+  ],
+  "api_or_integration_evidence": [
+   {
+    "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+    "quote": "Our Company Enrichment API helps you retrieve unique insights from our company dataset."
+   },
+   {
+    "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+    "quote": "License data feeds. Access via Snowflake & Databricks."
+   }
+  ],
+  "newsletter_capability_status": "not_found_in_public_docs",
+  "newsletter_capability_detail": "Searched the Data Sources & Compliance doc, the Company Enrichment API page and the site for 'newsletter'. Sources are described only by category ('HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech'); no newsletter, publication or editorial-content dataset is documented.",
+  "verified_gap": "",
+  "gap_status": "unverified",
+  "evidence": [
+   {
+    "url": "https://docs.peopledatalabs.com/docs/data-sources",
+    "quote": "Our data sources come from a variety of verticals, including HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech and others."
+   },
+   {
+    "url": "https://docs.peopledatalabs.com/docs/data-sources",
+    "quote": "Our Job Posting Dataset is sourced exclusively from company career pages"
+   },
+   {
+    "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+    "quote": "Access over 70MM+ company profiles, from stealth startups to conglomerates."
+   }
+  ],
+  "likely_buyer_role": "Head of Data Partnerships or Product Manager, Company Data / Enrichment",
+  "contact_route": {
+   "url": "https://www.peopledatalabs.com/contact-us",
+   "value": null,
+   "note": "Public contact page offers a 'Submit a ticket' support form; no sales email published. Enterprise plans route via a dedicated CSM."
+  },
+  "confidence": "Medium",
+  "caveats": "PDL documents sources only at category level and does not enumerate its web-scrape inputs, so newsletter absence is unverified rather than confirmed. They already sell a non-firmographic activity signal (job postings from career pages), which is the closest existing analogue and a useful wedge, but also means newsletter activity would compete with an in-house signal. No public newsletter dataset or partnership mention found."
+ },
+ {
+  "company": "CompanyEnrich",
+  "official_website": "https://companyenrich.com/",
+  "product_summary": "Real-time B2B data API suite covering 33M+ companies and 193M+ people: enrichment, search, lookalikes, headcount trends, reverse email lookup, bulk enrichment and an MCP server.",
+  "current_data_sources": [
+   "Public web",
+   "Maps",
+   "Social media",
+   "Government records"
+  ],
+  "api_or_integration_evidence": [
+   {
+    "url": "https://docs.companyenrich.com/docs/getting-started",
+    "quote": "CompanyEnrich is a B2B data API that returns verified company and people information through a single REST interface."
+   },
+   {
+    "url": "https://docs.companyenrich.com/docs/getting-started",
+    "quote": "connect AI agents to live data through our MCP server"
+   },
+   {
+    "url": "https://companyenrich.com/product/company-enrichment-api",
+    "quote": "Get 60+ data points, from firmographics to financials. 33M+ companies covered."
+   }
+  ],
+  "newsletter_capability_status": "not_found_in_public_docs",
+  "newsletter_capability_detail": "Searched the homepage, Getting Started docs, Company Enrichment API product page and site for 'newsletter'. Documented sources are 'the public web, maps, social media, and government records'; the published field schema (industry, employees, revenue, keywords, technologies, financials, socials, NAICS, page_rank) contains no newsletter mention, publication or topic-momentum field.",
+  "verified_gap": "Company activity fields stop at firmographics, tech stack, headcount, hiring and funding; there is no newsletter mention, publication or topic-momentum field, and newsletters are not among their named sources.",
+  "gap_status": "confirmed",
+  "evidence": [
+   {
+    "url": "https://companyenrich.com/",
+    "quote": "Data sourced from the public web, maps, social media, and government records helps you find businesses other providers miss."
+   },
+   {
+    "url": "https://docs.companyenrich.com/docs/getting-started",
+    "quote": "Returns industry, size, revenue range, location, technologies, employee count, and 15+ additional fields."
+   },
+   {
+    "url": "https://companyenrich.com/product/company-enrichment-api",
+    "quote": "Get 60+ data points, from firmographics to financials. 33M+ companies covered."
+   },
+   {
+    "url": "https://companyenrich.com/product/company-enrichment-api",
+    "quote": "Fields used: Industry, employee range, revenue range, business model categories, and funding stage."
+   }
+  ],
+  "likely_buyer_role": "Co-founder/CTO or Head of Product (small founding team owns API roadmap and partnerships)",
+  "contact_route": {
+   "url": "https://companyenrich.com/contact",
+   "value": "support@companyenrich.com"
+  },
+  "confidence": "High",
+  "caveats": "Absence is drawn from their own source description and public field schema, not a formal 'we do not ingest newsletters' statement; the free-text 'keywords' and 'description' fields are derived from web content and could partially capture newsletter-derived language. They ship fast (new Jobs API, MCP server), so a data-partnership pitch should target the founders directly."
+ },
+ {
+  "company": "Clay",
+  "official_website": "https://www.clay.com/",
+  "product_summary": "GTM data orchestration platform combining a 200+ vendor data marketplace, waterfall enrichment, AI research agents and visual workflows to build outbound and account-scoring plays.",
+  "current_data_sources": [
+   "200+ third-party data and AI vendors via marketplace",
+   "First-party CRM and warehouse data",
+   "Web/news content (News & Online Content data points)",
+   "Social media and ads data",
+   "Job postings and technographics"
+  ],
+  "api_or_integration_evidence": [
+   {
+    "url": "https://www.clay.com/",
+    "quote": "One contract to buy data from 200+ data and AI vendors in Clay’s marketplace."
+   },
+   {
+    "url": "https://www.clay.com/",
+    "quote": "Create intent signals from anything on the internet."
+   },
+   {
+    "url": "https://www.clay.com/integrations",
+    "quote": "HTTP API"
+   },
+   {
+    "url": "https://www.clay.com/integrations/data-points",
+    "quote": "Discover where the article was originally published to understand the context and credibility of the information."
+   }
+  ],
+  "newsletter_capability_status": "not_found_in_public_docs",
+  "newsletter_capability_detail": "Searched the homepage, integrations list, and the data-point catalog (including the News & Online Content category: Article Body, Article Source, Article Title) for 'newsletter'. Newsletter content is not a documented data point; Clay does show newsletter-adjacent use cases such as enriching beehiiv subscribers, where newsletter data is an input rather than a content source.",
+  "verified_gap": "",
+  "gap_status": "unverified",
+  "evidence": [
+   {
+    "url": "https://www.clay.com/",
+    "quote": "One contract to buy data from 200+ data and AI vendors in Clay’s marketplace."
+   },
+   {
+    "url": "https://www.clay.com/",
+    "quote": "Create intent signals from anything on the internet."
+   },
+   {
+    "url": "https://www.clay.com/integrations/data-points",
+    "quote": "Discover where the article was originally published to understand the context and credibility of the information."
+   }
+  ],
+  "likely_buyer_role": "Head of Data Partnerships / marketplace partnerships lead (or GTM engineering lead for a pilot)",
+  "contact_route": {
+   "url": "https://www.clay.com/contact",
+   "value": "support@clay.com"
+  },
+  "confidence": "Medium",
+  "caveats": "Clay is a distributor, not a data owner: the realistic play is becoming an HTTP-API/marketplace provider, not filling a documented gap. Their News & Online Content data points already cover articles, and 'anything on the internet' positioning means the absence of newsletter-specific fields is unverified. Support email only; no public partnerships contact named."
+ },
+ {
+  "company": "Feedly",
+  "official_website": "https://feedly.com/",
+  "product_summary": "Threat-intelligence and content-monitoring platform collecting 10,000+ sources, with AI extraction, a threat graph, report builder and an authenticated search API over team feeds.",
+  "current_data_sources": [
+   "RSS/Atom feeds and blogs",
+   "News sites and national newspapers",
+   "Email newsletters (user-subscribed or forwarded)",
+   "Reddit",
+   "X (Twitter) via API",
+   "Clear and dark web threat sources"
+  ],
+  "api_or_integration_evidence": [
+   {
+    "url": "https://developers.feedly.com/docs/using-the-search-api",
+    "quote": "This is an authenticated endpoint so you will need to pass your authentication token"
+   },
+   {
+    "url": "https://developers.feedly.com/docs/using-the-search-api",
+    "quote": "POST https://feedly.com/v3/search/contents"
+   }
+  ],
+  "newsletter_capability_status": "confirmed_present",
+  "newsletter_capability_detail": "Feedly already ingests newsletters through a per-user Feedly email address or forwarding: 'Feedly can ingest email newsletters directly into your feeds,' and it converts each email into an article treated like any other source. Coverage is user-subscribed, not a catalog with publication metadata or momentum.",
+  "verified_gap": "",
+  "gap_status": "disconfirmed",
+  "evidence": [
+   {
+    "url": "https://docs.feedly.com/article/768-follow-sources-in-feedly",
+    "quote": "Feedly can ingest email newsletters directly into your feeds."
+   },
+   {
+    "url": "https://docs.feedly.com/article/768-follow-sources-in-feedly",
+    "quote": "Feedly will convert each email into a readable article format and treat it like any other source"
+   },
+   {
+    "url": "https://feedly.com/",
+    "quote": "Continuously collect relevant threat signals from 10,000+ trusted clear and dark web sources."
+   },
+   {
+    "url": "https://developers.feedly.com/docs/using-the-search-api",
+    "quote": "This is an authenticated endpoint so you will need to pass your authentication token"
+   }
+  ],
+  "likely_buyer_role": "VP Product or Head of Content/Data Partnerships, Feedly Threat Intelligence",
+  "contact_route": {
+   "url": "https://docs.feedly.com/article/529-contact",
+   "value": "pro@feedly.com"
+  },
+  "confidence": "High",
+  "caveats": "Gap disconfirmed: newsletters are already a supported source type, though only ones the customer subscribes to or forwards, and Feedly is positioned around CTI rather than GTM enrichment. A catalog-level play (publication discovery, sponsor/mention metadata, momentum across 26k publications) is still differentiated from one-email-at-a-time ingestion, but it is not an ingestion gap. No named partnerships contact found."
+ }
+]

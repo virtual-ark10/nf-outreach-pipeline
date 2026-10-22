@@ -1,0 +1,59 @@
+{
+ "company": "Hunter",
+ "official_website": "https://hunter.io/",
+ "product_summary": "Email finder, verifier and B2B contact database plus cold-email sequences, sold via app, MCP server and API; returns each contact with the public sources it was found on.",
+ "current_data_sources": [
+  "Public web pages crawled daily (30M pages/day, 650M public sources)",
+  "Indexed professional email addresses (150M) tied to person and company records",
+  "B2B firmographic and technographic company data (Discover database)",
+  "Intent/signals data layered on existing leads"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://hunter.io/api",
+   "quote": "Using the Domain Search API, you can fetch all email addresses Hunter found for a given domain."
+  },
+  {
+   "url": "https://hunter.io/mcp",
+   "quote": "Every contact is found and verified, never guessed."
+  },
+  {
+   "url": "https://hunter.io/",
+   "quote": "Sync Hunter data to HubSpot, Zoho, Salesforce, or Pipedrive, and push contact details plus email activity to 5,000+ Zapier endpoints."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched hunter.io/our-data (the page that documents sourcing), /api, /mcp, /b2b-database and site:hunter.io newsletter. Newsletter appears only as outreach templates (newsletter-swap, sponsor-slot templates) and blog content, never as an ingested source or a data product.",
+ "verified_gap": "Hunter documents its ingestion as crawling public web pages to extract professional contact information, with source records attached. It has no newsletter publication index, no article-level topic/guest/sponsor extraction and no publication momentum tracking, so it cannot show which newsletters covered a company or who sponsors them.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://hunter.io/our-data",
+   "quote": "we maintain an index of the entire web and use it to source verified email addresses"
+  },
+  {
+   "url": "https://hunter.io/our-data",
+   "quote": "30M Web pages crawled every day."
+  },
+  {
+   "url": "https://hunter.io/our-data",
+   "quote": "All the contacts in the Domain Search are returned with information about where and when we found them."
+  },
+  {
+   "url": "https://hunter.io/mcp",
+   "quote": "Answers come from Hunter\u2019s data from 100M+ companies and real email addresses, not the model\u2019s best guess."
+  },
+  {
+   "url": "https://hunter.io/api",
+   "quote": "Programmatically identify your target audience. Use natural language or robust filters to find companies aligned with your ICP."
+  }
+ ],
+ "likely_buyer_role": "Head of Data or VP Product for the Data Platform/API (data sourcing and enrichment roadmap)",
+ "contact_route": {
+  "url": "https://hunter.io/pricing",
+  "value": "contact@hunter.io",
+  "note": "Address publicly listed in Hunter's site footer (verified on the pricing page); hunter.io/contact is a form, no named data lead published."
+ },
+ "confidence": "High",
+ "caveats": "Hunter already crawls the open web and sells 'signals', so they could build newsletter extraction in-house; the pitch must be corpus + entity resolution + momentum history rather than raw crawling. Their API is a real integration surface (MCP, Zapier, CRMs) but they are a much larger vendor with in-house data engineering."
+}

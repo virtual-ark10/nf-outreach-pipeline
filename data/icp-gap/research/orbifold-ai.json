@@ -1,0 +1,55 @@
+{
+ "company": "Orbifold AI",
+ "official_website": "https://www.orbifold.ai/",
+ "product_summary": "Distributed multimodal data infrastructure for physical AI: ingests, aligns, labels and schema-maps enterprise text, image, video and audio into AI-ready datasets for fine-tuning, RAG and model training, deployable on-prem or in private cloud.",
+ "current_data_sources": [
+  "Customer-supplied enterprise documents, PDFs and filings",
+  "Images, video and audio (including sensor and claims media)",
+  "Emails and business communications",
+  "Customer data estates, processed in-tenant or private cloud with zero data retention"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "Ingest, align, and manage multimodal data through one API."
+  },
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "structured, timestamped, schema-mapped data pipelines \u2014 ready for on-prem or private cloud deployment"
+  },
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "replaces fragmented data pipelines and manual labeling vendors with a unified multimodal data API"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage, all solution copy, the blog index, the BFSI case study and the careers page: no newsletter, publication, sponsor or editorial-corpus mention. Their only text sources are customer documents and emails, curated for model training rather than for company intelligence. No public API reference or docs site and no pricing page (the /pricing URL renders the homepage).",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "Orbifold AI is the distributed infrastructure for physical AI."
+  },
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "Orbifold transforms messy, multimodal enterprise data into clean, AI-ready datasets \u2014 text, image, video, audio"
+  },
+  {
+   "url": "https://www.orbifold.ai/",
+   "quote": "structuring of emails, documents, and media"
+  },
+  {
+   "url": "https://www.orbifold.ai/blog/orbifold-ai-unlocking-deep-insights-and-operational-excellence-in-bfsi-with-advanced-multimodal-data-curation",
+   "quote": "photos, videos, audio recordings, and medical bills"
+  }
+ ],
+ "likely_buyer_role": "Head of Data Partnerships / founding Product Manager (platform data sourcing); no evidence a newsletter-corpus buyer role exists",
+ "contact_route": {
+  "url": "https://www.orbifold.ai/blog",
+  "value": "chat@orbifold.ai",
+  "note": "Address published in the site footer ('Talk to us'); no named person with public profile verified."
+ },
+ "confidence": "Low",
+ "caveats": "Supply-side data-curation vendor, not a buyer of newsletter intelligence: they sell multimodal data pipelines to physical-AI, BFSI and industrial customers, and NF's entity-extracted newsletter corpus does not map to their workloads. Seed-stage ($5M) with no public docs, API reference or pricing page, so procurement and budget are unverified."
+}

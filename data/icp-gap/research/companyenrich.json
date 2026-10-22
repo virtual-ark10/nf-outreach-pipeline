@@ -1,0 +1,54 @@
+{
+ "company": "CompanyEnrich",
+ "official_website": "https://companyenrich.com/",
+ "product_summary": "Real-time B2B data API suite covering 33M+ companies and 193M+ people: enrichment, search, lookalikes, headcount trends, reverse email lookup, bulk enrichment and an MCP server.",
+ "current_data_sources": [
+  "Public web",
+  "Maps",
+  "Social media",
+  "Government records"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.companyenrich.com/docs/getting-started",
+   "quote": "CompanyEnrich is a B2B data API that returns verified company and people information through a single REST interface."
+  },
+  {
+   "url": "https://docs.companyenrich.com/docs/getting-started",
+   "quote": "connect AI agents to live data through our MCP server"
+  },
+  {
+   "url": "https://companyenrich.com/product/company-enrichment-api",
+   "quote": "Get 60+ data points, from firmographics to financials. 33M+ companies covered."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage, Getting Started docs, Company Enrichment API product page and site for 'newsletter'. Documented sources are 'the public web, maps, social media, and government records'; the published field schema (industry, employees, revenue, keywords, technologies, financials, socials, NAICS, page_rank) contains no newsletter mention, publication or topic-momentum field.",
+ "verified_gap": "Company activity fields stop at firmographics, tech stack, headcount, hiring and funding; there is no newsletter mention, publication or topic-momentum field, and newsletters are not among their named sources.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://companyenrich.com/",
+   "quote": "Data sourced from the public web, maps, social media, and government records helps you find businesses other providers miss."
+  },
+  {
+   "url": "https://docs.companyenrich.com/docs/getting-started",
+   "quote": "Returns industry, size, revenue range, location, technologies, employee count, and 15+ additional fields."
+  },
+  {
+   "url": "https://companyenrich.com/product/company-enrichment-api",
+   "quote": "Get 60+ data points, from firmographics to financials. 33M+ companies covered."
+  },
+  {
+   "url": "https://companyenrich.com/product/company-enrichment-api",
+   "quote": "Fields used: Industry, employee range, revenue range, business model categories, and funding stage."
+  }
+ ],
+ "likely_buyer_role": "Co-founder/CTO or Head of Product (small founding team owns API roadmap and partnerships)",
+ "contact_route": {
+  "url": "https://companyenrich.com/contact",
+  "value": "support@companyenrich.com"
+ },
+ "confidence": "High",
+ "caveats": "Absence is drawn from their own source description and public field schema, not a formal 'we do not ingest newsletters' statement; the free-text 'keywords' and 'description' fields are derived from web content and could partially capture newsletter-derived language. They ship fast (new Jobs API, MCP server), so a data-partnership pitch should target the founders directly."
+}

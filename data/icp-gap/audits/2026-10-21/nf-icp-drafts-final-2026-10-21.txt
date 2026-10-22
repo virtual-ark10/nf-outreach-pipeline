@@ -1,0 +1,93 @@
+NEWSLETTERFIT ICP OUTREACH, THREE DRAFTS WITH VERIFIED CONTACTS
+2026-10-21. Not sent. Ready for review, then loading into the pad.
+
+Contacts verified in this pass:
+  Common Room   Dan Brayton, VP of Revenue Operations, danbrayton@commonroom.io (Hunter score 96, valid)
+  Crustdata     Andres Pimentel, Founding GTM, andres@crustdata.com (Hunter score 84, accept_all: catch-all domain)
+  Autobound     Kyle Schuster, Co-Founder (Sales and Product), kyle@autobound.ai (Hunter score 81, valid, six sources)
+  Hunter        REMOVED: supplier, not a prospect. Researched at 79/100, draft withdrawn.
+  CompanyEnrich Amir Nurmagomedov, Co-Founder, NO USABLE ADDRESS. amir.nurmagomedov@companyenrich.com verified
+                undeliverable (score 0), the free lanes give no addresses, Hunter's finder returned nothing.
+                Cleared from the CRM so it cannot bounce. Draft blocked until an address is found.
+
+Still needed before any send, all four: a tracked link minted per draft, and the ICP ladder switched on
+(data/icp-drafts.enabled). The send gate then re-checks each draft: contact name present, address on the
+lead's own domain, no duplicate first touch, no reply on the thread, corpus figures correct.
+
+
+1. COMMON ROOM
+To: Dan Brayton, VP of Revenue Operations, danbrayton@commonroom.io
+Subject: Newsletter mentions as a Common Room signal
+
+Hi Dan,
+
+Your integrations page describes Common Room merging signals "from 50+ channels, spanning social,
+community, product, code collaboration, CRM, and more". Public newsletters are not named among those
+channels, and for B2B companies they are often where an account surfaces first: a founder essay, a
+guest appearance, a sponsor read.
+
+NewsletterFIT indexes 26,401 public newsletter publications, 141,392 articles and 2,218 sponsor
+mentions, each record carrying the publication, the article URL and the date. That is the part your
+custom API, Zapier and warehouse paths cannot source on their own: publication-level metadata,
+sponsor relationships and mention history.
+
+Would a sample help? I can send 20 accounts as rows shaped to your signal schema, with publication,
+mention type, sponsor and timestamp, so your team can judge fit before any integration conversation.
+
+
+2. CRUSTDATA
+To: Andres Pimentel, Founding GTM, andres@crustdata.com
+Subject: A newsletter dataset beside companies, people, jobs and social posts
+
+Hi Andres,
+
+Your docs describe Crustdata as a place to "query indexed datasets of companies, people, jobs, and
+social posts", with activity read from executive moves, news and product launches. Newsletter
+publications sit just outside that set, and they carry a kind of activity the other four do not: what
+a company is being discussed for, in whose newsletter, on what date.
+
+We index 26,401 publications and 141,392 articles, with topic and sponsor extraction and the source URL
+on every observation. It could arrive as a sixth dataset in your schema, or as an enrichment field on
+company records.
+
+If useful, I will pull 500 companies you already cover and send the newsletter mentions, topics and
+sponsors we hold, with timestamps, so you can compare against your current activity signals.
+
+
+3. AUTOBOUND
+To: Kyle Schuster, Co-Founder (Sales and Product), kyle@autobound.ai
+Subject: Newsletter text in Autobound's signal set
+
+Hi Kyle,
+
+Your platform page says Autobound monitors "35+ public data sources", and that your models already
+parse unstructured documents including podcast transcripts. Public newsletter issues are the same
+shape of input: long-form text, published on a schedule, with named companies, people and sponsors
+inside.
+
+NewsletterFIT turns that text into records: publication, article, companies and people mentioned,
+topics, sponsors, each with source URL and date. We hold 26,401 publications and 141,392 articles.
+
+You license signals through REST, S3/GCS and OEM. I can send 5,000 records mapped to your signal
+taxonomy so your team can test whether newsletter mentions add lift on accounts you already score.
+
+
+4. COMPANYENRICH, BLOCKED, no verified address
+To: Amir Nurmagomedov, Co-Founder
+Subject: Newsletter activity fields for CompanyEnrich
+
+Hi Amir,
+
+Your site says the data is sourced "from the public web, maps, social media, and government records",
+and enrichment returns 60+ points from firmographics to financials, technologies and headcount.
+Newsletter activity is a different axis: not what a company is, but where it is being written about
+and who is sponsoring that writing.
+
+We hold 26,401 publications and 141,392 articles, with company mentions, topics and 2,218 sponsor
+mentions, each with article URL and date.
+
+I can send mention, topic and sponsor fields for 1,000 domains you already enrich, in your field
+format, so you can see fill rate before any feed work.
+
+Do not send this one. Options: reach Ekin Koc or Amir on LinkedIn, use the site contact form, or wait
+for the Hunter allowance to reset on 2026-11-07 and try the finder again.

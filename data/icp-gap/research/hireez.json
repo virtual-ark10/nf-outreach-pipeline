@@ -1,0 +1,55 @@
+{
+ "company": "HireEZ",
+ "official_website": "https://hireez.com/",
+ "product_summary": "AI recruiting platform combining sourcing, CRM, outreach, AI screening, scheduling and analytics on top of the customer's ATS, with agentic workflows and a large open-web candidate database.",
+ "current_data_sources": [
+  "Customer ATS and CRM databases",
+  "Job boards and open-web professional profiles (~1 billion)",
+  "Partner talent databases (Nexxt, Talroo)",
+  "Customer-owned talent pools, campaign and hiring-analytics data"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://hireez.com/partners/",
+   "quote": "With 100+ integration across ATS, CRM, HRIS, and more, hireEZ fits right into the way your team already works."
+  },
+  {
+   "url": "https://hireez.com/pricing/",
+   "quote": "The full workflow runs on one platform with 40+ native ATS integrations"
+  },
+  {
+   "url": "https://hireez.com/pricing/",
+   "quote": "Solo recruiters start at $494/mo with a 7-day free trial."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "No newsletter-publication ingestion found. Sourcing is enumerated as ATS, job boards and the open web plus partner candidate databases; newsletters appear only as something hireEZ sends for candidate nurturing ('creating nurturing newsletters'), not as a data source. No public developer API docs for customers located.",
+ "verified_gap": "hireEZ enumerates its sourcing inputs as the customer's ATS, job boards, the open web and partner databases. Newsletter publications are not a source, so there is no newsletter-derived company, people or sponsor signal for account prioritisation; NF also cannot supply candidate profiles, so the gap is adjacent rather than core.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://hireez.com/blog/what-is-hireez/",
+   "quote": "Enhanced candidate sourcing from your ATS, job boards, and the open web"
+  },
+  {
+   "url": "https://hireez.com/blog/hireez-nexxt-talroo-partnership/",
+   "quote": "over 1 billion professional profiles sourced from the open web"
+  },
+  {
+   "url": "https://hireez.com/blog/what-makes-up-hireez2/",
+   "quote": "creating nurturing newsletters"
+  },
+  {
+   "url": "https://hireez.com/pricing/",
+   "quote": "The full workflow runs on one platform with 40+ native ATS integrations"
+  }
+ ],
+ "likely_buyer_role": "VP Product or Head of Data Partnerships (external data licensing); recruiting-side buyer would be a TA leader, not a data buyer",
+ "contact_route": {
+  "url": "https://explore.hireez.com/contact-sales",
+  "value": "Contact sales / book a demo form",
+  "note": "Linked from hireez.com/about-us/; no named person with a public profile verified."
+ },
+ "confidence": "Low",
+ "caveats": "Fundamental data mismatch: hireEZ needs individual candidate profiles, resumes and contact details, which NF does not produce (NF extracts companies, people mentioned in newsletters, sponsors and topics). hireEZ is also a large data supplier itself (1B+ profiles), so the realistic relationship is data partnership or supplier, not buyer. Pricing is seat/stack-based with a four-week paid verification, so no low-friction entry point."
+}

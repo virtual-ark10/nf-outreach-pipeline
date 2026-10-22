@@ -1,0 +1,58 @@
+{
+ "company": "Brandwatch",
+ "official_website": "https://www.brandwatch.com/",
+ "product_summary": "Enterprise social listening and consumer research suite (Cision-owned): monitors brand mentions across social, news, blogs and review sites, with analysis, publishing, engagement tools and several export APIs.",
+ "current_data_sources": [
+  "X/Twitter full firehose",
+  "Facebook public non-owned Pages",
+  "Instagram public accounts",
+  "LinkedIn company pages (authenticated)",
+  "TikTok, Tumblr, YouTube, Reddit, Forums, QQ",
+  "News sites, blogs and review sites",
+  "TV/radio via TVEyes (paid add-on)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.brandwatch.com/products/apis/",
+   "quote": "Query our content library (or your imported data) and return aggregated statistics, computed analysis"
+  },
+  {
+   "url": "https://www.brandwatch.com/products/apis/",
+   "quote": "Export and stream real-time data"
+  },
+  {
+   "url": "https://www.brandwatch.com/",
+   "quote": "Monitor emerging threats across over 100m sources and set up smart, real-time alerts"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Confirmed absent as a source type. The Listen sources article enumerates X/Twitter, Facebook, Instagram, LinkedIn, TikTok, Tumblr, Forums, YouTube, Reddit, News, Blogs, Review sites and QQ, with TV/radio as paid add-ons; no newsletter or email source is listed. The nearest adjacency is 'Blogs'. Note LinkedIn mentions are limited to a company page you own, so LinkedIn newsletters are not ingested either.",
+ "verified_gap": "Brandwatch's documented Listen sources cover social networks, news, blogs and review sites; newsletters and email publications are not among the ingested sources, so newsletter mentions and sponsor relationships fall outside the platform.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions",
+   "quote": "Mentions are provided by the Brandwatch Data Library and originate from popular online sources, such as social media networks"
+  },
+  {
+   "url": "https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions",
+   "quote": "Premium data sources \u2013 such as TV/radio (via TVEyes) \u2013 are available as add-ons"
+  },
+  {
+   "url": "https://www.brandwatch.com/products/apis/",
+   "quote": "Import unstructured data from any source and analyze with our advanced algorithms"
+  },
+  {
+   "url": "https://www.brandwatch.com/",
+   "quote": "The most intelligent social suite"
+  }
+ ],
+ "likely_buyer_role": "VP Product / Head of Data Partnerships for the Consumer Research (Listen) platform",
+ "contact_route": {
+  "url": "https://www.brandwatch.com/contact/",
+  "value": null,
+  "note": "Web form only, routed by solution; no public email. Parent company Cision also gates contact behind forms."
+ },
+ "confidence": "High",
+ "caveats": "Confirmed gap rests on the Listen help-centre source list, which may lag product changes; older Consumer Research may ingest additional connectors. The Data Upload API means customers could import newsletter text themselves, though Brandwatch does not supply it. Enterprise sales cycle and procurement are long."
+}

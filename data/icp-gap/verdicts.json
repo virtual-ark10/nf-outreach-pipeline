@@ -1,0 +1,463 @@
+{
+ "6sense": {
+  "lead_id": "6sense",
+  "company": "6sense",
+  "gap_status": "unverified",
+  "checked": 2,
+  "verified": 0,
+  "failed": [
+   {
+    "url": "https://6sense.com/platform/intent-data/",
+    "quote": "partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://6sense.com/platform/",
+    "quote": "Every signal, yours and ours, flows into one context layer.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "unchecked",
+  "reason": "2 quote(s) could not be fetched; re-run the verifier"
+ },
+ "affinity": {
+  "lead_id": "affinity",
+  "company": "Affinity",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "autobound": {
+  "lead_id": "autobound",
+  "company": "Autobound",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "beehiiv": {
+  "lead_id": "beehiiv",
+  "company": "beehiiv",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 5,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 5/5 quotes verified"
+ },
+ "bombora": {
+  "lead_id": "bombora",
+  "company": "Bombora",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 2,
+  "failed": [
+   {
+    "url": "https://developer.bombora.com/apis",
+    "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "unchecked",
+  "reason": "1 quote(s) could not be fetched; re-run the verifier"
+ },
+ "brand24": {
+  "lead_id": "brand24",
+  "company": "Brand24",
+  "gap_status": "disconfirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "blocked",
+  "reason": "gap disconfirmed: they already have the capability, or they are supply-side"
+ },
+ "brandwatch": {
+  "lead_id": "brandwatch",
+  "company": "Brandwatch",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "cb-insights": {
+  "lead_id": "cb-insights",
+  "company": "CB Insights",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 2,
+  "failed": [
+   {
+    "url": "https://www.cbinsights.com/",
+    "quote": "Continuous monitoring of 12M companies worldwide, with global funding, financial, and firmographic intelligence",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "unchecked",
+  "reason": "1 quote(s) could not be fetched; re-run the verifier"
+ },
+ "cision": {
+  "lead_id": "cision",
+  "company": "Cision",
+  "gap_status": "confirmed",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 2/2 quotes verified"
+ },
+ "clay": {
+  "lead_id": "clay",
+  "company": "Clay",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "common-room": {
+  "lead_id": "common-room",
+  "company": "Common Room",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 2,
+  "failed": [
+   {
+    "url": "https://www.commonroom.io/docs/using-common-room/contacts/impact-points/",
+    "quote": "Newsletter subscribed | 1 | Manual Entry / API / Zapier / CSV",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/13 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://www.commonroom.io/docs/using-common-room/c quote not on rendered page (leading match 0/13 words)"
+ },
+ "companyenrich": {
+  "lead_id": "companyenrich",
+  "company": "CompanyEnrich",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "contify": {
+  "lead_id": "contify",
+  "company": "Contify",
+  "gap_status": "confirmed",
+  "checked": 2,
+  "verified": 1,
+  "failed": [
+   {
+    "url": "https://www.contify.com/news-api/",
+    "quote": "Access stories from 1 Mn+ curated business-relevant sources, including 250k+ non-English sources, covering company websites, regulatory portals, job boards, review sites, and more.",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/23 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://www.contify.com/news-api/ quote not on rendered page (leading match 0/23 words)"
+ },
+ "crunchbase": {
+  "lead_id": "crunchbase",
+  "company": "Crunchbase",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 2,
+  "failed": [
+   {
+    "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+    "quote": "descriptions, sentiment scores (e.g., positive, neutral, or negative), news source links, and relevant dates",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/14 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://support.crunchbase.com/hc/en-us/articles/3 quote not on rendered page (leading match 0/14 words)"
+ },
+ "crustdata": {
+  "lead_id": "crustdata",
+  "company": "Crustdata",
+  "gap_status": "confirmed",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 2/2 quotes verified"
+ },
+ "dealroom": {
+  "lead_id": "dealroom",
+  "company": "Dealroom",
+  "gap_status": "unverified",
+  "checked": 2,
+  "verified": 1,
+  "failed": [
+   {
+    "url": "https://docs.dealroom.co/",
+    "quote": "Dealroom API v1 host: https://api.dealroom.co/api/v1",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 4/5 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://docs.dealroom.co/ quote not on rendered page (leading match 4/5 words)"
+ },
+ "feedly": {
+  "lead_id": "feedly",
+  "company": "Feedly",
+  "gap_status": "disconfirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "blocked",
+  "reason": "gap disconfirmed: they already have the capability, or they are supply-side"
+ },
+ "grata": {
+  "lead_id": "grata",
+  "company": "Grata",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "harmonic": {
+  "lead_id": "harmonic",
+  "company": "Harmonic",
+  "gap_status": "unverified",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "hireez": {
+  "lead_id": "hireez",
+  "company": "HireEZ",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 4,
+  "failed": [
+   {
+    "url": "https://hireez.com/blog/what-is-hireez/",
+    "quote": "Enhanced candidate sourcing from your ATS, job boards, and the open web",
+    "ok": false,
+    "reason": "not found (longest leading match 0/12 words)"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://hireez.com/blog/what-is-hireez/ not found (longest leading match 0/12 words)"
+ },
+ "hunter": {
+  "lead_id": "hunter",
+  "company": "Hunter",
+  "gap_status": "confirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 4/4 quotes verified"
+ },
+ "icypeas": {
+  "lead_id": "icypeas",
+  "company": "Icypeas",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "industrylens": {
+  "lead_id": "industrylens",
+  "company": "IndustryLens",
+  "gap_status": "disconfirmed",
+  "checked": 2,
+  "verified": 1,
+  "failed": [
+   {
+    "url": "https://industry-lens.com/pricing",
+    "quote": "News & content \u2014 Google News, newsletters, blogs",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/8 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://industry-lens.com/pricing quote not on rendered page (leading match 0/8 words)"
+ },
+ "kadoa": {
+  "lead_id": "kadoa",
+  "company": "Kadoa",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 5,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 5/5 quotes verified"
+ },
+ "meltwater": {
+  "lead_id": "meltwater",
+  "company": "Meltwater",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "mention": {
+  "lead_id": "mention",
+  "company": "Mention",
+  "gap_status": "confirmed",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 2/2 quotes verified"
+ },
+ "muck-rack": {
+  "lead_id": "muck-rack",
+  "company": "Muck Rack",
+  "gap_status": "confirmed",
+  "checked": 6,
+  "verified": 6,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 6/6 quotes verified"
+ },
+ "onclusive": {
+  "lead_id": "onclusive",
+  "company": "Onclusive",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "orbifold-ai": {
+  "lead_id": "orbifold-ai",
+  "company": "Orbifold AI",
+  "gap_status": "unverified",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "paved": {
+  "lead_id": "paved",
+  "company": "Paved",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 4,
+  "failed": [
+   {
+    "url": "https://docs.paved.com/reference/llms.txt",
+    "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "unchecked",
+  "reason": "1 quote(s) could not be fetched; re-run the verifier"
+ },
+ "people-data-labs": {
+  "lead_id": "people-data-labs",
+  "company": "People Data Labs",
+  "gap_status": "unverified",
+  "checked": 2,
+  "verified": 2,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
+ "signal-ai": {
+  "lead_id": "signal-ai",
+  "company": "Signal AI",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "sponsorsheep": {
+  "lead_id": "sponsorsheep",
+  "company": "SponsorSheep",
+  "gap_status": "disconfirmed",
+  "checked": 2,
+  "verified": 1,
+  "failed": [
+   {
+    "url": "https://sponsorsheep.com/bellwether",
+    "quote": "1,646 newsletters monitored across every platform",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/6 words)",
+    "pass": "still_unverified"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://sponsorsheep.com/bellwether quote not on rendered page (leading match 0/6 words)"
+ },
+ "sponsorunited": {
+  "lead_id": "sponsorunited",
+  "company": "SponsorUnited",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "tracxn": {
+  "lead_id": "tracxn",
+  "company": "Tracxn",
+  "gap_status": "confirmed",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "zyte": {
+  "lead_id": "zyte",
+  "company": "Zyte",
+  "gap_status": "unverified",
+  "checked": 5,
+  "verified": 4,
+  "failed": [
+   {
+    "url": "https://www.zyte.com/data-extraction/",
+    "quote": "A managed web data service. Our team builds, runs and maintains the collection",
+    "ok": false,
+    "reason": "not found (longest leading match 4/13 words)"
+   }
+  ],
+  "status": "blocked",
+  "reason": "1 quote(s) not found on the cited page, first: https://www.zyte.com/data-extraction/ not found (longest leading match 4/13 words)"
+ }
+}

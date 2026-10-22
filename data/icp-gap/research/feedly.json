@@ -1,0 +1,52 @@
+{
+ "company": "Feedly",
+ "official_website": "https://feedly.com/",
+ "product_summary": "Threat-intelligence and content-monitoring platform collecting 10,000+ sources, with AI extraction, a threat graph, report builder and an authenticated search API over team feeds.",
+ "current_data_sources": [
+  "RSS/Atom feeds and blogs",
+  "News sites and national newspapers",
+  "Email newsletters (user-subscribed or forwarded)",
+  "Reddit",
+  "X (Twitter) via API",
+  "Clear and dark web threat sources"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://developers.feedly.com/docs/using-the-search-api",
+   "quote": "This is an authenticated endpoint so you will need to pass your authentication token"
+  },
+  {
+   "url": "https://developers.feedly.com/docs/using-the-search-api",
+   "quote": "POST https://feedly.com/v3/search/contents"
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Feedly already ingests newsletters through a per-user Feedly email address or forwarding: 'Feedly can ingest email newsletters directly into your feeds,' and it converts each email into an article treated like any other source. Coverage is user-subscribed, not a catalog with publication metadata or momentum.",
+ "verified_gap": "",
+ "gap_status": "disconfirmed",
+ "evidence": [
+  {
+   "url": "https://docs.feedly.com/article/768-follow-sources-in-feedly",
+   "quote": "Feedly can ingest email newsletters directly into your feeds."
+  },
+  {
+   "url": "https://docs.feedly.com/article/768-follow-sources-in-feedly",
+   "quote": "Feedly will convert each email into a readable article format and treat it like any other source"
+  },
+  {
+   "url": "https://feedly.com/",
+   "quote": "Continuously collect relevant threat signals from 10,000+ trusted clear and dark web sources."
+  },
+  {
+   "url": "https://developers.feedly.com/docs/using-the-search-api",
+   "quote": "This is an authenticated endpoint so you will need to pass your authentication token"
+  }
+ ],
+ "likely_buyer_role": "VP Product or Head of Content/Data Partnerships, Feedly Threat Intelligence",
+ "contact_route": {
+  "url": "https://docs.feedly.com/article/529-contact",
+  "value": "pro@feedly.com"
+ },
+ "confidence": "High",
+ "caveats": "Gap disconfirmed: newsletters are already a supported source type, though only ones the customer subscribes to or forwards, and Feedly is positioned around CTI rather than GTM enrichment. A catalog-level play (publication discovery, sponsor/mention metadata, momentum across 26k publications) is still differentiated from one-email-at-a-time ingestion, but it is not an ingestion gap. No named partnerships contact found."
+}

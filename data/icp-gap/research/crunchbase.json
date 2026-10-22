@@ -1,0 +1,51 @@
+{
+ "company": "Crunchbase",
+ "official_website": "https://about.crunchbase.com/products/crunchbase-api",
+ "product_summary": "Private-company data and predictive intelligence platform; the Crunchbase API exposes financials, firmographics, funding events, heat scores, AI news insights and seven prediction models to product and data teams.",
+ "current_data_sources": [
+  "Direct market-expert and contributor input (4,000+ venture partners, 600,000 contributors)",
+  "User engagement signals from 80M+ users",
+  "News outlets and government filings (1,000+ reviewed and verified)",
+  "Company and investor submissions / proprietary ingestion systems",
+  "Analyst validation by a global research team"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://about.crunchbase.com/products/crunchbase-api",
+   "quote": "The only API combining institutional-grade private company data with seven proven prediction models"
+  },
+  {
+   "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+   "quote": "leverage LLMs to categorize and monitor company-related news events"
+  },
+  {
+   "url": "https://about.crunchbase.com/data",
+   "quote": "Crunchbase data is accessible through the Crunchbase platform, via API for programmatic access"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the API product page, the About Crunchbase Data page (which itemises the five ingestion sources) and the News Insights in the API support article. News is handled at article level only: News Insights provides 'news source links' and dated, sentiment-scored event categories such as Product Launches and Layoffs. No newsletter publication identity, newsletter sponsor data or newsletter-derived company graph is documented anywhere. Closest adjacent capability is their LLM news-event categorisation, which is source-agnostic and not newsletter-specific.",
+ "verified_gap": "Crunchbase's own documentation enumerates external sourcing as 'more than 1,000 news outlets and government filings' and its News Insights emit article-level categories plus news source links - no newsletter-level publication identity, sponsor relationships or newsletter-native signals.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://about.crunchbase.com/data",
+   "quote": "Information extracted and validated from more than 1,000 news outlets and government filings."
+  },
+  {
+   "url": "https://about.crunchbase.com/products/crunchbase-api",
+   "quote": "1,000+ News outlets and government filings reviewed and verified by our analyst team"
+  },
+  {
+   "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+   "quote": "descriptions, sentiment scores (e.g., positive, neutral, or negative), news source links, and relevant dates"
+  }
+ ],
+ "likely_buyer_role": "Head of Product / Data Partnerships for Crunchbase API and Insights (also data licensing)",
+ "contact_route": {
+  "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+  "value": "sales@crunchbase.com"
+ },
+ "confidence": "High",
+ "caveats": "Crunchbase already runs its own news-event extraction (News Insights) and says it reviews 1,000+ news outlets, so NF must be positioned as newsletter-native publication and sponsor evidence, not as generic news coverage. 'News outlets' is a loose category - Crunchbase may quietly ingest some newsletter publishers without naming them, so treat the gap as documented absence, not proof of zero coverage. Do not imply NF holds funding data: Crunchbase itself is the funding-data owner."
+}

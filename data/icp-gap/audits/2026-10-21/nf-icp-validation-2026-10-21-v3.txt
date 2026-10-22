@@ -1,0 +1,740 @@
+NEWSLETTERFIT ICP VALIDATION
+25 accounts from the ICP lookalike list, rescored against public evidence
+(Paved, Contify, Crunchbase, beehiiv and Tracxn were removed from the list at the reader's request)
+Run 2026-10-21. Scores are out of 100 using the published rubric: fit with NF data 35,
+publicly evidenced gap 30, integration path 20, commercial fit 15.
+
+Method. For each account the researcher read the vendor's own product, documentation, API and
+pricing pages. Every claim carried below was then re-fetched and the quote checked verbatim
+against the page text, twice: plain HTTP first, then a rendering fetch for pages that blocked
+or client-render. 77 of 88 researcher quotes verified this way; the unverified remainder is
+either dropped or named in the account's caveat. A gap is called confirmed only when the
+vendor's own docs enumerate what they ingest or expose and the capability is absent from that
+enumeration. Where the docs are silent, the gap is unverified, however plausible it looks.
+
+Verdict at a glance. 12 of the 25 gaps survived scrutiny. 9 are unverified on public
+evidence, and 4 were wrong: SponsorSheep, Feedly, IndustryLens, Brand24 already sell newsletter coverage.
+4 accounts clear the 75 threshold with Medium or High confidence and get a draft
+email: Common Room, Crustdata, Autobound, CompanyEnrich. Nothing has been sent.
+
+Contacts. Every address named below was found on the vendor's own contact page or their published
+support docs during this pass; none was constructed from a name pattern. Where no address is
+published the account says "none published" and gives the form URL.
+
+What is cited and what is not. Every fetched fact carries a citation whose page, under Sources,
+shows the verbatim sentence it came from: 72 sources, all quote-checked. Scoring, buyer guesses,
+CTA choices and caveats are judgements and carry none. 103 of the 716 prose sentences here are
+cited, which is most of the sentences that state a fact about a vendor.
+
+
+Common Room   original 88 -> revised 87   evidence High   draft
+    official website: https://www.commonroom.io/
+    score breakdown: fit 33/35, gap 24/30, integration 18/20, commercial 12/15
+    product: AI-native go-to-market platform that aggregates 50+ digital, community, product and CRM signals into unified person and account profiles, then scores, segments and triggers sales plays from that buyer intelligence. [1]
+    data it collects today: social and community platforms (X, Reddit, Discord, Slack, LinkedIn, YouTube, Medium, DEV, Stack Overflow, GitHub, G2), CRM and business apps (HubSpot, Salesforce, Marketo, Outreach, Salesloft, Gainsight), product usage and warehouse imports (Snowflake, BigQuery, Redshift, S3, Databricks, Census, Hightouch), third-party intent (Bombora, G2, TechTarget, Demandbase, 6sense, Scarf), custom data via API, Zapier, CSV and Google Sheets [1]
+    api / integration: Use the Common Room API to create new users and add activity to any user from any source. (https://www.commonroom.io/integrations/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: The integrations catalogue lists social, community, product, CRM and intent sources but no newsletter publication tracking, sponsor data or newsletter archive. The only newsletter item in their docs is an activity type a customer records for its own subscribers: "Newsletter subscribed | 1 | Manual Entry / API / Zapier / CSV" (docs Impact Points table). Searched: the full /integrations/ catalogue, /docs/signals/, and site-restricted searches for 'newsletter' on commonroom.io. [1]
+    verified gap: No native ingestion of newsletter publications: no newsletter publication/author coverage, no sponsor relationships, no newsletter article text or activity history. Customers can only approximate it by pushing events through the API, Zapier, CSV or a warehouse import, and those events carry no publication-level metadata or source links. [1]
+    gap status: confirmed
+    evidence: [1] "Newsletter subscribed 1 Manual Entry / API / Zapier / CSV" (https://www.commonroom.io/docs/using-common-room/contacts/impact-points/)
+    evidence: [2] "Seamlessly aggregate, merge, and enrich signals from 50+ channels, spanning social, community, product, code collaboration, CRM, and more." (https://www.commonroom.io/integrations/)
+    evidence: [3] "Signals are how Common Room brings together social, business, product, CRM, customer data, and more." (https://www.commonroom.io/docs/signals/)
+    quotes verified for this account: 2 of 3 researcher quotes
+    NF data that could fill it: Article-level company and topic mentions with publication, article URL and date, plus 26,401 publication profiles and activity snapshots to score against.
+    NF capabilities we must not claim here: No private audience metrics, no real-time guarantee, no funding data.
+    likely buyer: Head of Revenue Operations or GTM/signal owner who decides which third-party data sources feed account scoring and workflows (secondary: Head of Growth / PLG marketing).
+    contact route: none published (https://www.commonroom.io/contact/) -- Contact page is a demo-request form only; no public email address and no named contact found.
+    caveat: Their custom-integration path (API, Zapier, CSV, warehouse) means newsletter events can be pushed in, so the gap is about native newsletter data quality and coverage, not technical impossibility. Integrations page is a marketing catalogue, not a full data dictionary; private sources may exist.
+
+Muck Rack   original 86 -> revised 73   evidence High   second wave
+    official website: https://muckrack.com/
+    score breakdown: fit 30/35, gap 21/30, integration 13/20, commercial 9/15
+    product: PR and earned-media platform combining a verified journalist and outlet database, media monitoring across digital, broadcast, print, podcast and social, pitching, press-release distribution and coverage reporting, with a paid read-only API. [4]
+    data it collects today: news and article databases (queryable Searches over article headlines and body text, up to 5 years history), journalist and media-outlet profiles built by an editorial verification team, broadcast content (TV and radio, paid add-on), print content licensed from LexisNexis (paid add-on, 25-month lookback), social media and podcast monitoring, newsletter authors in the media database (added 2021) [4]
+    api / integration: The Muck Rack API moves your coverage into tools like Tableau, Power BI, or your database automatically. (https://muckrack.com/pr-software/api)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Newsletter authors are discoverable as media contacts, not as newsletter content: "we've added (and are continuing to add) newsletter authors to Muck Rack's media database." Their help centre enumerates five search types - People, Article, Media Outlet, Broadcast and Print - with no newsletter search, archive or sponsor data. [4]
+    verified gap: Newsletter depth stops at author/outlet discovery. No newsletter-level article search, no historical newsletter activity dataset and no sponsor-relationship intelligence are documented in the search-type docs or the API (article data behind a Saved Search only). [4]
+    gap status: confirmed
+    evidence: [4] "we've added (and are continuing to add) newsletter authors to Muck Rack's media database." (https://muckrack.com/blog/2021/05/12/newsletter-authors)
+    evidence: [5] "Muck Rack offers five search types." (https://help.muckrack.com/en/articles/5866899-getting-started-with-search-in-muck-rack)
+    evidence: [6] "Across sources spanning digital, broadcast, podcasts, print, and social media" (https://muckrack.com/pr-software/media-monitoring-alerts)
+    quotes verified for this account: 6 of 6 researcher quotes
+    NF data that could fill it: Sponsor relationships and newsletter article-level coverage to deepen the author records they already hold.
+    NF capabilities we must not claim here: NF has no journalist verification team and no LexisNexis print archive; publication audience data is not ours.
+    likely buyer: VP of Product or Head of Media Intelligence / Data Products, who owns media-database coverage and the monitoring source roadmap.
+    contact route: support@muckrack.com (https://muckrack.com/contact) -- Publicly listed customer-support address; no sales address published (press@muckrack.com is for media inquiries only).
+    caveat: muckrack.com initially returned bot_blocked to automated fetches and later served pages; coverage details may sit behind authenticated docs (the full API reference is customer-only per apis.io). 'Digital' monitoring is not defined publicly, so some newsletter content may already be captured without being labelled as such. Sponsor data absence is inferred from docs, not from an explicit denial.
+
+Crustdata   original 85 -> revised 87   evidence High   draft
+    official website: https://crustdata.com/
+    score breakdown: fit 32/35, gap 24/30, integration 19/20, commercial 12/15
+    product: Real-time B2B data API and MCP layer over indexed company, people, job and social-post datasets, enriching entities from 15+ sources into one schema with headcount, funding, web traffic, review and hiring signals. [7]
+    data it collects today: company firmographic and industry data, people and contact profiles, job listings and hiring signals, funding and headcount time series, web traffic and G2/Glassdoor employee reviews, social posts, press mentions and company news, web search and page fetch (news, web, scholar, social) [7]
+    api / integration: You can query indexed datasets of companies, people, jobs, and social posts (https://docs.crustdata.com/general/introduction)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Their API docs enumerate five dataset areas - Company, Person, Job, Web and Social Post - with no newsletter dataset: "query indexed datasets of companies, people, jobs, and social posts". Company activity datapoints are exec moves, company news and product launches. Searched: docs.crustdata.com introduction and API areas, /apis/company-enrichment, and site-restricted 'newsletter' searches (results were only client companies that happen to publish newsletters, e.g. HR Brew profiles). [7]
+    verified gap: No newsletter dataset or newsletter-derived activity signal: no publication-level index, no article text, no sponsor relationships. Their activity signals are exec moves, news and product launches; newsletters are not a documented source even though newsletter companies appear as firmographic profiles. [7]
+    gap status: confirmed
+    evidence: [7] "You can query indexed datasets of companies, people, jobs, and social posts" (https://docs.crustdata.com/general/introduction)
+    evidence: [8] "not just firmographics, but the signals that show what a company is actually doing: reviews, web traffic, product launches, funding, and hiring." (https://crustdata.com/apis/company-enrichment)
+    quotes verified for this account: 2 of 2 researcher quotes
+    NF data that could fill it: A sixth dataset beside companies, people, jobs and social posts: newsletter mentions with publication, topic, article URL and date.
+    NF capabilities we must not claim here: No private audience metrics, no funding-round data, no guaranteed real-time feed.
+    likely buyer: Head of Data Products or co-founder/CTO who owns dataset coverage and API schema decisions; also a potential OEM/data-licensing partner for their 'data layer' positioning.
+    contact route: none published (https://www.crustdata.com/apis/company-enrichment) -- Only a 'Get a Demo' form; crustdata.com/contact returns 404 and no email address is published on the site.
+    caveat: Their Web API can search news/web and fetch arbitrary pages, so newsletter text could be retrieved ad hoc, but there is no structured newsletter dataset, sponsor graph or publication activity history. Docs do not publish a full source list (only '15+ sources'), so coverage of newsletters cannot be fully ruled out.
+
+Autobound   original 84 -> revised 87   evidence High   draft
+    official website: https://www.autobound.ai/
+    score breakdown: fit 31/35, gap 24/30, integration 19/20, commercial 13/15
+    product: B2B signal-intelligence platform delivering 700+ signals from 35+ public sources via REST API, MCP server, file push and OEM licensing, plus AI-personalized sales content generated from those signals. [9]
+    data it collects today: SEC EDGAR filings and earnings call transcripts, LinkedIn and job boards (hiring surges, job changes), patent databases and GitHub, Glassdoor, Reddit and social posts, news feeds, podcast transcripts [9]
+    api / integration: Autobound delivers B2B buying signals — 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies (https://autobound-api.readme.io/docs)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Their platform architecture names the sources they monitor and newsletters are absent: "We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more." Podcast transcripts are extracted, but no newsletter publications. Searched: /platform, /integrations, autobound-api.readme.io docs, site-restricted 'newsletter' searches (results were only their blog posts about email marketing). [9]
+    verified gap: No newsletter source in the documented 35+ source list, so no newsletter-derived signals: no publication-level topics, no sponsor relationships, no article timestamps. Their closest documented analogue is podcast transcripts, which shows the extraction pipeline could accept long-form newsletter text but does not currently ingest it. [9]
+    gap status: confirmed
+    evidence: [9] "We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more." (https://www.autobound.ai/platform)
+    evidence: [10] "Autobound delivers B2B buying signals — 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies" (https://autobound-api.readme.io/docs)
+    evidence: [11] "Native MCP support for Claude Code and Cursor." (https://www.autobound.ai/integrations)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter long-form text turned into signal records: publication, topic, sponsor, company mention, all with source URL and timestamp.
+    NF capabilities we must not claim here: No private audience metrics and no production SLA; coverage is public newsletter web only.
+    likely buyer: VP Product / Head of Signal Data and Partnerships, given their OEM licensing motion and platform-embedding delivery (REST, S3/GCS, MCP).
+    contact route: support@autobound.ai (https://autobound-api.readme.io/docs) -- Support email published in their API docs; sales form at autobound.ai/contact-sales.
+    caveat: 'news feeds' and 'and more' leave room for newsletter content under a broader label, so this is a documented-list gap rather than a stated exclusion. Source count has changed recently (25 to 35+ in five weeks), so new sources may appear without doc updates.
+
+Grata   original 81 -> revised 60   evidence Medium   second wave
+    official website: https://grata.com/api
+    score breakdown: fit 24/35, gap 12/30, integration 16/20, commercial 8/15
+    product: Private-market intelligence platform and API for M&A and deal sourcing: 150 data points on 22M+ companies, executive contacts and conference lists, exposed through search, similarity, enrichment and list APIs. [12]
+    data it collects today: AI-synthesized public data (company descriptions, comps, employee counts, growth signals), Proprietary private financials and valuations, Executive contact database (emails, titles, LinkedIn), Trade show and conference exhibitor/sponsor lists, Institutional/user data: notes, labels, deal status [12]
+    api / integration: Grata's API surfaces our data in your firm's internal systems for comprehensive, verified market intelligence (https://grata.com/api)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Not found. Searched grata.com/api, grata.com/our-data and docs.grata.com; documented inputs are AI-synthesized public data, private financials, executive contacts and 'Trade show & conference exhibitor lists'. No newsletter, email or publication data is mentioned, but the underlying public sources are never enumerated field by field, so this stays unverified rather than a confirmed gap. [12]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [12]
+    gap status: unverified
+    evidence: [12] "Trade show & conference exhibitor lists" (https://grata.com/our-data)
+    evidence: [13] "Grata synthesizes public sources, private insights, and exclusive data, rigorously cleans and reconciles every record" (https://grata.com/api)
+    evidence: [14] "Search API delivers the power of Grata’s search capabilities into your proprietary systems" (https://docs.grata.com/)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Source-linked newsletter mentions and topic activity to complement private-company profiles.
+    NF capabilities we must not claim here: No private financials, no valuations, no executive contact database.
+    likely buyer: Head of Data / VP Product responsible for API data coverage and third-party data partnerships
+    contact route: none published (https://grata.com/contact) -- Form-only contact page (demo request); docs.grata.com links 'Contact Customer Success'. No public email address found, none assumed.
+    caveat: Gap unverified: Grata describes 'disparate public data' without naming sources, so absence of newsletters is inferred from the data-type lists only. API exists and is documented, which makes a data-supplement conversation plausible; no public pricing for API.
+
+Harmonic   original 80 -> revised 61   evidence Medium   second wave
+    official website: https://harmonic.ai/
+    score breakdown: fit 26/35, gap 12/30, integration 14/20, commercial 9/15
+    product: Startup discovery and intelligence platform for investors: company, founder and investor profiles with hiring, funding and launch signals, AI 'Scout' agents, plus API, MCP and warehouse delivery. [15]
+    data it collects today: Company and people profiles assembled from web sources, Hiring and job-change signals, Funding events and investor activity, Product launches and company direction changes, Network graph from synced inboxes, calendars and LinkedIn, Web-wide research gathered by its agent [15]
+    api / integration: Always up to date, always production ready and tailored to your integration (https://harmonic.ai/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Not found. Searched harmonic.ai, harmonic.ai/solutions/growth and the console API reference (docs.harmonic.ai and help.harmonic.ai were unreachable, returning blocked responses). Public copy says it tracks companies 'as they grow, hire, fundraise, launch products' and pulls from 'the entire web', but no page enumerates newsletter or email data, so this is unverified rather than a confirmed gap. [15]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [15]
+    gap status: unverified
+    evidence: [15] "We track companies and people as they grow, hire, fundraise, launch products, and change direction." (https://harmonic.ai/)
+    evidence: [16] "Real-time signals for traction and growth" (https://harmonic.ai/solutions/growth)
+    quotes verified for this account: 2 of 2 researcher quotes
+    NF data that could fill it: Newsletter activity as an early signal on young companies, with publication and date attached.
+    NF capabilities we must not claim here: No founder graph, no funding data, no stealth detection.
+    likely buyer: Head of Data / VP Product owning startup-data coverage and signal sources
+    contact route: none published (https://harmonic.ai/) -- 'Book a demo' form on the homepage; no public contact email or named data-contact found.
+    caveat: Docs are behind console/docs subdomains that could not be fetched, so an internal source list may exist; gap therefore unverified. Harmonic markets 'the entire web', which may mean some newsletter content is already crawled incidentally.
+
+SponsorSheep   original 79 -> revised 37   evidence High   not a prospect
+    official website: https://www.sponsorsheep.com/
+    score breakdown: fit 28/35, gap 3/30, integration 4/20, commercial 2/15
+    product: Newsletter sponsorship marketplace plus Bellwether Intel, a free sponsor-intelligence database of observed sponsor placements across monitored newsletters; commission-only, no subscription fees. [17]
+    data it collects today: Newsletter emails monitored for sponsor placements, Placement calendars and rate cards supplied by publishers, Sponsor company details and LinkedIn profiles, shown when verified, Audience reach figures where publisher size is known [17]
+    api / integration: Counts, trends and last-seen dates refresh hourly (https://sponsorsheep.com/bellwether)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Present and directly competitive: Bellwether Intel states '1,646 newsletters monitored across every platform' with placements drawn from real emails and refreshed hourly. Observed coverage is roughly 1,646 newsletters, 4,163 sponsors and 29,853 placements, against NewsletterFIT's 26,401 indexed publications and 2,218 sponsor mentions — same domain, different observation method and scale. No public API is advertised; access is a free member UI. [17]
+    verified gap: none. The claimed gap is wrong: newsletter coverage is already sold. [17]
+    gap status: disconfirmed
+    evidence: [17] "1,654 newsletters monitored across every platform" (https://sponsorsheep.com/bellwether)
+    evidence: [17] "Placements detected 29,888 all time, ≥85% confidence" (https://sponsorsheep.com/bellwether)
+    evidence: [18] "No subscription. No listing fee. No setup fee." (https://www.sponsorsheep.com/)
+    quotes verified for this account: 1 of 2 researcher quotes
+    NF data that could fill it: Coverage of publications that never list on a marketplace, and sponsor mentions read from article text.
+    NF capabilities we must not claim here: No marketplace inventory, no ESP-verified open and click rates, no booking flow.
+    likely buyer: Founder / CEO (Revbox Ltd) making data-coverage or partnership decisions
+    contact route: none published (https://www.sponsorsheep.com/contact) -- Contact form plus postal address (Revbox Ltd, 71-75 Shelton Street, London). No public email listed; none guessed.
+    caveat: Direct competitor, not a prospect in the ordinary sense: newsletter sponsor data is their core product, so partnership framing must be coverage-complement or data-supply, not 'we can add newsletters'. Live counters vary between pages (1,646 vs 1,654 newsletters) because they refresh continuously. No API means integration would be bespoke.
+    disqualification: not a prospect on this evidence. See the caveat and treat as competitor or partner at most.
+
+Brandwatch   original 78 -> revised 68   evidence High   second wave
+    official website: https://www.brandwatch.com/
+    score breakdown: fit 26/35, gap 21/30, integration 13/20, commercial 8/15
+    product: Enterprise social listening and consumer research suite (Cision-owned): monitors brand mentions across social, news, blogs and review sites, with analysis, publishing, engagement tools and several export APIs. [19]
+    data it collects today: X/Twitter full firehose, Facebook public non-owned Pages, Instagram public accounts, LinkedIn company pages (authenticated), TikTok, Tumblr, YouTube, Reddit, Forums, QQ, News sites, blogs and review sites, TV/radio via TVEyes (paid add-on) [19]
+    api / integration: Query our content library (or your imported data) and return aggregated statistics, computed analysis (https://www.brandwatch.com/products/apis/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Confirmed absent as a source type. The Listen sources article enumerates X/Twitter, Facebook, Instagram, LinkedIn, TikTok, Tumblr, Forums, YouTube, Reddit, News, Blogs, Review sites and QQ, with TV/radio as paid add-ons; no newsletter or email source is listed. The nearest adjacency is 'Blogs'. Note LinkedIn mentions are limited to a company page you own, so LinkedIn newsletters are not ingested either. [19]
+    verified gap: Brandwatch's documented Listen sources cover social networks, news, blogs and review sites; newsletters and email publications are not among the ingested sources, so newsletter mentions and sponsor relationships fall outside the platform. [19]
+    gap status: confirmed
+    evidence: [19] "Mentions are provided by the Brandwatch Data Library and originate from popular online sources, such as social media networks" (https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions)
+    evidence: [20] "Import unstructured data from any source and analyze with our advanced algorithms" (https://www.brandwatch.com/products/apis/)
+    evidence: [21] "The most intelligent social suite" (https://www.brandwatch.com/)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter mentions and sponsor relationships as a source class their Listen taxonomy does not carry.
+    NF capabilities we must not claim here: No full social firehose, no licensed premium publisher archive, no consumer research panels.
+    likely buyer: VP Product / Head of Data Partnerships for the Consumer Research (Listen) platform
+    contact route: none published (https://www.brandwatch.com/contact/) -- Web form only, routed by solution; no public email. Parent company Cision also gates contact behind forms.
+    caveat: Confirmed gap rests on the Listen help-centre source list, which may lag product changes; older Consumer Research may ingest additional connectors. The Data Upload API means customers could import newsletter text themselves, though Brandwatch does not supply it. Enterprise sales cycle and procurement are long.
+
+Dealroom   original 77 -> revised 63   evidence Medium   second wave
+    official website: https://dealroom.co/products/api/
+    score breakdown: fit 26/35, gap 12/30, integration 16/20, commercial 9/15
+    product: Startup and VC data platform: 3M+ companies, 336K+ funding rounds, investor and founder profiles, with a REST API, hosted MCP server and bulk feeds for sourcing and ecosystem analytics. [22]
+    data it collects today: Company and investor profiles curated by analysts, Funding rounds, valuations and financials, Founder/operator profiles enriched from 40+ sources, Entity-level news and AI-synthesized sentiment, Hiring and web/app traction signals, Company filings and founder signals for stealth detection [22]
+    api / integration: REST with OAuth2, the hosted MCP server and bulk feeds, in production use by customers now (https://dealroom.co/products/api/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Not found. Searched dealroom.co/products/api/, dealroom.co/for-agents/ and docs.dealroom.co: documented signals are news, sentiment, filings, hiring, founder, web/app and stealth detection, with people data 'enriched from 40+ sources' left unnamed. No page mentions newsletters or email publications, but sources are not enumerated, so unverified rather than confirmed. [22]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [22]
+    gap status: unverified
+    evidence: [22] "Entity-level news, AI-synthesized sentiment and predictive signals — wired to the exact company or investor." (https://dealroom.co/products/api/)
+    quotes verified for this account: 1 of 2 researcher quotes
+    NF data that could fill it: Newsletter attention signals attached to company and investor records, with source URL and date.
+    NF capabilities we must not claim here: No funding rounds, no valuations, no analyst-curated company profiles.
+    likely buyer: Head of Data / API Product Manager for the Dealroom data platform
+    contact route: support@dealroom.co (https://dealroom.co/contact/) -- Published on the contact page for general inquiries; privacy@dealroom.co for privacy requests. Prefer support@ and ask to be routed to the data/API team.
+    caveat: Gap unverified: Dealroom's 'entity-level news' may already sweep newsletter content without naming it. A new API is in closed beta, so data-model changes are in flight. Their positioning stresses completeness, so an external newsletter signal needs to be framed as net-new, not as coverage they lack.
+
+Mention   original 76 -> revised 46   evidence Medium   not a prospect
+    official website: https://mention.com/en/media-monitoring-api/
+    score breakdown: fit 18/35, gap 16/30, integration 9/20, commercial 3/15
+    product: Social listening and media monitoring platform, now delivered as Agorapulse Listening, with a streaming API that returns keyword mentions from web, news, blogs, forums and social platforms. [23]
+    data it collects today: Web pages, News sites, Blogs, Forums, Reddit, YouTube, X (Twitter), Facebook [23]
+    api / integration: We use a streaming API, so you’ll receive mentions as soon as they happen online. (https://mention.com/en/media-monitoring-api/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the media monitoring API page, homepage, and Mention/Agorapulse plans documentation for 'newsletter'. No email-newsletter ingestion appears; the documented source list is 'Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web.' [23]
+    verified gap: No newsletter source in Mention's documented monitoring coverage (Web, News, Blogs, Forums, Reddit, social platforms) and no newsletter publication/author metadata or publication momentum signal. [23]
+    gap status: confirmed
+    evidence: [23] "Mention’s API shows you when your keywords are used on websites, forums, blogs, the news, and social media." (https://mention.com/en/media-monitoring-api/)
+    evidence: [24] "track brand mentions and keywords across Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web" (https://support.mention.com/en/articles/13354178-mention-plans-explained)
+    quotes verified for this account: 2 of 2 researcher quotes
+    NF data that could fill it: Newsletter mention coverage as a monitoring source.
+    NF capabilities we must not claim here: No social firehose and no Agorapulse publishing surface.
+    likely buyer: Head of Product / API product manager for Agorapulse Listening (Mention’s successor product)
+    contact route: none published (https://support.mention.com/en/) -- No public contact page on mention.com (mention.com/en/contact/ returns 404); only the help center. Mention is no longer sold standalone since July 1, 2026, so outreach should be routed to Agorapulse.
+    caveat: Gap is well supported but the account is largely retired: Mention stopped standalone sales on 1 July 2026 and its capability is being absorbed into Agorapulse Listening. Its 'News' and 'Blogs' crawlers may surface some newsletter web archives, though no email-newsletter ingestion or publication metadata is documented. No named contact found.
+    disqualification: not a prospect on this evidence. See the caveat and treat as competitor or partner at most.
+
+People Data Labs   original 74 -> revised 66   evidence Medium   second wave
+    official website: https://www.peopledatalabs.com/
+    score breakdown: fit 28/35, gap 12/30, integration 16/20, commercial 10/15
+    product: People and company data provider offering enrichment, search, IP enrichment and data-license feeds built on a large person dataset and 70M+ company profiles, plus job-posting signals. [25]
+    data it collects today: Proprietary licensed data (HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech), Publicly available data and open datasets, Governmental public records, Company career pages (job postings) [25]
+    api / integration: Our Company Enrichment API helps you retrieve unique insights from our company dataset. (https://www.peopledatalabs.com/company-data/enrichment-api)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the Data Sources & Compliance doc, the Company Enrichment API page and the site for 'newsletter'. Sources are described only by category ('HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech'); no newsletter, publication or editorial-content dataset is documented. [25]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [25]
+    gap status: unverified
+    evidence: [25] "Our data sources come from a variety of verticals, including HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech and others." (https://docs.peopledatalabs.com/docs/data-sources)
+    evidence: [26] "Access over 70MM+ company profiles, from stealth startups to conglomerates." (https://www.peopledatalabs.com/company-data/enrichment-api)
+    quotes verified for this account: 2 of 2 researcher quotes
+    NF data that could fill it: A newsletter activity field (mentions, topics, sponsors) beside the job-posting dataset.
+    NF capabilities we must not claim here: No person-level identity graph and no contact data.
+    likely buyer: Head of Data Partnerships or Product Manager, Company Data / Enrichment
+    contact route: none published (https://www.peopledatalabs.com/contact-us) -- Public contact page offers a 'Submit a ticket' support form; no sales email published. Enterprise plans route via a dedicated CSM.
+    caveat: PDL documents sources only at category level and does not enumerate its web-scrape inputs, so newsletter absence is unverified rather than confirmed. They already sell a non-firmographic activity signal (job postings from career pages), which is the closest existing analogue and a useful wedge, but also means newsletter activity would compete with an in-house signal. No public newsletter dataset or partnership mention found.
+
+CompanyEnrich   original 73 -> revised 82   evidence High   draft
+    official website: https://companyenrich.com/
+    score breakdown: fit 30/35, gap 24/30, integration 17/20, commercial 11/15
+    product: Real-time B2B data API suite covering 33M+ companies and 193M+ people: enrichment, search, lookalikes, headcount trends, reverse email lookup, bulk enrichment and an MCP server. [27]
+    data it collects today: Public web, Maps, Social media, Government records [27]
+    api / integration: CompanyEnrich is a B2B data API that returns verified company and people information through a single REST interface. (https://docs.companyenrich.com/docs/getting-started)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the homepage, Getting Started docs, Company Enrichment API product page and site for 'newsletter'. Documented sources are 'the public web, maps, social media, and government records'; the published field schema (industry, employees, revenue, keywords, technologies, financials, socials, NAICS, page_rank) contains no newsletter mention, publication or topic-momentum field. [27]
+    verified gap: Company activity fields stop at firmographics, tech stack, headcount, hiring and funding; there is no newsletter mention, publication or topic-momentum field, and newsletters are not among their named sources. [27]
+    gap status: confirmed
+    evidence: [27] "Data sourced from the public web, maps, social media, and government records helps you find businesses other providers miss." (https://companyenrich.com/)
+    evidence: [28] "Returns industry, size, revenue range, location, technologies, employee count, and 15+ additional fields." (https://docs.companyenrich.com/docs/getting-started)
+    evidence: [29] "Get 60+ data points, from firmographics to financials. 33M+ companies covered." (https://companyenrich.com/product/company-enrichment-api)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter mention, topic and sponsor fields with source URL and date, as new company fields rather than firmographic ones.
+    NF capabilities we must not claim here: No person contact data, no firmographic master record, no private audience metrics.
+    likely buyer: Co-founder/CTO or Head of Product (small founding team owns API roadmap and partnerships)
+    contact route: support@companyenrich.com (https://companyenrich.com/contact)
+    caveat: Absence is drawn from their own source description and public field schema, not a formal 'we do not ingest newsletters' statement; the free-text 'keywords' and 'description' fields are derived from web content and could partially capture newsletter-derived language. They ship fast (new Jobs API, MCP server), so a data-partnership pitch should target the founders directly.
+
+Clay   original 72 -> revised 66   evidence Medium   second wave
+    official website: https://www.clay.com/
+    score breakdown: fit 26/35, gap 10/30, integration 18/20, commercial 12/15
+    product: GTM data orchestration platform combining a 200+ vendor data marketplace, waterfall enrichment, AI research agents and visual workflows to build outbound and account-scoring plays. [30]
+    data it collects today: 200+ third-party data and AI vendors via marketplace, First-party CRM and warehouse data, Web/news content (News & Online Content data points), Social media and ads data, Job postings and technographics [30]
+    api / integration: One contract to buy data from 200+ data and AI vendors in Clay’s marketplace. (https://www.clay.com/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the homepage, integrations list, and the data-point catalog (including the News & Online Content category: Article Body, Article Source, Article Title) for 'newsletter'. Newsletter content is not a documented data point; Clay does show newsletter-adjacent use cases such as enriching beehiiv subscribers, where newsletter data is an input rather than a content source. [30]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [30]
+    gap status: unverified
+    evidence: [30] "One contract to buy data from 200+ data and AI vendors in Clay’s marketplace." (https://www.clay.com/)
+    evidence: [31] "Discover where the article was originally published to understand the context and credibility of the information." (https://www.clay.com/integrations/data-points)
+    evidence: [32] "Clay-built Integration Enrichment (Native) Export (Native) HTTP API" (https://www.clay.com/integrations)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter publications, mentions and sponsors as a marketplace data provider and HTTP API endpoint.
+    NF capabilities we must not claim here: No waterfall enrichment and no CRM sync product.
+    likely buyer: Head of Data Partnerships / marketplace partnerships lead (or GTM engineering lead for a pilot)
+    contact route: support@clay.com (https://www.clay.com/contact)
+    caveat: Clay is a distributor, not a data owner: the realistic play is becoming an HTTP-API/marketplace provider, not filling a documented gap. Their News & Online Content data points already cover articles, and 'anything on the internet' positioning means the absence of newsletter-specific fields is unverified. Support email only; no public partnerships contact named.
+
+Feedly   original 71 -> revised 49   evidence High   not a prospect
+    official website: https://feedly.com/
+    score breakdown: fit 22/35, gap 5/30, integration 14/20, commercial 8/15
+    product: Threat-intelligence and content-monitoring platform collecting 10,000+ sources, with AI extraction, a threat graph, report builder and an authenticated search API over team feeds. [33]
+    data it collects today: RSS/Atom feeds and blogs, News sites and national newspapers, Email newsletters (user-subscribed or forwarded), Reddit, X (Twitter) via API, Clear and dark web threat sources [33]
+    api / integration: This is an authenticated endpoint so you will need to pass your authentication token (https://developers.feedly.com/docs/using-the-search-api)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Feedly already ingests newsletters through a per-user Feedly email address or forwarding: 'Feedly can ingest email newsletters directly into your feeds,' and it converts each email into an article treated like any other source. Coverage is user-subscribed, not a catalog with publication metadata or momentum. [33]
+    verified gap: none. The claimed gap is wrong: newsletter coverage is already sold. [33]
+    gap status: disconfirmed
+    evidence: [33] "Feedly can ingest email newsletters directly into your feeds." (https://docs.feedly.com/article/768-follow-sources-in-feedly)
+    evidence: [34] "Continuously collect relevant threat signals from 10,000+ trusted clear and dark web sources." (https://feedly.com/)
+    evidence: [35] "This is an authenticated endpoint so you will need to pass your authentication token" (https://developers.feedly.com/docs/using-the-search-api)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: A catalog layer over publications rather than a per-user inbox subscription.
+    NF capabilities we must not claim here: No threat-intelligence graph and no CTI curation.
+    likely buyer: VP Product or Head of Content/Data Partnerships, Feedly Threat Intelligence
+    contact route: pro@feedly.com (https://docs.feedly.com/article/529-contact)
+    caveat: Gap disconfirmed: newsletters are already a supported source type, though only ones the customer subscribes to or forwards, and Feedly is positioned around CTI rather than GTM enrichment. A catalog-level play (publication discovery, sponsor/mention metadata, momentum across 26k publications) is still differentiated from one-email-at-a-time ingestion, but it is not an ingestion gap. No named partnerships contact found.
+    disqualification: not a prospect on this evidence. See the caveat and treat as competitor or partner at most.
+
+Affinity   original 68 -> revised 65   evidence High   second wave
+    official website: https://www.affinity.co/
+    score breakdown: fit 24/35, gap 19/30, integration 14/20, commercial 8/15
+    product: AI-first CRM for private capital that auto-captures email and calendar activity, enriches company and contact records from 40+ sources, and scores relationship strength across 3,300+ firms. [36]
+    data it collects today: Affinity proprietary enrichment engine (40M+ people, 8M+ companies), PitchBook (integrated data partner), Dealroom (including Twitter follower counts), Crunchbase (view-only integrated data partner), Firmographic providers and biographic data, Growth-signal feeds (headcount, hiring/departure trends), The firm's own email, calendar and meeting activity [36]
+    api / integration: This API provides a RESTful interface for building internal apps, automated workflows, 3rd party integrations (https://developer.affinity.co/pages/external-api-v2/introduction)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the Affinity Data product page (which lists every enrichable data point by source: Affinity, Pitchbook, Crunchbase, Dealroom), the homepage and the developer docs. Data-point catalogue covers biographic, firmographic, funding, growth, social, sustainability and team fields; there is no newsletter or publication field of any kind. Affinity's 'social' coverage is limited to last-month Twitter follower metrics via Dealroom. [36]
+    verified gap: No newsletter or newsletter-publication source appears anywhere in Affinity's documented enrichment stack: the source list runs 'PitchBook, Dealroom, and Crunchbase ... firmographic providers, biographic data, and growth signal feeds', and the data-point catalogue has no publication-level field. [36]
+    gap status: confirmed
+    evidence: [36] "PitchBook, Dealroom, and Crunchbase sit alongside firmographic providers, biographic data, and growth signal feeds." (https://www.affinity.co/product/affinity-data)
+    evidence: [37] "The Affinity APIs are only available on select license types." (https://developer.affinity.co/pages/external-api-v2/introduction)
+    evidence: [38] "Enriched with Affinity’s proprietary data and 40+ sources, including Pitchbook, Preqin, and Grata" (https://www.affinity.co/)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter-derived company and founder activity mapped onto existing company records.
+    NF capabilities we must not claim here: No relationship-strength graph from private email and calendar, no funding data.
+    likely buyer: Head of Data Partnerships / Product lead for Affinity Data
+    contact route: info@affinity.co (https://www.affinity.co/contact)
+    caveat: Affinity's wedge is relationship strength from the firm's own email and calendar data, so any newsletter signal must attach to an existing company or person record to be useful - a standalone publication corpus would need mapping work. Many enrichments are partner-licensed and view-only (Crunchbase is explicitly view-only), which affects how a third-party feed could be redistributed. Buying is likely a data-partnership conversation, not a CRM seat sale.
+
+IndustryLens   original 67 -> revised 39   evidence High   not a prospect
+    official website: https://industry-lens.com/features/data-sources
+    score breakdown: fit 18/35, gap 4/30, integration 12/20, commercial 5/15
+    product: Founder-led competitive-intelligence tool that monitors 350+ sources across 62 source types per tracked company and delivers weekly verified battlecards and briefings, priced from £149/month per company. [39]
+    data it collects today: Company website pages, deep crawls, careers boards and campaign landing pages, Google News plus named outlets (TechCrunch, Forbes, Bloomberg, Reuters, VentureBeat, Wired, Business Insider, The Verge, Axios), Industry newsletters and trade press, A tracked competitor's own email newsletter (forwarded or subscribed), Review platforms (G2, Capterra, Trustpilot, Google Reviews, Gartner Peer Insights, Glassdoor, Clutch, TrustRadius, app stores), Social (LinkedIn posts/profiles/exec posts, X, Reddit, YouTube, Instagram, Facebook, TikTok), Ad libraries (Meta, Google, LinkedIn), Hiring sources (LinkedIn Jobs, LinkedIn Events, Indeed) [39]
+    api / integration: API access (https://industry-lens.com/pricing)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Newsletter coverage is already a named, sold feature, not a gap. The data-sources page lists 'Industry newsletters and trade press' as a news source type, and separately a custom/private source called 'Newsletter content' described as 'A competitor's own email newsletter, forwarded or subscribed.' The pricing page lists 'News & content — Google News, newsletters, blogs' as an included channel and 'Google News + newsletters' in the plan matrix. Coverage is per tracked company (10–100 companies), not a searchable publication corpus. [39]
+    verified gap: none. The claimed gap is wrong: newsletter coverage is already sold. [39]
+    gap status: disconfirmed
+    evidence: [39] "A competitor’s own email newsletter, forwarded or subscribed." (https://industry-lens.com/features/data-sources)
+    quotes verified for this account: 1 of 2 researcher quotes
+    NF data that could fill it: Corpus breadth across 26,401 publications rather than per-competitor newsletters.
+    NF capabilities we must not claim here: No battlecard generation and no per-company monitoring pipeline.
+    likely buyer: Founder (Naveed Ratansi) — sole decision-maker in a founder-led, self-serve product
+    contact route: Naveed Ratansi, Founder — contact form / 30-min call booking; no email published (https://industry-lens.com/contact)
+    caveat: Do not pitch newsletter coverage as missing - they already sell it. The real opening is breadth and structure: their newsletter coverage is per-competitor (a company's own email plus generic trade press), not an index of 26,401 publications with sponsor and guest relationships. Volume is small (10-100 tracked companies, £149/month), so an enterprise data licence would need a specific, cheap use case. Naveed is both buyer and contact, and he vets claims hard (the page publishes rejected claims and a 29-check pipeline), so evidence quality matters more than framing.
+    disqualification: not a prospect on this evidence. See the caveat and treat as competitor or partner at most.
+
+Meltwater   original 66 -> revised 55   evidence Medium   second wave
+    official website: https://www.meltwater.com/
+    score breakdown: fit 24/35, gap 9/30, integration 14/20, commercial 8/15
+    product: Media, social and AI-visibility intelligence platform for PR and comms teams, ingesting over a billion documents daily and offering API, MCP and BI/data-warehouse integrations. [40]
+    data it collects today: 400,000+ traditional media sources (newspapers, magazines, print and digital), 200M+ online publications including blogs, review sites and forums, TV and radio broadcast stations (all 210 U.S. DMAs), 20,000+ podcasts with speech-to-text transcripts, Substack as a dedicated source, Social platforms (X, Facebook, Instagram, YouTube, TikTok, LinkedIn, Reddit, WeChat, Weibo and more), AI platforms and LLM outputs (ChatGPT, Perplexity, Gemini, Claude, Grok, AI Overviews), Review sites (Google, Trustpilot, Glassdoor, Indeed, app stores, marketplaces) [40]
+    api / integration: Search and export mentions, access historical and live analytics, manage searches and tags programmatically (https://www.meltwater.com/en/platform/integrations-api)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Meltwater has newsletter-adjacent coverage but only names one platform: the global coverage page states they added 'Expanded YouTube monitoring, Substack as a dedicated source' to close visibility gaps. Beyond Substack, newsletters are not a documented media type - the enumerated channel list runs traditional media, online publications (blogs, review sites, forums), TV/radio, podcasts, AI platforms and social. Their 'newsletters' product page is the reverse direction: a tool to build branded internal newsletters from monitoring results, not a source of newsletter intelligence. Searched their coverage page, integrations/API page and newsletter product pages; no beehiiv, Ghost, Mailchimp, Kit or LinkedIn-newsletter coverage and no sponsor/guest data is documented. [40]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [40]
+    gap status: unverified
+    evidence: [40] "Expanded YouTube monitoring, Substack as a dedicated source, and social coverage of China through Midu" (https://www.meltwater.com/en/platform/global-content-coverage)
+    evidence: [41] "pulls directly from your media monitoring activity, curates the most relevant coverage, and delivers polished, branded briefings" (https://www.meltwater.com/en/products/newsletters)
+    evidence: [42] "Search and export mentions, access historical and live analytics, manage searches and tags programmatically" (https://www.meltwater.com/en/platform/integrations-api)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Coverage beyond Substack: beehiiv, Ghost, Kit, Mailchimp and LinkedIn newsletters with publication-level metadata.
+    NF capabilities we must not claim here: No licensed premium publisher content, no broadcast monitoring, no AI-platform visibility data.
+    likely buyer: Head of Data Partnerships / Product Director for global content coverage
+    contact route: none published (https://www.meltwater.com/en/contact) -- Contact form only ('Enter your work email to get started'); no named data-partnership contact or email published.
+    caveat: The claimed gap is only partly true: Substack is already a dedicated source, so a 'you have no newsletter coverage' pitch would be wrong and easy to rebut. The defensible angle is breadth beyond Substack (beehiiv, Ghost, Kit, Mailchimp, LinkedIn newsletters) plus publication-level and sponsor-relationship data, which their docs do not describe - that remainder is unverified, not a confirmed absence, since 200M+ online publications may already scoop up newsletter web archives. Meltwater also resells under licensing agreements, so redistribution terms will dominate any partnership conversation.
+
+Cision   original 65 -> revised 61   evidence High   second wave
+    official website: https://www.cision.com/
+    score breakdown: fit 24/35, gap 19/30, integration 12/20, commercial 6/15
+    product: CisionOne is a PR and media-intelligence platform combining media monitoring across print, online, broadcast, podcast and social, journalist outreach, analytics and a REST API for mention data. [43]
+    data it collects today: Print newspapers and magazines (LexisNexis-sourced), Online news websites and online publications, TV and radio broadcast (2,700+ stations), Podcasts (20,000+ global, 16 languages, speech-to-text), Social media: Facebook, YouTube, X/Twitter, Bluesky (with Brandwatch), Journalist, influencer and outlet database, Premium and paywalled publisher content (e.g. Financial Times, NLA/CLA titles) [43]
+    api / integration: CisionOne offers a REST API that allows you to connect your media monitoring data with your own internal tools. (https://www.cision.com/lp/cision-overview-faqs/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched the CisionOne coverage-and-data-quality FAQ (which enumerates every monitored media type with start dates), the media monitoring product page and the Cision Canada monitoring page. The documented list is print, online news websites/publications, TV, radio, podcast and four social platforms. Newsletters are not a media type and newsletter sponsors are not a data dimension; the closest adjacent field is outlet-level audience and circulation enrichment. [43]
+    verified gap: CisionOne's documented media types are print, online news websites/publications, TV, radio, podcast, Facebook, YouTube, X and Bluesky. Newsletters, newsletter publications and sponsor relationships are absent from that enumeration. [43]
+    gap status: confirmed
+    evidence: [43] "News websites, online publications (articles from March 2022 onward)" (https://www.cision.com/lp/cision-overview-faqs/)
+    evidence: [44] "across online news, blogs, social, print, broadcast, forums, and review sites" (https://www.cision.ca/lp/media-monitoring/)
+    quotes verified for this account: 2 of 2 researcher quotes
+    NF data that could fill it: Newsletters as a media type and sponsor relationships as a data dimension in their monitoring taxonomy.
+    NF capabilities we must not claim here: No licensed print or premium publisher archive, no journalist database.
+    likely buyer: VP Product / Head of Content Acquisition for CisionOne media monitoring
+    contact route: none published (https://www.cision.com/contact-us/) -- Sales enquiries route through a form; the only published addresses are privacy@cision.com and CisionPR@cision.com (press), neither of which is a data-partnership route.
+    caveat: Some cision.com product pages were bot-blocked, so the .com evidence comes from the CisionOne FAQ and the cision.ca monitoring page - both first-party Cision properties but not the identical page set a US buyer sees. Cision aggregates heavily through licensors (LexisNexis, NLA/CLA, FT), so newsletter content would face the same licensing and redistribution constraints, and their coverage is measured in 'sites' rather than publications, which makes newsletter URLs hard to isolate. Enterprise procurement is slow; expect a long cycle.
+
+Onclusive   original 64 -> revised 65   evidence High   second wave
+    official website: https://onclusive.com/
+    score breakdown: fit 24/35, gap 19/30, integration 14/20, commercial 8/15
+    product: Media intelligence platform for PR and comms teams, monitoring print, online, broadcast and social coverage, with analytics, journalist contacts and API/data-as-a-service delivery of enriched media content. [45]
+    data it collects today: Online news websites (3M+ sites), Print titles (60,000+), Broadcast sources (12,000+), Social media platforms (25+), Journalist and media contacts database, Global events data (250,000+ events) [45]
+    api / integration: Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items (https://onclusive.com/data-as-a-service/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched onclusive.com homepage, products/media-monitoring, data-as-a-service and site-wide searches for 'newsletter'. No newsletter or email-newsletter source type is documented; coverage is described by channel: print, online, broadcast, social. [45]
+    verified gap: Documented coverage enumerates four channels (print, online, broadcast, social); no newsletter/email channel is named, so newsletter-native coverage and newsletter-level publisher metadata are absent from their stated source set. [45]
+    gap status: confirmed
+    evidence: [45] "Monitor 28M+ earned media items daily across 60,000 print titles, 3M websites and 12,000+ broadcast sources worldwide." (https://onclusive.com/products/media-monitoring/)
+    evidence: [46] "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items, thousands of media contacts" (https://onclusive.com/data-as-a-service/)
+    evidence: [47] "(212) 398-1141 info@onclusive.com Onclusive US Office" (https://onclusive.com/contact/)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: A newsletter channel and publication-level metadata beside print, online, broadcast and social.
+    NF capabilities we must not claim here: No broadcast monitoring and no journalist contact database.
+    likely buyer: VP/Director of Product or Head of Content/Data Partnerships for the media intelligence platform and DaaS line
+    contact route: info@onclusive.com (https://onclusive.com/contact/)
+    caveat: Their '3M websites' crawl may incidentally capture web-hosted newsletter archives, which weakens the gap at the margin; the channel list is a product enumeration, not an explicit exclusion of newsletters. Contact email is a general company address, not a named buyer.
+
+CB Insights   original 62 -> revised 53   evidence Medium   second wave
+    official website: https://www.cbinsights.com/
+    score breakdown: fit 22/35, gap 10/30, integration 14/20, commercial 7/15
+    product: Predictive intelligence platform on private companies, combining company, funding, deal and business-relationship data with AI scoring, market maps, research and API/data-feed delivery for strategy, corp dev and investor teams. [48]
+    data it collects today: Company firmographics and profiles, Funding rounds, deals, valuations and cap tables, M&A and IPO transactions, Business relationships (partnerships, client/vendor, licensing), Patents, Hiring data, Public company earnings, Expert research reports [48]
+    api / integration: APIs and data feeds for market and company insight (https://www.cbinsights.com/what-we-offer/api/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched cbinsights.com homepage, API/data-feed page, api-docs.cbinsights.com and site queries for 'newsletter'. References to newsletters are CB Insights' own outbound newsletter and newsletter archive; no newsletter content is described as an input signal. [48]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [48]
+    gap status: unverified
+    evidence: [48] "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes." (https://www.cbinsights.com/what-we-offer/api/)
+    evidence: [49] "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access" (https://api-docs.cbinsights.com/)
+    quotes verified for this account: 2 of 3 researcher quotes
+    NF data that could fill it: Source-backed niche publication intelligence as a supplementary market signal.
+    NF capabilities we must not claim here: No private-company financials, no predictive scoring, no M&A data.
+    likely buyer: VP Product or Head of Data Strategy/Data Partnerships for the predictive-intelligence platform
+    contact route: none published (https://www.cbinsights.com/contact/) -- Public page is a sales contact form only; no email address published, so no address was constructed.
+    caveat: CB Insights publishes a dataset catalogue, not a media-ingestion inventory, so the absence of newsletter ingestion is not confirmed by their docs. They also may treat 'Customer voice' or research inputs in ways not publicly itemised. Their API docs page confirms a v1 API (v2 announced) but no public pricing.
+
+Signal AI   original 61 -> revised 57   evidence High   second wave
+    official website: https://signal-ai.com/
+    score breakdown: fit 22/35, gap 17/30, integration 12/20, commercial 6/15
+    product: AI-driven media, reputation and risk intelligence platform for communications and risk leaders, ingesting licensed premium news and social content at scale, with API and MCP access plus analyst-curated briefings. [50]
+    data it collects today: Licensed publisher content (Dow Jones Factiva, LexisNexis, Moody's NewsEdge, Financial Times, The Washington Post), Broadcast, Podcasts, Regulatory filings, Social media and curated premium social profiles (100,000+), Publisher readership data (5,000+ publisher relationships) [50]
+    api / integration: Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions (https://signal-ai.com/products-services/integrations)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched signal-ai.com homepage, integrations, and the newsletters-briefings product page plus site queries for 'newsletter'. Their 'newsletters' product is an outbound analyst-curated briefing format, and their integrated source list reads: 'all sources combined: published media, podcasts, broadcast, regulatory filings, and social'. No newsletter ingestion is documented. [50]
+    verified gap: Their documented source classes are licensed published media, podcasts, broadcast, regulatory filings and social; newsletter-native content and newsletter publisher metadata are not a named input. [50]
+    gap status: confirmed
+    evidence: [50] "all sources combined: published media, podcasts, broadcast, regulatory filings, and social" (https://signal-ai.com/products-services/newsletters-briefings)
+    evidence: [51] "5.5M+ articles ingested per day" (https://signal-ai.com/)
+    evidence: [52] "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions" (https://signal-ai.com/products-services/integrations)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter content and publication metadata as a source class beside published media, podcasts and broadcast.
+    NF capabilities we must not claim here: No licensed premium publisher content and no risk-event models.
+    likely buyer: Head of Content/Data Partnerships or VP Product for the intelligence platform
+    contact route: none published (https://signal-ai.com/contact) -- Public page is a demo/contact form only; no email address published, so no address was constructed.
+    caveat: Their phrase 'published media' could include web-hosted newsletter posts, so the gap is at the source-class level rather than an explicit exclusion of newsletters. They are a premium licensed-data buyer, so a newsletter corpus would need clean licensing and provenance.
+
+Brand24   original 60 -> revised 47   evidence High   not a prospect
+    official website: https://brand24.com/
+    score breakdown: fit 22/35, gap 7/30, integration 12/20, commercial 6/15
+    product: AI social listening and media monitoring platform tracking brand mentions across social, news, blogs, forums, podcasts and reviews, with sentiment, reach analytics, reporting, and a REST API for mentions and insights. [53]
+    data it collects today: Social platforms (Facebook, Instagram, X, TikTok, YouTube, Telegram, LinkedIn, Reddit, Twitch, Bluesky), News sites, Blogs, Forums, Podcasts, Review platforms, User-added newsletters (via URL) [53]
+    api / integration: 25M+ online sources monitored – social media, news, blogs, forums, podcasts, review platforms & more (https://brand24.com/social-listening-api/)
+    newsletter coverage today: confirmed_present
+    evidence on newsletters: Brand24 documents newsletter monitoring as a self-serve feature where a user adds a newsletter URL in account settings, so newsletter coverage exists but appears to be per-project, user-initiated rather than a broad indexed newsletter corpus. [53]
+    verified gap: none. The claimed gap is wrong: newsletter coverage is already sold. [53]
+    gap status: disconfirmed
+    evidence: [53] "You’ll see a form where you can enter your own, or any other, newsletter to monitor!" (https://help.brand24.com/en/articles/5336568-newsletter-monitoring-how-to-add-one)
+    evidence: [54] "25M+ online sources monitored – social media, news, blogs, forums, podcasts, review platforms & more" (https://brand24.com/social-listening-api/)
+    evidence: [55] "Gather insights from 25 million online sources, tracked in real-time." (https://brand24.com/)
+    quotes verified for this account: 4 of 4 researcher quotes
+    NF data that could fill it: An indexed newsletter corpus rather than user-added newsletter URLs.
+    NF capabilities we must not claim here: No social monitoring breadth and no sentiment models.
+    likely buyer: Head of Product/CPO or Head of Data & Integrations for the listening platform
+    contact route: help@brand24.com (https://brand24.com/contact/)
+    caveat: Claimed gap is disconfirmed: newsletter monitoring already exists as a user-added URL feature, so the only defensible angle is breadth of indexed newsletter coverage and discovery, not absence of capability. Contact address is a support inbox, not a named buyer.
+    disqualification: not a prospect on this evidence. See the caveat and treat as competitor or partner at most.
+
+6sense   original 57 -> revised 53   evidence Low   second wave
+    official website: https://6sense.com/
+    score breakdown: fit 24/35, gap 9/30, integration 12/20, commercial 8/15
+    product: AI-driven B2B revenue and account intelligence platform that combines multi-source intent, web deanonymization, first-party signals and buying-stage prediction to tell sales and marketing teams which accounts are in-market.
+    data it collects today: Third-party intent from research and review sites (partner feeds including Bombora, TechTarget, TrustRadius, G2), Native web deanonymization of anonymous traffic across devices, channels and locations, First-party CRM, marketing automation and website engagement signals, Content consumption patterns and auto-generated keyword recommendations, AI buying-stage and buying-group modeling (6AI)
+    api / integration: Every signal, yours and ours, flows into one context layer. (https://6sense.com/platform/)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched 6sense.com/platform/intent-data/ and 6sense.com/platform/ for newsletter, publisher and subscription-content ingestion. Documented inputs are research-site intent, web deanonymization, first-party signals and content consumption; newsletters are not mentioned as a source. No newsletter signal is claimed either way - absence is an inference from their source list, not a stated exclusion.
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed.
+    gap status: unverified
+    quotes verified for this account: 0 of 2 researcher quotes
+    NF data that could fill it: Newsletter topic activity as an intent input beside research-site, review-site and web behaviour.
+    NF capabilities we must not claim here: No research-site co-op, no web deanonymisation graph.
+    likely buyer: VP/Director of Data Partnerships or Product Management, signal and data strategy
+    contact route: none published (https://6sense.com/contact/) -- Web contact form only (demo / partner program links); no named data-partnership contact or public email on the page.
+    caveat: Gap is unverified, not confirmed: 6sense aggregates many third-party feeds and their docs are marketing-level, so newsletter signals may arrive via partners (notably Bombora) without being named. They already claim intent coverage in 40+ languages and '10x the intent coverage of other B2B intent data providers', so NF must prove incremental lift on top of existing signals. Large vendor with long procurement - expect a data-validation pilot ask, and note their 'Contextual Intelligence (Coming Soon)' roadmap may absorb this need internally.
+
+Bombora   original 56 -> revised 53   evidence Medium   second wave
+    official website: https://bombora.com/
+    score breakdown: fit 24/35, gap 9/30, integration 12/20, commercial 8/15
+    product: B2B intent data company operating a Data Co-op of B2B media destinations, selling Company Surge intent scores, topic taxonomies, buying-group personas and digital audiences through APIs and 100+ GTM integrations. [56]
+    data it collects today: Data Co-op of thousands of B2B media destinations (publishers, B2B brands, premium data providers), Topic taxonomy of tens of thousands of topics mapped to millions of B2B domains, Domain-level research behavior measured over time (Company Surge models), B2B persona/buying-group enrichment, Identity resolution and first-party site engagement enrichment [56]
+    api / integration: The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data. (https://developer.bombora.com/apis)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched bombora.com/intent-data/, bombora.com/all-partners/ and developer.bombora.com for newsletter, email and subscription-content sourcing. Sources are described as media destinations and B2B websites with topic-level research behavior: "Across the Co-op we track tens of thousands of topics (updated frequently) and millions of B2B domains." Newsletters are not named as a source type. [56]
+    verified gap: unverified. The vendor does not publish its ingestion list, so no absence is claimed. [56]
+    gap status: unverified
+    evidence: [56] "made up of thousands of media destinations (publishers, B2B brands, and premium data providers)" (https://bombora.com/intent-data/)
+    evidence: [57] "More than one hundred integrations and partnerships make it possible to share data and insights" (https://bombora.com/all-partners/)
+    quotes verified for this account: 2 of 3 researcher quotes
+    NF data that could fill it: Newsletter topic activity as a Co-op input where web archives miss the email edition.
+    NF capabilities we must not claim here: No publisher co-op membership and no Company Surge models.
+    likely buyer: VP Data Partnerships / GM Data Solutions (Co-op sourcing and data licensing)
+    contact route: none published (https://bombora.com/all-partners/) -- Public partner-ecosystem inquiry ('Become a partner') is the only route found; contact page returned bot-blocked and no named data-partnership contact or public email was retrievable.
+    caveat: The Co-op already includes publishers, so the honest framing is a data-licensing conversation - does newsletter open/mention data add topic coverage their web signals miss - not a capability gap claim. Bombora is also a supplier to 6sense, so approaching both risks channel conflict. Their docs are marketing-level; a definitive answer needs a direct data-co-op conversation.
+
+SponsorUnited   original 55 -> revised 57   evidence Medium   second wave
+    official website: https://www.sponsorunited.com/
+    score breakdown: fit 24/35, gap 17/30, integration 8/20, commercial 8/15
+    product: Sponsorship intelligence platform tracking brand-property deals across sports, entertainment and media, with pricing benchmarks, activation creative library, audience insights and AI proposal evaluation for brands, rights holders, agencies and media companies. [58]
+    data it collects today: On-premise venue audits by a global scout team (venues, signage, assets), In-media device scraping for sponsorship and advertising data (TV/streaming/audio), Third-party individual profiles for demographic and affinity data, Transaction/deal data used to train pricing estimates ($45B+), Sponsorship creative library and human-enriched deal records [58]
+    api / integration: Our global scout team and proprietary tech capture real-time sponsor activity—deal by deal, asset by asset. (https://www.sponsorunited.com/platform)
+    newsletter coverage today: not_found_in_public_docs
+    evidence on newsletters: Searched sponsorunited.com, /platform, /contact and the podcast-network insight page for newsletter and email sponsorship coverage. Their documented capture methods are venue audits, device scraping, profile data and deal transactions - none of which read newsletter issues. Newsletters appear only as their own marketing newsletter signup, and podcast networks appear as a customer segment rather than tracked inventory. [58]
+    verified gap: Newsletter sponsor and brand relationships are outside their documented capture stack (venue audits, device scraping, profiles, deal benchmarks). Their media coverage is device-scraped broadcast/streaming/audio, so email newsletter sponsorships - read from article text rather than a device - are the missing surface. [58]
+    gap status: confirmed
+    evidence: [58] "Our global scout team and proprietary tech capture real-time sponsor activity—deal by deal, asset by asset." (https://www.sponsorunited.com/platform)
+    evidence: [59] "Benchmark pricing and validate spend with $45B+ in verified deal data." (https://www.sponsorunited.com/)
+    evidence: [60] "Sponsorship intelligence—demographics, engagement levels, listener behavior data, and more—is critical" (https://www.sponsorunited.com/insights/unlocking-sponsorship-opportunities-for-podcast-networks)
+    quotes verified for this account: 3 of 3 researcher quotes
+    NF data that could fill it: Newsletter sponsor and brand relationships as a media surface beside venue, device and deal data.
+    NF capabilities we must not claim here: No venue audits, no $45B deal benchmark, no activation library.
+    likely buyer: VP of Data / Head of Product or Chief Revenue Officer (dataset expansion and media-company segment)
+    contact route: none published (https://www.sponsorunited.com/contact) -- Contact form only ('Fill out this form to contact us and one of our team members will be in touch'); no public email or named data contact found.
+    caveat: Highest overlap risk of the batch: they sell sponsorship intelligence to the same brand and media-company buyers, so NF could be seen as a competitor or as a cheap data feed. Their $45B deal benchmark and activation library are far deeper on sports/entertainment; newsletters are a thin slice of their market. Positive signal is that podcast networks are already a served segment, suggesting appetite for creator-media sponsorship data.
+
+DRAFT EMAILS for the six accounts at 75 or above with Medium or High confidence
+None of these has been sent. Each references one verified fact from the vendor's own pages.
+
+TO: Common Room, Head of Revenue Operations or the signal owner
+SUBJECT: Newsletter mentions as a Common Room signal
+
+Your integrations page describes Common Room merging signals "from 50+ channels, spanning
+social, community, product, code collaboration, CRM, and more". Public newsletters are not named
+among those channels, and for B2B companies they are often where an account first surfaces: a
+founder essay, a guest appearance, a sponsor read.
+
+NewsletterFIT indexes 26,401 public newsletter publications, 141,392 articles and 2,218 sponsor
+mentions, each record carrying the publication, the article URL and the date. That is the part
+your custom API, Zapier and warehouse paths cannot source on their own: publication-level
+metadata, sponsor relationships and mention history.
+
+Would a sample help? I can send 20 accounts as rows shaped to your signal schema, with
+publication, mention type, sponsor and timestamp, so your team can judge fit before any
+integration conversation.
+
+TO: Crustdata, Head of Data Products or co-founder
+SUBJECT: A newsletter dataset beside companies, people, jobs and social posts
+
+Your docs describe Crustdata as a place to "query indexed datasets of companies, people, jobs,
+and social posts", with company activity read from executive moves, news and product launches.
+Newsletter publications sit just outside that set, and they carry activity of a kind the other
+four do not: what a company is being discussed for, in whose newsletter, on what date.
+
+We index 26,401 public newsletter publications and 141,392 articles, with topic and sponsor
+extraction and the source URL on every observation. It could arrive as a sixth dataset in your
+schema, or as an enrichment field on company records.
+
+If it is useful I will pull 500 companies you already cover and send the newsletter mentions,
+topics and sponsors we hold for them, with timestamps, so you can compare against your current
+activity signals before deciding whether it is worth a feed.
+
+TO: Autobound, VP Product or Head of Signal Data
+SUBJECT: Newsletter text in Autobound's signal set
+
+Your platform page says Autobound monitors "35+ public data sources", and that your models
+already parse unstructured documents including podcast transcripts. Public newsletter issues are
+the same shape of input: long-form text, published on a schedule, with named companies, people
+and sponsors inside it.
+
+NewsletterFIT turns that text into records: publication, article, companies and people mentioned,
+topics, sponsors, each with the source URL and date. We hold 26,401 publications and 141,392
+articles as of today.
+
+You license signals through REST, S3/GCS and OEM. I can send 5,000 records mapped to your signal
+taxonomy so your team can test whether newsletter mentions add lift on accounts you already
+score, and we can talk licensing if they do.
+
+TO: CompanyEnrich, co-founder or Head of Product
+SUBJECT: Newsletter activity fields for CompanyEnrich
+
+Your site says the data is sourced "from the public web, maps, social media, and government
+records", and the enrichment returns 60+ points running from firmographics to financials,
+technologies and headcount. Newsletter activity is a different axis: not what a company is, but
+where it is being written about and who is sponsoring that writing.
+
+We hold 26,401 public newsletter publications and 141,392 articles, with company mentions,
+topics and 2,218 sponsor mentions, each with the article URL and date.
+
+I can send newsletter mention, topic and sponsor fields for 1,000 domains you already enrich, in
+your field format, so you can see the fill rate and whether customers would pay for the field
+before any feed work.
+
+TO: Contify, VP Product or Head of Data Partnerships
+SUBJECT: Newsletter publications as a Contify source
+
+Contify's source list is unusually explicit: "over 1 million vetted external sources including
+news, company websites, SEC filings, social media, regulatory portals, review sites, and job
+boards". Newsletter publications are not on it, and they are the one channel where a company's
+own narrative runs in full rather than as a news fragment.
+
+NewsletterFIT indexes 26,401 public newsletter publications and 141,392 articles, with company,
+people, topic and sponsor extraction and the source URL on every record. Since your Business
+News API already delivers structured stories over REST, webhooks and RSS, a newsletter stream
+with publication metadata would slot in as one more source rather than a new product.
+
+Would a sample feed of 1,000 recent newsletter items, in your story schema, be a fair test?
+
+TO: Paved, Head of Ad Network or VP Marketplace Partnerships
+SUBJECT: Coverage outside the Paved marketplace
+
+Paved lists sponsor-ready newsletters with statistics verified through publisher ESPs, which is
+stronger evidence than anything outside-in. The blind spot is structural: publications that
+never list on Paved, and sponsor relationships that can be read from the article text of issues
+nobody submitted.
+
+We index 26,401 public newsletter publications across Substack, LinkedIn, beehiiv, Ghost,
+Mailchimp and Kit, with 2,218 sponsor mentions and the article URL and date on each.
+
+A useful first step might be a coverage comparison rather than a pitch: I can send the
+publications we hold that look sponsor-ready, so you can see how much of it is missing from your
+marketplace inventory, and you can decide whether any of it is worth adding.
+
+## Sources
+
+[1] https://www.commonroom.io/docs/using-common-room/contacts/impact-points — www.commonroom.io
+    > "Newsletter subscribed 1 Manual Entry / API / Zapier / CSV"
+[2] https://www.commonroom.io/integrations — www.commonroom.io
+    > "Seamlessly aggregate, merge, and enrich signals from 50+ channels, spanning social, community, product, code collaboration, CRM, and more."
+[3] https://www.commonroom.io/docs/signals — www.commonroom.io
+    > "Signals are how Common Room brings together social, business, product, CRM, customer data, and more."
+[4] https://muckrack.com/blog/2021/05/12/newsletter-authors — muckrack.com
+    > "we've added (and are continuing to add) newsletter authors to Muck Rack's media database."
+[5] https://help.muckrack.com/en/articles/5866899-getting-started-with-search-in-muck-rack — help.muckrack.com
+    > "Muck Rack offers five search types."
+[6] https://muckrack.com/pr-software/media-monitoring-alerts — muckrack.com
+    > "Across sources spanning digital, broadcast, podcasts, print, and social media"
+[7] https://docs.crustdata.com/general/introduction — docs.crustdata.com
+    > "You can query indexed datasets of companies, people, jobs, and social posts"
+[8] https://crustdata.com/apis/company-enrichment — crustdata.com
+    > "not just firmographics, but the signals that show what a company is actually doing: reviews, web traffic, product launches, funding, and hiring."
+[9] https://www.autobound.ai/platform — www.autobound.ai
+    > "We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more."
+[10] https://autobound-api.readme.io/docs — autobound-api.readme.io
+    > "Autobound delivers B2B buying signals — 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies"
+[11] https://www.autobound.ai/integrations — www.autobound.ai
+    > "Native MCP support for Claude Code and Cursor."
+[12] https://grata.com/our-data — grata.com
+    > "Trade show & conference exhibitor lists"
+[13] https://grata.com/api — grata.com
+    > "Grata synthesizes public sources, private insights, and exclusive data, rigorously cleans and reconciles every record"
+[14] https://docs.grata.com — docs.grata.com
+    > "Search API delivers the power of Grata’s search capabilities into your proprietary systems"
+[15] https://harmonic.ai — harmonic.ai
+    > "We track companies and people as they grow, hire, fundraise, launch products, and change direction."
+[16] https://harmonic.ai/solutions/growth — harmonic.ai
+    > "Real-time signals for traction and growth"
+[17] https://sponsorsheep.com/bellwether — sponsorsheep.com
+    > "1,654 newsletters monitored across every platform"
+    > "Placements detected 29,888 all time, ≥85% confidence"
+[18] https://www.sponsorsheep.com — www.sponsorsheep.com
+    > "No subscription. No listing fee. No setup fee."
+[19] https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions — social-media-management-help.brandwatch.com
+    > "Mentions are provided by the Brandwatch Data Library and originate from popular online sources, such as social media networks"
+[20] https://www.brandwatch.com/products/apis — www.brandwatch.com
+    > "Import unstructured data from any source and analyze with our advanced algorithms"
+[21] https://www.brandwatch.com — www.brandwatch.com
+    > "The most intelligent social suite"
+[22] https://dealroom.co/products/api — dealroom.co
+    > "Entity-level news, AI-synthesized sentiment and predictive signals — wired to the exact company or investor."
+[23] https://mention.com/en/media-monitoring-api — mention.com
+    > "Mention’s API shows you when your keywords are used on websites, forums, blogs, the news, and social media."
+[24] https://support.mention.com/en/articles/13354178-mention-plans-explained — support.mention.com
+    > "track brand mentions and keywords across Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web"
+[25] https://docs.peopledatalabs.com/docs/data-sources — docs.peopledatalabs.com
+    > "Our data sources come from a variety of verticals, including HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech and others."
+[26] https://www.peopledatalabs.com/company-data/enrichment-api — www.peopledatalabs.com
+    > "Access over 70MM+ company profiles, from stealth startups to conglomerates."
+[27] https://companyenrich.com — companyenrich.com
+    > "Data sourced from the public web, maps, social media, and government records helps you find businesses other providers miss."
+[28] https://docs.companyenrich.com/docs/getting-started — docs.companyenrich.com
+    > "Returns industry, size, revenue range, location, technologies, employee count, and 15+ additional fields."
+[29] https://companyenrich.com/product/company-enrichment-api — companyenrich.com
+    > "Get 60+ data points, from firmographics to financials. 33M+ companies covered."
+[30] https://www.clay.com — www.clay.com
+    > "One contract to buy data from 200+ data and AI vendors in Clay’s marketplace."
+[31] https://www.clay.com/integrations/data-points — www.clay.com
+    > "Discover where the article was originally published to understand the context and credibility of the information."
+[32] https://www.clay.com/integrations — www.clay.com
+    > "Clay-built Integration Enrichment (Native) Export (Native) HTTP API"
+[33] https://docs.feedly.com/article/768-follow-sources-in-feedly — docs.feedly.com
+    > "Feedly can ingest email newsletters directly into your feeds."
+[34] https://feedly.com — feedly.com
+    > "Continuously collect relevant threat signals from 10,000+ trusted clear and dark web sources."
+[35] https://developers.feedly.com/docs/using-the-search-api — developers.feedly.com
+    > "This is an authenticated endpoint so you will need to pass your authentication token"
+[36] https://www.affinity.co/product/affinity-data — www.affinity.co
+    > "PitchBook, Dealroom, and Crunchbase sit alongside firmographic providers, biographic data, and growth signal feeds."
+[37] https://developer.affinity.co/pages/external-api-v2/introduction — developer.affinity.co
+    > "The Affinity APIs are only available on select license types."
+[38] https://www.affinity.co — www.affinity.co
+    > "Enriched with Affinity’s proprietary data and 40+ sources, including Pitchbook, Preqin, and Grata"
+[39] https://industry-lens.com/features/data-sources — industry-lens.com
+    > "A competitor’s own email newsletter, forwarded or subscribed."
+[40] https://www.meltwater.com/en/platform/global-content-coverage — www.meltwater.com
+    > "Expanded YouTube monitoring, Substack as a dedicated source, and social coverage of China through Midu"
+[41] https://www.meltwater.com/en/products/newsletters — www.meltwater.com
+    > "pulls directly from your media monitoring activity, curates the most relevant coverage, and delivers polished, branded briefings"
+[42] https://www.meltwater.com/en/platform/integrations-api — www.meltwater.com
+    > "Search and export mentions, access historical and live analytics, manage searches and tags programmatically"
+[43] https://www.cision.com/lp/cision-overview-faqs — www.cision.com
+    > "News websites, online publications (articles from March 2022 onward)"
+[44] https://www.cision.ca/lp/media-monitoring — www.cision.ca
+    > "across online news, blogs, social, print, broadcast, forums, and review sites"
+[45] https://onclusive.com/products/media-monitoring — onclusive.com
+    > "Monitor 28M+ earned media items daily across 60,000 print titles, 3M websites and 12,000+ broadcast sources worldwide."
+[46] https://onclusive.com/data-as-a-service — onclusive.com
+    > "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items, thousands of media contacts"
+[47] https://onclusive.com/contact — onclusive.com
+    > "(212) 398-1141 info@onclusive.com Onclusive US Office"
+[48] https://www.cbinsights.com/what-we-offer/api — www.cbinsights.com
+    > "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes."
+[49] https://api-docs.cbinsights.com — api-docs.cbinsights.com
+    > "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access"
+[50] https://signal-ai.com/products-services/newsletters-briefings — signal-ai.com
+    > "all sources combined: published media, podcasts, broadcast, regulatory filings, and social"
+[51] https://signal-ai.com — signal-ai.com
+    > "5.5M+ articles ingested per day"
+[52] https://signal-ai.com/products-services/integrations — signal-ai.com
+    > "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions"
+[53] https://help.brand24.com/en/articles/5336568-newsletter-monitoring-how-to-add-one — help.brand24.com
+    > "You’ll see a form where you can enter your own, or any other, newsletter to monitor!"
+[54] https://brand24.com/social-listening-api — brand24.com
+    > "25M+ online sources monitored – social media, news, blogs, forums, podcasts, review platforms & more"
+[55] https://brand24.com — brand24.com
+    > "Gather insights from 25 million online sources, tracked in real-time."
+[56] https://bombora.com/intent-data — bombora.com
+    > "made up of thousands of media destinations (publishers, B2B brands, and premium data providers)"
+[57] https://bombora.com/all-partners — bombora.com
+    > "More than one hundred integrations and partnerships make it possible to share data and insights"
+[58] https://www.sponsorunited.com/platform — www.sponsorunited.com
+    > "Our global scout team and proprietary tech capture real-time sponsor activity—deal by deal, asset by asset."
+[59] https://www.sponsorunited.com — www.sponsorunited.com
+    > "Benchmark pricing and validate spend with $45B+ in verified deal data."
+[60] https://www.sponsorunited.com/insights/unlocking-sponsorship-opportunities-for-podcast-networks — www.sponsorunited.com
+    > "Sponsorship intelligence—demographics, engagement levels, listener behavior data, and more—is critical"

@@ -1,0 +1,59 @@
+{
+ "company": "Kadoa",
+ "official_website": "https://www.kadoa.com/",
+ "product_summary": "Web data extraction and monitoring for investment firms: agents build, validate and self-heal pipelines that turn websites, filings, PDFs and feeds into datasets delivered to Snowflake, S3, BigQuery, spreadsheets, webhooks, MCP and API.",
+ "current_data_sources": [
+  "Customer-specified URLs / public web pages (workflow sources)",
+  "Filings and PDFs",
+  "APIs and feeds (HTML, XML, RSS, JSON)",
+  "Customer data warehouses and storage as delivery targets (Snowflake, Databricks, BigQuery, S3, SFTP)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.kadoa.com/api-reference/introduction",
+   "quote": "Kadoa is built as an API-first platform."
+  },
+  {
+   "url": "https://docs.kadoa.com/docs/introduction",
+   "quote": "Connect the MCP server and use Kadoa from ChatGPT, Claude, Cursor, and other AI tools."
+  },
+  {
+   "url": "https://www.kadoa.com/",
+   "quote": "Native destinations for your environment, whether you are an analyst, an engineer, or an agent."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "No newsletter or email ingestion. Sources are URL lists and the supported types are HTML, XML, RSS, JSON and PDF, so a Substack or beehiiv archive could only be scraped page-by-page as ordinary URLs. No publication-level corpus, no cross-publication entity/sponsor extraction and no newsletter activity tracking.",
+ "verified_gap": "Kadoa ingests URL-scoped pages and documents only (HTML, XML, RSS, JSON, PDF). A newsletter corpus of 26,401 publications with extracted companies, people, guests, sponsors and activity momentum is absent, so finance customers get no newsletter-derived signal without hand-building per-site pipelines.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.kadoa.com/",
+   "quote": "Our agents build, monitor, and maintain mission-critical web data pipelines for investment teams and AI agents."
+  },
+  {
+   "url": "https://docs.kadoa.com/docs/ui/workflows/sources",
+   "quote": "A workflow\u2019s source is the set of URLs it extracts from."
+  },
+  {
+   "url": "https://docs.kadoa.com/docs/ui/workflows/sources",
+   "quote": "Kadoa supports following content types by design"
+  },
+  {
+   "url": "https://www.kadoa.com/pricing",
+   "quote": "For funds and central data teams running at scale"
+  },
+  {
+   "url": "https://www.kadoa.com/pricing",
+   "quote": "We keep pricing simple with a consumption-based model."
+  }
+ ],
+ "likely_buyer_role": "Head of Data Sourcing / Data Partnerships at a finance-focused web-data vendor (licensing NF corpus as an input feed), secondary: Head of Data at a fund customer",
+ "contact_route": {
+  "url": "https://www.kadoa.com/contact/sales",
+  "value": "Sales contact form (Talk to sales)",
+  "note": "Public contact page; general inquiries listed as support@kadoa.com. No named data-partnerships contact verified."
+ },
+ "confidence": "Medium",
+ "caveats": "Partly supply-side: Kadoa sells curated web datasets to funds, so NF's corpus is more plausibly a licensed input or partnership than a seat purchase, and Kadoa could also build newsletter scraping itself. Real-time monitoring is an Enterprise-plan feature, so NF's non-real-time snapshots would be an add-on, not a replacement."
+}

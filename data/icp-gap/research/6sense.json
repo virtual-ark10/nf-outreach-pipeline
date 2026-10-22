@@ -1,0 +1,52 @@
+{
+ "company": "6sense",
+ "official_website": "https://6sense.com/",
+ "product_summary": "AI-driven B2B revenue and account intelligence platform that combines multi-source intent, web deanonymization, first-party signals and buying-stage prediction to tell sales and marketing teams which accounts are in-market.",
+ "current_data_sources": [
+  "Third-party intent from research and review sites (partner feeds including Bombora, TechTarget, TrustRadius, G2)",
+  "Native web deanonymization of anonymous traffic across devices, channels and locations",
+  "First-party CRM, marketing automation and website engagement signals",
+  "Content consumption patterns and auto-generated keyword recommendations",
+  "AI buying-stage and buying-group modeling (6AI)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://6sense.com/platform/",
+   "quote": "Every signal, yours and ours, flows into one context layer."
+  },
+  {
+   "url": "https://6sense.com/platform/intent-data/",
+   "quote": "Our native intent data capabilities are complemented by partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched 6sense.com/platform/intent-data/ and 6sense.com/platform/ for newsletter, publisher and subscription-content ingestion. Documented inputs are research-site intent, web deanonymization, first-party signals and content consumption; newsletters are not mentioned as a source. No newsletter signal is claimed either way - absence is an inference from their source list, not a stated exclusion.",
+ "verified_gap": "Newsletter discussion/topic activity is not among their documented intent inputs, which run on research and review sites, anonymous web traffic and first-party engagement. Whether newsletter content reaches them indirectly through partner co-ops is not disclosed.",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://6sense.com/platform/intent-data/",
+   "quote": "partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2"
+  },
+  {
+   "url": "https://6sense.com/platform/intent-data/",
+   "quote": "Matches anonymous web traffic and intent signals to B2B buyers and accounts across devices, channels, and locations."
+  },
+  {
+   "url": "https://6sense.com/platform/intent-data/",
+   "quote": "Understand content consumption patterns across accounts and generate keyword recommendations automatically."
+  },
+  {
+   "url": "https://6sense.com/platform/",
+   "quote": "Every signal, yours and ours, flows into one context layer."
+  }
+ ],
+ "likely_buyer_role": "VP/Director of Data Partnerships or Product Management, signal and data strategy",
+ "contact_route": {
+  "url": "https://6sense.com/contact/",
+  "value": null,
+  "note": "Web contact form only (demo / partner program links); no named data-partnership contact or public email on the page."
+ },
+ "confidence": "Medium",
+ "caveats": "Gap is unverified, not confirmed: 6sense aggregates many third-party feeds and their docs are marketing-level, so newsletter signals may arrive via partners (notably Bombora) without being named. They already claim intent coverage in 40+ languages and '10x the intent coverage of other B2B intent data providers', so NF must prove incremental lift on top of existing signals. Large vendor with long procurement - expect a data-validation pilot ask, and note their 'Contextual Intelligence (Coming Soon)' roadmap may absorb this need internally."
+}

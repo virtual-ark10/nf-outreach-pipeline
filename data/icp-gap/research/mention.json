@@ -1,0 +1,54 @@
+{
+ "company": "Mention",
+ "official_website": "https://mention.com/en/media-monitoring-api/",
+ "product_summary": "Social listening and media monitoring platform, now delivered as Agorapulse Listening, with a streaming API that returns keyword mentions from web, news, blogs, forums and social platforms.",
+ "current_data_sources": [
+  "Web pages",
+  "News sites",
+  "Blogs",
+  "Forums",
+  "Reddit",
+  "YouTube",
+  "X (Twitter)",
+  "Facebook",
+  "Instagram",
+  "LinkedIn",
+  "TikTok"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://mention.com/en/media-monitoring-api/",
+   "quote": "We use a streaming API, so you\u2019ll receive mentions as soon as they happen online."
+  },
+  {
+   "url": "https://mention.com/en/media-monitoring-api/",
+   "quote": "Mention\u2019s API shows you when your keywords are used on websites, forums, blogs, the news, and social media."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the media monitoring API page, homepage, and Mention/Agorapulse plans documentation for 'newsletter'. No email-newsletter ingestion appears; the documented source list is 'Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web.'",
+ "verified_gap": "No newsletter source in Mention's documented monitoring coverage (Web, News, Blogs, Forums, Reddit, social platforms) and no newsletter publication/author metadata or publication momentum signal.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://mention.com/en/media-monitoring-api/",
+   "quote": "Mention\u2019s API shows you when your keywords are used on websites, forums, blogs, the news, and social media."
+  },
+  {
+   "url": "https://support.mention.com/en/articles/13354178-mention-plans-explained",
+   "quote": "track brand mentions and keywords across Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web"
+  },
+  {
+   "url": "https://support.mention.com/en/articles/13354178-mention-plans-explained",
+   "quote": "As of July 1, 2026, Mention is no longer sold as a standalone product."
+  }
+ ],
+ "likely_buyer_role": "Head of Product / API product manager for Agorapulse Listening (Mention\u2019s successor product)",
+ "contact_route": {
+  "url": "https://support.mention.com/en/",
+  "value": null,
+  "note": "No public contact page on mention.com (mention.com/en/contact/ returns 404); only the help center. Mention is no longer sold standalone since July 1, 2026, so outreach should be routed to Agorapulse."
+ },
+ "confidence": "Medium",
+ "caveats": "Gap is well supported but the account is largely retired: Mention stopped standalone sales on 1 July 2026 and its capability is being absorbed into Agorapulse Listening. Its 'News' and 'Blogs' crawlers may surface some newsletter web archives, though no email-newsletter ingestion or publication metadata is documented. No named contact found."
+}

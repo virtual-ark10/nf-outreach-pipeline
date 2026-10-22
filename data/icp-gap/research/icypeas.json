@@ -1,0 +1,58 @@
+{
+ "company": "Icypeas",
+ "official_website": "https://www.icypeas.com/",
+ "product_summary": "French contact-discovery API: email finder, catch-all email verifier, reverse email lookup, domain scan and profile/company scrapers, sold on credits to sales teams, agencies and platforms embedding enrichment.",
+ "current_data_sources": [
+  "Public web and open-source intelligence (public profiles, company sites)",
+  "Proprietary contact database of 1B+ records, refreshed monthly",
+  "Profile and company page scraping (Profile Scraper, Person/Company Profile URL Finder)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.icypeas.com/",
+   "quote": "80% of our customers embed the Icypeas API in their own product or automated workflows."
+  },
+  {
+   "url": "https://api-doc.icypeas.com/getting-started/",
+   "quote": "The API allows you to make single and bulk searches as well as being notified during a search."
+  },
+  {
+   "url": "https://www.icypeas.com/pricing",
+   "quote": "No-code integrations (Make, Zapier, n8n)"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage feature list (Email Finder, Email Verifier, Reverse Email Lookup, Domain Scan, People Scraper, Company Scraper, Find People, Find Companies), pricing/credit table and api-doc.icypeas.com getting-started page, plus site:icypeas.com newsletter search. No newsletter ingestion, publication index, article corpus, sponsor tracking or entity extraction from editorial content is described anywhere.",
+ "verified_gap": "Icypeas' own scope is person/domain contact records (emails, phones, profile and company data). It holds no newsletter publication index, article corpus, guest/sponsor mentions or publication momentum signal, so it cannot answer 'which newsletters wrote about company X'.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.icypeas.com/",
+   "quote": "Discover valid emails (including catchalls), and scrape contacts at scale."
+  },
+  {
+   "url": "https://www.icypeas.com/",
+   "quote": "Our billion-plus record database is fully refreshed every month"
+  },
+  {
+   "url": "https://www.icypeas.com/",
+   "quote": "Open-source intelligence only, ensuring full compliance while delivering actionable business insights."
+  },
+  {
+   "url": "https://www.icypeas.com/pricing",
+   "quote": "Get more value from your campaigns by paying only for emails that are verified and deliverable."
+  },
+  {
+   "url": "https://api-doc.icypeas.com/getting-started/",
+   "quote": "The API allows you to make single and bulk searches as well as being notified during a search."
+  }
+ ],
+ "likely_buyer_role": "Co-founder / Head of Product owning the data and API roadmap (small GTM-focused team)",
+ "contact_route": {
+  "url": "https://www.icypeas.com/contact",
+  "value": "contact@icypeas.com",
+  "note": "Publicly listed under 'Contact Support' on the contact page; phone +33 668 467 845 also listed."
+ },
+ "confidence": "High",
+ "caveats": "They are a contact-data vendor selling into GTM teams, so newsletter-derived company intelligence is adjacent input for their company enrichment rather than core product; budget authority may sit with the founders. Their buyers are largely agencies and outbound platforms, not newsletter publishers."
+}

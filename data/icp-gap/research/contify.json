@@ -1,0 +1,54 @@
+{
+ "company": "Contify",
+ "official_website": "https://www.contify.com/ai-info/",
+ "product_summary": "AI-native market and competitive intelligence platform plus Business News API, monitoring 1M+ vetted sources for company, industry and competitor news, with entity tagging, event classification, sentiment and structured delivery via REST, webhooks and RSS.",
+ "current_data_sources": [
+  "news and press releases from 1M+ curated sources",
+  "company websites and blogs",
+  "SEC filings and regulatory portals",
+  "social media",
+  "review sites",
+  "job boards",
+  "internal sources (SharePoint, Gong, Slack, Microsoft Teams, email)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.contify.com/ai-info/",
+   "quote": "The Business News API delivers GenAI-enriched, structured news data via RESTful APIs, Webhooks, and RSS."
+  },
+  {
+   "url": "https://www.contify.com/news-api/",
+   "quote": "Structured RESTful JSON outputs with standard HTTP methods (GET, POST, PUT, DELETE)"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Their documented source list does not include newsletter publications: \"collects intelligence from over 1 million vetted external sources including news, company websites, SEC filings, social media, regulatory portals, review sites, and job boards.\" Their 'newsletters' feature is an output format they generate for customers, not a newsletter corpus. Searched: /ai-info/, /news-api/, and site-restricted 'newsletter' searches (returned only their own intelligence-newsletter product and case studies).",
+ "verified_gap": "No newsletter archive and no sponsor-relationship data: coverage is news, websites, filings, social, reviews and job boards, with events extracted from those. Newsletter publications, their authors and their sponsors are not documented as sources, and there is no historical newsletter activity dataset.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.contify.com/ai-info/",
+   "quote": "collects intelligence from over 1 million vetted external sources including news, company websites, SEC filings, social media, regulatory portals, review sites, and job boards."
+  },
+  {
+   "url": "https://www.contify.com/ai-info/",
+   "quote": "The Business News API delivers GenAI-enriched, structured news data via RESTful APIs, Webhooks, and RSS."
+  },
+  {
+   "url": "https://www.contify.com/news-api/",
+   "quote": "Access stories from 1 Mn+ curated business-relevant sources, including 250k+ non-English sources, covering company websites, regulatory portals, job boards, review sites, and more."
+  },
+  {
+   "url": "https://www.contify.com/news-api/",
+   "quote": "Add your preferred sources beyond our 1 Mn+ pre-configured sources to capture content from information channels critical to your use-case"
+  }
+ ],
+ "likely_buyer_role": "VP Product or Head of Content/Data Partnerships owning the Business News API source roadmap and content licensing.",
+ "contact_route": {
+  "url": "https://www.contify.com/contact-us/",
+  "value": "sales.support@contify.com",
+  "note": "Sales email publicly listed on the contact page (also marketing@ and partnerships@contify.com)."
+ },
+ "confidence": "High",
+ "caveats": "Contify already lets customers add custom sources, 'including specialized publications', so newsletters could be onboarded as bespoke sources rather than being structurally impossible; the 'and more' in their source list leaves room for some newsletter coverage. Gap is about a dedicated newsletter archive and sponsor graph, not raw article access."
+}

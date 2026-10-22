@@ -1,0 +1,59 @@
+{
+ "company": "CB Insights",
+ "official_website": "https://www.cbinsights.com/",
+ "product_summary": "Predictive intelligence platform on private companies, combining company, funding, deal and business-relationship data with AI scoring, market maps, research and API/data-feed delivery for strategy, corp dev and investor teams.",
+ "current_data_sources": [
+  "Company firmographics and profiles",
+  "Funding rounds, deals, valuations and cap tables",
+  "M&A and IPO transactions",
+  "Business relationships (partnerships, client/vendor, licensing)",
+  "Patents",
+  "Hiring data",
+  "Public company earnings",
+  "Expert research reports"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.cbinsights.com/what-we-offer/api/",
+   "quote": "APIs and data feeds for market and company insight"
+  },
+  {
+   "url": "https://www.cbinsights.com/what-we-offer/api/",
+   "quote": "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes."
+  },
+  {
+   "url": "https://api-docs.cbinsights.com/",
+   "quote": "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched cbinsights.com homepage, API/data-feed page, api-docs.cbinsights.com and site queries for 'newsletter'. References to newsletters are CB Insights' own outbound newsletter and newsletter archive; no newsletter content is described as an input signal.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://www.cbinsights.com/",
+   "quote": "Continuous monitoring of 12M companies worldwide, with global funding, financial, and firmographic intelligence"
+  },
+  {
+   "url": "https://www.cbinsights.com/",
+   "quote": "Comprehensive data on 12M companies and 1600+ markets, plus visual maps"
+  },
+  {
+   "url": "https://www.cbinsights.com/what-we-offer/api/",
+   "quote": "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes."
+  },
+  {
+   "url": "https://api-docs.cbinsights.com/",
+   "quote": "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access"
+  }
+ ],
+ "likely_buyer_role": "VP Product or Head of Data Strategy/Data Partnerships for the predictive-intelligence platform",
+ "contact_route": {
+  "url": "https://www.cbinsights.com/contact/",
+  "value": null,
+  "note": "Public page is a sales contact form only; no email address published, so no address was constructed."
+ },
+ "confidence": "Medium",
+ "caveats": "CB Insights publishes a dataset catalogue, not a media-ingestion inventory, so the absence of newsletter ingestion is not confirmed by their docs. They also may treat 'Customer voice' or research inputs in ways not publicly itemised. Their API docs page confirms a v1 API (v2 announced) but no public pricing."
+}

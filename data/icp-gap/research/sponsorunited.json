@@ -1,0 +1,56 @@
+{
+ "company": "SponsorUnited",
+ "official_website": "https://www.sponsorunited.com/",
+ "product_summary": "Sponsorship intelligence platform tracking brand-property deals across sports, entertainment and media, with pricing benchmarks, activation creative library, audience insights and AI proposal evaluation for brands, rights holders, agencies and media companies.",
+ "current_data_sources": [
+  "On-premise venue audits by a global scout team (venues, signage, assets)",
+  "In-media device scraping for sponsorship and advertising data (TV/streaming/audio)",
+  "Third-party individual profiles for demographic and affinity data",
+  "Transaction/deal data used to train pricing estimates ($45B+)",
+  "Sponsorship creative library and human-enriched deal records"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.sponsorunited.com/platform",
+   "quote": "Our global scout team and proprietary tech capture real-time sponsor activity\u2014deal by deal, asset by asset."
+  },
+  {
+   "url": "https://www.sponsorunited.com/platform",
+   "quote": "Devices scraped for sponsorship & advertising data."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched sponsorunited.com, /platform, /contact and the podcast-network insight page for newsletter and email sponsorship coverage. Their documented capture methods are venue audits, device scraping, profile data and deal transactions - none of which read newsletter issues. Newsletters appear only as their own marketing newsletter signup, and podcast networks appear as a customer segment rather than tracked inventory.",
+ "verified_gap": "Newsletter sponsor and brand relationships are outside their documented capture stack (venue audits, device scraping, profiles, deal benchmarks). Their media coverage is device-scraped broadcast/streaming/audio, so email newsletter sponsorships - read from article text rather than a device - are the missing surface.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.sponsorunited.com/platform",
+   "quote": "Our global scout team and proprietary tech capture real-time sponsor activity\u2014deal by deal, asset by asset."
+  },
+  {
+   "url": "https://www.sponsorunited.com/platform",
+   "quote": "Venues audited by 3,000 scouts, capturing offline data."
+  },
+  {
+   "url": "https://www.sponsorunited.com/platform",
+   "quote": "Devices scraped for sponsorship & advertising data."
+  },
+  {
+   "url": "https://www.sponsorunited.com/",
+   "quote": "Benchmark pricing and validate spend with $45B+ in verified deal data."
+  },
+  {
+   "url": "https://www.sponsorunited.com/insights/unlocking-sponsorship-opportunities-for-podcast-networks",
+   "quote": "Sponsorship intelligence\u2014demographics, engagement levels, listener behavior data, and more\u2014is critical"
+  }
+ ],
+ "likely_buyer_role": "VP of Data / Head of Product or Chief Revenue Officer (dataset expansion and media-company segment)",
+ "contact_route": {
+  "url": "https://www.sponsorunited.com/contact",
+  "value": null,
+  "note": "Contact form only ('Fill out this form to contact us and one of our team members will be in touch'); no public email or named data contact found."
+ },
+ "confidence": "Medium",
+ "caveats": "Highest overlap risk of the batch: they sell sponsorship intelligence to the same brand and media-company buyers, so NF could be seen as a competitor or as a cheap data feed. Their $45B deal benchmark and activation library are far deeper on sports/entertainment; newsletters are a thin slice of their market. Positive signal is that podcast networks are already a served segment, suggesting appetite for creator-media sponsorship data."
+}

@@ -1,0 +1,60 @@
+{
+ "company": "beehiiv",
+ "official_website": "https://www.beehiiv.com/",
+ "product_summary": "All-in-one newsletter platform for publishing, growth and monetization, including a newsletter ad network, Boosts/Recommendations network, paid subscriptions, podcasts, websites and a public API for publication management.",
+ "current_data_sources": [
+  "First-party publication, subscriber and engagement data from its own platform (open rate, click rate, active subscriptions via API)",
+  "Ad Network impression, click and payout performance",
+  "Recommendation/Boosts network activity between publications",
+  "Advertiser campaign delivery and engagement reporting",
+  "Publisher-declared categories and publication descriptions used for ad targeting"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://developers.beehiiv.com/api-reference/publications/index.mdx",
+   "quote": "Retrieve all publications associated with your API key."
+  },
+  {
+   "url": "https://www.beehiiv.com/features/api-and-integrations",
+   "quote": "Trigger actions, manage subscribers, and update newsletter data automatically - no manual interaction required."
+  },
+  {
+   "url": "https://www.beehiiv.com/ad-network",
+   "quote": "Using our SSP (Supply-Side Platform) technology, we optimize placement and ensure every ad opportunity is valuable."
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "beehiiv holds the richest first-party newsletter data in the category, but scoped to its own platform: the API only lets you \"Retrieve all publications associated with your API key\", and its advertiser page sells access to \"Thousands of vetted newsletters\" inside beehiiv. Their own scale claims: \"135K+ publishers on beehiiv growing their content\" and \"400M+ unique readers every month on beehiiv\".",
+ "verified_gap": "No cross-platform discovery. Their documented API surface returns only publications tied to the caller's own API key, and Ad Network inventory is beehiiv-hosted publications only; nothing documents coverage of Substack, LinkedIn, Ghost or Mailchimp newsletters. Coverage of the open newsletter web sits outside their platform boundary.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.beehiiv.com/",
+   "quote": "The all-in-one platform helping the world's best newsletters publish, grow and earn."
+  },
+  {
+   "url": "https://developers.beehiiv.com/api-reference/publications/index.mdx",
+   "quote": "Retrieve all publications associated with your API key."
+  },
+  {
+   "url": "https://www.beehiiv.com/features/ad-network/brands",
+   "quote": "Our algorithm places your ads in the newsletters that are most likely to drive your desired business outcomes."
+  },
+  {
+   "url": "https://www.beehiiv.com/ad-network",
+   "quote": "Using our SSP (Supply-Side Platform) technology, we optimize placement and ensure every ad opportunity is valuable."
+  },
+  {
+   "url": "https://www.beehiiv.com/",
+   "quote": "135K+ publishers on beehiiv growing their content"
+  }
+ ],
+ "likely_buyer_role": "Head of Ad Network / VP Partnerships or Corporate Development (data or product partnership, not API procurement)",
+ "contact_route": {
+  "url": "https://www.beehiiv.com/support/article/18621437457303-ways-to-contact-beehiiv-support",
+  "value": null,
+  "note": "No public sales/partner email. Support doc states verbatim: \"Phone support and a direct email address for support are not currently available.\" Contact is via in-account ticket or the Knowledge Base chat widget; a partner-team address is referenced on /partners but is redacted in the public page."
+ },
+ "confidence": "High",
+ "caveats": "This is a platform partnership, not an API sale: beehiiv builds in-house (own SSP, MCP, API) so the pitch is cross-platform coverage they cannot see - publications on Substack/LinkedIn/Ghost and sponsor mentions outside their network. Note the asymmetry: NF indexes only 1,776 beehiiv publications against beehiiv's stated 135K publishers, so NF adds nothing to beehiiv's internal view of its own base. Also a partial competitor in newsletter ad inventory, which limits willingness to share data."
+}

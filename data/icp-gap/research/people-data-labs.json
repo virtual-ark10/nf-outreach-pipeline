@@ -1,0 +1,47 @@
+{
+ "company": "People Data Labs",
+ "official_website": "https://www.peopledatalabs.com/",
+ "product_summary": "People and company data provider offering enrichment, search, IP enrichment and data-license feeds built on a large person dataset and 70M+ company profiles, plus job-posting signals.",
+ "current_data_sources": [
+  "Proprietary licensed data (HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech)",
+  "Publicly available data and open datasets",
+  "Governmental public records",
+  "Company career pages (job postings)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+   "quote": "Our Company Enrichment API helps you retrieve unique insights from our company dataset."
+  },
+  {
+   "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+   "quote": "License data feeds. Access via Snowflake & Databricks."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the Data Sources & Compliance doc, the Company Enrichment API page and the site for 'newsletter'. Sources are described only by category ('HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech'); no newsletter, publication or editorial-content dataset is documented.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://docs.peopledatalabs.com/docs/data-sources",
+   "quote": "Our data sources come from a variety of verticals, including HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech and others."
+  },
+  {
+   "url": "https://docs.peopledatalabs.com/docs/data-sources",
+   "quote": "Our Job Posting Dataset is sourced exclusively from company career pages"
+  },
+  {
+   "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+   "quote": "Access over 70MM+ company profiles, from stealth startups to conglomerates."
+  }
+ ],
+ "likely_buyer_role": "Head of Data Partnerships or Product Manager, Company Data / Enrichment",
+ "contact_route": {
+  "url": "https://www.peopledatalabs.com/contact-us",
+  "value": null,
+  "note": "Public contact page offers a 'Submit a ticket' support form; no sales email published. Enterprise plans route via a dedicated CSM."
+ },
+ "confidence": "Medium",
+ "caveats": "PDL documents sources only at category level and does not enumerate its web-scrape inputs, so newsletter absence is unverified rather than confirmed. They already sell a non-firmographic activity signal (job postings from career pages), which is the closest existing analogue and a useful wedge, but also means newsletter activity would compete with an in-house signal. No public newsletter dataset or partnership mention found."
+}

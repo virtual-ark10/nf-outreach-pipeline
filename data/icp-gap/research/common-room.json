@@ -1,0 +1,52 @@
+{
+ "company": "Common Room",
+ "official_website": "https://www.commonroom.io/",
+ "product_summary": "AI-native go-to-market platform that aggregates 50+ digital, community, product and CRM signals into unified person and account profiles, then scores, segments and triggers sales plays from that buyer intelligence.",
+ "current_data_sources": [
+  "social and community platforms (X, Reddit, Discord, Slack, LinkedIn, YouTube, Medium, DEV, Stack Overflow, GitHub, G2)",
+  "CRM and business apps (HubSpot, Salesforce, Marketo, Outreach, Salesloft, Gainsight)",
+  "product usage and warehouse imports (Snowflake, BigQuery, Redshift, S3, Databricks, Census, Hightouch)",
+  "third-party intent (Bombora, G2, TechTarget, Demandbase, 6sense, Scarf)",
+  "custom data via API, Zapier, CSV and Google Sheets"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.commonroom.io/integrations/",
+   "quote": "Use the Common Room API to create new users and add activity to any user from any source."
+  },
+  {
+   "url": "https://www.commonroom.io/integrations/",
+   "quote": "Seamlessly aggregate, merge, and enrich signals from 50+ channels, spanning social, community, product, code collaboration, CRM, and more."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "The integrations catalogue lists social, community, product, CRM and intent sources but no newsletter publication tracking, sponsor data or newsletter archive. The only newsletter item in their docs is an activity type a customer records for its own subscribers: \"Newsletter subscribed | 1 | Manual Entry / API / Zapier / CSV\" (docs Impact Points table). Searched: the full /integrations/ catalogue, /docs/signals/, and site-restricted searches for 'newsletter' on commonroom.io.",
+ "verified_gap": "No native ingestion of newsletter publications: no newsletter publication/author coverage, no sponsor relationships, no newsletter article text or activity history. Customers can only approximate it by pushing events through the API, Zapier, CSV or a warehouse import, and those events carry no publication-level metadata or source links.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.commonroom.io/integrations/",
+   "quote": "Seamlessly aggregate, merge, and enrich signals from 50+ channels, spanning social, community, product, code collaboration, CRM, and more."
+  },
+  {
+   "url": "https://www.commonroom.io/integrations/",
+   "quote": "Use the Common Room API to create new users and add activity to any user from any source."
+  },
+  {
+   "url": "https://www.commonroom.io/docs/using-common-room/contacts/impact-points/",
+   "quote": "Newsletter subscribed | 1 | Manual Entry / API / Zapier / CSV"
+  },
+  {
+   "url": "https://www.commonroom.io/docs/signals/",
+   "quote": "Signals are how Common Room brings together social, business, product, CRM, customer data, and more."
+  }
+ ],
+ "likely_buyer_role": "Head of Revenue Operations or GTM/signal owner who decides which third-party data sources feed account scoring and workflows (secondary: Head of Growth / PLG marketing).",
+ "contact_route": {
+  "url": "https://www.commonroom.io/contact/",
+  "value": null,
+  "note": "Contact page is a demo-request form only; no public email address and no named contact found."
+ },
+ "confidence": "High",
+ "caveats": "Their custom-integration path (API, Zapier, CSV, warehouse) means newsletter events can be pushed in, so the gap is about native newsletter data quality and coverage, not technical impossibility. Integrations page is a marketing catalogue, not a full data dictionary; private sources may exist."
+}

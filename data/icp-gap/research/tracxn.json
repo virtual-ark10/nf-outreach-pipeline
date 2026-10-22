@@ -1,0 +1,57 @@
+{
+ "company": "Tracxn",
+ "official_website": "https://tracxn.com/",
+ "product_summary": "Private-market intelligence platform covering millions of companies, investors, funding rounds, financials and cap tables, sold as subscriptions plus API, data-dump and warehouse integrations for VC, PE and corporate development teams.",
+ "current_data_sources": [
+  "Publicly available web information (company home pages, blogs, news articles, social media)",
+  "Proprietary analyst-generated data and taxonomy",
+  "Regulatory filings (registrar, transaction, labour and tax filings)",
+  "Private company financials and cap tables",
+  "Funding, M&A and transaction data",
+  "News coverage of companies, investors and sectors"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+   "quote": "Access real-time company data through APIs or scheduled exports, with no manual exports or uploads required."
+  },
+  {
+   "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+   "quote": "Scheduled SFTP Dumps"
+  },
+  {
+   "url": "https://tracxn.com/pricing",
+   "quote": "Our Data Solutions packs enable seamless integration with your existing workflows through APIs and Datadump features."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched tracxn.com, w.tracxn.com product/data-solutions pages, the FY23-24 annual report PDF and site queries for 'newsletter'. The only newsletter references are Tracxn's own outbound 'sector-based newsletters' and 'personalized dashboards & newsletters' product features; no newsletter ingestion or newsletter-derived signal is documented.",
+ "verified_gap": "Their own stated data sources are public web information, proprietary analyst data and regulatory filings; newsletters are not named as a source, and no newsletter-level publisher or activity data is offered.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://cdn.tracxn.com/investor-relations/financials/Annual_Report_-_FY_23-24_U8hIN8m0UgQoQNoJSFdQT.pdf",
+   "quote": "company home pages, blogs, news articles, social media and other secondary sources"
+  },
+  {
+   "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+   "quote": "Access real-time company data through APIs or scheduled exports, with no manual exports or uploads required."
+  },
+  {
+   "url": "https://tracxn.com/pricing",
+   "quote": "8.4M+ Companies, 292K+ Investors"
+  },
+  {
+   "url": "https://cdn.tracxn.com/investor-relations/financials/Annual_Report_-_FY_23-24_U8hIN8m0UgQoQNoJSFdQT.pdf",
+   "quote": "Launched a collection of sector-based newsletters on the platform"
+  }
+ ],
+ "likely_buyer_role": "VP/Head of Data Products or Data Solutions (API/data-licensing) lead",
+ "contact_route": {
+  "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+  "value": null,
+  "note": "Only a 'Contact Specialist' web form on the Data Solutions page; no sales email published. Sole public email is compliance-officer@tracxn.com, listed for investor grievances, not sales."
+ },
+ "confidence": "Medium",
+ "caveats": "tracxn.com and /data returned blocks or 404s to extraction, so product detail came from w.tracxn.com and the investor-relations PDF. 'Other secondary sources' in their annual report is open-ended, so the gap is documented-by-omission rather than an explicit exclusion. No named contact found."
+}

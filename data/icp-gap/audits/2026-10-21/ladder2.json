@@ -1,0 +1,171 @@
+[
+  {
+    "company": "Kadoa",
+    "official_website": "https://www.kadoa.com/",
+    "product_summary": "Web data extraction and monitoring for investment firms: agents build, validate and self-heal pipelines that turn websites, filings, PDFs and feeds into datasets delivered to Snowflake, S3, BigQuery, spreadsheets, webhooks, MCP and API.",
+    "current_data_sources": [
+      "Customer-specified URLs / public web pages (workflow sources)",
+      "Filings and PDFs",
+      "APIs and feeds (HTML, XML, RSS, JSON)",
+      "Customer data warehouses and storage as delivery targets (Snowflake, Databricks, BigQuery, S3, SFTP)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.kadoa.com/api-reference/introduction",
+        "quote": "Kadoa is built as an API-first platform."
+      },
+      {
+        "url": "https://docs.kadoa.com/docs/introduction",
+        "quote": "Connect the MCP server and use Kadoa from ChatGPT, Claude, Cursor, and other AI tools."
+      },
+      {
+        "url": "https://www.kadoa.com/",
+        "quote": "Native destinations for your environment, whether you are an analyst, an engineer, or an agent."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "No newsletter or email ingestion. Sources are URL lists and the supported types are HTML, XML, RSS, JSON and PDF, so a Substack or beehiiv archive could only be scraped page-by-page as ordinary URLs. No publication-level corpus, no cross-publication entity/sponsor extraction and no newsletter activity tracking.",
+    "verified_gap": "Kadoa ingests URL-scoped pages and documents only (HTML, XML, RSS, JSON, PDF). A newsletter corpus of 26,401 publications with extracted companies, people, guests, sponsors and activity momentum is absent, so finance customers get no newsletter-derived signal without hand-building per-site pipelines.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.kadoa.com/",
+        "quote": "Our agents build, monitor, and maintain mission-critical web data pipelines for investment teams and AI agents."
+      },
+      {
+        "url": "https://docs.kadoa.com/docs/ui/workflows/sources",
+        "quote": "A workflow’s source is the set of URLs it extracts from."
+      },
+      {
+        "url": "https://docs.kadoa.com/docs/ui/workflows/sources",
+        "quote": "Kadoa supports following content types by design"
+      },
+      {
+        "url": "https://www.kadoa.com/pricing",
+        "quote": "For funds and central data teams running at scale"
+      },
+      {
+        "url": "https://www.kadoa.com/pricing",
+        "quote": "We keep pricing simple with a consumption-based model."
+      }
+    ],
+    "likely_buyer_role": "Head of Data Sourcing / Data Partnerships at a finance-focused web-data vendor (licensing NF corpus as an input feed), secondary: Head of Data at a fund customer",
+    "contact_route": {
+      "url": "https://www.kadoa.com/contact/sales",
+      "value": "Sales contact form (Talk to sales)",
+      "note": "Public contact page; general inquiries listed as support@kadoa.com. No named data-partnerships contact verified."
+    },
+    "confidence": "Medium",
+    "caveats": "Partly supply-side: Kadoa sells curated web datasets to funds, so NF's corpus is more plausibly a licensed input or partnership than a seat purchase, and Kadoa could also build newsletter scraping itself. Real-time monitoring is an Enterprise-plan feature, so NF's non-real-time snapshots would be an add-on, not a replacement."
+  },
+  {
+    "company": "Orbifold AI",
+    "official_website": "https://www.orbifold.ai/",
+    "product_summary": "Distributed multimodal data infrastructure for physical AI: ingests, aligns, labels and schema-maps enterprise text, image, video and audio into AI-ready datasets for fine-tuning, RAG and model training, deployable on-prem or in private cloud.",
+    "current_data_sources": [
+      "Customer-supplied enterprise documents, PDFs and filings",
+      "Images, video and audio (including sensor and claims media)",
+      "Emails and business communications",
+      "Customer data estates, processed in-tenant or private cloud with zero data retention"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "Ingest, align, and manage multimodal data through one API."
+      },
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "structured, timestamped, schema-mapped data pipelines — ready for on-prem or private cloud deployment"
+      },
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "replaces fragmented data pipelines and manual labeling vendors with a unified multimodal data API"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the homepage, all solution copy, the blog index, the BFSI case study and the careers page: no newsletter, publication, sponsor or editorial-corpus mention. Their only text sources are customer documents and emails, curated for model training rather than for company intelligence. No public API reference or docs site and no pricing page (the /pricing URL renders the homepage).",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "Orbifold AI is the distributed infrastructure for physical AI."
+      },
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "Orbifold transforms messy, multimodal enterprise data into clean, AI-ready datasets — text, image, video, audio"
+      },
+      {
+        "url": "https://www.orbifold.ai/",
+        "quote": "structuring of emails, documents, and media"
+      },
+      {
+        "url": "https://www.orbifold.ai/blog/orbifold-ai-unlocking-deep-insights-and-operational-excellence-in-bfsi-with-advanced-multimodal-data-curation",
+        "quote": "photos, videos, audio recordings, and medical bills"
+      }
+    ],
+    "likely_buyer_role": "Head of Data Partnerships / founding Product Manager (platform data sourcing); no evidence a newsletter-corpus buyer role exists",
+    "contact_route": {
+      "url": "https://www.orbifold.ai/blog",
+      "value": "chat@orbifold.ai",
+      "note": "Address published in the site footer ('Talk to us'); no named person with public profile verified."
+    },
+    "confidence": "Low",
+    "caveats": "Supply-side data-curation vendor, not a buyer of newsletter intelligence: they sell multimodal data pipelines to physical-AI, BFSI and industrial customers, and NF's entity-extracted newsletter corpus does not map to their workloads. Seed-stage ($5M) with no public docs, API reference or pricing page, so procurement and budget are unverified."
+  },
+  {
+    "company": "HireEZ",
+    "official_website": "https://hireez.com/",
+    "product_summary": "AI recruiting platform combining sourcing, CRM, outreach, AI screening, scheduling and analytics on top of the customer's ATS, with agentic workflows and a large open-web candidate database.",
+    "current_data_sources": [
+      "Customer ATS and CRM databases",
+      "Job boards and open-web professional profiles (~1 billion)",
+      "Partner talent databases (Nexxt, Talroo)",
+      "Customer-owned talent pools, campaign and hiring-analytics data"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://hireez.com/partners/",
+        "quote": "With 100+ integration across ATS, CRM, HRIS, and more, hireEZ fits right into the way your team already works."
+      },
+      {
+        "url": "https://hireez.com/pricing/",
+        "quote": "The full workflow runs on one platform with 40+ native ATS integrations"
+      },
+      {
+        "url": "https://hireez.com/pricing/",
+        "quote": "Solo recruiters start at $494/mo with a 7-day free trial."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "No newsletter-publication ingestion found. Sourcing is enumerated as ATS, job boards and the open web plus partner candidate databases; newsletters appear only as something hireEZ sends for candidate nurturing ('creating nurturing newsletters'), not as a data source. No public developer API docs for customers located.",
+    "verified_gap": "hireEZ enumerates its sourcing inputs as the customer's ATS, job boards, the open web and partner databases. Newsletter publications are not a source, so there is no newsletter-derived company, people or sponsor signal for account prioritisation; NF also cannot supply candidate profiles, so the gap is adjacent rather than core.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://hireez.com/blog/what-is-hireez/",
+        "quote": "Enhanced candidate sourcing from your ATS, job boards, and the open web"
+      },
+      {
+        "url": "https://hireez.com/blog/hireez-nexxt-talroo-partnership/",
+        "quote": "over 1 billion professional profiles sourced from the open web"
+      },
+      {
+        "url": "https://hireez.com/blog/what-makes-up-hireez2/",
+        "quote": "creating nurturing newsletters"
+      },
+      {
+        "url": "https://hireez.com/pricing/",
+        "quote": "The full workflow runs on one platform with 40+ native ATS integrations"
+      }
+    ],
+    "likely_buyer_role": "VP Product or Head of Data Partnerships (external data licensing); recruiting-side buyer would be a TA leader, not a data buyer",
+    "contact_route": {
+      "url": "https://explore.hireez.com/contact-sales",
+      "value": "Contact sales / book a demo form",
+      "note": "Linked from hireez.com/about-us/; no named person with a public profile verified."
+    },
+    "confidence": "Low",
+    "caveats": "Fundamental data mismatch: hireEZ needs individual candidate profiles, resumes and contact details, which NF does not produce (NF extracts companies, people mentioned in newsletters, sponsors and topics). hireEZ is also a large data supplier itself (1B+ profiles), so the realistic relationship is data partnership or supplier, not buyer. Pricing is seat/stack-based with a four-week paid verification, so no low-friction entry point."
+  }
+]

@@ -1,0 +1,57 @@
+{
+ "company": "Signal AI",
+ "official_website": "https://signal-ai.com/",
+ "product_summary": "AI-driven media, reputation and risk intelligence platform for communications and risk leaders, ingesting licensed premium news and social content at scale, with API and MCP access plus analyst-curated briefings.",
+ "current_data_sources": [
+  "Licensed publisher content (Dow Jones Factiva, LexisNexis, Moody's NewsEdge, Financial Times, The Washington Post)",
+  "Broadcast",
+  "Podcasts",
+  "Regulatory filings",
+  "Social media and curated premium social profiles (100,000+)",
+  "Publisher readership data (5,000+ publisher relationships)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://signal-ai.com/products-services/integrations",
+   "quote": "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions"
+  },
+  {
+   "url": "https://signal-ai.com/products-services/integrations",
+   "quote": "Signal AI's proprietary event-tracking capability pinpoints 30+ emerging risk events"
+  },
+  {
+   "url": "https://signal-ai.com/",
+   "quote": "Plug risk and reputation intelligence directly into Claude, ChatGPT, Microsoft Copilot, and your agents of choice."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched signal-ai.com homepage, integrations, and the newsletters-briefings product page plus site queries for 'newsletter'. Their 'newsletters' product is an outbound analyst-curated briefing format, and their integrated source list reads: 'all sources combined: published media, podcasts, broadcast, regulatory filings, and social'. No newsletter ingestion is documented.",
+ "verified_gap": "Their documented source classes are licensed published media, podcasts, broadcast, regulatory filings and social; newsletter-native content and newsletter publisher metadata are not a named input.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://signal-ai.com/products-services/newsletters-briefings",
+   "quote": "all sources combined: published media, podcasts, broadcast, regulatory filings, and social"
+  },
+  {
+   "url": "https://signal-ai.com/",
+   "quote": "5.5M+ articles ingested per day"
+  },
+  {
+   "url": "https://signal-ai.com/",
+   "quote": "Signal AI is the only platform combining Dow Jones Factiva, LexisNexis, Moody's NewsEdge, the Financial Times, and The Washington Post"
+  },
+  {
+   "url": "https://signal-ai.com/products-services/integrations",
+   "quote": "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions"
+  }
+ ],
+ "likely_buyer_role": "Head of Content/Data Partnerships or VP Product for the intelligence platform",
+ "contact_route": {
+  "url": "https://signal-ai.com/contact",
+  "value": null,
+  "note": "Public page is a demo/contact form only; no email address published, so no address was constructed."
+ },
+ "confidence": "High",
+ "caveats": "Their phrase 'published media' could include web-hosted newsletter posts, so the gap is at the source-class level rather than an explicit exclusion of newsletters. They are a premium licensed-data buyer, so a newsletter corpus would need clean licensing and provenance."
+}

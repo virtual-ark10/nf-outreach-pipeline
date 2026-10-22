@@ -1,0 +1,52 @@
+{
+ "company": "Onclusive",
+ "official_website": "https://onclusive.com/",
+ "product_summary": "Media intelligence platform for PR and comms teams, monitoring print, online, broadcast and social coverage, with analytics, journalist contacts and API/data-as-a-service delivery of enriched media content.",
+ "current_data_sources": [
+  "Online news websites (3M+ sites)",
+  "Print titles (60,000+)",
+  "Broadcast sources (12,000+)",
+  "Social media platforms (25+)",
+  "Journalist and media contacts database",
+  "Global events data (250,000+ events)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://onclusive.com/data-as-a-service/",
+   "quote": "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items"
+  },
+  {
+   "url": "https://onclusive.com/data-as-a-service/",
+   "quote": "XML and RSS formats supported"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched onclusive.com homepage, products/media-monitoring, data-as-a-service and site-wide searches for 'newsletter'. No newsletter or email-newsletter source type is documented; coverage is described by channel: print, online, broadcast, social.",
+ "verified_gap": "Documented coverage enumerates four channels (print, online, broadcast, social); no newsletter/email channel is named, so newsletter-native coverage and newsletter-level publisher metadata are absent from their stated source set.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://onclusive.com/products/media-monitoring/",
+   "quote": "Monitor 28M+ earned media items daily across 60,000 print titles, 3M websites and 12,000+ broadcast sources worldwide."
+  },
+  {
+   "url": "https://onclusive.com/products/media-monitoring/",
+   "quote": "Track global media coverage in real-time with AI-powered monitoring across print, online, broadcast and social media."
+  },
+  {
+   "url": "https://onclusive.com/data-as-a-service/",
+   "quote": "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items, thousands of media contacts"
+  },
+  {
+   "url": "https://onclusive.com/contact/",
+   "quote": "info@onclusive.com"
+  }
+ ],
+ "likely_buyer_role": "VP/Director of Product or Head of Content/Data Partnerships for the media intelligence platform and DaaS line",
+ "contact_route": {
+  "url": "https://onclusive.com/contact/",
+  "value": "info@onclusive.com"
+ },
+ "confidence": "High",
+ "caveats": "Their '3M websites' crawl may incidentally capture web-hosted newsletter archives, which weakens the gap at the margin; the channel list is a product enumeration, not an explicit exclusion of newsletters. Contact email is a general company address, not a named buyer."
+}

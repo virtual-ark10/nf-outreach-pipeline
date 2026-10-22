@@ -1,0 +1,55 @@
+{
+ "company": "Paved",
+ "official_website": "https://www.paved.com/",
+ "product_summary": "Newsletter ad network and sponsorship marketplace where advertisers book native placements across thousands of vetted newsletters, and publishers monetize inventory; includes programmatic ad network, self-serve campaign tooling, verified audience stats and an MCP connector.",
+ "current_data_sources": [
+  "Publisher-created marketplace listings (opt-in newsletters available for sponsorship)",
+  "ESP-verified subscriber counts, open rates and click rates (Paved Verified badge)",
+  "Advertiser reviews and recommendation scores per newsletter",
+  "Publisher-declared audience demographics, job titles and household income",
+  "First-party campaign delivery and click reporting from the Paved Ad Network"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.paved.com/reference/llms.txt",
+   "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting."
+  },
+  {
+   "url": "https://www.paved.com/help/articles/14441704-paved-mcp-guide",
+   "quote": "Search for newsletters, book sponsorships, submit creative, track campaigns, and handle billing"
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Paved has deep first-party newsletter data, but only for newsletters listed for sponsorship in its own marketplace, with stats verified through publisher ESPs: \"Verified newsletter statistics, including subscriber count, open rates, and click rates.\" Its glossary defines the Marketplace as \"a directory where we list thousands of premium newsletters with available sponsorships\" - i.e. opt-in sponsor-ready inventory, not a cross-platform index.",
+ "verified_gap": "Coverage is limited to Paved's own opt-in marketplace inventory (thousands of sponsor-ready newsletters) plus point-in-time publisher/ESP stats. Nothing in their public docs describes indexing publications that never list on Paved (Substack, LinkedIn, Ghost, Mailchimp) or tracking publication growth/momentum over repeated snapshots.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.paved.com/",
+   "quote": "Target your ads across 253+ million subscribers"
+  },
+  {
+   "url": "https://www.paved.com/help/articles/8116455-email-sponsorship-glossary",
+   "quote": "it's a directory where we list thousands of premium newsletters with available sponsorships"
+  },
+  {
+   "url": "https://www.paved.com/help/articles/8120696-how-to-read-newsletter-profiles",
+   "quote": "Verified newsletter statistics, including subscriber count, open rates, and click rates."
+  },
+  {
+   "url": "https://docs.paved.com/reference/llms.txt",
+   "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting."
+  },
+  {
+   "url": "https://www.paved.com/help/articles/14441704-paved-mcp-guide",
+   "quote": "Search for newsletters, book sponsorships, submit creative, track campaigns, and handle billing"
+  }
+ ],
+ "likely_buyer_role": "Head of Ad Network / VP Marketplace Partnerships (advertiser-side data and inventory expansion)",
+ "contact_route": {
+  "url": "https://www.paved.com/contact",
+  "value": "hey@paved.com (published on the contact page)"
+ },
+ "confidence": "High",
+ "caveats": "Paved is simultaneously a prospect, a channel and a partial competitor: it already holds sponsor relationships and campaign performance for its own inventory, so NF must be sold as outside-in coverage (publications not on Paved, sponsor mentions read from article text) rather than as better marketplace stats. API docs are split advertiser/publisher and are thin on discovery endpoints."
+}

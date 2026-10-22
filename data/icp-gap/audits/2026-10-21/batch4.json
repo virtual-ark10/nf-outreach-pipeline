@@ -1,0 +1,279 @@
+[
+  {
+    "company": "Crunchbase",
+    "official_website": "https://about.crunchbase.com/products/crunchbase-api",
+    "product_summary": "Private-company data and predictive intelligence platform; the Crunchbase API exposes financials, firmographics, funding events, heat scores, AI news insights and seven prediction models to product and data teams.",
+    "current_data_sources": [
+      "Direct market-expert and contributor input (4,000+ venture partners, 600,000 contributors)",
+      "User engagement signals from 80M+ users",
+      "News outlets and government filings (1,000+ reviewed and verified)",
+      "Company and investor submissions / proprietary ingestion systems",
+      "Analyst validation by a global research team"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://about.crunchbase.com/products/crunchbase-api",
+        "quote": "The only API combining institutional-grade private company data with seven proven prediction models"
+      },
+      {
+        "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+        "quote": "leverage LLMs to categorize and monitor company-related news events"
+      },
+      {
+        "url": "https://about.crunchbase.com/data",
+        "quote": "Crunchbase data is accessible through the Crunchbase platform, via API for programmatic access"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the API product page, the About Crunchbase Data page (which itemises the five ingestion sources) and the News Insights in the API support article. News is handled at article level only: News Insights provides 'news source links' and dated, sentiment-scored event categories such as Product Launches and Layoffs. No newsletter publication identity, newsletter sponsor data or newsletter-derived company graph is documented anywhere. Closest adjacent capability is their LLM news-event categorisation, which is source-agnostic and not newsletter-specific.",
+    "verified_gap": "Crunchbase's own documentation enumerates external sourcing as 'more than 1,000 news outlets and government filings' and its News Insights emit article-level categories plus news source links - no newsletter-level publication identity, sponsor relationships or newsletter-native signals.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://about.crunchbase.com/data",
+        "quote": "Information extracted and validated from more than 1,000 news outlets and government filings."
+      },
+      {
+        "url": "https://about.crunchbase.com/products/crunchbase-api",
+        "quote": "1,000+ News outlets and government filings reviewed and verified by our analyst team"
+      },
+      {
+        "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+        "quote": "descriptions, sentiment scores (e.g., positive, neutral, or negative), news source links, and relevant dates"
+      }
+    ],
+    "likely_buyer_role": "Head of Product / Data Partnerships for Crunchbase API and Insights (also data licensing)",
+    "contact_route": {
+      "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+      "value": "sales@crunchbase.com"
+    },
+    "confidence": "High",
+    "caveats": "Crunchbase already runs its own news-event extraction (News Insights) and says it reviews 1,000+ news outlets, so NF must be positioned as newsletter-native publication and sponsor evidence, not as generic news coverage. 'News outlets' is a loose category - Crunchbase may quietly ingest some newsletter publishers without naming them, so treat the gap as documented absence, not proof of zero coverage. Do not imply NF holds funding data: Crunchbase itself is the funding-data owner."
+  },
+  {
+    "company": "Affinity",
+    "official_website": "https://www.affinity.co/",
+    "product_summary": "AI-first CRM for private capital that auto-captures email and calendar activity, enriches company and contact records from 40+ sources, and scores relationship strength across 3,300+ firms.",
+    "current_data_sources": [
+      "Affinity proprietary enrichment engine (40M+ people, 8M+ companies)",
+      "PitchBook (integrated data partner)",
+      "Dealroom (including Twitter follower counts)",
+      "Crunchbase (view-only integrated data partner)",
+      "Firmographic providers and biographic data",
+      "Growth-signal feeds (headcount, hiring/departure trends)",
+      "The firm's own email, calendar and meeting activity"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://developer.affinity.co/pages/external-api-v2/introduction",
+        "quote": "This API provides a RESTful interface for building internal apps, automated workflows, 3rd party integrations"
+      },
+      {
+        "url": "https://www.affinity.co/product/affinity-data",
+        "quote": "Data can be used across the platform without restrictions including over API, within analytics reporting, and via export"
+      },
+      {
+        "url": "https://www.affinity.co/",
+        "quote": "Enriched with Affinity’s proprietary data and 40+ sources, including Pitchbook, Preqin, and Grata"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the Affinity Data product page (which lists every enrichable data point by source: Affinity, Pitchbook, Crunchbase, Dealroom), the homepage and the developer docs. Data-point catalogue covers biographic, firmographic, funding, growth, social, sustainability and team fields; there is no newsletter or publication field of any kind. Affinity's 'social' coverage is limited to last-month Twitter follower metrics via Dealroom.",
+    "verified_gap": "No newsletter or newsletter-publication source appears anywhere in Affinity's documented enrichment stack: the source list runs 'PitchBook, Dealroom, and Crunchbase ... firmographic providers, biographic data, and growth signal feeds', and the data-point catalogue has no publication-level field.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.affinity.co/product/affinity-data",
+        "quote": "PitchBook, Dealroom, and Crunchbase sit alongside firmographic providers, biographic data, and growth signal feeds."
+      },
+      {
+        "url": "https://www.affinity.co/product/affinity-data",
+        "quote": "Affinity enriches every company and contact record from 40+ trusted sources."
+      },
+      {
+        "url": "https://developer.affinity.co/pages/external-api-v2/introduction",
+        "quote": "The Affinity APIs are only available on select license types."
+      }
+    ],
+    "likely_buyer_role": "Head of Data Partnerships / Product lead for Affinity Data",
+    "contact_route": {
+      "url": "https://www.affinity.co/contact",
+      "value": "info@affinity.co"
+    },
+    "confidence": "High",
+    "caveats": "Affinity's wedge is relationship strength from the firm's own email and calendar data, so any newsletter signal must attach to an existing company or person record to be useful - a standalone publication corpus would need mapping work. Many enrichments are partner-licensed and view-only (Crunchbase is explicitly view-only), which affects how a third-party feed could be redistributed. Buying is likely a data-partnership conversation, not a CRM seat sale."
+  },
+  {
+    "company": "IndustryLens",
+    "official_website": "https://industry-lens.com/features/data-sources",
+    "product_summary": "Founder-led competitive-intelligence tool that monitors 350+ sources across 62 source types per tracked company and delivers weekly verified battlecards and briefings, priced from £149/month per company.",
+    "current_data_sources": [
+      "Company website pages, deep crawls, careers boards and campaign landing pages",
+      "Google News plus named outlets (TechCrunch, Forbes, Bloomberg, Reuters, VentureBeat, Wired, Business Insider, The Verge, Axios)",
+      "Industry newsletters and trade press",
+      "A tracked competitor's own email newsletter (forwarded or subscribed)",
+      "Review platforms (G2, Capterra, Trustpilot, Google Reviews, Gartner Peer Insights, Glassdoor, Clutch, TrustRadius, app stores)",
+      "Social (LinkedIn posts/profiles/exec posts, X, Reddit, YouTube, Instagram, Facebook, TikTok)",
+      "Ad libraries (Meta, Google, LinkedIn)",
+      "Hiring sources (LinkedIn Jobs, LinkedIn Events, Indeed)",
+      "Press-release wires (PR Newswire, Business Wire, GlobeNewswire)",
+      "SEC EDGAR, UK Companies House, EU TED procurement awards",
+      "Crunchbase funding data, podcasts, GitHub releases, Product Hunt, Google Patents",
+      "App marketplaces (Salesforce, HubSpot, Atlassian, Shopify, Chrome Web Store)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://industry-lens.com/pricing",
+        "quote": "API access"
+      },
+      {
+        "url": "https://industry-lens.com/pricing",
+        "quote": "MCP connector — query your intel from Claude, Cursor & any MCP-aware AI tool"
+      },
+      {
+        "url": "https://industry-lens.com/features/data-sources",
+        "quote": "Enterprise customers can add any custom source (a specific competitor URL, a private feed, a niche publication, your own data)"
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "Newsletter coverage is already a named, sold feature, not a gap. The data-sources page lists 'Industry newsletters and trade press' as a news source type, and separately a custom/private source called 'Newsletter content' described as 'A competitor's own email newsletter, forwarded or subscribed.' The pricing page lists 'News & content — Google News, newsletters, blogs' as an included channel and 'Google News + newsletters' in the plan matrix. Coverage is per tracked company (10–100 companies), not a searchable publication corpus.",
+    "verified_gap": "",
+    "gap_status": "disconfirmed",
+    "evidence": [
+      {
+        "url": "https://industry-lens.com/features/data-sources",
+        "quote": "A competitor’s own email newsletter, forwarded or subscribed."
+      },
+      {
+        "url": "https://industry-lens.com/pricing",
+        "quote": "News & content — Google News, newsletters, blogs"
+      },
+      {
+        "url": "https://industry-lens.com/features/data-sources",
+        "quote": "350+ sources across 62 source types is the platform total."
+      }
+    ],
+    "likely_buyer_role": "Founder (Naveed Ratansi) — sole decision-maker in a founder-led, self-serve product",
+    "contact_route": {
+      "url": "https://industry-lens.com/contact",
+      "value": "Naveed Ratansi, Founder — contact form / 30-min call booking; no email published"
+    },
+    "confidence": "High",
+    "caveats": "Do not pitch newsletter coverage as missing - they already sell it. The real opening is breadth and structure: their newsletter coverage is per-competitor (a company's own email plus generic trade press), not an index of 26,401 publications with sponsor and guest relationships. Volume is small (10-100 tracked companies, £149/month), so an enterprise data licence would need a specific, cheap use case. Naveed is both buyer and contact, and he vets claims hard (the page publishes rejected claims and a 29-check pipeline), so evidence quality matters more than framing."
+  },
+  {
+    "company": "Meltwater",
+    "official_website": "https://www.meltwater.com/",
+    "product_summary": "Media, social and AI-visibility intelligence platform for PR and comms teams, ingesting over a billion documents daily and offering API, MCP and BI/data-warehouse integrations.",
+    "current_data_sources": [
+      "400,000+ traditional media sources (newspapers, magazines, print and digital)",
+      "200M+ online publications including blogs, review sites and forums",
+      "TV and radio broadcast stations (all 210 U.S. DMAs)",
+      "20,000+ podcasts with speech-to-text transcripts",
+      "Substack as a dedicated source",
+      "Social platforms (X, Facebook, Instagram, YouTube, TikTok, LinkedIn, Reddit, WeChat, Weibo and more)",
+      "AI platforms and LLM outputs (ChatGPT, Perplexity, Gemini, Claude, Grok, AI Overviews)",
+      "Review sites (Google, Trustpilot, Glassdoor, Indeed, app stores, marketplaces)",
+      "Premium/paywalled licensed content (Dow Jones, Bloomberg, NYT, WaPo, AP)",
+      "First-party/BYOC content and customers' own connected social accounts"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.meltwater.com/en/platform/integrations-api",
+        "quote": "Search and export mentions, access historical and live analytics, manage searches and tags programmatically"
+      },
+      {
+        "url": "https://www.meltwater.com/en/platform/integrations-api",
+        "quote": "API Foundations is included in most Meltwater packages."
+      },
+      {
+        "url": "https://www.meltwater.com/en/platform/global-content-coverage",
+        "quote": "Whether in Salesforce, Tableau, internal dashboards, or data warehouses"
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "Meltwater has newsletter-adjacent coverage but only names one platform: the global coverage page states they added 'Expanded YouTube monitoring, Substack as a dedicated source' to close visibility gaps. Beyond Substack, newsletters are not a documented media type - the enumerated channel list runs traditional media, online publications (blogs, review sites, forums), TV/radio, podcasts, AI platforms and social. Their 'newsletters' product page is the reverse direction: a tool to build branded internal newsletters from monitoring results, not a source of newsletter intelligence. Searched their coverage page, integrations/API page and newsletter product pages; no beehiiv, Ghost, Mailchimp, Kit or LinkedIn-newsletter coverage and no sponsor/guest data is documented.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://www.meltwater.com/en/platform/global-content-coverage",
+        "quote": "Expanded YouTube monitoring, Substack as a dedicated source, and social coverage of China through Midu"
+      },
+      {
+        "url": "https://www.meltwater.com/en/platform/global-content-coverage",
+        "quote": "more than 200 million online publications including blogs, review sites and forums"
+      },
+      {
+        "url": "https://www.meltwater.com/en/products/newsletters",
+        "quote": "pulls directly from your media monitoring activity, curates the most relevant coverage, and delivers polished, branded briefings"
+      },
+      {
+        "url": "https://www.meltwater.com/en/platform/integrations-api",
+        "quote": "Search and export mentions, access historical and live analytics, manage searches and tags programmatically"
+      }
+    ],
+    "likely_buyer_role": "Head of Data Partnerships / Product Director for global content coverage",
+    "contact_route": {
+      "url": "https://www.meltwater.com/en/contact",
+      "value": null,
+      "note": "Contact form only ('Enter your work email to get started'); no named data-partnership contact or email published."
+    },
+    "confidence": "Medium",
+    "caveats": "The claimed gap is only partly true: Substack is already a dedicated source, so a 'you have no newsletter coverage' pitch would be wrong and easy to rebut. The defensible angle is breadth beyond Substack (beehiiv, Ghost, Kit, Mailchimp, LinkedIn newsletters) plus publication-level and sponsor-relationship data, which their docs do not describe - that remainder is unverified, not a confirmed absence, since 200M+ online publications may already scoop up newsletter web archives. Meltwater also resells under licensing agreements, so redistribution terms will dominate any partnership conversation."
+  },
+  {
+    "company": "Cision",
+    "official_website": "https://www.cision.com/",
+    "product_summary": "CisionOne is a PR and media-intelligence platform combining media monitoring across print, online, broadcast, podcast and social, journalist outreach, analytics and a REST API for mention data.",
+    "current_data_sources": [
+      "Print newspapers and magazines (LexisNexis-sourced)",
+      "Online news websites and online publications",
+      "TV and radio broadcast (2,700+ stations)",
+      "Podcasts (20,000+ global, 16 languages, speech-to-text)",
+      "Social media: Facebook, YouTube, X/Twitter, Bluesky (with Brandwatch)",
+      "Journalist, influencer and outlet database",
+      "Premium and paywalled publisher content (e.g. Financial Times, NLA/CLA titles)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.cision.com/lp/cision-overview-faqs/",
+        "quote": "CisionOne offers a REST API that allows you to connect your media monitoring data with your own internal tools."
+      },
+      {
+        "url": "https://www.cision.com/lp/cision-overview-faqs/",
+        "quote": "A list of mentions for a Mention Stream (including metadata)."
+      },
+      {
+        "url": "https://www.cision.ca/lp/media-monitoring/",
+        "quote": "With over 100 million data sources available, never miss a mention of your brand"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the CisionOne coverage-and-data-quality FAQ (which enumerates every monitored media type with start dates), the media monitoring product page and the Cision Canada monitoring page. The documented list is print, online news websites/publications, TV, radio, podcast and four social platforms. Newsletters are not a media type and newsletter sponsors are not a data dimension; the closest adjacent field is outlet-level audience and circulation enrichment.",
+    "verified_gap": "CisionOne's documented media types are print, online news websites/publications, TV, radio, podcast, Facebook, YouTube, X and Bluesky. Newsletters, newsletter publications and sponsor relationships are absent from that enumeration.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.cision.com/lp/cision-overview-faqs/",
+        "quote": "News websites, online publications (articles from March 2022 onward)"
+      },
+      {
+        "url": "https://www.cision.ca/lp/media-monitoring/",
+        "quote": "across online news, blogs, social, print, broadcast, forums, and review sites"
+      },
+      {
+        "url": "https://www.cision.com/lp/cision-overview-faqs/",
+        "quote": "CisionOne offers a REST API that allows you to connect your media monitoring data with your own internal tools."
+      }
+    ],
+    "likely_buyer_role": "VP Product / Head of Content Acquisition for CisionOne media monitoring",
+    "contact_route": {
+      "url": "https://www.cision.com/contact-us/",
+      "value": null,
+      "note": "Sales enquiries route through a form; the only published addresses are privacy@cision.com and CisionPR@cision.com (press), neither of which is a data-partnership route."
+    },
+    "confidence": "High",
+    "caveats": "Some cision.com product pages were bot-blocked, so the .com evidence comes from the CisionOne FAQ and the cision.ca monitoring page - both first-party Cision properties but not the identical page set a US buyer sees. Cision aggregates heavily through licensors (LexisNexis, NLA/CLA, FT), so newsletter content would face the same licensing and redistribution constraints, and their coverage is measured in 'sites' rather than publications, which makes newsletter URLs hard to isolate. Enterprise procurement is slow; expect a long cycle."
+  }
+]

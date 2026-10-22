@@ -1,0 +1,60 @@
+{
+ "company": "Grata",
+ "official_website": "https://grata.com/api",
+ "product_summary": "Private-market intelligence platform and API for M&A and deal sourcing: 150 data points on 22M+ companies, executive contacts and conference lists, exposed through search, similarity, enrichment and list APIs.",
+ "current_data_sources": [
+  "AI-synthesized public data (company descriptions, comps, employee counts, growth signals)",
+  "Proprietary private financials and valuations",
+  "Executive contact database (emails, titles, LinkedIn)",
+  "Trade show and conference exhibitor/sponsor lists",
+  "Institutional/user data: notes, labels, deal status"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://grata.com/api",
+   "quote": "Grata's API surfaces our data in your firm's internal systems for comprehensive, verified market intelligence"
+  },
+  {
+   "url": "https://grata.com/api",
+   "quote": "150 data points across 22M+ global companies, 200K+ conferences, 10M+ executive contacts"
+  },
+  {
+   "url": "https://docs.grata.com/",
+   "quote": "Search API delivers the power of Grata\u2019s search capabilities into your proprietary systems"
+  },
+  {
+   "url": "https://docs.grata.com/",
+   "quote": "Enrichment API brings Grata company profiles into your system, ensuring that your data is robust and up-to-date."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Not found. Searched grata.com/api, grata.com/our-data and docs.grata.com; documented inputs are AI-synthesized public data, private financials, executive contacts and 'Trade show & conference exhibitor lists'. No newsletter, email or publication data is mentioned, but the underlying public sources are never enumerated field by field, so this stays unverified rather than a confirmed gap.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://grata.com/our-data",
+   "quote": "Trade show & conference exhibitor lists"
+  },
+  {
+   "url": "https://grata.com/api",
+   "quote": "Grata synthesizes public sources, private insights, and exclusive data, rigorously cleans and reconciles every record"
+  },
+  {
+   "url": "https://grata.com/api",
+   "quote": "Detailed company descriptions, revenue, headcount, ownership, funding data, industry classifications, social profiles, growth"
+  },
+  {
+   "url": "https://grata.com/api",
+   "quote": "Rely on our API as a production-grade data backbone"
+  }
+ ],
+ "likely_buyer_role": "Head of Data / VP Product responsible for API data coverage and third-party data partnerships",
+ "contact_route": {
+  "url": "https://grata.com/contact",
+  "value": null,
+  "note": "Form-only contact page (demo request); docs.grata.com links 'Contact Customer Success'. No public email address found, none assumed."
+ },
+ "confidence": "Medium",
+ "caveats": "Gap unverified: Grata describes 'disparate public data' without naming sources, so absence of newsletters is inferred from the data-type lists only. API exists and is documented, which makes a data-supplement conversation plausible; no public pricing for API."
+}

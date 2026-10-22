@@ -1,0 +1,61 @@
+{
+ "company": "Muck Rack",
+ "official_website": "https://muckrack.com/",
+ "product_summary": "PR and earned-media platform combining a verified journalist and outlet database, media monitoring across digital, broadcast, print, podcast and social, pitching, press-release distribution and coverage reporting, with a paid read-only API.",
+ "current_data_sources": [
+  "news and article databases (queryable Searches over article headlines and body text, up to 5 years history)",
+  "journalist and media-outlet profiles built by an editorial verification team",
+  "broadcast content (TV and radio, paid add-on)",
+  "print content licensed from LexisNexis (paid add-on, 25-month lookback)",
+  "social media and podcast monitoring",
+  "newsletter authors in the media database (added 2021)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://muckrack.com/pr-software/api",
+   "quote": "The Muck Rack API moves your coverage into tools like Tableau, Power BI, or your database automatically."
+  },
+  {
+   "url": "https://muckrack.com/pr-software/api",
+   "quote": "The mentions you're already tracking in Muck Rack, ready to plug into your own systems."
+  },
+  {
+   "url": "https://apis.io/apis/muck-rack/muck-rack-api/",
+   "quote": "Read-only REST API providing programmatic access to the article data behind a Muck Rack Saved Search."
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Newsletter authors are discoverable as media contacts, not as newsletter content: \"we've added (and are continuing to add) newsletter authors to Muck Rack's media database.\" Their help centre enumerates five search types - People, Article, Media Outlet, Broadcast and Print - with no newsletter search, archive or sponsor data.",
+ "verified_gap": "Newsletter depth stops at author/outlet discovery. No newsletter-level article search, no historical newsletter activity dataset and no sponsor-relationship intelligence are documented in the search-type docs or the API (article data behind a Saved Search only).",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://muckrack.com/blog/2021/05/12/newsletter-authors",
+   "quote": "we've added (and are continuing to add) newsletter authors to Muck Rack's media database."
+  },
+  {
+   "url": "https://help.muckrack.com/en/articles/5866899-getting-started-with-search-in-muck-rack",
+   "quote": "Muck Rack offers five search types."
+  },
+  {
+   "url": "https://muckrack.com/pr-software/media-monitoring-alerts",
+   "quote": "Across sources spanning digital, broadcast, podcasts, print, and social media"
+  },
+  {
+   "url": "https://muckrack.com/pr-software/api",
+   "quote": "The mentions you're already tracking in Muck Rack, ready to plug into your own systems."
+  },
+  {
+   "url": "https://muckrack.com/contact",
+   "quote": "You can also email our Customer Support team at support@muckrack.com."
+  }
+ ],
+ "likely_buyer_role": "VP of Product or Head of Media Intelligence / Data Products, who owns media-database coverage and the monitoring source roadmap.",
+ "contact_route": {
+  "url": "https://muckrack.com/contact",
+  "value": "support@muckrack.com",
+  "note": "Publicly listed customer-support address; no sales address published (press@muckrack.com is for media inquiries only)."
+ },
+ "confidence": "High",
+ "caveats": "muckrack.com initially returned bot_blocked to automated fetches and later served pages; coverage details may sit behind authenticated docs (the full API reference is customer-only per apis.io). 'Digital' monitoring is not defined publicly, so some newsletter content may already be captured without being labelled as such. Sponsor data absence is inferred from docs, not from an explicit denial."
+}

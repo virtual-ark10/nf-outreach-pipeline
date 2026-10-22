@@ -1,0 +1,54 @@
+{
+ "company": "Cision",
+ "official_website": "https://www.cision.com/",
+ "product_summary": "CisionOne is a PR and media-intelligence platform combining media monitoring across print, online, broadcast, podcast and social, journalist outreach, analytics and a REST API for mention data.",
+ "current_data_sources": [
+  "Print newspapers and magazines (LexisNexis-sourced)",
+  "Online news websites and online publications",
+  "TV and radio broadcast (2,700+ stations)",
+  "Podcasts (20,000+ global, 16 languages, speech-to-text)",
+  "Social media: Facebook, YouTube, X/Twitter, Bluesky (with Brandwatch)",
+  "Journalist, influencer and outlet database",
+  "Premium and paywalled publisher content (e.g. Financial Times, NLA/CLA titles)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.cision.com/lp/cision-overview-faqs/",
+   "quote": "CisionOne offers a REST API that allows you to connect your media monitoring data with your own internal tools."
+  },
+  {
+   "url": "https://www.cision.com/lp/cision-overview-faqs/",
+   "quote": "A list of mentions for a Mention Stream (including metadata)."
+  },
+  {
+   "url": "https://www.cision.ca/lp/media-monitoring/",
+   "quote": "With over 100 million data sources available, never miss a mention of your brand"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the CisionOne coverage-and-data-quality FAQ (which enumerates every monitored media type with start dates), the media monitoring product page and the Cision Canada monitoring page. The documented list is print, online news websites/publications, TV, radio, podcast and four social platforms. Newsletters are not a media type and newsletter sponsors are not a data dimension; the closest adjacent field is outlet-level audience and circulation enrichment.",
+ "verified_gap": "CisionOne's documented media types are print, online news websites/publications, TV, radio, podcast, Facebook, YouTube, X and Bluesky. Newsletters, newsletter publications and sponsor relationships are absent from that enumeration.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.cision.com/lp/cision-overview-faqs/",
+   "quote": "News websites, online publications (articles from March 2022 onward)"
+  },
+  {
+   "url": "https://www.cision.ca/lp/media-monitoring/",
+   "quote": "across online news, blogs, social, print, broadcast, forums, and review sites"
+  },
+  {
+   "url": "https://www.cision.com/lp/cision-overview-faqs/",
+   "quote": "CisionOne offers a REST API that allows you to connect your media monitoring data with your own internal tools."
+  }
+ ],
+ "likely_buyer_role": "VP Product / Head of Content Acquisition for CisionOne media monitoring",
+ "contact_route": {
+  "url": "https://www.cision.com/contact-us/",
+  "value": null,
+  "note": "Sales enquiries route through a form; the only published addresses are privacy@cision.com and CisionPR@cision.com (press), neither of which is a data-partnership route."
+ },
+ "confidence": "High",
+ "caveats": "Some cision.com product pages were bot-blocked, so the .com evidence comes from the CisionOne FAQ and the cision.ca monitoring page - both first-party Cision properties but not the identical page set a US buyer sees. Cision aggregates heavily through licensors (LexisNexis, NLA/CLA, FT), so newsletter content would face the same licensing and redistribution constraints, and their coverage is measured in 'sites' rather than publications, which makes newsletter URLs hard to isolate. Enterprise procurement is slow; expect a long cycle."
+}

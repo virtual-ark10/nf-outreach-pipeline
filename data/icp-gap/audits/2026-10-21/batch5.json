@@ -1,0 +1,284 @@
+[
+  {
+    "company": "Onclusive",
+    "official_website": "https://onclusive.com/",
+    "product_summary": "Media intelligence platform for PR and comms teams, monitoring print, online, broadcast and social coverage, with analytics, journalist contacts and API/data-as-a-service delivery of enriched media content.",
+    "current_data_sources": [
+      "Online news websites (3M+ sites)",
+      "Print titles (60,000+)",
+      "Broadcast sources (12,000+)",
+      "Social media platforms (25+)",
+      "Journalist and media contacts database",
+      "Global events data (250,000+ events)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://onclusive.com/data-as-a-service/",
+        "quote": "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items"
+      },
+      {
+        "url": "https://onclusive.com/data-as-a-service/",
+        "quote": "XML and RSS formats supported"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched onclusive.com homepage, products/media-monitoring, data-as-a-service and site-wide searches for 'newsletter'. No newsletter or email-newsletter source type is documented; coverage is described by channel: print, online, broadcast, social.",
+    "verified_gap": "Documented coverage enumerates four channels (print, online, broadcast, social); no newsletter/email channel is named, so newsletter-native coverage and newsletter-level publisher metadata are absent from their stated source set.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://onclusive.com/products/media-monitoring/",
+        "quote": "Monitor 28M+ earned media items daily across 60,000 print titles, 3M websites and 12,000+ broadcast sources worldwide."
+      },
+      {
+        "url": "https://onclusive.com/products/media-monitoring/",
+        "quote": "Track global media coverage in real-time with AI-powered monitoring across print, online, broadcast and social media."
+      },
+      {
+        "url": "https://onclusive.com/data-as-a-service/",
+        "quote": "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items, thousands of media contacts"
+      },
+      {
+        "url": "https://onclusive.com/contact/",
+        "quote": "info@onclusive.com"
+      }
+    ],
+    "likely_buyer_role": "VP/Director of Product or Head of Content/Data Partnerships for the media intelligence platform and DaaS line",
+    "contact_route": {
+      "url": "https://onclusive.com/contact/",
+      "value": "info@onclusive.com"
+    },
+    "confidence": "High",
+    "caveats": "Their '3M websites' crawl may incidentally capture web-hosted newsletter archives, which weakens the gap at the margin; the channel list is a product enumeration, not an explicit exclusion of newsletters. Contact email is a general company address, not a named buyer."
+  },
+  {
+    "company": "Tracxn",
+    "official_website": "https://tracxn.com/",
+    "product_summary": "Private-market intelligence platform covering millions of companies, investors, funding rounds, financials and cap tables, sold as subscriptions plus API, data-dump and warehouse integrations for VC, PE and corporate development teams.",
+    "current_data_sources": [
+      "Publicly available web information (company home pages, blogs, news articles, social media)",
+      "Proprietary analyst-generated data and taxonomy",
+      "Regulatory filings (registrar, transaction, labour and tax filings)",
+      "Private company financials and cap tables",
+      "Funding, M&A and transaction data",
+      "News coverage of companies, investors and sectors"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+        "quote": "Access real-time company data through APIs or scheduled exports, with no manual exports or uploads required."
+      },
+      {
+        "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+        "quote": "Scheduled SFTP Dumps"
+      },
+      {
+        "url": "https://tracxn.com/pricing",
+        "quote": "Our Data Solutions packs enable seamless integration with your existing workflows through APIs and Datadump features."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched tracxn.com, w.tracxn.com product/data-solutions pages, the FY23-24 annual report PDF and site queries for 'newsletter'. The only newsletter references are Tracxn's own outbound 'sector-based newsletters' and 'personalized dashboards & newsletters' product features; no newsletter ingestion or newsletter-derived signal is documented.",
+    "verified_gap": "Their own stated data sources are public web information, proprietary analyst data and regulatory filings; newsletters are not named as a source, and no newsletter-level publisher or activity data is offered.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://cdn.tracxn.com/investor-relations/financials/Annual_Report_-_FY_23-24_U8hIN8m0UgQoQNoJSFdQT.pdf",
+        "quote": "company home pages, blogs, news articles, social media and other secondary sources"
+      },
+      {
+        "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+        "quote": "Access real-time company data through APIs or scheduled exports, with no manual exports or uploads required."
+      },
+      {
+        "url": "https://tracxn.com/pricing",
+        "quote": "8.4M+ Companies, 292K+ Investors"
+      },
+      {
+        "url": "https://cdn.tracxn.com/investor-relations/financials/Annual_Report_-_FY_23-24_U8hIN8m0UgQoQNoJSFdQT.pdf",
+        "quote": "Launched a collection of sector-based newsletters on the platform"
+      }
+    ],
+    "likely_buyer_role": "VP/Head of Data Products or Data Solutions (API/data-licensing) lead",
+    "contact_route": {
+      "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+      "value": null,
+      "note": "Only a 'Contact Specialist' web form on the Data Solutions page; no sales email published. Sole public email is compliance-officer@tracxn.com, listed for investor grievances, not sales."
+    },
+    "confidence": "Medium",
+    "caveats": "tracxn.com and /data returned blocks or 404s to extraction, so product detail came from w.tracxn.com and the investor-relations PDF. 'Other secondary sources' in their annual report is open-ended, so the gap is documented-by-omission rather than an explicit exclusion. No named contact found."
+  },
+  {
+    "company": "CB Insights",
+    "official_website": "https://www.cbinsights.com/",
+    "product_summary": "Predictive intelligence platform on private companies, combining company, funding, deal and business-relationship data with AI scoring, market maps, research and API/data-feed delivery for strategy, corp dev and investor teams.",
+    "current_data_sources": [
+      "Company firmographics and profiles",
+      "Funding rounds, deals, valuations and cap tables",
+      "M&A and IPO transactions",
+      "Business relationships (partnerships, client/vendor, licensing)",
+      "Patents",
+      "Hiring data",
+      "Public company earnings",
+      "Expert research reports"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.cbinsights.com/what-we-offer/api/",
+        "quote": "APIs and data feeds for market and company insight"
+      },
+      {
+        "url": "https://www.cbinsights.com/what-we-offer/api/",
+        "quote": "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes."
+      },
+      {
+        "url": "https://api-docs.cbinsights.com/",
+        "quote": "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched cbinsights.com homepage, API/data-feed page, api-docs.cbinsights.com and site queries for 'newsletter'. References to newsletters are CB Insights' own outbound newsletter and newsletter archive; no newsletter content is described as an input signal.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://www.cbinsights.com/",
+        "quote": "Continuous monitoring of 12M companies worldwide, with global funding, financial, and firmographic intelligence"
+      },
+      {
+        "url": "https://www.cbinsights.com/",
+        "quote": "Comprehensive data on 12M companies and 1600+ markets, plus visual maps"
+      },
+      {
+        "url": "https://www.cbinsights.com/what-we-offer/api/",
+        "quote": "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes."
+      },
+      {
+        "url": "https://api-docs.cbinsights.com/",
+        "quote": "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access"
+      }
+    ],
+    "likely_buyer_role": "VP Product or Head of Data Strategy/Data Partnerships for the predictive-intelligence platform",
+    "contact_route": {
+      "url": "https://www.cbinsights.com/contact/",
+      "value": null,
+      "note": "Public page is a sales contact form only; no email address published, so no address was constructed."
+    },
+    "confidence": "Medium",
+    "caveats": "CB Insights publishes a dataset catalogue, not a media-ingestion inventory, so the absence of newsletter ingestion is not confirmed by their docs. They also may treat 'Customer voice' or research inputs in ways not publicly itemised. Their API docs page confirms a v1 API (v2 announced) but no public pricing."
+  },
+  {
+    "company": "Signal AI",
+    "official_website": "https://signal-ai.com/",
+    "product_summary": "AI-driven media, reputation and risk intelligence platform for communications and risk leaders, ingesting licensed premium news and social content at scale, with API and MCP access plus analyst-curated briefings.",
+    "current_data_sources": [
+      "Licensed publisher content (Dow Jones Factiva, LexisNexis, Moody's NewsEdge, Financial Times, The Washington Post)",
+      "Broadcast",
+      "Podcasts",
+      "Regulatory filings",
+      "Social media and curated premium social profiles (100,000+)",
+      "Publisher readership data (5,000+ publisher relationships)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://signal-ai.com/products-services/integrations",
+        "quote": "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions"
+      },
+      {
+        "url": "https://signal-ai.com/products-services/integrations",
+        "quote": "Signal AI's proprietary event-tracking capability pinpoints 30+ emerging risk events"
+      },
+      {
+        "url": "https://signal-ai.com/",
+        "quote": "Plug risk and reputation intelligence directly into Claude, ChatGPT, Microsoft Copilot, and your agents of choice."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched signal-ai.com homepage, integrations, and the newsletters-briefings product page plus site queries for 'newsletter'. Their 'newsletters' product is an outbound analyst-curated briefing format, and their integrated source list reads: 'all sources combined: published media, podcasts, broadcast, regulatory filings, and social'. No newsletter ingestion is documented.",
+    "verified_gap": "Their documented source classes are licensed published media, podcasts, broadcast, regulatory filings and social; newsletter-native content and newsletter publisher metadata are not a named input.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://signal-ai.com/products-services/newsletters-briefings",
+        "quote": "all sources combined: published media, podcasts, broadcast, regulatory filings, and social"
+      },
+      {
+        "url": "https://signal-ai.com/",
+        "quote": "5.5M+ articles ingested per day"
+      },
+      {
+        "url": "https://signal-ai.com/",
+        "quote": "Signal AI is the only platform combining Dow Jones Factiva, LexisNexis, Moody's NewsEdge, the Financial Times, and The Washington Post"
+      },
+      {
+        "url": "https://signal-ai.com/products-services/integrations",
+        "quote": "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions"
+      }
+    ],
+    "likely_buyer_role": "Head of Content/Data Partnerships or VP Product for the intelligence platform",
+    "contact_route": {
+      "url": "https://signal-ai.com/contact",
+      "value": null,
+      "note": "Public page is a demo/contact form only; no email address published, so no address was constructed."
+    },
+    "confidence": "High",
+    "caveats": "Their phrase 'published media' could include web-hosted newsletter posts, so the gap is at the source-class level rather than an explicit exclusion of newsletters. They are a premium licensed-data buyer, so a newsletter corpus would need clean licensing and provenance."
+  },
+  {
+    "company": "Brand24",
+    "official_website": "https://brand24.com/",
+    "product_summary": "AI social listening and media monitoring platform tracking brand mentions across social, news, blogs, forums, podcasts and reviews, with sentiment, reach analytics, reporting, and a REST API for mentions and insights.",
+    "current_data_sources": [
+      "Social platforms (Facebook, Instagram, X, TikTok, YouTube, Telegram, LinkedIn, Reddit, Twitch, Bluesky)",
+      "News sites",
+      "Blogs",
+      "Forums",
+      "Podcasts",
+      "Review platforms",
+      "User-added newsletters (via URL)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://brand24.com/social-listening-api/",
+        "quote": "25M+ online sources monitored – social media, news, blogs, forums, podcasts, review platforms & more"
+      },
+      {
+        "url": "https://brand24.com/social-listening-api/",
+        "quote": "Simple REST integration with X-Api-Key authentication, consistent JSON responses"
+      },
+      {
+        "url": "https://brand24.com/social-listening-api/",
+        "quote": "The API is available as a $99/month add-on on the Business plan and included on Enterprise."
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "Brand24 documents newsletter monitoring as a self-serve feature where a user adds a newsletter URL in account settings, so newsletter coverage exists but appears to be per-project, user-initiated rather than a broad indexed newsletter corpus.",
+    "verified_gap": "",
+    "gap_status": "disconfirmed",
+    "evidence": [
+      {
+        "url": "https://help.brand24.com/en/articles/5336568-newsletter-monitoring-how-to-add-one",
+        "quote": "You’ll see a form where you can enter your own, or any other, newsletter to monitor!"
+      },
+      {
+        "url": "https://brand24.com/social-listening-api/",
+        "quote": "25M+ online sources monitored – social media, news, blogs, forums, podcasts, review platforms & more"
+      },
+      {
+        "url": "https://brand24.com/",
+        "quote": "Gather insights from 25 million online sources, tracked in real-time."
+      },
+      {
+        "url": "https://brand24.com/contact/",
+        "quote": "help@brand24.com"
+      }
+    ],
+    "likely_buyer_role": "Head of Product/CPO or Head of Data & Integrations for the listening platform",
+    "contact_route": {
+      "url": "https://brand24.com/contact/",
+      "value": "help@brand24.com"
+    },
+    "confidence": "High",
+    "caveats": "Claimed gap is disconfirmed: newsletter monitoring already exists as a user-added URL feature, so the only defensible angle is breadth of indexed newsletter coverage and discovery, not absence of capability. Contact address is a support inbox, not a named buyer."
+  }
+]

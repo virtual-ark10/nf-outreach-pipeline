@@ -1,0 +1,76 @@
+{
+ "first_name": "James",
+ "last_name": "Milsom",
+ "email": "james@hunter.io",
+ "score": 99,
+ "domain": "hunter.io",
+ "accept_all": false,
+ "position": "Head Of Marketing",
+ "twitter": null,
+ "linkedin_url": "https://www.linkedin.com/in/james-milsom",
+ "phone_number": null,
+ "company": "Hunter",
+ "source_type": "found",
+ "sources": [
+  {
+   "domain": "ctm.com",
+   "uri": "https://ctm.com/blog/resources/podcast/james-milsom",
+   "extracted_on": "2026-05-29",
+   "last_seen_on": "2026-10-20",
+   "still_on_page": true
+  },
+  {
+   "domain": "hunter.io",
+   "uri": "https://hunter.io/fr/about",
+   "extracted_on": "2025-10-28",
+   "last_seen_on": "2026-10-20",
+   "still_on_page": true
+  },
+  {
+   "domain": "hunter.io",
+   "uri": "https://hunter.io/about",
+   "extracted_on": "2025-10-30",
+   "last_seen_on": "2026-10-19",
+   "still_on_page": true
+  },
+  {
+   "domain": "hunter.io",
+   "uri": "https://hunter.io/templates/sales/book-meeting/webinar-follow-up",
+   "extracted_on": "2026-05-17",
+   "last_seen_on": "2026-09-15",
+   "still_on_page": true
+  },
+  {
+   "domain": "hunter.io",
+   "uri": "https://hunter.io/fr/templates/sales/prospecting/your-journey",
+   "extracted_on": "2026-09-05",
+   "last_seen_on": "2026-09-05",
+   "still_on_page": true
+  },
+  {
+   "domain": "hunter.io",
+   "uri": "https://hunter.io/templates/sales/prospecting/your-journey",
+   "extracted_on": "2026-08-13",
+   "last_seen_on": "2026-08-13",
+   "still_on_page": true
+  },
+  {
+   "domain": "calltrackingmetrics.com",
+   "uri": "https://calltrackingmetrics.com/blog/resources/podcast/james-milsom",
+   "extracted_on": "2025-09-04",
+   "last_seen_on": "2026-02-22",
+   "still_on_page": false
+  },
+  {
+   "domain": "api.hunter.io",
+   "uri": "https://api.hunter.io/about",
+   "extracted_on": "2024-11-15",
+   "last_seen_on": "2025-05-18",
+   "still_on_page": false
+  }
+ ],
+ "verification": {
+  "date": "2026-09-24",
+  "status": "valid"
+ }
+}

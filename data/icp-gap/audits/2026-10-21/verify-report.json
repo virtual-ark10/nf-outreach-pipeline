@@ -1,0 +1,798 @@
+{
+ "Common Room": {
+  "checked": 3,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://www.commonroom.io/integrations/",
+    "quote": "Seamlessly aggregate, merge, and enrich signals from 50+ channels, spanning social, community, product, code collaboration, CRM, and more.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.commonroom.io/docs/using-common-room/contacts/impact-points/",
+    "quote": "Newsletter subscribed | 1 | Manual Entry / API / Zapier / CSV",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/13 words)",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://www.commonroom.io/docs/signals/",
+    "quote": "Signals are how Common Room brings together social, business, product, CRM, customer data, and more.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Muck Rack": {
+  "checked": 6,
+  "verified": 6,
+  "rows": [
+   {
+    "url": "https://muckrack.com/blog/2021/05/12/newsletter-authors",
+    "quote": "we've added (and are continuing to add) newsletter authors to Muck Rack's media database.",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://help.muckrack.com/en/articles/5866899-getting-started-with-search-in-muck-rack",
+    "quote": "Muck Rack offers five search types.",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://muckrack.com/pr-software/media-monitoring-alerts",
+    "quote": "Across sources spanning digital, broadcast, podcasts, print, and social media",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://muckrack.com/pr-software/api",
+    "quote": "The mentions you're already tracking in Muck Rack, ready to plug into your own systems.",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://muckrack.com/contact",
+    "quote": "You can also email our Customer Support team at support@muckrack.com.",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://apis.io/apis/muck-rack/muck-rack-api/",
+    "quote": "Read-only REST API providing programmatic access to the article data behind a Muck Rack Saved Search.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Crustdata": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://docs.crustdata.com/general/introduction",
+    "quote": "You can query indexed datasets of companies, people, jobs, and social posts",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://crustdata.com/apis/company-enrichment",
+    "quote": "not just firmographics, but the signals that show what a company is actually doing: reviews, web traffic, product launches, funding, and hiring.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Autobound": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://www.autobound.ai/platform",
+    "quote": "We monitor 35+ public data sources continuously: SEC EDGAR, LinkedIn, job boards, patent databases, Glassdoor, Reddit, GitHub, news feeds, earnings call transcripts, and more.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://autobound-api.readme.io/docs",
+    "quote": "Autobound delivers B2B buying signals \u2014 34 signal types, 963 subtypes, 250M+ contacts, 80M+ companies",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://www.autobound.ai/integrations",
+    "quote": "Native MCP support for Claude Code and Cursor.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Contify": {
+  "checked": 2,
+  "verified": 1,
+  "rows": [
+   {
+    "url": "https://www.contify.com/ai-info/",
+    "quote": "collects intelligence from over 1 million vetted external sources including news, company websites, SEC filings, social media, regulatory portals, review sites, and job boards.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.contify.com/news-api/",
+    "quote": "Access stories from 1 Mn+ curated business-relevant sources, including 250k+ non-English sources, covering company websites, regulatory portals, job boards, review sites, and more.",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/23 words)",
+    "pass": "still_unverified"
+   }
+  ]
+ },
+ "Grata": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://grata.com/our-data",
+    "quote": "Trade show & conference exhibitor lists",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://grata.com/api",
+    "quote": "Grata synthesizes public sources, private insights, and exclusive data, rigorously cleans and reconciles every record",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://docs.grata.com/",
+    "quote": "Search API delivers the power of Grata\u2019s search capabilities into your proprietary systems",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   }
+  ]
+ },
+ "Harmonic": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://harmonic.ai/",
+    "quote": "We track companies and people as they grow, hire, fundraise, launch products, and change direction.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://harmonic.ai/solutions/growth",
+    "quote": "Real-time signals for traction and growth",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "SponsorSheep": {
+  "checked": 2,
+  "verified": 1,
+  "rows": [
+   {
+    "url": "https://sponsorsheep.com/bellwether",
+    "quote": "1,646 newsletters monitored across every platform",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/6 words)",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://www.sponsorsheep.com/",
+    "quote": "No subscription. No listing fee. No setup fee.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Brandwatch": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions",
+    "quote": "Mentions are provided by the Brandwatch Data Library and originate from popular online sources, such as social media networks",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.brandwatch.com/products/apis/",
+    "quote": "Import unstructured data from any source and analyze with our advanced algorithms",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.brandwatch.com/",
+    "quote": "The most intelligent social suite",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Dealroom": {
+  "checked": 2,
+  "verified": 1,
+  "rows": [
+   {
+    "url": "https://dealroom.co/products/api/",
+    "quote": "Entity-level news, AI-synthesized sentiment and predictive signals \u2014 wired to the exact company or investor.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://docs.dealroom.co/",
+    "quote": "Dealroom API v1 host: https://api.dealroom.co/api/v1",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 4/5 words)",
+    "pass": "still_unverified"
+   }
+  ]
+ },
+ "Mention": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://mention.com/en/media-monitoring-api/",
+    "quote": "Mention\u2019s API shows you when your keywords are used on websites, forums, blogs, the news, and social media.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://support.mention.com/en/articles/13354178-mention-plans-explained",
+    "quote": "track brand mentions and keywords across Facebook, Instagram, YouTube, X (Twitter), LinkedIn, Reddit, TikTok, News, Forums, and the Web",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "People Data Labs": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://docs.peopledatalabs.com/docs/data-sources",
+    "quote": "Our data sources come from a variety of verticals, including HR Tech, Real Estate Tech, Identity/Anti-Fraud, Martech and others.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.peopledatalabs.com/company-data/enrichment-api",
+    "quote": "Access over 70MM+ company profiles, from stealth startups to conglomerates.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "CompanyEnrich": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://companyenrich.com/",
+    "quote": "Data sourced from the public web, maps, social media, and government records helps you find businesses other providers miss.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://docs.companyenrich.com/docs/getting-started",
+    "quote": "Returns industry, size, revenue range, location, technologies, employee count, and 15+ additional fields.",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://companyenrich.com/product/company-enrichment-api",
+    "quote": "Get 60+ data points, from firmographics to financials. 33M+ companies covered.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Clay": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://www.clay.com/",
+    "quote": "One contract to buy data from 200+ data and AI vendors in Clay\u2019s marketplace.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.clay.com/integrations/data-points",
+    "quote": "Discover where the article was originally published to understand the context and credibility of the information.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.clay.com/integrations",
+    "quote": "HTTP API",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Feedly": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://docs.feedly.com/article/768-follow-sources-in-feedly",
+    "quote": "Feedly can ingest email newsletters directly into your feeds.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://feedly.com/",
+    "quote": "Continuously collect relevant threat signals from 10,000+ trusted clear and dark web sources.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://developers.feedly.com/docs/using-the-search-api",
+    "quote": "This is an authenticated endpoint so you will need to pass your authentication token",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   }
+  ]
+ },
+ "Crunchbase": {
+  "checked": 3,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://about.crunchbase.com/data",
+    "quote": "Information extracted and validated from more than 1,000 news outlets and government filings.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://about.crunchbase.com/products/crunchbase-api",
+    "quote": "1,000+ News outlets and government filings reviewed and verified by our analyst team",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://support.crunchbase.com/hc/en-us/articles/33614647829267-News-Insights-in-the-API",
+    "quote": "descriptions, sentiment scores (e.g., positive, neutral, or negative), news source links, and relevant dates",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/14 words)",
+    "pass": "still_unverified"
+   }
+  ]
+ },
+ "Affinity": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://www.affinity.co/product/affinity-data",
+    "quote": "PitchBook, Dealroom, and Crunchbase sit alongside firmographic providers, biographic data, and growth signal feeds.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://developer.affinity.co/pages/external-api-v2/introduction",
+    "quote": "The Affinity APIs are only available on select license types.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.affinity.co/",
+    "quote": "Enriched with Affinity\u2019s proprietary data and 40+ sources, including Pitchbook, Preqin, and Grata",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "IndustryLens": {
+  "checked": 2,
+  "verified": 1,
+  "rows": [
+   {
+    "url": "https://industry-lens.com/features/data-sources",
+    "quote": "A competitor\u2019s own email newsletter, forwarded or subscribed.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://industry-lens.com/pricing",
+    "quote": "News & content \u2014 Google News, newsletters, blogs",
+    "ok": false,
+    "reason": "quote not on rendered page (leading match 0/8 words)",
+    "pass": "still_unverified"
+   }
+  ]
+ },
+ "Meltwater": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://www.meltwater.com/en/platform/global-content-coverage",
+    "quote": "Expanded YouTube monitoring, Substack as a dedicated source, and social coverage of China through Midu",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.meltwater.com/en/products/newsletters",
+    "quote": "pulls directly from your media monitoring activity, curates the most relevant coverage, and delivers polished, branded briefings",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.meltwater.com/en/platform/integrations-api",
+    "quote": "Search and export mentions, access historical and live analytics, manage searches and tags programmatically",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Cision": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://www.cision.com/lp/cision-overview-faqs/",
+    "quote": "News websites, online publications (articles from March 2022 onward)",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.cision.ca/lp/media-monitoring/",
+    "quote": "across online news, blogs, social, print, broadcast, forums, and review sites",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Onclusive": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://onclusive.com/products/media-monitoring/",
+    "quote": "Monitor 28M+ earned media items daily across 60,000 print titles, 3M websites and 12,000+ broadcast sources worldwide.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://onclusive.com/data-as-a-service/",
+    "quote": "Onclusive API solutions give you enterprise-grade access to 28+ million daily media content items, thousands of media contacts",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://onclusive.com/contact/",
+    "quote": "info@onclusive.com",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Tracxn": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://cdn.tracxn.com/investor-relations/financials/Annual_Report_-_FY_23-24_U8hIN8m0UgQoQNoJSFdQT.pdf",
+    "quote": "company home pages, blogs, news articles, social media and other secondary sources",
+    "ok": true,
+    "reason": "found in rendered markdown",
+    "pass": "firecrawl"
+   },
+   {
+    "url": "https://w.tracxn.com/offerings/data-solutions/pricing",
+    "quote": "Access real-time company data through APIs or scheduled exports, with no manual exports or uploads required.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://tracxn.com/pricing",
+    "quote": "8.4M+ Companies, 292K+ Investors",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "CB Insights": {
+  "checked": 3,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://www.cbinsights.com/",
+    "quote": "Continuous monitoring of 12M companies worldwide, with global funding, financial, and firmographic intelligence",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://www.cbinsights.com/what-we-offer/api/",
+    "quote": "Funding deals, cap table history, M&A, and IPOs plus AI-generated insights that extract key themes.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://api-docs.cbinsights.com/",
+    "quote": "This site contains documentation for v1 of the CB Insights data API, enabling programmatic access",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Signal AI": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://signal-ai.com/products-services/newsletters-briefings",
+    "quote": "all sources combined: published media, podcasts, broadcast, regulatory filings, and social",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://signal-ai.com/",
+    "quote": "5.5M+ articles ingested per day",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://signal-ai.com/products-services/integrations",
+    "quote": "Signal AI offers two ways to integrate: an API for direct access in your preferred Business Intelligence (BI) solutions",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Brand24": {
+  "checked": 4,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://help.brand24.com/en/articles/5336568-newsletter-monitoring-how-to-add-one",
+    "quote": "You\u2019ll see a form where you can enter your own, or any other, newsletter to monitor!",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://brand24.com/social-listening-api/",
+    "quote": "25M+ online sources monitored \u2013 social media, news, blogs, forums, podcasts, review platforms & more",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://brand24.com/",
+    "quote": "Gather insights from 25 million online sources, tracked in real-time.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://brand24.com/contact/",
+    "quote": "help@brand24.com",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "Paved": {
+  "checked": 5,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://www.paved.com/",
+    "quote": "Target your ads across 253+ million subscribers",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.paved.com/help/articles/8116455-email-sponsorship-glossary",
+    "quote": "it's a directory where we list thousands of premium newsletters with available sponsorships",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.paved.com/help/articles/8120696-how-to-read-newsletter-profiles",
+    "quote": "Verified newsletter statistics, including subscriber count, open rates, and click rates.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://docs.paved.com/reference/llms.txt",
+    "quote": "With the Paved API, you can view site details, sponsorship details, creative, and reporting.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://www.paved.com/help/articles/14441704-paved-mcp-guide",
+    "quote": "Search for newsletters, book sponsorships, submit creative, track campaigns, and handle billing",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "beehiiv": {
+  "checked": 5,
+  "verified": 5,
+  "rows": [
+   {
+    "url": "https://www.beehiiv.com/",
+    "quote": "The all-in-one platform helping the world's best newsletters publish, grow and earn.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://developers.beehiiv.com/api-reference/publications/index.mdx",
+    "quote": "Retrieve all publications associated with your API key.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.beehiiv.com/features/ad-network/brands",
+    "quote": "Our algorithm places your ads in the newsletters that are most likely to drive your desired business outcomes.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.beehiiv.com/ad-network",
+    "quote": "Using our SSP (Supply-Side Platform) technology, we optimize placement and ensure every ad opportunity is valuable.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.beehiiv.com/features/api-and-integrations",
+    "quote": "Trigger actions, manage subscribers, and update newsletter data automatically - no manual interaction required.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "6sense": {
+  "checked": 2,
+  "verified": 0,
+  "rows": [
+   {
+    "url": "https://6sense.com/platform/intent-data/",
+    "quote": "partnerships with other leading intent data providers like Bombora, TechTarget, TrustRadius, and G2",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://6sense.com/platform/",
+    "quote": "Every signal, yours and ours, flows into one context layer.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   }
+  ]
+ },
+ "Bombora": {
+  "checked": 3,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://bombora.com/intent-data/",
+    "quote": "made up of thousands of media destinations (publishers, B2B brands, and premium data providers)",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://developer.bombora.com/apis",
+    "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data.",
+    "ok": false,
+    "reason": "firecrawl failed: HTTP Error 429: Too Many Requests",
+    "pass": "still_unverified"
+   },
+   {
+    "url": "https://bombora.com/all-partners/",
+    "quote": "More than one hundred integrations and partnerships make it possible to share data and insights",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ },
+ "SponsorUnited": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://www.sponsorunited.com/platform",
+    "quote": "Our global scout team and proprietary tech capture real-time sponsor activity\u2014deal by deal, asset by asset.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.sponsorunited.com/",
+    "quote": "Benchmark pricing and validate spend with $45B+ in verified deal data.",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   },
+   {
+    "url": "https://www.sponsorunited.com/insights/unlocking-sponsorship-opportunities-for-podcast-networks",
+    "quote": "Sponsorship intelligence\u2014demographics, engagement levels, listener behavior data, and more\u2014is critical",
+    "ok": true,
+    "reason": "exact",
+    "pass": "exact"
+   }
+  ]
+ }
+}

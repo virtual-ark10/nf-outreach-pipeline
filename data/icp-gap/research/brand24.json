@@ -1,0 +1,57 @@
+{
+ "company": "Brand24",
+ "official_website": "https://brand24.com/",
+ "product_summary": "AI social listening and media monitoring platform tracking brand mentions across social, news, blogs, forums, podcasts and reviews, with sentiment, reach analytics, reporting, and a REST API for mentions and insights.",
+ "current_data_sources": [
+  "Social platforms (Facebook, Instagram, X, TikTok, YouTube, Telegram, LinkedIn, Reddit, Twitch, Bluesky)",
+  "News sites",
+  "Blogs",
+  "Forums",
+  "Podcasts",
+  "Review platforms",
+  "User-added newsletters (via URL)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://brand24.com/social-listening-api/",
+   "quote": "25M+ online sources monitored \u2013 social media, news, blogs, forums, podcasts, review platforms & more"
+  },
+  {
+   "url": "https://brand24.com/social-listening-api/",
+   "quote": "Simple REST integration with X-Api-Key authentication, consistent JSON responses"
+  },
+  {
+   "url": "https://brand24.com/social-listening-api/",
+   "quote": "The API is available as a $99/month add-on on the Business plan and included on Enterprise."
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Brand24 documents newsletter monitoring as a self-serve feature where a user adds a newsletter URL in account settings, so newsletter coverage exists but appears to be per-project, user-initiated rather than a broad indexed newsletter corpus.",
+ "verified_gap": "",
+ "gap_status": "disconfirmed",
+ "evidence": [
+  {
+   "url": "https://help.brand24.com/en/articles/5336568-newsletter-monitoring-how-to-add-one",
+   "quote": "You\u2019ll see a form where you can enter your own, or any other, newsletter to monitor!"
+  },
+  {
+   "url": "https://brand24.com/social-listening-api/",
+   "quote": "25M+ online sources monitored \u2013 social media, news, blogs, forums, podcasts, review platforms & more"
+  },
+  {
+   "url": "https://brand24.com/",
+   "quote": "Gather insights from 25 million online sources, tracked in real-time."
+  },
+  {
+   "url": "https://brand24.com/contact/",
+   "quote": "help@brand24.com"
+  }
+ ],
+ "likely_buyer_role": "Head of Product/CPO or Head of Data & Integrations for the listening platform",
+ "contact_route": {
+  "url": "https://brand24.com/contact/",
+  "value": "help@brand24.com"
+ },
+ "confidence": "High",
+ "caveats": "Claimed gap is disconfirmed: newsletter monitoring already exists as a user-added URL feature, so the only defensible angle is breadth of indexed newsletter coverage and discovery, not absence of capability. Contact address is a support inbox, not a named buyer."
+}

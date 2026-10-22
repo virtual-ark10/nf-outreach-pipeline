@@ -1,0 +1,54 @@
+{
+ "company": "Crustdata",
+ "official_website": "https://crustdata.com/",
+ "product_summary": "Real-time B2B data API and MCP layer over indexed company, people, job and social-post datasets, enriching entities from 15+ sources into one schema with headcount, funding, web traffic, review and hiring signals.",
+ "current_data_sources": [
+  "company firmographic and industry data",
+  "people and contact profiles",
+  "job listings and hiring signals",
+  "funding and headcount time series",
+  "web traffic and G2/Glassdoor employee reviews",
+  "social posts, press mentions and company news",
+  "web search and page fetch (news, web, scholar, social)"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.crustdata.com/general/introduction",
+   "quote": "You can query indexed datasets of companies, people, jobs, and social posts"
+  },
+  {
+   "url": "https://crustdata.com/apis/company-enrichment",
+   "quote": "Crustdata enriches any company with the freshest real-time data: 15+ sources resolved into one unified schema"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Their API docs enumerate five dataset areas - Company, Person, Job, Web and Social Post - with no newsletter dataset: \"query indexed datasets of companies, people, jobs, and social posts\". Company activity datapoints are exec moves, company news and product launches. Searched: docs.crustdata.com introduction and API areas, /apis/company-enrichment, and site-restricted 'newsletter' searches (results were only client companies that happen to publish newsletters, e.g. HR Brew profiles).",
+ "verified_gap": "No newsletter dataset or newsletter-derived activity signal: no publication-level index, no article text, no sponsor relationships. Their activity signals are exec moves, news and product launches; newsletters are not a documented source even though newsletter companies appear as firmographic profiles.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://docs.crustdata.com/general/introduction",
+   "quote": "You can query indexed datasets of companies, people, jobs, and social posts"
+  },
+  {
+   "url": "https://crustdata.com/apis/company-enrichment",
+   "quote": "not just firmographics, but the signals that show what a company is actually doing: reviews, web traffic, product launches, funding, and hiring."
+  },
+  {
+   "url": "https://crustdata.com/apis/company-enrichment",
+   "quote": "going beyond firmographics to employee reviews, web traffic, funding history, and hiring signals."
+  },
+  {
+   "url": "https://docs.crustdata.com/general/introduction",
+   "quote": "Search the web across news, web, scholar, social, and deep-research sources"
+  }
+ ],
+ "likely_buyer_role": "Head of Data Products or co-founder/CTO who owns dataset coverage and API schema decisions; also a potential OEM/data-licensing partner for their 'data layer' positioning.",
+ "contact_route": {
+  "url": "https://www.crustdata.com/apis/company-enrichment",
+  "value": null,
+  "note": "Only a 'Get a Demo' form; crustdata.com/contact returns 404 and no email address is published on the site."
+ },
+ "confidence": "High",
+ "caveats": "Their Web API can search news/web and fetch arbitrary pages, so newsletter text could be retrieved ad hoc, but there is no structured newsletter dataset, sponsor graph or publication activity history. Docs do not publish a full source list (only '15+ sources'), so coverage of newsletters cannot be fully ruled out."
+}

@@ -1,0 +1,55 @@
+{
+ "company": "Clay",
+ "official_website": "https://www.clay.com/",
+ "product_summary": "GTM data orchestration platform combining a 200+ vendor data marketplace, waterfall enrichment, AI research agents and visual workflows to build outbound and account-scoring plays.",
+ "current_data_sources": [
+  "200+ third-party data and AI vendors via marketplace",
+  "First-party CRM and warehouse data",
+  "Web/news content (News & Online Content data points)",
+  "Social media and ads data",
+  "Job postings and technographics"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.clay.com/",
+   "quote": "One contract to buy data from 200+ data and AI vendors in Clay\u2019s marketplace."
+  },
+  {
+   "url": "https://www.clay.com/",
+   "quote": "Create intent signals from anything on the internet."
+  },
+  {
+   "url": "https://www.clay.com/integrations",
+   "quote": "HTTP API"
+  },
+  {
+   "url": "https://www.clay.com/integrations/data-points",
+   "quote": "Discover where the article was originally published to understand the context and credibility of the information."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage, integrations list, and the data-point catalog (including the News & Online Content category: Article Body, Article Source, Article Title) for 'newsletter'. Newsletter content is not a documented data point; Clay does show newsletter-adjacent use cases such as enriching beehiiv subscribers, where newsletter data is an input rather than a content source.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://www.clay.com/",
+   "quote": "One contract to buy data from 200+ data and AI vendors in Clay\u2019s marketplace."
+  },
+  {
+   "url": "https://www.clay.com/",
+   "quote": "Create intent signals from anything on the internet."
+  },
+  {
+   "url": "https://www.clay.com/integrations/data-points",
+   "quote": "Discover where the article was originally published to understand the context and credibility of the information."
+  }
+ ],
+ "likely_buyer_role": "Head of Data Partnerships / marketplace partnerships lead (or GTM engineering lead for a pilot)",
+ "contact_route": {
+  "url": "https://www.clay.com/contact",
+  "value": "support@clay.com"
+ },
+ "confidence": "Medium",
+ "caveats": "Clay is a distributor, not a data owner: the realistic play is becoming an HTTP-API/marketplace provider, not filling a documented gap. Their News & Online Content data points already cover articles, and 'anything on the internet' positioning means the absence of newsletter-specific fields is unverified. Support email only; no public partnerships contact named."
+}

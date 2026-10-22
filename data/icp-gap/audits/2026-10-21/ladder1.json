@@ -1,0 +1,182 @@
+[
+  {
+    "company": "Icypeas",
+    "official_website": "https://www.icypeas.com/",
+    "product_summary": "French contact-discovery API: email finder, catch-all email verifier, reverse email lookup, domain scan and profile/company scrapers, sold on credits to sales teams, agencies and platforms embedding enrichment.",
+    "current_data_sources": [
+      "Public web and open-source intelligence (public profiles, company sites)",
+      "Proprietary contact database of 1B+ records, refreshed monthly",
+      "Profile and company page scraping (Profile Scraper, Person/Company Profile URL Finder)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.icypeas.com/",
+        "quote": "80% of our customers embed the Icypeas API in their own product or automated workflows."
+      },
+      {
+        "url": "https://api-doc.icypeas.com/getting-started/",
+        "quote": "The API allows you to make single and bulk searches as well as being notified during a search."
+      },
+      {
+        "url": "https://www.icypeas.com/pricing",
+        "quote": "No-code integrations (Make, Zapier, n8n)"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the homepage feature list (Email Finder, Email Verifier, Reverse Email Lookup, Domain Scan, People Scraper, Company Scraper, Find People, Find Companies), pricing/credit table and api-doc.icypeas.com getting-started page, plus site:icypeas.com newsletter search. No newsletter ingestion, publication index, article corpus, sponsor tracking or entity extraction from editorial content is described anywhere.",
+    "verified_gap": "Icypeas' own scope is person/domain contact records (emails, phones, profile and company data). It holds no newsletter publication index, article corpus, guest/sponsor mentions or publication momentum signal, so it cannot answer 'which newsletters wrote about company X'.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.icypeas.com/",
+        "quote": "Discover valid emails (including catchalls), and scrape contacts at scale."
+      },
+      {
+        "url": "https://www.icypeas.com/",
+        "quote": "Our billion-plus record database is fully refreshed every month"
+      },
+      {
+        "url": "https://www.icypeas.com/",
+        "quote": "Open-source intelligence only, ensuring full compliance while delivering actionable business insights."
+      },
+      {
+        "url": "https://www.icypeas.com/pricing",
+        "quote": "Get more value from your campaigns by paying only for emails that are verified and deliverable."
+      },
+      {
+        "url": "https://api-doc.icypeas.com/getting-started/",
+        "quote": "The API allows you to make single and bulk searches as well as being notified during a search."
+      }
+    ],
+    "likely_buyer_role": "Co-founder / Head of Product owning the data and API roadmap (small GTM-focused team)",
+    "contact_route": {
+      "url": "https://www.icypeas.com/contact",
+      "value": "contact@icypeas.com",
+      "note": "Publicly listed under 'Contact Support' on the contact page; phone +33 668 467 845 also listed."
+    },
+    "confidence": "High",
+    "caveats": "They are a contact-data vendor selling into GTM teams, so newsletter-derived company intelligence is adjacent input for their company enrichment rather than core product; budget authority may sit with the founders. Their buyers are largely agencies and outbound platforms, not newsletter publishers."
+  },
+  {
+    "company": "Hunter",
+    "official_website": "https://hunter.io/",
+    "product_summary": "Email finder, verifier and B2B contact database plus cold-email sequences, sold via app, MCP server and API; returns each contact with the public sources it was found on.",
+    "current_data_sources": [
+      "Public web pages crawled daily (30M pages/day, 650M public sources)",
+      "Indexed professional email addresses (150M) tied to person and company records",
+      "B2B firmographic and technographic company data (Discover database)",
+      "Intent/signals data layered on existing leads"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://hunter.io/api",
+        "quote": "Using the Domain Search API, you can fetch all email addresses Hunter found for a given domain."
+      },
+      {
+        "url": "https://hunter.io/mcp",
+        "quote": "Every contact is found and verified, never guessed."
+      },
+      {
+        "url": "https://hunter.io/",
+        "quote": "Sync Hunter data to HubSpot, Zoho, Salesforce, or Pipedrive, and push contact details plus email activity to 5,000+ Zapier endpoints."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched hunter.io/our-data (the page that documents sourcing), /api, /mcp, /b2b-database and site:hunter.io newsletter. Newsletter appears only as outreach templates (newsletter-swap, sponsor-slot templates) and blog content, never as an ingested source or a data product.",
+    "verified_gap": "Hunter documents its ingestion as crawling public web pages to extract professional contact information, with source records attached. It has no newsletter publication index, no article-level topic/guest/sponsor extraction and no publication momentum tracking, so it cannot show which newsletters covered a company or who sponsors them.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://hunter.io/our-data",
+        "quote": "we maintain an index of the entire web and use it to source verified email addresses"
+      },
+      {
+        "url": "https://hunter.io/our-data",
+        "quote": "30M Web pages crawled every day."
+      },
+      {
+        "url": "https://hunter.io/our-data",
+        "quote": "All the contacts in the Domain Search are returned with information about where and when we found them."
+      },
+      {
+        "url": "https://hunter.io/mcp",
+        "quote": "Answers come from Hunter’s data from 100M+ companies and real email addresses, not the model’s best guess."
+      },
+      {
+        "url": "https://hunter.io/api",
+        "quote": "Programmatically identify your target audience. Use natural language or robust filters to find companies aligned with your ICP."
+      }
+    ],
+    "likely_buyer_role": "Head of Data or VP Product for the Data Platform/API (data sourcing and enrichment roadmap)",
+    "contact_route": {
+      "url": "https://hunter.io/pricing",
+      "value": "contact@hunter.io",
+      "note": "Address publicly listed in Hunter's site footer (verified on the pricing page); hunter.io/contact is a form, no named data lead published."
+    },
+    "confidence": "High",
+    "caveats": "Hunter already crawls the open web and sells 'signals', so they could build newsletter extraction in-house; the pitch must be corpus + entity resolution + momentum history rather than raw crawling. Their API is a real integration surface (MCP, Zapier, CRMs) but they are a much larger vendor with in-house data engineering."
+  },
+  {
+    "company": "Zyte",
+    "official_website": "https://www.zyte.com/",
+    "product_summary": "Web scraping infrastructure: Zyte API for ban-avoiding URL extraction, Scrapy Cloud hosting, the Scrapy framework, an MCP server, and Zyte Data, a managed pipeline delivering schema-ready data.",
+    "current_data_sources": [
+      "Customer-supplied URLs on any website (no first-party corpus)",
+      "Automatic extraction of e-commerce, article and job-posting page structures",
+      "Search engine results pages (non-AI extraction)",
+      "Managed custom collection built and maintained by Zyte Data engineers"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.zyte.com/zyte-api/usage/reference.html",
+        "quote": "This is the complete reference documentation of the HTTP API of Zyte API."
+      },
+      {
+        "url": "https://www.zyte.com/",
+        "quote": "One API across easy, moderate and hard websites. Skip managing bans, proxies and browsers."
+      },
+      {
+        "url": "https://www.zyte.com/",
+        "quote": "All of Zyte, inside your agent."
+      },
+      {
+        "url": "https://www.zyte.com/pricing/",
+        "quote": "From $0.06 per 1,000 successful responses"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the homepage, /data-extraction, /pricing, docs.zyte.com Zyte API reference and the automatic-extraction page, plus site:zyte.com newsletter. 'Newsletter' appears only as Zyte's own developer community newsletter blog posts; no publication index or newsletter-derived data product exists.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://www.zyte.com/",
+        "quote": "Point it at a URL. Zyte API picks the leanest access strategy that works and escalates only when the website demands it."
+      },
+      {
+        "url": "https://docs.zyte.com/zyte-api/usage/extract/index.html",
+        "quote": "Automatic extraction supports AI-powered extraction of e-commerce, article and job posting data from any website"
+      },
+      {
+        "url": "https://www.zyte.com/data-extraction/",
+        "quote": "A managed web data service. Our team builds, runs and maintains the collection"
+      },
+      {
+        "url": "https://docs.zyte.com/zyte-api/usage/reference.html",
+        "quote": "An absolute URL to extract data from."
+      },
+      {
+        "url": "https://www.zyte.com/pricing/",
+        "quote": "Websites are priced in five tiers, with datacenter, residential, rendering and more included in one automated API"
+      }
+    ],
+    "likely_buyer_role": "Head of Data Acquisition / VP Product for Zyte Data (buys or builds vertical datasets)",
+    "contact_route": {
+      "url": "https://www.zyte.com/talk-to-us/",
+      "value": "Web form ('Talk to us')",
+      "note": "No named data lead or email published; form is the only public sales route found."
+    },
+    "confidence": "Medium",
+    "caveats": "Weakest fit of the three: Zyte sells extraction capacity, not curated datasets, and already extracts article content on request, so the gap is unverified rather than confirmed. A newsletter corpus could be raw material for their managed Zyte Data service, but they more plausibly build it than buy it. No public pricing for Zyte Data and no named buyer."
+  }
+]

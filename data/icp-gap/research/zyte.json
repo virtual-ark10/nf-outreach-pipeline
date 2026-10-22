@@ -1,0 +1,63 @@
+{
+ "company": "Zyte",
+ "official_website": "https://www.zyte.com/",
+ "product_summary": "Web scraping infrastructure: Zyte API for ban-avoiding URL extraction, Scrapy Cloud hosting, the Scrapy framework, an MCP server, and Zyte Data, a managed pipeline delivering schema-ready data.",
+ "current_data_sources": [
+  "Customer-supplied URLs on any website (no first-party corpus)",
+  "Automatic extraction of e-commerce, article and job-posting page structures",
+  "Search engine results pages (non-AI extraction)",
+  "Managed custom collection built and maintained by Zyte Data engineers"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.zyte.com/zyte-api/usage/reference.html",
+   "quote": "This is the complete reference documentation of the HTTP API of Zyte API."
+  },
+  {
+   "url": "https://www.zyte.com/",
+   "quote": "One API across easy, moderate and hard websites. Skip managing bans, proxies and browsers."
+  },
+  {
+   "url": "https://www.zyte.com/",
+   "quote": "All of Zyte, inside your agent."
+  },
+  {
+   "url": "https://www.zyte.com/pricing/",
+   "quote": "From $0.06 per 1,000 successful responses"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage, /data-extraction, /pricing, docs.zyte.com Zyte API reference and the automatic-extraction page, plus site:zyte.com newsletter. 'Newsletter' appears only as Zyte's own developer community newsletter blog posts; no publication index or newsletter-derived data product exists.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://www.zyte.com/",
+   "quote": "Point it at a URL. Zyte API picks the leanest access strategy that works and escalates only when the website demands it."
+  },
+  {
+   "url": "https://docs.zyte.com/zyte-api/usage/extract/index.html",
+   "quote": "Automatic extraction supports AI-powered extraction of e-commerce, article and job posting data from any website"
+  },
+  {
+   "url": "https://www.zyte.com/data-extraction/",
+   "quote": "A managed web data service. Our team builds, runs and maintains the collection"
+  },
+  {
+   "url": "https://docs.zyte.com/zyte-api/usage/reference.html",
+   "quote": "An absolute URL to extract data from."
+  },
+  {
+   "url": "https://www.zyte.com/pricing/",
+   "quote": "Websites are priced in five tiers, with datacenter, residential, rendering and more included in one automated API"
+  }
+ ],
+ "likely_buyer_role": "Head of Data Acquisition / VP Product for Zyte Data (buys or builds vertical datasets)",
+ "contact_route": {
+  "url": "https://www.zyte.com/talk-to-us/",
+  "value": "Web form ('Talk to us')",
+  "note": "No named data lead or email published; form is the only public sales route found."
+ },
+ "confidence": "Medium",
+ "caveats": "Weakest fit of the three: Zyte sells extraction capacity, not curated datasets, and already extracts article content on request, so the gap is unverified rather than confirmed. A newsletter corpus could be raw material for their managed Zyte Data service, but they more plausibly build it than buy it. No public pricing for Zyte Data and no named buyer."
+}

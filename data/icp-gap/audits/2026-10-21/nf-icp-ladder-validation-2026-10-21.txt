@@ -1,0 +1,71 @@
+NEWSLETTERFIT ICP LADDER, EVIDENCE AUDIT OF THE NEXT BATCH
+2026-10-21. Same method as the 30-account list: vendor's own pages, quotes re-fetched and checked
+verbatim, rescored on fit 35 / gap 30 / integration 20 / commercial 15.
+
+Scope. The CRM holds 105 icp_research leads, but only 10 are uncontacted with an email, and the
+ladder refuses to draft a lead with no contact name. Three of those ten were handled in the
+30-account pass (Common Room, Crustdata, Autobound), and Clay was audited there at 66 with an
+unverified gap. Six were researched here. Hunter was removed after the audit: it is the supplier this
+pipeline buys contact discovery from, not a prospect.
+
+Verdicts
+  Icypeas       71  High    second wave    solid gap, small credits-based vendor
+  Kadoa         66  Medium  second wave    confirmed gap, but partly supply-side licensing
+  HireEZ        47  Low     not a prospect  needs candidate resumes, which NF does not produce
+  Zyte          45  Medium  not a prospect  sells extraction capacity, would build rather than buy
+  Orbifold AI   26  Low     not a prospect  physical-AI data infrastructure, wrong domain entirely
+
+No account in this batch clears 75, so this batch produces no draft.
+
+
+ICYpeas   71/100  (24 fit, 21 gap, 17 integration, 9 commercial)  Evidence High
+  site: https://www.icypeas.com/
+  product: French contact-discovery API: email finder, catch-all verifier, reverse lookup, domain
+  scan and profile scrapers, sold on credits to sales teams and platforms that embed enrichment.
+  verified gap: their scope is person and domain contact records. No publication index, article
+  corpus, sponsor mentions or momentum, so they cannot answer which newsletters wrote about a
+  company.
+  evidence: "Discover valid emails (including catchalls), and scrape contacts at scale."; "Our
+  billion-plus record database is fully refreshed every month"; "80% of our customers embed the
+  Icypeas API in their own product or automated workflows."
+  why second wave: real API surface, but a small credits-based vendor, so a data licence would be a
+  new cost line for them. Contact: contact@icypeas.com (published).
+
+KADOA   66/100  (22 fit, 21 gap, 15 integration, 8 commercial)  Evidence Medium
+  site: https://www.kadoa.com/
+  product: web data extraction and monitoring for investment firms, delivering to Snowflake, S3,
+  BigQuery, spreadsheets, webhooks, MCP and API.
+  verified gap: ingestion is URL-scoped pages and documents only (HTML, XML, RSS, JSON, PDF). No
+  newsletter corpus, no cross-publication entity or sponsor extraction, no activity tracking.
+  evidence: "A workflow's source is the set of URLs it extracts from."; "Our agents build, monitor,
+  and maintain mission-critical web data pipelines for investment teams and AI agents."
+  why second wave: partly supply-side. Their funds would benefit from a newsletter corpus, but the
+  realistic deal is licensed input, and they could hand-build newsletter scraping.
+
+HIREEZ   47/100  (12 fit, 17 gap, 12 integration, 6 commercial)  Evidence Low
+  site: https://hireez.com/
+  gap: sourcing is enumerated as ATS, job boards, open web and partner databases; newsletters are
+  not a source. But they need candidate profiles and resumes, which NF does not produce, and they
+  already run 1B+ profiles of their own. Data-partner conversation at best, not a buyer.
+
+ZYTE   45/100  (15 fit, 9 gap, 15 integration, 6 commercial)  Evidence Medium
+  site: https://www.zyte.com/
+  gap: unverified. They sell extraction capacity per URL and already auto-extract article content,
+  so a newsletter corpus is raw material their managed service could build. Supply-side.
+
+ORBIFOLD AI   26/100  (8 fit, 6 gap, 9 integration, 3 commercial)  Evidence Low
+  site: https://www.orbifold.ai/
+  gap: unverified. They sell multimodal data infrastructure for physical AI, on customer-tenant
+  data. No newsletter, publication or company-intelligence use case exists to attach to.
+
+PLUS, already audited in the 30-account pass: Clay 66/100, Medium, unverified gap, distributor
+rather than data owner.
+
+
+HUNTER, REMOVED FROM THE LIST
+  Researched at 79/100 with a confirmed gap (ingestion is web crawling for contacts; no publication
+  index, no article-level topic, guest or sponsor extraction, no momentum). Removed because Hunter is
+  the supplier this pipeline buys contact discovery from. Pitching a vendor whose service we already
+  depend on buys nothing, and it would put a negotiating counterparty on our own sourcing method.
+  The CRM record is kept for operational reasons, marked LOW priority, with a note that it must not
+  be drafted.

@@ -1,0 +1,293 @@
+[
+  {
+    "company": "Grata",
+    "official_website": "https://grata.com/api",
+    "product_summary": "Private-market intelligence platform and API for M&A and deal sourcing: 150 data points on 22M+ companies, executive contacts and conference lists, exposed through search, similarity, enrichment and list APIs.",
+    "current_data_sources": [
+      "AI-synthesized public data (company descriptions, comps, employee counts, growth signals)",
+      "Proprietary private financials and valuations",
+      "Executive contact database (emails, titles, LinkedIn)",
+      "Trade show and conference exhibitor/sponsor lists",
+      "Institutional/user data: notes, labels, deal status"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://grata.com/api",
+        "quote": "Grata's API surfaces our data in your firm's internal systems for comprehensive, verified market intelligence"
+      },
+      {
+        "url": "https://grata.com/api",
+        "quote": "150 data points across 22M+ global companies, 200K+ conferences, 10M+ executive contacts"
+      },
+      {
+        "url": "https://docs.grata.com/",
+        "quote": "Search API delivers the power of Grata’s search capabilities into your proprietary systems"
+      },
+      {
+        "url": "https://docs.grata.com/",
+        "quote": "Enrichment API brings Grata company profiles into your system, ensuring that your data is robust and up-to-date."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Not found. Searched grata.com/api, grata.com/our-data and docs.grata.com; documented inputs are AI-synthesized public data, private financials, executive contacts and 'Trade show & conference exhibitor lists'. No newsletter, email or publication data is mentioned, but the underlying public sources are never enumerated field by field, so this stays unverified rather than a confirmed gap.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://grata.com/our-data",
+        "quote": "Trade show & conference exhibitor lists"
+      },
+      {
+        "url": "https://grata.com/api",
+        "quote": "Grata synthesizes public sources, private insights, and exclusive data, rigorously cleans and reconciles every record"
+      },
+      {
+        "url": "https://grata.com/api",
+        "quote": "Detailed company descriptions, revenue, headcount, ownership, funding data, industry classifications, social profiles, growth"
+      },
+      {
+        "url": "https://grata.com/api",
+        "quote": "Rely on our API as a production-grade data backbone"
+      }
+    ],
+    "likely_buyer_role": "Head of Data / VP Product responsible for API data coverage and third-party data partnerships",
+    "contact_route": {
+      "url": "https://grata.com/contact",
+      "value": null,
+      "note": "Form-only contact page (demo request); docs.grata.com links 'Contact Customer Success'. No public email address found, none assumed."
+    },
+    "confidence": "Medium",
+    "caveats": "Gap unverified: Grata describes 'disparate public data' without naming sources, so absence of newsletters is inferred from the data-type lists only. API exists and is documented, which makes a data-supplement conversation plausible; no public pricing for API."
+  },
+  {
+    "company": "Harmonic",
+    "official_website": "https://harmonic.ai/",
+    "product_summary": "Startup discovery and intelligence platform for investors: company, founder and investor profiles with hiring, funding and launch signals, AI 'Scout' agents, plus API, MCP and warehouse delivery.",
+    "current_data_sources": [
+      "Company and people profiles assembled from web sources",
+      "Hiring and job-change signals",
+      "Funding events and investor activity",
+      "Product launches and company direction changes",
+      "Network graph from synced inboxes, calendars and LinkedIn",
+      "Web-wide research gathered by its agent"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "Always up to date, always production ready and tailored to your integration"
+      },
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "Harmonic intelligence in every conversation with your AI"
+      },
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "Zapier and n8n bots can keep your workflow up to date with the latest data"
+      },
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "The complete startup database delivered directly to your data warehouse or cloud"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Not found. Searched harmonic.ai, harmonic.ai/solutions/growth and the console API reference (docs.harmonic.ai and help.harmonic.ai were unreachable, returning blocked responses). Public copy says it tracks companies 'as they grow, hire, fundraise, launch products' and pulls from 'the entire web', but no page enumerates newsletter or email data, so this is unverified rather than a confirmed gap.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "We track companies and people as they grow, hire, fundraise, launch products, and change direction."
+      },
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "Highlights from Harmonic’s proprietary data… and the entire web in one click"
+      },
+      {
+        "url": "https://harmonic.ai/solutions/growth",
+        "quote": "Real-time signals for traction and growth"
+      },
+      {
+        "url": "https://harmonic.ai/",
+        "quote": "Stay up to date by syncing connections from inboxes, calendars and LinkedIn"
+      }
+    ],
+    "likely_buyer_role": "Head of Data / VP Product owning startup-data coverage and signal sources",
+    "contact_route": {
+      "url": "https://harmonic.ai/",
+      "value": null,
+      "note": "'Book a demo' form on the homepage; no public contact email or named data-contact found."
+    },
+    "confidence": "Medium",
+    "caveats": "Docs are behind console/docs subdomains that could not be fetched, so an internal source list may exist; gap therefore unverified. Harmonic markets 'the entire web', which may mean some newsletter content is already crawled incidentally."
+  },
+  {
+    "company": "SponsorSheep",
+    "official_website": "https://www.sponsorsheep.com/",
+    "product_summary": "Newsletter sponsorship marketplace plus Bellwether Intel, a free sponsor-intelligence database of observed sponsor placements across monitored newsletters; commission-only, no subscription fees.",
+    "current_data_sources": [
+      "Newsletter emails monitored for sponsor placements",
+      "Placement calendars and rate cards supplied by publishers",
+      "Sponsor company details and LinkedIn profiles, shown when verified",
+      "Audience reach figures where publisher size is known"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://sponsorsheep.com/bellwether",
+        "quote": "Counts, trends and last-seen dates refresh hourly"
+      },
+      {
+        "url": "https://www.sponsorsheep.com/",
+        "quote": "Availability comes straight from the placement calendar, so it is never stale"
+      }
+    ],
+    "newsletter_capability_status": "confirmed_present",
+    "newsletter_capability_detail": "Present and directly competitive: Bellwether Intel states '1,646 newsletters monitored across every platform' with placements drawn from real emails and refreshed hourly. Observed coverage is roughly 1,646 newsletters, 4,163 sponsors and 29,853 placements, against NewsletterFIT's 26,401 indexed publications and 2,218 sponsor mentions — same domain, different observation method and scale. No public API is advertised; access is a free member UI.",
+    "verified_gap": "",
+    "gap_status": "disconfirmed",
+    "evidence": [
+      {
+        "url": "https://sponsorsheep.com/bellwether",
+        "quote": "1,646 newsletters monitored across every platform"
+      },
+      {
+        "url": "https://sponsorsheep.com/bellwether",
+        "quote": "Every placement comes from a real newsletter email, with the sponsor, the date it was sent"
+      },
+      {
+        "url": "https://sponsorsheep.com/bellwether",
+        "quote": "A placement only appears once we are at least 85% confident it is real."
+      },
+      {
+        "url": "https://www.sponsorsheep.com/",
+        "quote": "No subscription. No listing fee. No setup fee."
+      }
+    ],
+    "likely_buyer_role": "Founder / CEO (Revbox Ltd) making data-coverage or partnership decisions",
+    "contact_route": {
+      "url": "https://www.sponsorsheep.com/contact",
+      "value": null,
+      "note": "Contact form plus postal address (Revbox Ltd, 71-75 Shelton Street, London). No public email listed; none guessed."
+    },
+    "confidence": "High",
+    "caveats": "Direct competitor, not a prospect in the ordinary sense: newsletter sponsor data is their core product, so partnership framing must be coverage-complement or data-supply, not 'we can add newsletters'. Live counters vary between pages (1,646 vs 1,654 newsletters) because they refresh continuously. No API means integration would be bespoke."
+  },
+  {
+    "company": "Brandwatch",
+    "official_website": "https://www.brandwatch.com/",
+    "product_summary": "Enterprise social listening and consumer research suite (Cision-owned): monitors brand mentions across social, news, blogs and review sites, with analysis, publishing, engagement tools and several export APIs.",
+    "current_data_sources": [
+      "X/Twitter full firehose",
+      "Facebook public non-owned Pages",
+      "Instagram public accounts",
+      "LinkedIn company pages (authenticated)",
+      "TikTok, Tumblr, YouTube, Reddit, Forums, QQ",
+      "News sites, blogs and review sites",
+      "TV/radio via TVEyes (paid add-on)"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.brandwatch.com/products/apis/",
+        "quote": "Query our content library (or your imported data) and return aggregated statistics, computed analysis"
+      },
+      {
+        "url": "https://www.brandwatch.com/products/apis/",
+        "quote": "Export and stream real-time data"
+      },
+      {
+        "url": "https://www.brandwatch.com/",
+        "quote": "Monitor emerging threats across over 100m sources and set up smart, real-time alerts"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Confirmed absent as a source type. The Listen sources article enumerates X/Twitter, Facebook, Instagram, LinkedIn, TikTok, Tumblr, Forums, YouTube, Reddit, News, Blogs, Review sites and QQ, with TV/radio as paid add-ons; no newsletter or email source is listed. The nearest adjacency is 'Blogs'. Note LinkedIn mentions are limited to a company page you own, so LinkedIn newsletters are not ingested either.",
+    "verified_gap": "Brandwatch's documented Listen sources cover social networks, news, blogs and review sites; newsletters and email publications are not among the ingested sources, so newsletter mentions and sponsor relationships fall outside the platform.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions",
+        "quote": "Mentions are provided by the Brandwatch Data Library and originate from popular online sources, such as social media networks"
+      },
+      {
+        "url": "https://social-media-management-help.brandwatch.com/en/articles/17449910-sources-for-listen-mentions",
+        "quote": "Premium data sources – such as TV/radio (via TVEyes) – are available as add-ons"
+      },
+      {
+        "url": "https://www.brandwatch.com/products/apis/",
+        "quote": "Import unstructured data from any source and analyze with our advanced algorithms"
+      },
+      {
+        "url": "https://www.brandwatch.com/",
+        "quote": "The most intelligent social suite"
+      }
+    ],
+    "likely_buyer_role": "VP Product / Head of Data Partnerships for the Consumer Research (Listen) platform",
+    "contact_route": {
+      "url": "https://www.brandwatch.com/contact/",
+      "value": null,
+      "note": "Web form only, routed by solution; no public email. Parent company Cision also gates contact behind forms."
+    },
+    "confidence": "High",
+    "caveats": "Confirmed gap rests on the Listen help-centre source list, which may lag product changes; older Consumer Research may ingest additional connectors. The Data Upload API means customers could import newsletter text themselves, though Brandwatch does not supply it. Enterprise sales cycle and procurement are long."
+  },
+  {
+    "company": "Dealroom",
+    "official_website": "https://dealroom.co/products/api/",
+    "product_summary": "Startup and VC data platform: 3M+ companies, 336K+ funding rounds, investor and founder profiles, with a REST API, hosted MCP server and bulk feeds for sourcing and ecosystem analytics.",
+    "current_data_sources": [
+      "Company and investor profiles curated by analysts",
+      "Funding rounds, valuations and financials",
+      "Founder/operator profiles enriched from 40+ sources",
+      "Entity-level news and AI-synthesized sentiment",
+      "Hiring and web/app traction signals",
+      "Company filings and founder signals for stealth detection"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "REST with OAuth2, the hosted MCP server and bulk feeds, in production use by customers now"
+      },
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "mcp.dealroom.co/mcp"
+      },
+      {
+        "url": "https://docs.dealroom.co/",
+        "quote": "Dealroom API v1 host: https://api.dealroom.co/api/v1"
+      },
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "Bulk and incremental data delivery"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Not found. Searched dealroom.co/products/api/, dealroom.co/for-agents/ and docs.dealroom.co: documented signals are news, sentiment, filings, hiring, founder, web/app and stealth detection, with people data 'enriched from 40+ sources' left unnamed. No page mentions newsletters or email publications, but sources are not enumerated, so unverified rather than confirmed.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "Entity-level news, AI-synthesized sentiment and predictive signals — wired to the exact company or investor."
+      },
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "Newly founded and stealth companies surfaced from filings, hiring and founder signals"
+      },
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "Every company is linked to its founders, investors, rounds, sector and signals"
+      },
+      {
+        "url": "https://dealroom.co/products/api/",
+        "quote": "enriched from 40+ sources, with mafias and where talent goes next"
+      }
+    ],
+    "likely_buyer_role": "Head of Data / API Product Manager for the Dealroom data platform",
+    "contact_route": {
+      "url": "https://dealroom.co/contact/",
+      "value": "support@dealroom.co",
+      "note": "Published on the contact page for general inquiries; privacy@dealroom.co for privacy requests. Prefer support@ and ask to be routed to the data/API team."
+    },
+    "confidence": "Medium",
+    "caveats": "Gap unverified: Dealroom's 'entity-level news' may already sweep newsletter content without naming it. A new API is in closed beta, so data-model changes are in flight. Their positioning stresses completeness, so an external newsletter signal needs to be framed as net-new, not as coverage they lack."
+  }
+]

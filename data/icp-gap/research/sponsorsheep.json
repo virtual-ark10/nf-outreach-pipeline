@@ -1,0 +1,51 @@
+{
+ "company": "SponsorSheep",
+ "official_website": "https://www.sponsorsheep.com/",
+ "product_summary": "Newsletter sponsorship marketplace plus Bellwether Intel, a free sponsor-intelligence database of observed sponsor placements across monitored newsletters; commission-only, no subscription fees.",
+ "current_data_sources": [
+  "Newsletter emails monitored for sponsor placements",
+  "Placement calendars and rate cards supplied by publishers",
+  "Sponsor company details and LinkedIn profiles, shown when verified",
+  "Audience reach figures where publisher size is known"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://sponsorsheep.com/bellwether",
+   "quote": "Counts, trends and last-seen dates refresh hourly"
+  },
+  {
+   "url": "https://www.sponsorsheep.com/",
+   "quote": "Availability comes straight from the placement calendar, so it is never stale"
+  }
+ ],
+ "newsletter_capability_status": "confirmed_present",
+ "newsletter_capability_detail": "Present and directly competitive: Bellwether Intel states '1,646 newsletters monitored across every platform' with placements drawn from real emails and refreshed hourly. Observed coverage is roughly 1,646 newsletters, 4,163 sponsors and 29,853 placements, against NewsletterFIT's 26,401 indexed publications and 2,218 sponsor mentions \u2014 same domain, different observation method and scale. No public API is advertised; access is a free member UI.",
+ "verified_gap": "",
+ "gap_status": "disconfirmed",
+ "evidence": [
+  {
+   "url": "https://sponsorsheep.com/bellwether",
+   "quote": "1,646 newsletters monitored across every platform"
+  },
+  {
+   "url": "https://sponsorsheep.com/bellwether",
+   "quote": "Every placement comes from a real newsletter email, with the sponsor, the date it was sent"
+  },
+  {
+   "url": "https://sponsorsheep.com/bellwether",
+   "quote": "A placement only appears once we are at least 85% confident it is real."
+  },
+  {
+   "url": "https://www.sponsorsheep.com/",
+   "quote": "No subscription. No listing fee. No setup fee."
+  }
+ ],
+ "likely_buyer_role": "Founder / CEO (Revbox Ltd) making data-coverage or partnership decisions",
+ "contact_route": {
+  "url": "https://www.sponsorsheep.com/contact",
+  "value": null,
+  "note": "Contact form plus postal address (Revbox Ltd, 71-75 Shelton Street, London). No public email listed; none guessed."
+ },
+ "confidence": "High",
+ "caveats": "Direct competitor, not a prospect in the ordinary sense: newsletter sponsor data is their core product, so partnership framing must be coverage-complement or data-supply, not 'we can add newsletters'. Live counters vary between pages (1,646 vs 1,654 newsletters) because they refresh continuously. No API means integration would be bespoke."
+}

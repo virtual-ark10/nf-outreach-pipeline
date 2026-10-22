@@ -1,0 +1,56 @@
+{
+ "company": "Bombora",
+ "official_website": "https://bombora.com/",
+ "product_summary": "B2B intent data company operating a Data Co-op of B2B media destinations, selling Company Surge intent scores, topic taxonomies, buying-group personas and digital audiences through APIs and 100+ GTM integrations.",
+ "current_data_sources": [
+  "Data Co-op of thousands of B2B media destinations (publishers, B2B brands, premium data providers)",
+  "Topic taxonomy of tens of thousands of topics mapped to millions of B2B domains",
+  "Domain-level research behavior measured over time (Company Surge models)",
+  "B2B persona/buying-group enrichment",
+  "Identity resolution and first-party site engagement enrichment"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://developer.bombora.com/apis",
+   "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data."
+  },
+  {
+   "url": "https://developer.bombora.com/apis",
+   "quote": "The Digital Audience Builder (DAB) API provides customers the ability to programmatically create and edit custom audiences."
+  },
+  {
+   "url": "https://bombora.com/all-partners/",
+   "quote": "More than one hundred integrations and partnerships make it possible to share data and insights"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched bombora.com/intent-data/, bombora.com/all-partners/ and developer.bombora.com for newsletter, email and subscription-content sourcing. Sources are described as media destinations and B2B websites with topic-level research behavior: \"Across the Co-op we track tens of thousands of topics (updated frequently) and millions of B2B domains.\" Newsletters are not named as a source type.",
+ "verified_gap": "Newsletter topic activity is not documented as a Co-op input; the Co-op is described in website/domain terms. Because membership is described broadly as \"media destinations (publishers, B2B brands, and premium data providers)\", newsletter publishers may already contribute indirectly via their web archives.",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://bombora.com/intent-data/",
+   "quote": "made up of thousands of media destinations (publishers, B2B brands, and premium data providers)"
+  },
+  {
+   "url": "https://bombora.com/intent-data/",
+   "quote": "Across the Co-op we track tens of thousands of topics (updated frequently) and millions of B2B domains."
+  },
+  {
+   "url": "https://bombora.com/intent-data/",
+   "quote": "Bombora uses patented AI-driven Intent models that measure real research behavior over time, not just keyword spikes."
+  },
+  {
+   "url": "https://developer.bombora.com/apis",
+   "quote": "The Intent API allows Signals to be seamlessly defined and managed, while also providing efficient access to actionable intent data."
+  }
+ ],
+ "likely_buyer_role": "VP Data Partnerships / GM Data Solutions (Co-op sourcing and data licensing)",
+ "contact_route": {
+  "url": "https://bombora.com/all-partners/",
+  "value": null,
+  "note": "Public partner-ecosystem inquiry ('Become a partner') is the only route found; contact page returned bot-blocked and no named data-partnership contact or public email was retrievable."
+ },
+ "confidence": "Medium",
+ "caveats": "The Co-op already includes publishers, so the honest framing is a data-licensing conversation - does newsletter open/mention data add topic coverage their web signals miss - not a capability gap claim. Bombora is also a supplier to 6sense, so approaching both risks channel conflict. Their docs are marketing-level; a definitive answer needs a direct data-co-op conversation."
+}

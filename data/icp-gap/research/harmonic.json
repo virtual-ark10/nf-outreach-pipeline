@@ -1,0 +1,61 @@
+{
+ "company": "Harmonic",
+ "official_website": "https://harmonic.ai/",
+ "product_summary": "Startup discovery and intelligence platform for investors: company, founder and investor profiles with hiring, funding and launch signals, AI 'Scout' agents, plus API, MCP and warehouse delivery.",
+ "current_data_sources": [
+  "Company and people profiles assembled from web sources",
+  "Hiring and job-change signals",
+  "Funding events and investor activity",
+  "Product launches and company direction changes",
+  "Network graph from synced inboxes, calendars and LinkedIn",
+  "Web-wide research gathered by its agent"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "Always up to date, always production ready and tailored to your integration"
+  },
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "Harmonic intelligence in every conversation with your AI"
+  },
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "Zapier and n8n bots can keep your workflow up to date with the latest data"
+  },
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "The complete startup database delivered directly to your data warehouse or cloud"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Not found. Searched harmonic.ai, harmonic.ai/solutions/growth and the console API reference (docs.harmonic.ai and help.harmonic.ai were unreachable, returning blocked responses). Public copy says it tracks companies 'as they grow, hire, fundraise, launch products' and pulls from 'the entire web', but no page enumerates newsletter or email data, so this is unverified rather than a confirmed gap.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "We track companies and people as they grow, hire, fundraise, launch products, and change direction."
+  },
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "Highlights from Harmonic\u2019s proprietary data\u2026 and the entire web in one click"
+  },
+  {
+   "url": "https://harmonic.ai/solutions/growth",
+   "quote": "Real-time signals for traction and growth"
+  },
+  {
+   "url": "https://harmonic.ai/",
+   "quote": "Stay up to date by syncing connections from inboxes, calendars and LinkedIn"
+  }
+ ],
+ "likely_buyer_role": "Head of Data / VP Product owning startup-data coverage and signal sources",
+ "contact_route": {
+  "url": "https://harmonic.ai/",
+  "value": null,
+  "note": "'Book a demo' form on the homepage; no public contact email or named data-contact found."
+ },
+ "confidence": "Medium",
+ "caveats": "Docs are behind console/docs subdomains that could not be fetched, so an internal source list may exist; gap therefore unverified. Harmonic markets 'the entire web', which may mean some newsletter content is already crawled incidentally."
+}
