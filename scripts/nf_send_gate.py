@@ -271,6 +271,30 @@ def ledger():
 
 
 # --- checks ---------------------------------------------------------------------------------
+def claimed_placement_counts(text):
+    """Every "N <Company> placements" claim the copy makes.
+
+    The count token has to stand alone. `(?<!\\d)` once let a digit INSIDE a company name be
+    read as the count, and the --fix-counts substitution then rewrote both: "2 F2 placements"
+    went out as "8 F8 placements". `(?<!\\w)` fixed that half. The other half was a number
+    with a thousands separator: in "1 80,000 Hours placements" the bare "000" after the comma
+    sat at a token boundary, so the gate read a claim of 0 for a draft that said 1 and held it.
+    Both lookarounds now refuse a digit or a comma, and the middle segment may carry the
+    separator, so the claim is read as the number a reader sees.
+    """
+    found = []
+    for m in re.finditer(r"(?<![\w,])(\d+)(?![\d,])\s+placements?", text):
+        found.append(int(m.group(1)))
+    for m in re.finditer(
+            r"(?<![\w,])(\d+)(?![\d,])\s+(?:[A-Za-z0-9.'&,\s]{0,24}?)(?:placements|sponsorships)",
+            text):
+        try:
+            found.append(int(m.group(1)))
+        except Exception:
+            pass
+    return sorted(set(found))
+
+
 def gate(draft, ctx):
     """Return (verdict, findings) for one draft. findings = list of dicts with level+message."""
     f = []
@@ -408,18 +432,7 @@ def gate(draft, ctx):
              f"intelligence: find the buyer's own address first")
 
     # 4. corpus facts: placement count, publications, subscriber labels
-    # The count token has to stand alone. `(?<!\d)` let a digit INSIDE a company name be read as
-    # the count, and the --fix-counts substitution then hit both: F2's opener went out today as
-    # "8 F8 placements" (claimed 2, real 8, so "2 F2" became "8 F8"). `(?<![\w])` requires the
-    # number to start a token, so "F2 placements" is no longer a claim and cannot be rewritten.
-    claimed = []
-    for m in re.finditer(r"(?<![\w])(\d+)\s+placements?", text):
-        claimed.append(int(m.group(1)))
-    for m in re.finditer(r"(?<![\w])(\d+)\s+(?:[A-Za-z0-9.'&\s]{0,24}?)(?:placements|sponsorships)", text):
-        try:
-            claimed.append(int(m.group(1)))
-        except Exception:
-            pass
+    claimed = claimed_placement_counts(text)
     for n in set(claimed):
         real = ctx["corpus"].placements(company)
         if real is None:
@@ -428,7 +441,7 @@ def gate(draft, ctx):
         elif n != real:
             hard(f"states {n} {company} placements, the corpus logs {real}",
                  kind="count", claimed=n, real=real,
-                 pattern=r"(?<![\w])" + str(n) + r"(?=\s+[A-Za-z0-9.'&\s]{0,24}?(?:placements|sponsorships))")
+                 pattern=r"(?<![\w,])" + str(n) + r"(?![\d,])(?=\s+[A-Za-z0-9.'&,\s]{0,24}?(?:placements|sponsorships))")
 
     pubs_named = re.findall(r"-\s+([^\n:()]{3,60}?)(?:\s*\(est\.|\s*:\s|\n|$)", text)
     # A publication is verified by the link that was minted onto it: the pad's link pass only
