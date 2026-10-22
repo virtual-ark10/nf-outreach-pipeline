@@ -34,3 +34,10 @@ hinge.co
 polymarket.com
 assemblyai.com
 brilliant.org
+
+# Ruled out by the founder, 2026-10-22: outbound senders and a competitor, not data buyers.
+clay.com            # distributes other vendors' data; a marketplace supply conversation, not a licence
+apollo.io           # all-in-one prospecting at enterprise scale
+instantly.ai        # cold-email sending
+smartlead.ai        # cold-email sending
+lemlist.com         # cold-email sending
