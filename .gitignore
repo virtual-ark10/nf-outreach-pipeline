@@ -38,3 +38,7 @@ data/send-cap.txt
 # Provider-response cache for scripts/fill_contact_names.py: re-derivable at $0, so not
 # archive material like data/. The CRM, the mail log and the send cap stay versioned.
 data/name-cache/
+
+# Employee-count lookups behind the off-ICP filter (scripts/icp_fit.py): re-derivable
+# provider responses, same reasoning as data/name-cache.
+data/icp-size-cache.json
