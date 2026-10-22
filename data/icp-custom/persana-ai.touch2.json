@@ -1,4 +1,4 @@
 {
- "subject": "the entity page, in detail",
- "body": "An entity page carries article and publication totals, the first and latest mention, mentions over the last thirty days against the thirty before, and the recent articles with the relation type behind each one.\n\nOne account in the graph, Brex, reads 66 articles across 31 publications with mentions moving from 17 to 27 month over month. That is the shape a signal takes when it has provenance behind it.\n\nI can pull it for a handful of accounts you already track, so you can compare it against what your signals return for the same names.\n"
+ "subject": "A time series behind each mention",
+ "body": "Each account comes back with the articles behind it: totals, first and latest mention, the last thirty days against the thirty before, and the recent pieces with the relation type that produced them.\n\nOne account, Brex, reads 66 articles across 31 publications with mentions moving from 17 to 27 between windows. That is a signal with provenance behind it.\n\nI can pull it for a handful of accounts you already track, so you can compare against what your signals return for the same names.\n"
 }

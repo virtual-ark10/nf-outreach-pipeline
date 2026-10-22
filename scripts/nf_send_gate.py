@@ -520,6 +520,16 @@ def gate(draft, ctx):
                 if recent and sp not in " ".join(recent):
                     soft(f"{name}: draft says it carries {sp}, corpus lists {rec.get('recentSponsors')}")
 
+    # 4b. subject quality. The subject is the only hook a cold lead gets, so it has to read in
+    # one gulp, carry one idea and say something about them rather than about us or the cadence.
+    subj_clean = subject.strip()
+    if subj_clean.lower().rstrip(":") in {"first email", "follow up", "follow-up", "intro",
+                                          "touch 1", "touch 2", "quick question"}:
+        hard("subject is a cadence label, not a finding")
+    words = [w for w in re.split(r"\s+", subj_clean) if w]
+    if len(subj_clean) > 58 or len(words) > 9:
+        soft(f"subject is {len(words)} words / {len(subj_clean)} chars: too long for an inbox preview")
+
     # 5. subject/body alignment
     subj_pub = re.search(r"\bin\s+(?:the\s+)?([A-Z][\w&'.#-]+(?:\s+[A-Z][\w&'.#-]+){0,4})", subject)
     if subj_pub:

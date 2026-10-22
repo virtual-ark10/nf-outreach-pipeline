@@ -52,6 +52,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _address_rules import is_role_address  # noqa: E402  (one definition, shared with the gate)
+import _greetings as greet                  # noqa: E402  (the opening line, one definition)
 # The researched copy is only as good as the research behind it: one module decides whether a
 # custom file's evidence was verified, so the seeder cannot send a claim the verifier refuted.
 from _gap_verdict import GapGate           # noqa: E402
@@ -239,7 +240,12 @@ def rotate(picks, offset, want):
 # --- the copy -------------------------------------------------------------------------------
 
 def _greeting(lead):
-    return str((lead.get("contact_name") or "")).strip().split()[0]
+    """The opening line: "Hi Jen," for a verified person, otherwise a bare "Hi,".
+
+    A lead with no verified name is still writable, so this never returns empty; an invented
+    first name is what it must never return (founder rule, 2026-10-22).
+    """
+    return greet.line(lead.get("contact_name"))
 
 
 def _bullets(picks):
@@ -263,17 +269,24 @@ def first_touch(lead, picks):
     # The subject carries the company so forty drafts in one morning are not forty identical
     # subjects, and carries the sponsor so it still says what was seen rather than what stage
     # the mail is at.
-    subject = (f"{company}: {peer_pick['sponsors'][0]} is buying in {peer_pick['name']}"
-               if peer_pick else f"{lane} lists taking sponsors for {company}")
+    # The finding is the subject. The company prefix is there so forty drafts in one morning are
+    # not forty identical lines, but it is dropped when it pushes the line past what an inbox
+    # preview shows: a subject has to read in one gulp.
+    finding = (f"{peer_pick['sponsors'][0]} is buying in {peer_pick['name']}" if peer_pick
+               else f"{lane} lists taking sponsors")
+    prefixed = f"{company}: {finding}"
+    subject = prefixed if len(prefixed) <= 58 else finding
     # For a data company the feed is the same purchase seen from the other side, so it gets one
     # sentence in the first touch, not a paragraph. The number of tools waits for touch 3.
     feed = ("The same records are available through a REST API and an MCP server, so they can be "
             f"queried inside {company} rather than read in an inbox.\n\n") if data_first(lead) else ""
     text = (
-        f"Hi {first},\n\n"
-        "I run NewsletterFIT. We track sponsorships across newsletters and watch which lists "
-        "are rising, so a team can back the ones its own market has already validated.\n\n"
+        f"{first}\n\n"
+        # The finding leads and the introduction follows it: the first line is the second hook
+        # after the subject, so it says what was seen rather than who is writing.
         + (f"{peer}\n\n" if peer else "")
+        + "I run NewsletterFIT. We track who sponsors which newsletters and which lists are "
+        "rising, so a team can back the audiences its market already pays for.\n\n"
         + f"{_lead_in(lane, picks)}\n\n"
         + f"{_bullets(picks)}\n\n"
         + feed
@@ -301,7 +314,7 @@ def follow_up(lead, touch, picks):
                  else f"reaches {p['label']} readers")
         subject = f"who reads {p['name']}"
         text = (
-            f"Hi {first},\n\n"
+            f"{first}\n\n"
             f"{p['name']} {reach}{runs}.\n\n"
             "If a list with that audience is worth a look, I can send the reader profile behind "
             "it: who they are, what they click, and how the list is trending.\n\n"
@@ -313,9 +326,9 @@ def follow_up(lead, touch, picks):
     if touch == 3 and data_first(lead):
         # The technical touch: a data buyer judges a feed by the surface it arrives on, so this
         # one names the endpoint, the docs and the tools an agent would actually call.
-        subject = f"querying {lane} newsletters from an agent"
+        subject = f"querying {lane} from an agent"
         text = (
-            f"Hi {first},\n\n"
+            f"{first}\n\n"
             f"The same {lane} coverage, delivered as a feed rather than a list. Our MCP server "
             f"exposes {MCP_TOOLS} tools, so an agent can ask which newsletters wrote about a "
             "company, which sponsors run in a publication, and which lists are rising, without an "
@@ -333,7 +346,7 @@ def follow_up(lead, touch, picks):
                           for q in picks if q["sponsors"])
         subject = f"the other side of {lane}"
         text = (
-            f"Hi {first},\n\n"
+            f"{first}\n\n"
             f"Same shape, other end of {lane}:\n\n"
             + f"{_bullets(picks)}\n\n"
             + (f"{named}.\n\n" if named else "")
@@ -349,7 +362,7 @@ def follow_up(lead, touch, picks):
            if data_first(lead) else
            "reply and I will pull the two or three lists that fit your buyers best")
     text = (
-        f"Hi {first},\n\n"
+        f"{first}\n\n"
         f"I will leave it here. If newsletter coverage makes it onto the roadmap at {company}, "
         f"{ask}.\n\n"
         "The one I would start with:\n\n"
@@ -378,7 +391,7 @@ def compose(lead, touch, picks, allow_custom=True):
             p = picks[0]
             bullet = ("\n\nOne list from your lane, if a sample is easier to judge with it:"
                       f"\n\n- {p['name']} (est. {p['label']}): [TRACKED_LINK]")
-        return custom["subject"], (f"Hi {_greeting(lead)},\n\n" + custom["body"].strip()
+        return custom["subject"], (f"{_greeting(lead)}\n\n" + custom["body"].strip()
                                    + bullet + "\n\n[Name], Founder, NewsletterFIT")
     if touch == 1:
         return first_touch(lead, picks)
@@ -537,9 +550,6 @@ def main():
             skipped.append((lead.get("company"), f"no sponsor-taking list found in {lane}"))
             continue
         subject, text = compose(lead, touch, picks, allow_custom=allow_custom)
-        if not _greeting(lead):
-            skipped.append((lead.get("company"), "no contact name, a greeting would be invented"))
-            continue
         if is_role_address(lead.get("email")):
             # The gate holds a role mailbox outright, so composing one only fills the queue with
             # a draft that can never leave. A named buyer's address is the fix, not better copy.

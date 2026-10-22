@@ -127,6 +127,14 @@ Touch 4: the commercial close. Sample export for a segment they pick, or a scope
 
 ## Copy rules that hold for every offer
 
+- Subject: three to seven words, one idea, specific to the lead. Name what they get or the
+  surface they would use it on. Never a cadence label, never two ideas joined by "and", never an
+  abstraction ("provenance, and the text question" became "What one newsletter record contains").
+- The first line is the second hook, so it is the pitch and never a description of the prospect's
+  own product. They know what they sell. Open with the signal we derive, picked for their gap.
+- The competitor comparison is that lead's own peer set, read from their docs and from the graph.
+  The Apollo, Clay and ZoomInfo trio is right for CRM data vendors and wrong for a crawler
+  (Bright Data, Apify) or a two to ten person startup (no comparison at all).
 - No count of publications, articles or sponsors. Say corpus of newsletters, or newsletter
   intelligence. A count is both stale and easy to check.
 - No em-dashes, no percentages, no "placement count" claims for a lead the corpus has never seen

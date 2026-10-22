@@ -1,4 +1,4 @@
 {
- "subject": "provenance, and the text question",
- "body": "Every record carries its source: publication, article URL, published date and the extraction that produced it, so a fact can be traced back to the issue it came from rather than trusted as a summary.\n\nOn full text, the honest position is per publication. Derived records and metadata travel without restriction. Republishing an issue body depends on that publisher's terms, so it is a licensing conversation, not a default.\n\nFor a graph the derived layer is usually the useful half. I can send it mapped against your ontology first and let the text question follow if the coverage proves out.\n"
+ "subject": "What one newsletter record contains",
+ "body": "A record carries the publication, the article URL, the published date, the entities extracted from the issue, and any sponsor placement with the evidence line that proves it.\n\nDerived records travel without restriction. Republishing an issue body depends on that publisher's terms, so text is a licensing conversation rather than a default.\n\nFor a graph the derived layer is usually the useful half. I can send it mapped against your ontology first.\n"
 }
