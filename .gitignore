@@ -45,3 +45,6 @@ data/icp-size-cache.json
 
 # Fetched-page cache for the gap verifier (scripts/icp_gap_verify.py): re-fetchable, the report is not.
 data/icp-gap/pages/
+
+# Fetched-page cache per gap audit (scripts/icp_gap_verify.py): re-fetchable, the report is not.
+data/icp-gap/audits/*/pages/

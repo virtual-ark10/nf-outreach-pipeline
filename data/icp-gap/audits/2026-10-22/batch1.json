@@ -1,0 +1,163 @@
+[
+  {
+    "company": "Bitscale",
+    "official_website": "https://bitscale.ai/",
+    "product_summary": "GTM data layer for Salesforce and HubSpot: 100+ source enrichment, 18+ provider contact waterfalls, and 15 intent signals (hiring, funding, job change, LinkedIn engagement) run through AI grids and playbooks.",
+    "current_data_sources": [
+      "100+ third-party data sources; 18+ contact-data providers sequenced in one waterfall",
+      "LinkedIn (people, company, posts and engagement via scraping grids)",
+      "Google News / Bing News API",
+      "Company blogs and press rooms",
+      "PR Newswire / BusinessWire",
+      "Crunchbase updates",
+      "External job boards via Apify",
+      "CRM records (Salesforce, HubSpot) as first-party input"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+        "quote": "The BitScale External API lets you programmatically query workspace and grid metadata, trigger grid runs"
+      },
+      {
+        "url": "https://bitscale.ai/",
+        "quote": "Bitscale connects to 100+ data sources and sequences 18+ contact-data providers in one waterfall."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched bitscale.ai homepage, docs.bitscale.ai intent-signals page, the SI-5 News & Event Triggers module, the SDR playbook, the influencer/competitor tracking playbook and the full API reference. Their docs enumerate 15 intent signals and name news sources explicitly (Google News / Bing News, company blogs and press rooms, LinkedIn company updates, PR Newswire / BusinessWire, Crunchbase) with no newsletter title, article-level publication coverage, sponsorship relationship or publication-momentum data. The word newsletter/Substack/sponsorship does not appear on any of those pages.",
+    "verified_gap": "Bitscale's own documentation enumerates what it ingests: 15 intent signals plus a named news-source list (Google News/Bing News, company blogs, LinkedIn company updates, PR Newswire/BusinessWire, Crunchbase). No newsletter-publication coverage, sponsor relationships or publication momentum anywhere in that enumeration, so newsletter-derived company intelligence is a genuine gap rather than an overlap.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://docs.bitscale.ai/ingredients/intent-signals",
+        "quote": "Bitscale lets you detect, enrich, and act on 15 high-impact intent signals"
+      },
+      {
+        "url": "https://docs.bitscale.ai/academy/signal-intelligence/news-triggers",
+        "quote": "Google News / Bing News API — broad coverage, keyword-based"
+      },
+      {
+        "url": "https://bitscale.ai/",
+        "quote": "Bitscale connects to 100+ data sources and sequences 18+ contact-data providers in one waterfall."
+      },
+      {
+        "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+        "quote": "The BitScale External API lets you programmatically query workspace and grid metadata, trigger grid runs"
+      }
+    ],
+    "likely_buyer_role": "BUYER of data. Bitscale does not own the underlying records: it layers 100+ sources and an 18+ provider waterfall and re-sells coverage into the CRM, so a newsletter-intelligence feed would slot in as one more licensed source in the signal/waterfall layer. It does hand-build LinkedIn and Google News scrapers, so it could replicate a thin version, but the clean editorial signal set is faster to license.",
+    "contact_route": {
+      "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+      "value": "team@bitscale.ai",
+      "note": "Support address published inside the API reference docs; no separate public contact page was found on bitscale.ai."
+    },
+    "confidence": "High",
+    "caveats": "Bitscale already monitors 'public web' and LinkedIn influencer engagement, and has a dedicated news-trigger module, so a newsletter signal would be an extension of an existing signal family rather than a new category. Their own docs claim 95% email/phone coverage but the site also says 90-95% in the demo pitch, i.e. numbers are marketing-grade. API access is Enterprise-only."
+  },
+  {
+    "company": "Persana AI",
+    "official_website": "https://persana.ai/",
+    "product_summary": "AI prospecting and enrichment platform with 100+ data sources, 75+ buying-intent signals, waterfall email finding, an AI sequencer and agents that build and enrich lead lists from plain-English prompts.",
+    "current_data_sources": [
+      "100+ data sources / data APIs",
+      "Enrichment partners incl. Apollo, ContactOut, Datagma, Icypeas, LeadMagic, Prospeo, PredictLeads",
+      "Apify actors for web scraping",
+      "Google Search",
+      "Website visitor, keyword and technographic intent signals",
+      "Signals derived from funding news, hiring trends, G2 reviews, social listening"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://persana.ai/integrations",
+        "quote": "Run Apify actors to scrape data from websites"
+      },
+      {
+        "url": "https://persana.ai/pricing",
+        "quote": "Tap into 100+ data sources, web scraping, and AI-crafted research & messaging — all with Persana credits"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "No public docs site exists (docs.persana.ai returns nothing and site:docs.persana.ai is empty), so I searched the product surface: persana.ai homepage and its FEATURED SIGNALS list, the pricing page, the integrations / 'Our Data & Integrations' catalog, the help center FAQ index and the learn-persana academy pages. None mentions newsletters, Substack, beehiiv, publication-level editorial coverage or sponsorships. The signal list is enumerated (funding news, hiring trends, G2 reviews, website visits, keyword intent, competitors, technographics, website activity, product data, social listening) and contains no publication or sponsor signal.",
+    "verified_gap": "",
+    "gap_status": "unverified",
+    "evidence": [
+      {
+        "url": "https://persana.ai/",
+        "quote": "Track 75+ signals that show buying intent—from job changes and funding rounds to website visits and keyword intent"
+      },
+      {
+        "url": "https://persana.ai/",
+        "quote": "Drive your pipeline with 100+ intent data sources, AI, and automation."
+      },
+      {
+        "url": "https://persana.ai/integrations",
+        "quote": "Run Apify actors to scrape data from websites"
+      },
+      {
+        "url": "https://persana.ai/pricing",
+        "quote": "Tap into 100+ data sources, web scraping, and AI-crafted research & messaging — all with Persana credits"
+      }
+    ],
+    "likely_buyer_role": "BUYER of data, with some hand-building. Persana licenses a long tail of enrichment providers (Apollo, ContactOut, LeadMagic, Prospeo, Datagma, Icypeas, PredictLeads) and wraps them with Apify scraping and its own agents, so an editorial newsletter dataset is a natural licensed add-on to its signal layer rather than something it would crawl itself.",
+    "contact_route": {
+      "url": "https://persana.ai/contact-us",
+      "value": "sriya@persana.ai",
+      "note": "Contact page publishes the co-founder's address directly (plus a sales form and Calendly demo link); the same page routes existing customers to it for support."
+    },
+    "confidence": "Medium",
+    "caveats": "Gap is UNVERIFIED, not confirmed: Persana publishes no technical docs or field-level data dictionary, so absence of newsletter data can only be inferred from a marketing signal list and an integrations catalog. The integrations page also carries a banner that Persana is 'joining forces with Rox', so ownership and roadmap may be in flux — worth checking before a pitch. Public API documentation could not be located; API access is only referenced via help-center FAQ entries on webhooks and API keys."
+  },
+  {
+    "company": "Databar",
+    "official_website": "https://databar.ai/",
+    "product_summary": "Data enrichment workspace and API: 100+ keyless provider connectors, waterfall contact lookup, tables, automations, plus REST API, Python SDK, CLI and MCP access for GTM teams and AI agents.",
+    "current_data_sources": [
+      "100+ / 160+ data providers via the keyless 'API Network' (e.g. BuiltWith, People Data Labs, Clearbit, Diffbot, Hunter.io, ContactOut, Trestle, CompanyEnrich)",
+      "150+ web scrapers",
+      "Custom HTTP APIs and bring-your-own API keys",
+      "Premium datasets",
+      "CRM and email/outreach integrations (HubSpot, Salesforce, Google Sheets)",
+      "Own-key OAuth connectors"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://databar.ai/solutions/developers",
+        "quote": "Access 100+ data providers, enrichments, web scrapers, and built-in AI tools from a single endpoint"
+      },
+      {
+        "url": "https://docs.databar.ai/product-guide/credits-and-billing",
+        "quote": "we partnered with 100+ data providers to offer keyless access to their data"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the Databar homepage data-category list, docs.databar.ai (What is Databar, Enrichments, Credits & billing, the enrichments-list API endpoint), the pricing feature matrix and the developers/API page. Their stated enrichment outputs are contact and company fields (email, phone, company_name, employee_count) and their data categories are firmographics, funding, tech stack, hiring, traffic, reviews and news. No newsletter or publication-level source, no sponsorship data, no publication momentum. The words newsletter, Substack, sponsorship and publication do not appear on any page fetched.",
+    "verified_gap": "Databar's own product docs define enrichment output as structured contact/company fields and its public data-category list enumerates firmographics, funding, tech stack, hiring, traffic, reviews and news across 100+ providers. Newsletter-title coverage of a company, sponsor relationships between brands and publications, and rising-publication momentum are absent from that enumeration, so NF adds a data category rather than duplicating one.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://databar.ai/",
+        "quote": "Firmographics, funding, tech stack, hiring, traffic, reviews, news: 160+ live providers fill the columns you ask for"
+      },
+      {
+        "url": "https://docs.databar.ai/product-guide/enrichments",
+        "quote": "Hand Databar 500 email addresses and it can return full names, job titles, company sizes, and locations"
+      },
+      {
+        "url": "https://docs.databar.ai/product-guide/credits-and-billing",
+        "quote": "we partnered with 100+ data providers to offer keyless access to their data"
+      },
+      {
+        "url": "https://databar.ai/solutions/developers",
+        "quote": "Access 100+ data providers, enrichments, web scrapers, and built-in AI tools from a single endpoint"
+      }
+    ],
+    "likely_buyer_role": "BUYER and RESELLER, the strongest fit of the three. Databar's entire product is packaging other companies' data keyless behind one API Network and one credit system, so a newsletter-intelligence provider is a connector they license, not a corpus they would build. Their 'Add a Custom API' and custom-connector work also means onboarding a new provider is routine for them.",
+    "contact_route": {
+      "url": "https://docs.databar.ai/product-guide/what-is-databar",
+      "value": "info@databar.ai",
+      "note": "Support address listed in the Databar docs header; databar.ai/contact returns HTTP 404, so docs is the public route."
+    },
+    "confidence": "High",
+    "caveats": "Databar already carries a generic 'news' category and news-ish providers, so the pitch must be specific: newsletter-title readership and brand-publication sponsorship relationships, not 'news'. They are a platform/reseller with a self-serve connector model, so deal shape is likely a listed integration with revenue share rather than an enterprise data licence. Pricing is credit-metered per row, which suits per-record newsletter fields."
+  }
+]

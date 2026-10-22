@@ -1,0 +1,125 @@
+[
+  {
+    "company": "SyncGTM",
+    "official_website": "https://syncgtm.com/",
+    "product_summary": "AI GTM orchestration platform: waterfall enrichment across 20+ licensed providers, 600M+ profiles and 300M+ companies, buying-signal monitors, ICP scoring, AI research agents and outreach actions run from one table, app or MCP.",
+    "current_data_sources": [
+      "Waterfall enrichment across 20-50+ third-party providers (counts differ by page) for email, phone and firmographics",
+      "LinkedIn: person and company profiles, posts, post engagement, employee lists",
+      "Web scrapers: Google Maps, Reddit, Product Hunt, Hacker News, Google News, directories, G2",
+      "Company websites: tech stack, pricing pages, blog posts, traffic and traffic-growth estimates",
+      "News aggregators, press release databases and media outlets (news-mention signal)",
+      "YouTube transcripts and video search",
+      "Meta Ad Library (ads by page or keyword)",
+      "Job boards and career pages; headcount and hiring growth",
+      "CRM connectors: HubSpot, Salesforce, Attio, Pipedrive, Close",
+      "Customer-supplied RSS, webhook and HTTP sources",
+      "Funding, M&A and revenue estimates resold through enrichment providers"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.syncgtm.com/core_concepts/features/api_key",
+        "quote": "Sync GTM provides managed API keys for popular third-party tools"
+      },
+      {
+        "url": "https://syncgtm.com/",
+        "quote": "all from one workspace, via app or MCP"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the homepage and feature sections, the /enrichments library (75+ itemised enrichment actions), the /product/enrichment-mcp action list, and docs.syncgtm.com (getting started, 'what you can enrich', web scrapers, API keys, and the news-mention enrichment page). Content monitoring exists only as news mentions, company blog posts, YouTube, Reddit and Google News scraping. No newsletter or publication entity anywhere: nothing returns which newsletter wrote about a company, no publication inventory, no sponsor-to-publication mapping. A site search for 'newsletter' surfaces only agency directory listings and a blog post about email autoresponders.",
+    "verified_gap": "Publication-level newsletter editorial data is absent from an enumerated 75+ action library and from the documented lead sources: no newsletter publication object, no article-to-publication attribution, no sponsor/publication pairs and no newsletter momentum. A newsletter can only enter as raw text via a customer's own RSS/webhook or a custom AI-agent scrape, with no publication metadata attached.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://syncgtm.com/",
+        "quote": "enrich contacts and companies across 50+ data providers"
+      },
+      {
+        "url": "https://syncgtm.com/enrichments",
+        "quote": "Enrich any company or person with 70+ data points from 20+ providers"
+      },
+      {
+        "url": "https://syncgtm.com/enrichments/mentioned-recently-on-news",
+        "quote": "SyncGTM scans news aggregators, press release databases, and media outlets for recent mentions."
+      },
+      {
+        "url": "https://docs.syncgtm.com/",
+        "quote": "social and web scrapers (LinkedIn, X, Instagram, TikTok, Reddit, Google Maps, G2, Product Hunt)"
+      },
+      {
+        "url": "https://docs.syncgtm.com/",
+        "quote": "custom webhook / RSS / HTTP sources"
+      }
+    ],
+    "likely_buyer_role": "BUYER first: resells 20-50+ licensed providers through one waterfall and credit balance, with bring-your-own-API-key support for tools like ContactOut, Apify and Firecrawl. Also a capable builder, since it runs its own web scrapers and AI research agents - so a newsletter field could be licensed or self-built, and the commercial logic favours licensing a ready publication graph.",
+    "contact_route": {
+      "url": "https://syncgtm.com/contact",
+      "value": "hello@syncgtm.com",
+      "note": "Publicly listed general-inquiries address on the contact page (legal@syncgtm.com for privacy); support@syncgtm.com also appears as the homepage mailto. Demo-booking form sits on the same page."
+    },
+    "confidence": "High",
+    "caveats": "Provider counts are inconsistent across their own pages (10+, 20+, 25+, 50+), so exact licensing breadth is unclear. Custom RSS/webhook ingestion plus AI research agents mean a determined customer can already push newsletter text in manually - the gap is structured publication and sponsor data, not the ability to read a feed. No named GTM/data leader verified from public pages, so outreach route is the shared inbox."
+  },
+  {
+    "company": "Unify",
+    "official_website": "https://www.unifygtm.com/",
+    "product_summary": "Outbound-agent platform for sales reps: 1.1B contacts and 65M companies, AI-adaptive waterfall over 11+ vendors, 40+ signal sources, native sequencing, automated plays and a public Data, Analytics, Sequences and Tasks API.",
+    "current_data_sources": [
+      "Proprietary database: 1.1B people and 65M companies",
+      "Email/phone waterfall vendors: Clearbit, ContactOut, Findymail, Forager, FullEnrich, Prospeo, Wiza",
+      "Intent and technographics: 6sense, Demandbase, G2, BuiltWith, BuyerCaddy, TheirStack, Harmonic, Dealroom",
+      "News and company events: PredictLeads (37 event categories)",
+      "Creator and podcast sponsorship activity: Upriver",
+      "SEO, traffic and search visibility: SE Ranking, Serpstat",
+      "Local/SMB and ecommerce: OpenMart, Store Leads",
+      "First-party events: Unify website tag, Segment, PostHog, Analytics API",
+      "CRM and warehouse: Salesforce, HubSpot, Fivetran, Hightouch",
+      "Unify API custom events, objects and records"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.unifygtm.com/developers/api/data/overview",
+        "quote": "The base URL of all API requests to the Data API is"
+      },
+      {
+        "url": "https://docs.unifygtm.com/developers/introduction",
+        "quote": "provides APIs for event collection, object data, sequences, and tasks"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched the homepage, /product/b2b-company-contact-data, /products/signals (the full 40+ source list with per-source data points), /pricing (signal categories), docs.unifygtm.com developer introduction, Data API overview, 'Connecting your data', and the integrations overview (Salesforce, HubSpot, 6sense, Clearbit, Demandbase, G2, Gmail, Google Tag Manager, Nooks, Orum, PostHog, Segment, Slack). No newsletter publication, Substack/beehiiv source or publication-level editorial field. Adjacent coverage exists - Upriver supplies podcast and creator sponsorship activity, PredictLeads supplies news events - but neither identifies which newsletter publication wrote about a company.",
+    "verified_gap": "No newsletter publication inventory, no article-to-publication attribution, no sponsor-to-publication pairs and no newsletter momentum, inside a catalogue that already sells the adjacency: 40+ enumerated sources including Upriver's podcast sponsorships and PredictLeads news events, but nothing publication-level in newsletters. Newsletter text could only arrive as customer-pushed custom objects through the Data API.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.unifygtm.com/products/signals",
+        "quote": "Unify gives you access to 40+ data sources out of the box"
+      },
+      {
+        "url": "https://www.unifygtm.com/products/signals",
+        "quote": "Surface creator partnerships and brand sponsorship activity."
+      },
+      {
+        "url": "https://docs.unifygtm.com/reference/integrations/overview",
+        "quote": "Connect the tools your team uses to bring data into Unify"
+      },
+      {
+        "url": "https://docs.unifygtm.com/developers/api/data/overview",
+        "quote": "These APIs provide the means to connect custom data sources to Unify"
+      },
+      {
+        "url": "https://www.unifygtm.com/pricing",
+        "quote": "we source from best-in-class specialized providers, negotiate pricing on your behalf"
+      }
+    ],
+    "likely_buyer_role": "BUYER of data: sells itself as a vetted wholesale marketplace that licenses specialist providers and resells them on credits, and already licenses a sponsorship-adjacent source (Upriver) plus a news-event source (PredictLeads). The archetype that licenses a newsletter field rather than building a corpus.",
+    "contact_route": {
+      "url": "https://support.unifygtm.com/",
+      "value": "support.unifygtm.com knowledge base (in-app chat support)",
+      "note": "Public support docs with chat entry point; no sales or general inbox published on the pages fetched - the only address on /pricing is security@unifygtm.com, for security matters."
+    },
+    "confidence": "Medium",
+    "caveats": "The 40+ source list ends with 'over a dozen additional sources natively built in', so it is not a closed enumeration - hence Medium confidence on the confirmed gap. Upriver's podcast/creator sponsorship data overlaps part of NF's sponsorship story, so positioning must be newsletter-specific. Custom objects plus the Data API let a customer load newsletter records themselves, but Unify would still have to source the underlying publication data. Open API and webhooks are Business-tier only."
+  }
+]

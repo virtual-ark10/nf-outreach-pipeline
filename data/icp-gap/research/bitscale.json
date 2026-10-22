@@ -1,0 +1,55 @@
+{
+ "company": "Bitscale",
+ "official_website": "https://bitscale.ai/",
+ "product_summary": "GTM data layer for Salesforce and HubSpot: 100+ source enrichment, 18+ provider contact waterfalls, and 15 intent signals (hiring, funding, job change, LinkedIn engagement) run through AI grids and playbooks.",
+ "current_data_sources": [
+  "100+ third-party data sources; 18+ contact-data providers sequenced in one waterfall",
+  "LinkedIn (people, company, posts and engagement via scraping grids)",
+  "Google News / Bing News API",
+  "Company blogs and press rooms",
+  "PR Newswire / BusinessWire",
+  "Crunchbase updates",
+  "External job boards via Apify",
+  "CRM records (Salesforce, HubSpot) as first-party input"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+   "quote": "The BitScale External API lets you programmatically query workspace and grid metadata, trigger grid runs"
+  },
+  {
+   "url": "https://bitscale.ai/",
+   "quote": "Bitscale connects to 100+ data sources and sequences 18+ contact-data providers in one waterfall."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched bitscale.ai homepage, docs.bitscale.ai intent-signals page, the SI-5 News & Event Triggers module, the SDR playbook, the influencer/competitor tracking playbook and the full API reference. Their docs enumerate 15 intent signals and name news sources explicitly (Google News / Bing News, company blogs and press rooms, LinkedIn company updates, PR Newswire / BusinessWire, Crunchbase) with no newsletter title, article-level publication coverage, sponsorship relationship or publication-momentum data. The word newsletter/Substack/sponsorship does not appear on any of those pages.",
+ "verified_gap": "Bitscale's own documentation enumerates what it ingests: 15 intent signals plus a named news-source list (Google News/Bing News, company blogs, LinkedIn company updates, PR Newswire/BusinessWire, Crunchbase). No newsletter-publication coverage, sponsor relationships or publication momentum anywhere in that enumeration, so newsletter-derived company intelligence is a genuine gap rather than an overlap.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://docs.bitscale.ai/ingredients/intent-signals",
+   "quote": "Bitscale lets you detect, enrich, and act on 15 high-impact intent signals"
+  },
+  {
+   "url": "https://docs.bitscale.ai/academy/signal-intelligence/news-triggers",
+   "quote": "Google News / Bing News API \u2014 broad coverage, keyword-based"
+  },
+  {
+   "url": "https://bitscale.ai/",
+   "quote": "Bitscale connects to 100+ data sources and sequences 18+ contact-data providers in one waterfall."
+  },
+  {
+   "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+   "quote": "The BitScale External API lets you programmatically query workspace and grid metadata, trigger grid runs"
+  }
+ ],
+ "likely_buyer_role": "BUYER of data. Bitscale does not own the underlying records: it layers 100+ sources and an 18+ provider waterfall and re-sells coverage into the CRM, so a newsletter-intelligence feed would slot in as one more licensed source in the signal/waterfall layer. It does hand-build LinkedIn and Google News scrapers, so it could replicate a thin version, but the clean editorial signal set is faster to license.",
+ "contact_route": {
+  "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+  "value": "team@bitscale.ai",
+  "note": "Support address published inside the API reference docs; no separate public contact page was found on bitscale.ai."
+ },
+ "confidence": "High",
+ "caveats": "Bitscale already monitors 'public web' and LinkedIn influencer engagement, and has a dedicated news-trigger module, so a newsletter signal would be an extension of an existing signal family rather than a new category. Their own docs claim 95% email/phone coverage but the site also says 90-95% in the demo pitch, i.e. numbers are marketing-grade. API access is Enterprise-only."
+}

@@ -1,0 +1,126 @@
+[
+  {
+    "company": "Ocean.io",
+    "official_website": "https://ocean.io/",
+    "product_summary": "Lookalike and account intelligence for outbound: learns an ICP from CRM won/lost deals, ranks an 85M+ company index against it, and enriches accounts, contacts and buying committees inside CRM, sequencer or agent workflows.",
+    "current_data_sources": [
+      "Proprietary 85M+ company index (single index behind search, scoring, research, enrichment)",
+      "Company websites, read live by AI to answer per-account research questions",
+      "Waterfall enrichment across 16+ third-party data sources (emails, phones)",
+      "CRM deal history from Salesforce and HubSpot (closed-won/closed-lost segmentation)",
+      "Hiring, funding, leadership-change and headcount-growth signals",
+      "Technographics, revenue bands, employee counts, mobile app data, LinkedIn headcount"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://docs.ocean.io",
+        "quote": "32 endpoints across 8 groups."
+      },
+      {
+        "url": "https://docs.ocean.io",
+        "quote": "Programmatic access to company and people data"
+      },
+      {
+        "url": "https://www.ocean.io/pricing",
+        "quote": "Waterfall enrichment across 16+ data sources"
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched ocean.io homepage, /pricing (full plan and feature comparison plus integrations table), docs.ocean.io API overview, /v2/data-fields, /v3/search/companies parameter reference, /v2/enrich/companies and the contact page. No newsletter, publication, Substack, beehiiv or editorial-coverage source, field or integration is listed anywhere; the documented index and signal surface is firmographic, technographic, hiring, funding and CRM-deal data, plus website research.",
+    "verified_gap": "No newsletter or publication-level editorial data. The documented company search surface exposes location, size, industry, technology, revenue, founding year, department-size, LinkedIn headcount and mobile-app filters, and the documented signals are hiring ('Hiring signals in workflows'), funding, leadership change and headcount growth. Nothing records which newsletters wrote about an account, which brands sponsor those newsletters, or whether a publication is gaining or losing momentum.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://www.ocean.io/",
+        "quote": "Ocean.io learns your ICP from the deals you already won, then ranks every company in your market against it."
+      },
+      {
+        "url": "https://www.ocean.io/",
+        "quote": "Ocean.io answers it from their own website, so a rep opens the account already knowing the answer."
+      },
+      {
+        "url": "https://docs.ocean.io/searchCompaniesV3",
+        "quote": "Find all B2B SaaS companies in Germany with 51–200 employees that use HubSpot."
+      },
+      {
+        "url": "https://www.ocean.io/pricing",
+        "quote": "Hiring signals in workflows"
+      },
+      {
+        "url": "https://www.ocean.io/pricing",
+        "quote": "Waterfall enrichment across 16+ data sources"
+      }
+    ],
+    "likely_buyer_role": "BUYER of third-party data, with a secondary SUPPLIER angle. Ocean.io already aggregates 16+ external sources into its index and sells per-credit enrichment, so newsletter coverage and sponsor relationships would drop in as additional account-research column or signal rather than a new product. It could equally sell NF its firmographic/technographic enrichment.",
+    "contact_route": {
+      "url": "https://www.ocean.io/contact-us",
+      "value": "contact form",
+      "note": "Public contact page lists Copenhagen and San Francisco offices and a demo/contact form; no named person or general email published."
+    },
+    "confidence": "Medium",
+    "caveats": "Gap rests on the API parameter reference plus plan/feature enumeration, not an exhaustive data dictionary, so an undocumented research layer could already read publisher sites; their 'research from the company's own website' framing suggests publisher text is not indexed. Two-sided fit: NF could also buy Ocean's firmographics, which weakens urgency. No public pricing for the Revenue Navigator tier that holds the signal features."
+  },
+  {
+    "company": "Warmly",
+    "official_website": "https://www.warmly.ai/",
+    "product_summary": "Signal-based GTM platform: de-anonymizes website visitors at person level, layers intent and buying signals into a context graph, and runs AI inbound/TAM agents across chat, email and ads, exposed via app, API and MCP.",
+    "current_data_sources": [
+      "First-party website visitor identification and product/chat behaviour",
+      "News & Press (weekly, ~33k events, article title/url/body)",
+      "LinkedIn company and contact posts plus comments (bi-weekly)",
+      "Hiring velocity/trends and open-role data",
+      "Work milestones, job changes, employee growth",
+      "G2 and Glassdoor reviews; SEC filings (8-K, 10-K, 10-Q, 20-F, 6-K)",
+      "Web & Social: YouTube, Reddit mentions, GitHub, patents, website changes, traffic, financial",
+      "Bombora third-party intent topics; multi-vendor enrichment waterfall (LinkedIn partners, email discovery, firmographic databases); CRM data"
+    ],
+    "api_or_integration_evidence": [
+      {
+        "url": "https://www.warmly.ai/",
+        "quote": "Access via: App · API · MCP"
+      },
+      {
+        "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+        "quote": "Every signal flows from one of eight source families currently live in the MCP."
+      },
+      {
+        "url": "https://www.warmly.ai/p/tam-agent/enrichment",
+        "quote": "One vendor doesn't have everyone."
+      }
+    ],
+    "newsletter_capability_status": "not_found_in_public_docs",
+    "newsletter_capability_detail": "Searched warmly.ai homepage, /p/signals, /p/signals/third-party (full signal list), /p/tam-agent/enrichment (enrichment fields and sources), help.warmly.ai MCP signal catalog with its eight source families, and the booking page. Newsletter ingestion, a Substack/beehiiv source, publication-level fields or sponsor data appear nowhere; the content layer is news articles, podcasts, YouTube, Reddit and review sites only.",
+    "verified_gap": "Newsletter and publication-level editorial data is absent from the source enumeration. The MCP signal catalog fixes the ingest surface at eight source families (News & Press, LinkedIn, Hiring, Work Milestones, G2 Reviews, SEC Filings, Glassdoor, Web & Social), none of which is a newsletter or publication feed, and no field carries publication identity, sponsor relationships or publication momentum. Warmly can therefore say an account was in the news, but not which newsletters covered it or who sponsors them.",
+    "gap_status": "confirmed",
+    "evidence": [
+      {
+        "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+        "quote": "Every signal flows from one of eight source families currently live in the MCP."
+      },
+      {
+        "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+        "quote": "News, LinkedIn, hiring, and work milestones are the most populated and refresh fastest."
+      },
+      {
+        "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+        "quote": "guest-spot detection across major shows."
+      },
+      {
+        "url": "https://www.warmly.ai/",
+        "quote": "Warmly's AI de-anonymizes website visitors at the person level"
+      },
+      {
+        "url": "https://www.warmly.ai/p/signals/third-party",
+        "quote": "Third-party signals reveal off-site buying behavior"
+      }
+    ],
+    "likely_buyer_role": "BUYER for signal-source expansion, with a SUPPLIER overlap. Warmly's product is a normalized signal stream over a fixed eight-source MCP, so newsletters would slot in as a ninth source feeding the same signal shape (company, domain, contact, detected_at). Because it already resells signals to other platforms via MCP, it could also see NF as a supplier or a narrow competitor rather than a pure customer.",
+    "contact_route": {
+      "url": "https://www.warmly.ai/p/book-a-demo",
+      "value": "demo request form",
+      "note": "Publicly listed demo/contact form with phone consent notice; no named person or published email found."
+    },
+    "confidence": "High",
+    "caveats": "Their News & Press source already returns article title, url and body, so the incremental value of NF is publication-level authority, sponsor relationships and momentum, not article text — pitch the 'who sponsors whom' and rising-publication layer. Podcast and Product Hunt detection on their roadmap shows appetite for new editorial sources, and a newsletter source may already be in flight undocumented. Adjacent capability means this is an extension sale, not greenfield."
+  }
+]

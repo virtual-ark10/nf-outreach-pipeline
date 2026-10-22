@@ -974,5 +974,221 @@
     "reason": "exact"
    }
   ]
+ },
+ "Bitscale": {
+  "checked": 4,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://docs.bitscale.ai/ingredients/intent-signals",
+    "quote": "Bitscale lets you detect, enrich, and act on 15 high-impact intent signals",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.bitscale.ai/academy/signal-intelligence/news-triggers",
+    "quote": "Google News / Bing News API \u2014 broad coverage, keyword-based",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://bitscale.ai/",
+    "quote": "Bitscale connects to 100+ data sources and sequences 18+ contact-data providers in one waterfall.",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.bitscale.ai/ingredients/bitscale-api-reference",
+    "quote": "The BitScale External API lets you programmatically query workspace and grid metadata, trigger grid runs",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "Persana AI": {
+  "checked": 3,
+  "verified": 3,
+  "rows": [
+   {
+    "url": "https://persana.ai/",
+    "quote": "Track 75+ signals that show buying intent\u2014from job changes and funding rounds to website visits and keyword intent",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://persana.ai/integrations",
+    "quote": "Run Apify actors to scrape data from websites",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://persana.ai/pricing",
+    "quote": "Tap into 100+ data sources, web scraping, and AI-crafted research & messaging \u2014 all with Persana credits",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "Databar": {
+  "checked": 4,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://databar.ai/",
+    "quote": "Firmographics, funding, tech stack, hiring, traffic, reviews, news: 160+ live providers fill the columns you ask for",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.databar.ai/product-guide/enrichments",
+    "quote": "Hand Databar 500 email addresses and it can return full names, job titles, company sizes, and locations",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.databar.ai/product-guide/credits-and-billing",
+    "quote": "we partnered with 100+ data providers to offer keyless access to their data",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://databar.ai/solutions/developers",
+    "quote": "Access 100+ data providers, enrichments, web scrapers, and built-in AI tools from a single endpoint",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "SyncGTM": {
+  "checked": 5,
+  "verified": 5,
+  "rows": [
+   {
+    "url": "https://syncgtm.com/",
+    "quote": "enrich contacts and companies across 50+ data providers",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://syncgtm.com/enrichments",
+    "quote": "Enrich any company or person with 70+ data points from 20+ providers",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://syncgtm.com/enrichments/mentioned-recently-on-news",
+    "quote": "SyncGTM scans news aggregators, press release databases, and media outlets for recent mentions.",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.syncgtm.com/",
+    "quote": "social and web scrapers (LinkedIn, X, Instagram, TikTok, Reddit, Google Maps, G2, Product Hunt)",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.syncgtm.com/core_concepts/features/api_key",
+    "quote": "Sync GTM provides managed API keys for popular third-party tools",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "Unify": {
+  "checked": 5,
+  "verified": 5,
+  "rows": [
+   {
+    "url": "https://www.unifygtm.com/products/signals",
+    "quote": "Unify gives you access to 40+ data sources out of the box",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.unifygtm.com/reference/integrations/overview",
+    "quote": "Connect the tools your team uses to bring data into Unify",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.unifygtm.com/developers/api/data/overview",
+    "quote": "These APIs provide the means to connect custom data sources to Unify",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.unifygtm.com/pricing",
+    "quote": "we source from best-in-class specialized providers, negotiate pricing on your behalf",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.unifygtm.com/developers/introduction",
+    "quote": "provides APIs for event collection, object data, sequences, and tasks",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "Ocean.io": {
+  "checked": 4,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://www.ocean.io/",
+    "quote": "Ocean.io learns your ICP from the deals you already won, then ranks every company in your market against it.",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.ocean.io/searchCompaniesV3",
+    "quote": "Find all B2B SaaS companies in Germany with 51\u2013200 employees that use HubSpot.",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.ocean.io/pricing",
+    "quote": "Hiring signals in workflows",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://docs.ocean.io",
+    "quote": "32 endpoints across 8 groups.",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
+ },
+ "Warmly": {
+  "checked": 4,
+  "verified": 4,
+  "rows": [
+   {
+    "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+    "quote": "Every signal flows from one of eight source families currently live in the MCP.",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.warmly.ai/",
+    "quote": "Warmly's AI de-anonymizes website visitors at the person level",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.warmly.ai/p/signals/third-party",
+    "quote": "Third-party signals reveal off-site buying behavior",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.warmly.ai/p/tam-agent/enrichment",
+    "quote": "One vendor doesn't have everyone.",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
  }
 }

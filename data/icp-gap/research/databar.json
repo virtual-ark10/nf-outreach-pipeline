@@ -1,0 +1,53 @@
+{
+ "company": "Databar",
+ "official_website": "https://databar.ai/",
+ "product_summary": "Data enrichment workspace and API: 100+ keyless provider connectors, waterfall contact lookup, tables, automations, plus REST API, Python SDK, CLI and MCP access for GTM teams and AI agents.",
+ "current_data_sources": [
+  "100+ / 160+ data providers via the keyless 'API Network' (e.g. BuiltWith, People Data Labs, Clearbit, Diffbot, Hunter.io, ContactOut, Trestle, CompanyEnrich)",
+  "150+ web scrapers",
+  "Custom HTTP APIs and bring-your-own API keys",
+  "Premium datasets",
+  "CRM and email/outreach integrations (HubSpot, Salesforce, Google Sheets)",
+  "Own-key OAuth connectors"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://databar.ai/solutions/developers",
+   "quote": "Access 100+ data providers, enrichments, web scrapers, and built-in AI tools from a single endpoint"
+  },
+  {
+   "url": "https://docs.databar.ai/product-guide/credits-and-billing",
+   "quote": "we partnered with 100+ data providers to offer keyless access to their data"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the Databar homepage data-category list, docs.databar.ai (What is Databar, Enrichments, Credits & billing, the enrichments-list API endpoint), the pricing feature matrix and the developers/API page. Their stated enrichment outputs are contact and company fields (email, phone, company_name, employee_count) and their data categories are firmographics, funding, tech stack, hiring, traffic, reviews and news. No newsletter or publication-level source, no sponsorship data, no publication momentum. The words newsletter, Substack, sponsorship and publication do not appear on any page fetched.",
+ "verified_gap": "Databar's own product docs define enrichment output as structured contact/company fields and its public data-category list enumerates firmographics, funding, tech stack, hiring, traffic, reviews and news across 100+ providers. Newsletter-title coverage of a company, sponsor relationships between brands and publications, and rising-publication momentum are absent from that enumeration, so NF adds a data category rather than duplicating one.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://databar.ai/",
+   "quote": "Firmographics, funding, tech stack, hiring, traffic, reviews, news: 160+ live providers fill the columns you ask for"
+  },
+  {
+   "url": "https://docs.databar.ai/product-guide/enrichments",
+   "quote": "Hand Databar 500 email addresses and it can return full names, job titles, company sizes, and locations"
+  },
+  {
+   "url": "https://docs.databar.ai/product-guide/credits-and-billing",
+   "quote": "we partnered with 100+ data providers to offer keyless access to their data"
+  },
+  {
+   "url": "https://databar.ai/solutions/developers",
+   "quote": "Access 100+ data providers, enrichments, web scrapers, and built-in AI tools from a single endpoint"
+  }
+ ],
+ "likely_buyer_role": "BUYER and RESELLER, the strongest fit of the three. Databar's entire product is packaging other companies' data keyless behind one API Network and one credit system, so a newsletter-intelligence provider is a connector they license, not a corpus they would build. Their 'Add a Custom API' and custom-connector work also means onboarding a new provider is routine for them.",
+ "contact_route": {
+  "url": "https://docs.databar.ai/product-guide/what-is-databar",
+  "value": "info@databar.ai",
+  "note": "Support address listed in the Databar docs header; databar.ai/contact returns HTTP 404, so docs is the public route."
+ },
+ "confidence": "High",
+ "caveats": "Databar already carries a generic 'news' category and news-ish providers, so the pitch must be specific: newsletter-title readership and brand-publication sponsorship relationships, not 'news'. They are a platform/reseller with a self-serve connector model, so deal shape is likely a listed integration with revenue share rather than an enterprise data licence. Pricing is credit-metered per row, which suits per-record newsletter fields."
+}

@@ -1,0 +1,62 @@
+{
+ "company": "SyncGTM",
+ "official_website": "https://syncgtm.com/",
+ "product_summary": "AI GTM orchestration platform: waterfall enrichment across 20+ licensed providers, 600M+ profiles and 300M+ companies, buying-signal monitors, ICP scoring, AI research agents and outreach actions run from one table, app or MCP.",
+ "current_data_sources": [
+  "Waterfall enrichment across 20-50+ third-party providers (counts differ by page) for email, phone and firmographics",
+  "LinkedIn: person and company profiles, posts, post engagement, employee lists",
+  "Web scrapers: Google Maps, Reddit, Product Hunt, Hacker News, Google News, directories, G2",
+  "Company websites: tech stack, pricing pages, blog posts, traffic and traffic-growth estimates",
+  "News aggregators, press release databases and media outlets (news-mention signal)",
+  "YouTube transcripts and video search",
+  "Meta Ad Library (ads by page or keyword)",
+  "Job boards and career pages; headcount and hiring growth",
+  "CRM connectors: HubSpot, Salesforce, Attio, Pipedrive, Close",
+  "Customer-supplied RSS, webhook and HTTP sources",
+  "Funding, M&A and revenue estimates resold through enrichment providers"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://docs.syncgtm.com/core_concepts/features/api_key",
+   "quote": "Sync GTM provides managed API keys for popular third-party tools"
+  },
+  {
+   "url": "https://syncgtm.com/",
+   "quote": "all from one workspace, via app or MCP"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the homepage and feature sections, the /enrichments library (75+ itemised enrichment actions), the /product/enrichment-mcp action list, and docs.syncgtm.com (getting started, 'what you can enrich', web scrapers, API keys, and the news-mention enrichment page). Content monitoring exists only as news mentions, company blog posts, YouTube, Reddit and Google News scraping. No newsletter or publication entity anywhere: nothing returns which newsletter wrote about a company, no publication inventory, no sponsor-to-publication mapping. A site search for 'newsletter' surfaces only agency directory listings and a blog post about email autoresponders.",
+ "verified_gap": "Publication-level newsletter editorial data is absent from an enumerated 75+ action library and from the documented lead sources: no newsletter publication object, no article-to-publication attribution, no sponsor/publication pairs and no newsletter momentum. A newsletter can only enter as raw text via a customer's own RSS/webhook or a custom AI-agent scrape, with no publication metadata attached.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://syncgtm.com/",
+   "quote": "enrich contacts and companies across 50+ data providers"
+  },
+  {
+   "url": "https://syncgtm.com/enrichments",
+   "quote": "Enrich any company or person with 70+ data points from 20+ providers"
+  },
+  {
+   "url": "https://syncgtm.com/enrichments/mentioned-recently-on-news",
+   "quote": "SyncGTM scans news aggregators, press release databases, and media outlets for recent mentions."
+  },
+  {
+   "url": "https://docs.syncgtm.com/",
+   "quote": "social and web scrapers (LinkedIn, X, Instagram, TikTok, Reddit, Google Maps, G2, Product Hunt)"
+  },
+  {
+   "url": "https://docs.syncgtm.com/",
+   "quote": "custom webhook / RSS / HTTP sources"
+  }
+ ],
+ "likely_buyer_role": "BUYER first: resells 20-50+ licensed providers through one waterfall and credit balance, with bring-your-own-API-key support for tools like ContactOut, Apify and Firecrawl. Also a capable builder, since it runs its own web scrapers and AI research agents - so a newsletter field could be licensed or self-built, and the commercial logic favours licensing a ready publication graph.",
+ "contact_route": {
+  "url": "https://syncgtm.com/contact",
+  "value": "hello@syncgtm.com",
+  "note": "Publicly listed general-inquiries address on the contact page (legal@syncgtm.com for privacy); support@syncgtm.com also appears as the homepage mailto. Demo-booking form sits on the same page."
+ },
+ "confidence": "High",
+ "caveats": "Provider counts are inconsistent across their own pages (10+, 20+, 25+, 50+), so exact licensing breadth is unclear. Custom RSS/webhook ingestion plus AI research agents mean a determined customer can already push newsletter text in manually - the gap is structured publication and sponsor data, not the ability to read a feed. No named GTM/data leader verified from public pages, so outreach route is the shared inbox."
+}

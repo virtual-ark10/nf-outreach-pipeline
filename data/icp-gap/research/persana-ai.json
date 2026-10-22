@@ -1,0 +1,53 @@
+{
+ "company": "Persana AI",
+ "official_website": "https://persana.ai/",
+ "product_summary": "AI prospecting and enrichment platform with 100+ data sources, 75+ buying-intent signals, waterfall email finding, an AI sequencer and agents that build and enrich lead lists from plain-English prompts.",
+ "current_data_sources": [
+  "100+ data sources / data APIs",
+  "Enrichment partners incl. Apollo, ContactOut, Datagma, Icypeas, LeadMagic, Prospeo, PredictLeads",
+  "Apify actors for web scraping",
+  "Google Search",
+  "Website visitor, keyword and technographic intent signals",
+  "Signals derived from funding news, hiring trends, G2 reviews, social listening"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://persana.ai/integrations",
+   "quote": "Run Apify actors to scrape data from websites"
+  },
+  {
+   "url": "https://persana.ai/pricing",
+   "quote": "Tap into 100+ data sources, web scraping, and AI-crafted research & messaging \u2014 all with Persana credits"
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "No public docs site exists (docs.persana.ai returns nothing and site:docs.persana.ai is empty), so I searched the product surface: persana.ai homepage and its FEATURED SIGNALS list, the pricing page, the integrations / 'Our Data & Integrations' catalog, the help center FAQ index and the learn-persana academy pages. None mentions newsletters, Substack, beehiiv, publication-level editorial coverage or sponsorships. The signal list is enumerated (funding news, hiring trends, G2 reviews, website visits, keyword intent, competitors, technographics, website activity, product data, social listening) and contains no publication or sponsor signal.",
+ "verified_gap": "",
+ "gap_status": "unverified",
+ "evidence": [
+  {
+   "url": "https://persana.ai/",
+   "quote": "Track 75+ signals that show buying intent\u2014from job changes and funding rounds to website visits and keyword intent"
+  },
+  {
+   "url": "https://persana.ai/",
+   "quote": "Drive your pipeline with 100+ intent data sources, AI, and automation."
+  },
+  {
+   "url": "https://persana.ai/integrations",
+   "quote": "Run Apify actors to scrape data from websites"
+  },
+  {
+   "url": "https://persana.ai/pricing",
+   "quote": "Tap into 100+ data sources, web scraping, and AI-crafted research & messaging \u2014 all with Persana credits"
+  }
+ ],
+ "likely_buyer_role": "BUYER of data, with some hand-building. Persana licenses a long tail of enrichment providers (Apollo, ContactOut, LeadMagic, Prospeo, Datagma, Icypeas, PredictLeads) and wraps them with Apify scraping and its own agents, so an editorial newsletter dataset is a natural licensed add-on to its signal layer rather than something it would crawl itself.",
+ "contact_route": {
+  "url": "https://persana.ai/contact-us",
+  "value": "sriya@persana.ai",
+  "note": "Contact page publishes the co-founder's address directly (plus a sales form and Calendly demo link); the same page routes existing customers to it for support."
+ },
+ "confidence": "Medium",
+ "caveats": "Gap is UNVERIFIED, not confirmed: Persana publishes no technical docs or field-level data dictionary, so absence of newsletter data can only be inferred from a marketing signal list and an integrations catalog. The integrations page also carries a banner that Persana is 'joining forces with Rox', so ownership and roadmap may be in flux \u2014 worth checking before a pitch. Public API documentation could not be located; API access is only referenced via help-center FAQ entries on webhooks and API keys."
+}

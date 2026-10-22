@@ -54,6 +54,16 @@
   "status": "verified",
   "reason": "confirmed gap, 5/5 quotes verified"
  },
+ "bitscale": {
+  "lead_id": "bitscale",
+  "company": "Bitscale",
+  "gap_status": "confirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 4/4 quotes verified"
+ },
  "bombora": {
   "lead_id": "bombora",
   "company": "Bombora",
@@ -204,6 +214,16 @@
   "status": "verified",
   "reason": "confirmed gap, 2/2 quotes verified"
  },
+ "databar": {
+  "lead_id": "databar",
+  "company": "Databar",
+  "gap_status": "confirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 4/4 quotes verified"
+ },
  "dealroom": {
   "lead_id": "dealroom",
   "company": "Dealroom",
@@ -347,6 +367,16 @@
   "status": "verified",
   "reason": "confirmed gap, 6/6 quotes verified"
  },
+ "ocean-io": {
+  "lead_id": "ocean-io",
+  "company": "Ocean.io",
+  "gap_status": "confirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 4/4 quotes verified"
+ },
  "onclusive": {
   "lead_id": "onclusive",
   "company": "Onclusive",
@@ -395,6 +425,16 @@
   "status": "ask-only",
   "reason": "gap unverified: offer the data and ask, never assert absence"
  },
+ "persana-ai": {
+  "lead_id": "persana-ai",
+  "company": "Persana AI",
+  "gap_status": "unverified",
+  "checked": 3,
+  "verified": 3,
+  "failed": [],
+  "status": "ask-only",
+  "reason": "gap unverified: offer the data and ask, never assert absence"
+ },
  "signal-ai": {
   "lead_id": "signal-ai",
   "company": "Signal AI",
@@ -433,6 +473,16 @@
   "status": "verified",
   "reason": "confirmed gap, 3/3 quotes verified"
  },
+ "syncgtm": {
+  "lead_id": "syncgtm",
+  "company": "SyncGTM",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 5,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 5/5 quotes verified"
+ },
  "tracxn": {
   "lead_id": "tracxn",
   "company": "Tracxn",
@@ -442,6 +492,26 @@
   "failed": [],
   "status": "verified",
   "reason": "confirmed gap, 3/3 quotes verified"
+ },
+ "unify": {
+  "lead_id": "unify",
+  "company": "Unify",
+  "gap_status": "confirmed",
+  "checked": 5,
+  "verified": 5,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 5/5 quotes verified"
+ },
+ "warmly": {
+  "lead_id": "warmly",
+  "company": "Warmly",
+  "gap_status": "confirmed",
+  "checked": 4,
+  "verified": 4,
+  "failed": [],
+  "status": "verified",
+  "reason": "confirmed gap, 4/4 quotes verified"
  },
  "zyte": {
   "lead_id": "zyte",

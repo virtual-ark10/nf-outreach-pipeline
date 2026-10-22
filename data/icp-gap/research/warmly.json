@@ -1,0 +1,63 @@
+{
+ "company": "Warmly",
+ "official_website": "https://www.warmly.ai/",
+ "product_summary": "Signal-based GTM platform: de-anonymizes website visitors at person level, layers intent and buying signals into a context graph, and runs AI inbound/TAM agents across chat, email and ads, exposed via app, API and MCP.",
+ "current_data_sources": [
+  "First-party website visitor identification and product/chat behaviour",
+  "News & Press (weekly, ~33k events, article title/url/body)",
+  "LinkedIn company and contact posts plus comments (bi-weekly)",
+  "Hiring velocity/trends and open-role data",
+  "Work milestones, job changes, employee growth",
+  "G2 and Glassdoor reviews; SEC filings (8-K, 10-K, 10-Q, 20-F, 6-K)",
+  "Web & Social: YouTube, Reddit mentions, GitHub, patents, website changes, traffic, financial",
+  "Bombora third-party intent topics; multi-vendor enrichment waterfall (LinkedIn partners, email discovery, firmographic databases); CRM data"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.warmly.ai/",
+   "quote": "Access via: App \u00b7 API \u00b7 MCP"
+  },
+  {
+   "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+   "quote": "Every signal flows from one of eight source families currently live in the MCP."
+  },
+  {
+   "url": "https://www.warmly.ai/p/tam-agent/enrichment",
+   "quote": "One vendor doesn't have everyone."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched warmly.ai homepage, /p/signals, /p/signals/third-party (full signal list), /p/tam-agent/enrichment (enrichment fields and sources), help.warmly.ai MCP signal catalog with its eight source families, and the booking page. Newsletter ingestion, a Substack/beehiiv source, publication-level fields or sponsor data appear nowhere; the content layer is news articles, podcasts, YouTube, Reddit and review sites only.",
+ "verified_gap": "Newsletter and publication-level editorial data is absent from the source enumeration. The MCP signal catalog fixes the ingest surface at eight source families (News & Press, LinkedIn, Hiring, Work Milestones, G2 Reviews, SEC Filings, Glassdoor, Web & Social), none of which is a newsletter or publication feed, and no field carries publication identity, sponsor relationships or publication momentum. Warmly can therefore say an account was in the news, but not which newsletters covered it or who sponsors them.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+   "quote": "Every signal flows from one of eight source families currently live in the MCP."
+  },
+  {
+   "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+   "quote": "News, LinkedIn, hiring, and work milestones are the most populated and refresh fastest."
+  },
+  {
+   "url": "https://help.warmly.ai/articles/5717409632-list-third-party-signals-the-full-signal-catalog",
+   "quote": "guest-spot detection across major shows."
+  },
+  {
+   "url": "https://www.warmly.ai/",
+   "quote": "Warmly's AI de-anonymizes website visitors at the person level"
+  },
+  {
+   "url": "https://www.warmly.ai/p/signals/third-party",
+   "quote": "Third-party signals reveal off-site buying behavior"
+  }
+ ],
+ "likely_buyer_role": "BUYER for signal-source expansion, with a SUPPLIER overlap. Warmly's product is a normalized signal stream over a fixed eight-source MCP, so newsletters would slot in as a ninth source feeding the same signal shape (company, domain, contact, detected_at). Because it already resells signals to other platforms via MCP, it could also see NF as a supplier or a narrow competitor rather than a pure customer.",
+ "contact_route": {
+  "url": "https://www.warmly.ai/p/book-a-demo",
+  "value": "demo request form",
+  "note": "Publicly listed demo/contact form with phone consent notice; no named person or published email found."
+ },
+ "confidence": "High",
+ "caveats": "Their News & Press source already returns article title, url and body, so the incremental value of NF is publication-level authority, sponsor relationships and momentum, not article text \u2014 pitch the 'who sponsors whom' and rising-publication layer. Podcast and Product Hunt detection on their roadmap shows appetite for new editorial sources, and a newsletter source may already be in flight undocumented. Adjacent capability means this is an extension sale, not greenfield."
+}
