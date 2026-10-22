@@ -77,6 +77,23 @@ from _lead_rank import quality_rank                    # noqa: E402
 # "a shared mailbox is not a contact" is one rule, in one place (scripts/_address_rules.py):
 # the gate holds a draft addressed to one, this script refuses to store one.
 from _address_rules import is_role_address, belongs_to_domain   # noqa: E402
+import icp_fit                                          # noqa: E402
+
+# Scraped "names" that are company words or function words: a paid name-first find on one of
+# these buys a guess that cannot come back ("Mann Our", "Julie Accounting" were both bought on
+# 2026-10-22). Only the paid find is gated by this; the stored contact is left as it is, because
+# the name pass and the send gate judge a greeting, not a domain lookup.
+BUSINESS_WORDS = {
+    "accounting", "agency", "ai", "analytics", "brand", "capital", "club", "consulting", "data",
+    "design", "digital", "engineering", "group", "growth", "health", "inc", "labs", "law",
+    "legal", "llc", "management", "marketing", "media", "partners", "press", "products",
+    "properties", "realty", "solutions", "studio", "studios", "systems", "team", "tech",
+    "technology", "technologies", "the", "ventures", "web", "works",
+}
+FUNCTION_WORDS = {
+    "about", "all", "and", "are", "best", "by", "for", "from", "how", "in", "new", "of", "on",
+    "our", "out", "the", "to", "top", "us", "we", "with", "your",
+}
 
 
 def load_token() -> str:
@@ -184,10 +201,14 @@ def targets_from(leads, limit: int) -> list:
         out.append(l)
     # Address-less leads first: an address is what makes a lead sendable at all, and a lead
     # holding only a shared mailbox is in that group (mail sent to support@ reaches nobody who
-    # buys). Inside that split the preferred tier goes first (MEDIUM ahead of HIGH, see
-    # scripts/_lead_rank.py).
+    # buys). Then a NAMED lead: the paid finder is name-first, so a lead with no name can only
+    # be helped by the free scrape and would otherwise take the whole run's target slots (on
+    # 2026-10-22 eight nameless corpus leads were worked and the paid engine fired zero times,
+    # inside a fresh $3.00 cap that looked like it was not working). Inside those splits the
+    # preferred tier goes first (MEDIUM ahead of HIGH, see scripts/_lead_rank.py).
     out.sort(key=lambda l: (bool(str(l.get("email") or "").strip())
                             and not is_role_address(l.get("email")),
+                            not bool(str(l.get("contact_name") or "").strip()),
                             quality_rank(l), str(l.get("company") or "")))
     return out[:limit]
 
@@ -216,12 +237,17 @@ def domain_confirms_brand(domain: str, name: str) -> tuple:
     return False, "could not load the site to confirm the domain"
 
 
+def norm_name(value) -> list[str]:
+    """Lowercase name tokens, so "Alan Zhao" and "zhao alan" compare equal."""
+    return sorted(t for t in re.sub(r"[^a-z ]+", " ", str(value or "").lower()).split() if t)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="fill missing contacts in the NewsletterFIT CRM")
     ap.add_argument("--max", type=int, default=20, help="leads to work this run")
     ap.add_argument("--max-finds", type=int, default=10, help="paid address finds this run")
     ap.add_argument("--budget", type=float, default=0.05, help="hard USD ceiling for this run")
-    ap.add_argument("--monthly-cap", type=float, default=0.30,
+    ap.add_argument("--monthly-cap", type=float, default=3.00,
                     help="stop finding once this month's spend reaches this")
     ap.add_argument("--no-find", action="store_true", help="free engines only (scrape + names)")
     ap.add_argument("--recheck-addresses", action="store_true",
@@ -317,16 +343,30 @@ def main() -> int:
             if not name and person:
                 name, how = person, how + ["name off the site"]
 
-        # 2. treg's free people route for a name (and a free address if it carries one)
-        if not name:
+        # 2. treg's free people route, asked for the address as well as the name.
+        #    Guarded on the ADDRESS, not on the name: the name pass (fill_contact_names.py) only
+        #    targets leads with no name, so a lead that already has a name and no address used to
+        #    skip this lane entirely and go straight to the paid find, even when the lane held a
+        #    person's own address for it. One free call per address-less lead closes that hole.
+        if not email:
             nm, ttl, free_email, served, cost, err = finder.find_person(domain)
             spent += cost
             if err:
                 print(f"    {company}: name lookup error {err[:80]}")
             if nm:
-                name, title, how = nm, ttl or title, how + [f"treg name ({served or 'people.search'})"]
-                stats["names"] += 1
-                if not email and free_email:
+                # The lane returns one sampled person. Their address may only be used for the
+                # contact we would greet, so a name that differs from the stored contact is
+                # reported and its address ignored: an address for a different person is how a
+                # draft greets one name and mails another.
+                same_person = (not name) or set(norm_name(nm)) == set(norm_name(name))
+                if not name:
+                    name, title = nm, ttl or title
+                    how = how + [f"treg name ({served or 'people.search'})"]
+                    stats["names"] += 1
+                elif not same_person:
+                    print(f"    {company}: the lane offers {nm}, not the stored contact "
+                          f"{name}: address not taken")
+                if not email and free_email and same_person:
                     if belongs_to_domain(free_email, domain):
                         email, how = free_email.lower(), how + ["address from the people route"]
                         stats["addresses_free"] += 1
@@ -334,8 +374,47 @@ def main() -> int:
                         print(f"    {company}: the people route offers {free_email}, which is "
                               f"not on {domain}: not a contact")
 
-        # 3. treg's paid name-first find, verified before it is kept
-        if finding and name and not email and finds < args.max_finds and spent < args.budget:
+        # 3. treg's paid name-first find, verified before it is kept.
+        #    The name has to be one a greeting can carry: the stored contact on a corpus lead
+        #    is often a scraped fragment ("Julie Accounting", "Value Engineering", "Mann Our"),
+        #    and a name-first find on those buys a guess at about four tenths of a cent a time.
+        #    On 2026-10-22 six such finds were bought for zero addresses. greeting_safe() is the
+        #    same test the name pass applies, imported lazily so this module keeps its cheap
+        #    import path.
+        name_ok, name_why = True, ""
+        if name:
+            try:
+                from fill_contact_names import greeting_safe
+                name_ok, name_why = greeting_safe(name)
+            except Exception:
+                name_ok = len(str(name).split()) >= 2
+                name_why = "single token"
+            # A paid find is name-first, so the name has to be a person, not a scraped
+            # fragment. greeting_safe() is deliberately lax (it also accepts a bare "Lindsay"),
+            # which lets "Mann Our" and "Julie Accounting" through; those buy a guess that
+            # cannot come back. The words below are the ones scraped fragments are made of.
+            if name_ok:
+                words = {re.sub(r"[^a-z]", "", w.lower()) for w in str(name).split()}
+                if words & BUSINESS_WORDS:
+                    name_ok, name_why = False, "a company word, not a person"
+                elif words & FUNCTION_WORDS:
+                    name_ok, name_why = False, "a function word, not a person"
+        # Never buy an address for a lead the composer will refuse. A corpus lead that is
+        # off-ICP (headcount outside the band, or on icp/off_icp.txt) is dropped by
+        # seed_first_touch_drafts before its greeting is even built, so the address is a find
+        # bought for a draft that cannot exist. Measured on 2026-10-22: six finds, zero
+        # addresses, all on scraped local businesses in the corpus pool.
+        fit_ok, fit_detail = True, ""
+        if finding and name_ok and not email and finds < args.max_finds and spent < args.budget:
+            try:
+                fit_ok, _fit_why, fit_detail = icp_fit.verdict(company, domain)
+            except Exception:
+                fit_ok, fit_detail = True, ""
+            if not fit_ok:
+                print(f"    {company}: off-ICP ({fit_detail}), the composer would never draft "
+                      f"it: no address bought")
+        if finding and name and name_ok and fit_ok and not email and finds < args.max_finds \
+                and spent < args.budget:
             addr, status, served, cost, err = finder.find_email(domain, name)
             spent += cost
             finds += 1
@@ -354,6 +433,11 @@ def main() -> int:
                     email = addr
                     how = how + [f"treg find ({served}, {vstatus or 'unverified'})"]
                     stats["addresses_paid"] += 1
+        elif finding and name and not name_ok and not email:
+            # Say why no money was spent: otherwise a run that correctly refuses six finds
+            # looks identical to a run whose paid path is switched off.
+            print(f"    {company}: stored name {name!r} is not greetable ({name_why}): "
+                  f"no paid find bought")
 
         # Whatever the engines returned, a shared mailbox is never written as the contact.
         if email and is_role_address(email):
