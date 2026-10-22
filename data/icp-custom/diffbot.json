@@ -1,0 +1,4 @@
+{
+ "subject": "The newsletters outside Diffbot's crawl",
+ "body": "Diffbot's Knowledge Graph is built by crawling the public web, and your own description of it is an RSS feed for every press release, blog, newspaper and magazine. Newsletters are the one publishing format missing from that list. They arrive by email, they sit behind Substack and beehiiv, and a crawler does not see them.\n\nNewsletterFIT reads that layer. Each issue is processed by AI into companies, people, guests, topics and sponsor placements, with the publication identity, the article URL and the date attached, so the record is a graph input rather than a document.\n\nFor a knowledge graph the questions are provenance and coverage, not prose. I can send a sample of the entity and placement records for a sector you already hold, mapped against your ontology, and a trial key if you want to test the endpoint directly.\n\nIf your crawl already reaches this content, tell me and I will stop there."
+}

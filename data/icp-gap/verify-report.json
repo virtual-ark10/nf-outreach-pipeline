@@ -1190,5 +1190,23 @@
     "reason": "exact"
    }
   ]
+ },
+ "Diffbot": {
+  "checked": 2,
+  "verified": 2,
+  "rows": [
+   {
+    "url": "https://www.diffbot.com/products/knowledge-graph/",
+    "quote": "An RSS feed for every press release, blog, newspaper, or magazine on the web",
+    "ok": true,
+    "reason": "exact"
+   },
+   {
+    "url": "https://www.diffbot.com/",
+    "quote": "Resolve entities, relationships, facts, and sentiment from plain text.",
+    "ok": true,
+    "reason": "exact"
+   }
+  ]
  }
 }

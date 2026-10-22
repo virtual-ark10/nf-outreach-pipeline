@@ -1,0 +1,4 @@
+{
+ "subject": "The editorial side of creator sponsorship",
+ "body": "Unify's signal catalogue already sells the adjacency: Upriver for podcast sponsorships, PredictLeads for news events, 40+ sources in total. The gap sits between them. A brand paying a podcaster and a brand paying a newsletter are the same buying behaviour in a different medium, and only one of the two is in the catalogue.\n\nNewsletterFIT covers the other one: which newsletters write about an account, which sponsors run placements in them, and how those lists are trending, with each record tied to the article it came from. AI does the reading, so a GTM platform gets companies, topics, guests and sponsor placements as fields it can score on rather than a feed of prose.\n\nDelivery is a signal source, not a UI: REST for joins, MCP for agent lookups.\n\nIf a sample for one segment would settle it, I will send the fields and the publication list behind them."
+}

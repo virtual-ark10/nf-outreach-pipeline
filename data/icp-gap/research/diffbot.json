@@ -1,0 +1,39 @@
+{
+ "company": "Diffbot",
+ "official_website": "https://www.diffbot.com/",
+ "product_summary": "Knowledge Graph and extraction APIs: a self-updating graph of entities crawled and structured from the public web, plus Extract, Crawl, Web Search and Natural Language APIs. Positioned as grounding for AI agents on facts from the public web.",
+ "current_data_sources": [
+  "public web crawl, sold as a self-hostable 4TB web index",
+  "Knowledge Graph of over 10 billion entities built from that crawl",
+  "Extract API per URL, Crawl API per site",
+  "Natural Language API, which structures text the customer supplies"
+ ],
+ "api_or_integration_evidence": [
+  {
+   "url": "https://www.diffbot.com/products/knowledge-graph/",
+   "quote": "Access a graph database of over 10 billion entities (news organizations, people, and more) crawled and structured from all over the public web."
+  },
+  {
+   "url": "https://www.diffbot.com/",
+   "quote": "Resolve entities, relationships, facts, and sentiment from plain text."
+  }
+ ],
+ "newsletter_capability_status": "not_found_in_public_docs",
+ "newsletter_capability_detail": "Searched the Knowledge Graph product page, the homepage product list (Extract, Crawl, Natural Language, Knowledge Graph, Web Search), the pricing page and the docs index. The publishing formats they enumerate are press releases, blogs, newspapers and magazines. The words newsletter, Substack and beehiiv do not appear on any page fetched. Their Natural Language API structures entity and relationship data from text the customer already holds, so it can consume a newsletter but does not source one.",
+ "verified_gap": "Diffbot's supply is a crawl of the public web, and its own description of that supply names press releases, blogs, newspapers and magazines. Newsletters are email-first and sit behind Substack and beehiiv, so the format is outside the ingest path, and the graph carries no publication-level newsletter object, no sponsor to publication pair and no newsletter momentum. The Natural Language API closes the structuring half of that (entities, relationships, sentiment from text) but not the sourcing half.",
+ "gap_status": "confirmed",
+ "evidence": [
+  {
+   "url": "https://www.diffbot.com/products/knowledge-graph/",
+   "quote": "An RSS feed for every press release, blog, newspaper, or magazine on the web"
+  },
+  {
+   "url": "https://www.diffbot.com/products/knowledge-graph/",
+   "quote": "Each entity is the result of crawling, structuring, and processing billions of pages on the public web"
+  }
+ ],
+ "likely_buyer_role": "BUYER of a data layer, and a SUPPLIER to NF. The Knowledge Graph is the product, so an editorial feed that its crawler cannot reach is an input it licenses rather than builds. The same relationship runs both ways: Diffbot enrichment is already one of the providers Databar resells, so it could equally sell NF firmographics. Approach it as a coverage gap in the graph, not as a competitor.",
+ "contact_route": "jerome@diffbot.com (Jerome Choo, COO, listed publicly; the CRM already holds this address)",
+ "confidence": "High",
+ "caveats": "The gap rests on what Diffbot says it crawls, not on a negative test of the graph. Their DQL endpoint would settle coverage directly and could not be used: the KG quota answers 429 until the pool resets. Firmographics from the Apollo line (31 employees, 8M revenue, 13M raised, Series A 2016, Menlo Park, 48 technologies) say a small API-first team, which is why the copy offers records and a trial key rather than a plan."
+}

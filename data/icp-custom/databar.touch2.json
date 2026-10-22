@@ -1,0 +1,4 @@
+{
+ "subject": "the publication record, field by field",
+ "body": "A publication record carries the name, platform, cadence, audience label and the basis for it, the topics it covers, whether it accepts sponsors, the sponsors detected in it, and a momentum figure computed from repeated audience snapshots. A sponsor placement carries the evidence line from the issue and the article it came from.\n\nThe export also carries author contact fields with a confidence and a source, which is usually the column a table wants next to the publication itself.\n\nI can send twenty records for one category so the join is testable without a build."
+}

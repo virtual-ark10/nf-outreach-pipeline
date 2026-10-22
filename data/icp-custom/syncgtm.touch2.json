@@ -1,0 +1,4 @@
+{
+ "subject": "seventeen tools, read first",
+ "body": "The MCP server exposes seventeen tools and they are read first: search newsletters, articles, entities and sponsors, then fetch a publication, its articles, its intelligence summary, or an entity page with its mention history. One tool creates an export. Typed ids keep references stable across calls, so an agent can carry a publication from search into a profile without a mapping table.\n\nThat is the part an action library cares about: an agent can resolve a company to a publication set on its own.\n\nDocs are at newsletterfit.com/docs/api and the endpoint is newsletterfit.com/mcp. A trial key is the fastest way to see whether the action set fits."
+}

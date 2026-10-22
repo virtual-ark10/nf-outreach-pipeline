@@ -1,0 +1,4 @@
+{
+ "subject": "Newsletter coverage beside Persana's signal list",
+ "body": "Persana advertises 75+ signals and 100+ intent sources, and the list reads as jobs, funding, web visits, keyword intent and the enrichment vendors behind them. What I could not find stated either way is newsletter coverage: which publications wrote about an account, which sponsors buy space in them, and whether those lists are growing.\n\nNewsletterFIT holds that layer. An AI pass reads each issue and returns the companies, people, topics and sponsor placements with the article and date behind each one, so it lands as structured signal rather than a text feed to interpret.\n\nIt is available over REST and MCP, which matters if your agents already call tools rather than query tables.\n\nIf the source list already covers editorial newsletter data, one line closes this. If not, I can send a sample for a segment you sell, so you can judge the fields against your own output."
+}
