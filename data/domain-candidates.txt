@@ -1,0 +1,29 @@
+# discovered 28 candidate(s); gates run in import_domain_list.py
+11X,11x.ai
+Activecampaign,activecampaign.com
+Aicpa Cima,aicpa-cima.com
+Aweber,aweber.com
+Beehiiv,beehiiv.com
+Brevo,brevo.com
+Cal,cal.com
+Campaignmonitor,campaignmonitor.com
+Capterra,capterra.ca
+Capterra,capterra.co
+Capterra,capterra.co.il
+Capterra,capterra.co.nz
+Capterra,capterra.co.uk
+Capterra,capterra.co.za
+Cbinsights,cbinsights.com
+Demandbase,demandbase.com
+Getnametags,getnametags.com
+Getwarmly,getwarmly.com
+Knockknock,knockknock.co
+Leadfeeder,leadfeeder.com
+Leadforensics,leadforensics.com
+Qualified,qualified.com
+Regie,regie.ai
+Revenue,revenue.io
+Spotify,spotify.com
+Start Chat,start-chat.com
+Vendr,vendr.com
+Whitehatsec,whitehatsec.com
