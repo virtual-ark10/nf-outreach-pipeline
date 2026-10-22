@@ -1,0 +1,4 @@
+{
+ "subject": "Autobound: newsletter text as a signal source",
+ "body": "Your platform page says Autobound monitors \"35+ public data sources\", and that your models already parse unstructured documents including podcast transcripts. Public newsletter issues are the same shape of input: long-form text, published on a schedule, with named companies, people and sponsors inside.\n\nNewsletterFIT turns that text into records: publication, article, companies and people mentioned, topics, sponsors, each with source URL and date. We hold more than 27,000 publications and 143,000 articles.\n\nYou license signals through REST, S3/GCS and OEM. I can send 5,000 records mapped to your signal taxonomy so your team can test whether newsletter mentions add lift on accounts you already score."
+}

@@ -10,6 +10,7 @@ import os
 import re
 import json
 import sys
+import datetime
 import unittest
 
 NF_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -214,10 +215,42 @@ class ResearchedFirstTouch(unittest.TestCase):
         self.assertTrue(text.rstrip().endswith("[Name], Founder, NewsletterFIT"))
         self.assertEqual(text.count("[TRACKED_LINK]"), 1)
 
-    def test_follow_ups_still_come_from_the_ladder(self):
+    def test_a_first_touch_file_leaves_the_follow_ups_alone(self):
+        # The touch-1 file must never leak into touch 2: a follow-up that repeats the first
+        # touch is not new information, it is the same mail twice.
         subject, text = icp.compose(LEAD, 2, self.picks)
         self.assertEqual(subject, f"who reads {self.picks[0]['name']}")
         self.assertNotIn("Would a sample be useful?", text)
+
+    def test_a_per_touch_file_replaces_that_touch_only(self):
+        # data/icp-custom/<id>.touch2.json is the only way a researched gap reaches a
+        # follow-up, and it must not touch any other rung.
+        with open(os.path.join(self.tmp, "crustdata.touch2.json"), "w") as fh:
+            json.dump({"subject": "The gap, one rung later",
+                       "body": "Your docs index companies, people, jobs and social posts.\\n\\n"
+                               "Newsletter mentions are the fifth set."}, fh)
+        subject, text = icp.compose(LEAD, 2, self.picks)
+        self.assertEqual(subject, "The gap, one rung later")
+        self.assertIn("Newsletter mentions are the fifth set.", text)
+        self.assertTrue(text.startswith("Hi Wei,"))
+        self.assertTrue(text.rstrip().endswith("[Name], Founder, NewsletterFIT"))
+        self.assertEqual(text.count("[TRACKED_LINK]"), 1)
+        # Touch 3 still comes from the ladder, and touch 1 still uses the plain file.
+        self.assertEqual(icp.compose(LEAD, 3, self.picks)[0], f"the other side of "
+                         f"{icp.lane_for(LEAD)[0]}")
+        self.assertEqual(icp.compose(LEAD, 1, self.picks)[0],
+                         "A newsletter corpus for your fund customers")
+
+    def test_a_due_date_the_pad_left_null_still_opens_the_ladder(self):
+        # The pad's DUE_DAYS has no entry for stage 'leads', and every ICP first touch is sent
+        # from there, so next_follow_up_at stays null. The send date plus the stage's wait is
+        # the fallback: without it no ICP lead ever becomes due for touch 2.
+        lead = dict(LEAD, stage="first_email", next_follow_up_at=None,
+                    last_contact_at="2026-10-22T07:00:42.738Z")
+        self.assertEqual(icp.cadence_due(lead), "2026-10-25")
+        lead["next_follow_up_at"] = "2026-11-01T00:00:00.000Z"
+        self.assertEqual(icp.cadence_due(lead), "2026-11-01")
+        self.assertEqual(icp.cadence_due(dict(LEAD, stage="first_email")), "")
 
     def test_a_missing_file_falls_back_to_the_lane_template(self):
         lead = dict(LEAD, id="nobody")
@@ -374,6 +407,76 @@ class TheRealGateWouldSendAnIcpDraft(unittest.TestCase):
         verdict, findings = gate.gate(draft, ctx)
         self.assertEqual(verdict, "REVIEW")
         self.assertIn("placements", " ".join(f["message"] for f in findings))
+
+
+class TheLiveGapCopiesClearTheGate(unittest.TestCase):
+    """The researched gap touches held in data/icp-custom, put through the real gate.
+
+    These are the copies themselves, not fixtures. Common Room, Crustdata and Autobound had a
+    researched gap written for them on 2026-10-21 and their first touches still went out on the
+    lane template, because the copy was never loaded into this directory. Loading it is half the
+    fix; this class is the other half, because a hand-written file is the one place a phrase the
+    gate bans can slip into the queue.
+    """
+    TOKEN = "bQ7fZ2mK4pRs9tVx1yA3"
+    Corpus = TheRealGateWouldSendAnIcpDraft.Corpus
+    LEADS = [
+        {"id": "common-room", "company": "Common Room", "contact_name": "Dan Brayton",
+         "contact_title": "VP of Revenue Operations", "email": "danbrayton@commonroom.io",
+         "domain": "commonroom.io", "industry": "Software Development", "score": 98,
+         "lead_source": "icp_research", "last_contact_at": "2026-10-22T07:00:39.803Z",
+         "notes": '["ICP research 2026-10-08: strong (98.3/100), segment signal_data"]'},
+        {"id": "crustdata", "company": "Crustdata", "contact_name": "Andres Pimentel",
+         "contact_title": "Founding GTM", "email": "andres@crustdata.com",
+         "domain": "crustdata.com", "industry": "Software Development", "score": 98,
+         "lead_source": "icp_research", "last_contact_at": "2026-10-22T07:00:41.280Z",
+         "notes": '["ICP research 2026-10-08: strong (98.3/100), segment signal_data"]'},
+        {"id": "autobound", "company": "Autobound", "contact_name": "Kyle Schuster",
+         "contact_title": "Co-Founder (Sales and Product)", "email": "kyle@autobound.ai",
+         "domain": "autobound.ai", "industry": "Software Development", "score": 81,
+         "lead_source": "icp_research", "last_contact_at": "2026-10-22T07:00:42.738Z",
+         "notes": '["ICP validation 2026-10-21: gap confirmed (35+ documented sources)"]'},
+    ]
+
+    def draft_for(self, picks, touch, lead=None):
+        if lead is None:
+            raise ValueError("the live gap copies are gated for a named lead, not a fixture")
+        # As the CRM holds them after the first touch: contacted, cadence open, stage
+        # first_email. Gating an earlier state would test a mail that can no longer be sent.
+        lead = dict(lead, stage="first_email", first_contact_at=lead["last_contact_at"],
+                    next_follow_up_at=datetime.date.today().isoformat())
+        subject, text = icp.compose(lead, touch, picks)
+        text = re.sub(r"\s*:\s*\[TRACKED_LINK\]", "", text).replace("[Name]", "Ian Hinga")
+        html = "<p>" + "</p><p>".join(
+            f'<a href="https://newsletterfit.com/api/click?lt={self.TOKEN}">{p["name"]}</a>'
+            f' (est. {p["label"]})' for p in picks) + "</p>"
+        draft = {"id": icp.draft_id(lead, touch), "company": lead["company"], "to": lead["email"],
+                 "from": "ian@newsletterfit.com", "subject": subject, "text": text, "html": html}
+        ctx = {"ledger": {self.TOKEN: {
+                   "dest": "https://newsletterfit.com/app/publications/refactoring"}},
+               # The gate keys both maps by the lowercased company name, not by lead id.
+               "leads": {lead["company"].lower(): lead}, "sent": {}, "replied": {},
+               "by_company": {lead["company"].lower(): [draft]}, "corpus": self.Corpus()}
+        return draft, ctx
+
+    def test_both_rungs_pass_the_real_gate(self):
+        picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+        for lead in self.LEADS:
+            for touch in (1, 2):
+                self.assertIsNotNone(icp.custom_copy(lead, touch),
+                                     f"no researched copy for {lead['id']} touch {touch}")
+                draft, ctx = self.draft_for(picks, touch, lead)
+                verdict, findings = gate.gate(draft, ctx)
+                self.assertEqual(
+                    verdict, "PASS",
+                    f"{lead['id']} touch {touch} came back {verdict}: "
+                    f"{[f['message'] for f in findings]}")
+
+    def test_the_follow_up_says_something_the_first_touch_did_not(self):
+        for lead in self.LEADS:
+            one = icp.custom_copy(lead, 1)["body"]
+            two = icp.custom_copy(lead, 2)["body"]
+            self.assertNotEqual(one[:80], two[:80], f"{lead['id']} repeats its first touch")
 
 
 if __name__ == "__main__":

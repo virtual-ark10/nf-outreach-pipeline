@@ -137,7 +137,11 @@ function activityFor(id) {
 
 // --------------------------------------------------------------- mail records
 function nextFollowUp(stage, fromISO) {
-  const wait = DUE_DAYS[stage];
+  // DUE_DAYS has no entry for the first stage: a lead waits at 'leads' until its first touch
+  // is sent, and the clock that send starts is the first_email wait. Without the fallback the
+  // column was written as null, the stage advanced to first_email, and the ladder never came
+  // due on its own. Every ICP first touch is sent from 'leads' and none of them had a date.
+  const wait = DUE_DAYS[stage] ?? DUE_DAYS[NEXT_STAGE[stage]];
   if (!wait) return null;
   return new Date(new Date(fromISO).getTime() + wait * 86400000).toISOString();
 }

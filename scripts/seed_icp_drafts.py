@@ -98,6 +98,24 @@ DATA_INDUSTRY = re.compile(
 
 # The touch number as the ladder names it, and the CRM stage that touch belongs to.
 TOUCH_STAGES = {1: "leads", 2: "first_email", 3: "follow_up_1", 4: "follow_up_2"}
+# The clock the ladder runs on: days waited after the touch sent at that stage, so day 3, day 7,
+# day 14. The pad's DUE_DAYS holds the same numbers and stamps next_follow_up_at on a send, but
+# it has no entry for stage 'leads', which is the stage every ICP first touch is sent from. The
+# column therefore stays null for this ladder, and a null must not stall it for ever: the send
+# date is the fallback anchor.
+STAGE_WAIT = {"first_email": 3, "follow_up_1": 4, "follow_up_2": 7}
+
+
+def cadence_due(lead):
+    """The date this lead's next touch falls due: the CRM column, else the send date + the wait."""
+    due = str((lead or {}).get("next_follow_up_at") or "")[:10]
+    if due:
+        return due
+    last = str((lead or {}).get("last_contact_at") or "")[:10]
+    wait = STAGE_WAIT.get(str((lead or {}).get("stage") or ""))
+    if not (last and wait):
+        return ""
+    return (datetime.date.fromisoformat(last) + datetime.timedelta(days=wait)).isoformat()
 
 
 def norm(v):
@@ -334,21 +352,20 @@ def follow_up(lead, touch, picks):
 
 
 def compose(lead, touch, picks):
+    custom = custom_copy(lead, touch)
+    if custom:
+        # A researched, hand-written touch beats the generated copy: it says something only that
+        # account could be told, which is the whole point of a per-account gap. The greeting and
+        # signature stay generated so the gate's contact check keeps working, and a lane list is
+        # appended when the body names none, because the pad mints the tracked link from it.
+        bullet = ""
+        if picks and "[TRACKED_LINK]" not in custom["body"]:
+            p = picks[0]
+            bullet = ("\n\nOne list from your lane, if a sample is easier to judge with it:"
+                      f"\n\n- {p['name']} (est. {p['label']}): [TRACKED_LINK]")
+        return custom["subject"], (f"Hi {_greeting(lead)},\n\n" + custom["body"].strip()
+                                   + bullet + "\n\n[Name], Founder, NewsletterFIT")
     if touch == 1:
-        custom = custom_copy(lead)
-        if custom:
-            # A researched, hand-written first touch beats the lane template: it says something
-            # only that account could be told. The ladder still owns touches 2 to 4, and the
-            # greeting and signature stay generated so the gate's contact check keeps working.
-            # One lane list is appended because the gate refuses a mail with no tracked link
-            # (attribution would be lost), and a data buyer judges a sample by a row anyway.
-            bullet = ""
-            if picks:
-                p = picks[0]
-                bullet = ("\n\nOne list from your lane, if a sample is easier to judge with it:"
-                          f"\n\n- {p['name']} (est. {p['label']}): [TRACKED_LINK]")
-            return custom["subject"], (f"Hi {_greeting(lead)},\n\n" + custom["body"].strip()
-                                       + bullet + "\n\n[Name], Founder, NewsletterFIT")
         return first_touch(lead, picks)
     return follow_up(lead, touch, picks)
 
@@ -358,16 +375,21 @@ def draft_id(lead, touch):
     return slug if touch == 1 else f"{slug}-follow-up-{touch}"
 
 
-def custom_copy(lead):
-    """The researched first touch for this lead, if one has been written down.
+def custom_copy(lead, touch=1):
+    """The researched copy for this lead and touch, if one has been written down.
 
-    data/icp-custom/<lead id>.json holds {"subject": ..., "body": ...}. It exists because the
-    lane template can only say what the corpus knows about a segment, while a researched account
-    (a gap confirmed in its docs, a buyer named, an integration surface read) deserves copy that
-    only that account could receive. Body excludes the greeting and the signature: those are
-    generated, so a stale name can never be baked into a JSON file.
+    data/icp-custom/<lead id>.json holds the first touch as {"subject": ..., "body": ...}, and
+    data/icp-custom/<lead id>.touch<N>.json holds touch N. It exists because the lane template
+    can only say what the corpus knows about a segment, while a researched account (a gap
+    confirmed in its own docs, a buyer named, an integration surface read) deserves copy that
+    only that account could receive. A per-touch file is separate on purpose: a follow-up must
+    add something the first touch did not say, so it can never be a copy of it. Body excludes
+    the greeting and the signature: those are generated, so a stale name can never be baked
+    into a JSON file.
     """
-    path = os.path.join(CUSTOM_DIR, f"{lead.get('id')}.json")
+    kid = str(lead.get("id") or "")
+    name = f"{kid}.json" if touch == 1 else f"{kid}.touch{int(touch)}.json"
+    path = os.path.join(CUSTOM_DIR, name)
     try:
         with open(path) as fh:
             d = json.load(fh)
@@ -421,7 +443,7 @@ def pending_leads(today, require_email=True):
         touch = next((t for t, s in TOUCH_STAGES.items() if s == stage and t > 1), None)
         if not touch:
             continue
-        due = str(l.get("next_follow_up_at") or "")[:10]
+        due = cadence_due(l)
         if due and due <= today:
             out.append((touch, l))
     out.sort(key=lambda t: (-(t[1].get("score") or 0), str(t[1].get("company"))))

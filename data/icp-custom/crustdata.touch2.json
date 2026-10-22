@@ -1,0 +1,4 @@
+{
+ "subject": "A sixth dataset beside companies, people, jobs and social posts",
+ "body": "The specific gap at Crustdata is narrow: your docs index companies, people, jobs and social posts, and activity gets read from executive moves, news and product launches. None of those answer what a company is being discussed for, in whose newsletter, and on what date, which is a different question from a job change or a funding headline.\n\nWe hold that as publications and articles, with company, people, topic and sponsor extraction, and the source URL and timestamp on every observation.\n\nIf it is easier to judge in schema, I can send 500 companies you already cover with their newsletter mentions, topics and sponsors, so your team can run it against the activity signals you already ship."
+}

@@ -1,0 +1,4 @@
+{
+ "subject": "A newsletter dataset beside companies, people, jobs and social posts",
+ "body": "Your docs describe Crustdata as a place to \"query indexed datasets of companies, people, jobs, and social posts\", with activity read from executive moves, news and product launches. Newsletter publications sit just outside that set, and they carry a kind of activity the other four do not: what a company is being discussed for, in whose newsletter, on what date.\n\nWe index more than 27,000 publications and 143,000 articles, with topic and sponsor extraction and the source URL on every observation. It could arrive as a sixth dataset in your schema, or as an enrichment field on company records.\n\nIf useful, I will pull 500 companies you already cover and send the newsletter mentions, topics and sponsors we hold, with timestamps, so you can compare against your current activity signals."
+}

@@ -1,0 +1,4 @@
+{
+ "subject": "Autobound: what a newsletter issue gives your models",
+ "body": "The fit at Autobound is on the input side. Your platform page counts 35+ public sources, and your models already parse unstructured documents including podcast transcripts. A newsletter issue is the same shape of input with better provenance: published on a schedule, dated, and carrying named companies, people and sponsors in the body text.\n\nWe hand that back as records, publication, article, entities, topics, sponsor, each with URL and date.\n\nIf it is worth testing, I can send 5,000 records mapped to your signal taxonomy, and your team can measure whether newsletter mentions move accounts you already score."
+}
