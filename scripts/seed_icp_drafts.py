@@ -319,7 +319,7 @@ def follow_up(lead, touch, picks):
             "If a list with that audience is worth a look, I can send the reader profile behind "
             "it: who they are, what they click, and how the list is trending.\n\n"
             + (f"If rows are easier to test than a profile, the API returns the same fields for "
-               f"{company}.\n\n" if data_first(lead) else "")
+               f"{company} at [DOCS_LINK].\n\n" if data_first(lead) else "")
             + "[Name], Founder, NewsletterFIT"
         )
         return subject, text
@@ -331,9 +331,11 @@ def follow_up(lead, touch, picks):
             f"{first}\n\n"
             f"The same {lane} coverage, delivered as a feed rather than a list. Our MCP server "
             f"exposes {MCP_TOOLS} tools, so an agent can ask which newsletters wrote about a "
-            "company, which sponsors run in a publication, and which lists are rising, without an "
-            "integration project on your side.\n\n"
-            f"Docs are at {API_DOCS} and the endpoint is {MCP_URL}. A trial key comes with a "
+            "company, which sponsors run in a publication, how an entity's mentions moved between "
+            "months, and which lists are rising, without an integration project on your side.\n\n"
+            "Every record carries its provenance, the publication, the article URL and the date, "
+            "and the export adds publication records with author contact fields.\n\n"
+            "Docs are at [DOCS_LINK] and the endpoint is [MCP_LINK]. A trial key comes with a "
             "sample export for a sector you pick.\n\n"
             "One list from the lane, if a sample is easier to judge with it:\n\n"
             + f"- {p['name']} (est. {p['label']}): [TRACKED_LINK]\n\n"
@@ -358,7 +360,8 @@ def follow_up(lead, touch, picks):
     # Touch 4, the close. One list stays attached so the mail still carries a tracked link,
     # and nothing here apologises or points back at an earlier message: the gate holds both.
     subject = "leaving it here"
-    ask = ("reply and I will send a trial key and a sample export for a sector you pick"
+    ask = ("reply and I will send a trial key, the endpoint, and a sample export with the "
+           "publication and author fields"
            if data_first(lead) else
            "reply and I will pull the two or three lists that fit your buyers best")
     text = (

@@ -340,7 +340,7 @@ def gate(draft, ctx):
             hard(f"tracked token does not resolve in the ledger: {t[:10]}...")
         elif known[t].get("dest") and not str(known[t]["dest"]).startswith("https://newsletterfit.com"):
             hard(f"tracked link points off-site: {known[t]['dest'][:60]}")
-    if re.search(r"\[(TRACKED_LINK|name|Name)\]|\{\{|\bTODO\b", text + html):
+    if re.search(r"\[(TRACKED_LINK|DOCS_LINK|MCP_LINK|name|Name)\]|\{\{|\bTODO\b", text + html):
         hard("unfilled placeholder")
 
     # 2. language

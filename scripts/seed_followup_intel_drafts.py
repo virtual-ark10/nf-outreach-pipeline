@@ -42,6 +42,8 @@ import urllib.parse
 import urllib.request
 
 REPO = "/home/boxed/nf-outreach-pipeline"
+sys.path.insert(0, os.path.join(REPO, "scripts"))
+import _greetings as greet                              # noqa: E402
 PAD_DB = f"{REPO}/pad/data/outreach.db"
 SNAP_DIR = f"{REPO}/pad/snapshots"
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
@@ -442,14 +444,12 @@ def greeting_for(contact_name, prior):
         m = re.match(r"^\s*(?:hi|hey|hello)\s+([^,\n]{2,30})[,!]", str(t), re.I)
         if m:
             greets.append(m.group(1).strip())
-    if name:
-        for g in reversed(greets):
-            if g.lower() == name.lower() or g.lower() in name.lower().split():
-                return g
-        return name.split()[0]
+    if greet.first_name(name):
+        return greet.line(name)
     for g in reversed(greets):
-        return g
-    return ""
+        if greet.is_person_name(g)[0]:
+            return f"Hi {g},"
+    return "Hi,"
 
 
 # --- worklist ----------------------------------------------------------------------------------
@@ -522,9 +522,6 @@ for l in leads:
     draft_id = f"{pid}-follow-up-{touch}"
     prior = prior_texts(con, l.get("id"), company, exclude_id=draft_id)
     greeting = greeting_for(l.get("contact_name"), prior)
-    if not greeting:
-        skipped.append((company, "no contact name and no earlier greeting, a name would be invented"))
-        continue
 
     used = used_pubs(prior)
     for p in (l.get("sponsored_pubs") or []):
@@ -574,10 +571,11 @@ for l in leads:
             tail.append(f"{lead_pub['name']} carries {sponsor} in its newest issue.")
             if title:
                 tail.append(f'The newest piece in {lead_pub["name"]} is "{title}".')
-        text = (f"Hi {greeting},\n\n{para}\n\n{bullets(pubs)}\n\n"
+        text = (f"{greeting}\n\n{para}\n\n{bullets(pubs)}\n\n"
                 + (" ".join(tail) + "\n\n" if tail else "")
-                + "Want the reader profiles and momentum behind these? If you're doing much "
-                  "newsletter buying, I can also show you what we're seeing across the broader market.\n\n"
+                + "Want the reader profiles and momentum behind these, and who else is buying "
+                  "space in them? Each list also comes with the publications that look like it, "
+                  "ranked by audience and cadence.\n\n"
                   "[Name], Founder, NewsletterFIT")
         data = (f"{', '.join(p['name'] + ' (est. ' + (label_of(p['rec']) or '?') + ')' for p in pubs)}"
                 + (f"; {lead_pub['name']} carries {sponsor}" if sponsor else "")
@@ -601,7 +599,7 @@ for l in leads:
         if lane:
             para.append(f"The list sits in the {lane} lane you are already buying into." if one
                         else f"Both lists sit in the {lane} lane you are already buying into.")
-        text = (f"Hi {greeting},\n\n" + " ".join(para) + f"\n\n{bullets(pubs)}\n\n"
+        text = (f"{greeting}\n\n" + " ".join(para) + f"\n\n{bullets(pubs)}\n\n"
                 "Want the reader profiles and momentum behind these? If you're doing much "
                 "newsletter buying, I can also show you what we're seeing across the broader market.\n\n"
                 "[Name], Founder, NewsletterFIT")
@@ -635,7 +633,7 @@ for l in leads:
             para.append(f"{pubs[1]['name']} carries {s2} in its newest issue.")
         if title and s1:
             para.append(f'The newest piece in {lead_pub["name"]} is "{title}".')
-        text = (f"Hi {greeting},\n\n" + " ".join(para) + f"\n\n{bullets(pubs)}\n\n"
+        text = (f"{greeting}\n\n" + " ".join(para) + f"\n\n{bullets(pubs)}\n\n"
                 "If useful I can pull the reader profiles and momentum behind these, and who else "
                 "is buying in that lane. No pitch, just the data.\n\n"
                 "[Name], Founder, NewsletterFIT")

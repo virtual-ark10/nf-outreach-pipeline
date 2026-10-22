@@ -1,4 +1,4 @@
 {
  "subject": "17 tools your agents can call",
- "body": "The MCP server exposes seventeen read first tools: search newsletters, articles, entities and sponsors, then fetch a publication, its articles, its intelligence summary, or an entity page with its mention history. One tool creates an export, and typed ids keep references stable across calls.\n\nAn agent carries a publication from search into a profile without a mapping table, which is the part an action library cares about.\n\nDocs are at newsletterfit.com/docs/api, endpoint newsletterfit.com/mcp. A trial key settles it faster than a call.\n"
+ "body": "The MCP server exposes seventeen read first tools: search newsletters, articles, entities and sponsors, then fetch a publication, its articles, its intelligence summary, or an entity page with its mention history. One tool creates an export, and typed ids keep references stable across calls.\n\nAn agent carries a publication from search into a profile without a mapping table, which is the part an action library cares about.\n\nDocs are at [DOCS_LINK], endpoint [MCP_LINK]. A trial key settles it faster than a call.\n"
 }

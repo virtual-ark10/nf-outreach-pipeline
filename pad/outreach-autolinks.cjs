@@ -32,6 +32,14 @@ const LT_URL_SRC = 'https:\\/\\/newsletterfit\\.com\\/api\\/click\\?lt=[A-Za-z0-
 const TOKEN_IN_BODY_RE = new RegExp(LT_SRC);
 const BARE_TRACKED_RE = new RegExp(LT_SRC, 'g');
 const ANY_TRACKED_RE = /api\/click\?lt=([A-Za-z0-9_-]{20,40})/g;
+// Fixed pages worth attributing: a draft that names the docs or the MCP endpoint marks the spot
+// with a placeholder, and prepareDraft mints a token for it. The plain-text part keeps a readable
+// URL, the html carries the token, so a click on the docs is attributable without a wrapped link
+// a reader has to trust.
+const DOC_LINKS = {
+  '[DOCS_LINK]': { path: '/docs/api', ref: 'docs-api-nf' },
+  '[MCP_LINK]': { path: '/mcp', ref: 'mcp-nf' },
+};
 // group 1 = the url, group 2 = the visible text (non-capturing inside, or the callback
 // would receive the token where it expects the label)
 const ANCHOR_RE = new RegExp(`<a\\s+[^>]*href=["'](${LT_URL_SRC})["'][^>]*>([\\s\\S]*?)<\\/a>`, 'g');
@@ -42,6 +50,9 @@ function unfilled(text, html) {
   const found = [];
   if (both.includes('[TRACKED_LINK]')) found.push('[TRACKED_LINK]');
   if (both.includes('[Name]')) found.push('[Name]');
+  for (const ph of Object.keys(DOC_LINKS)) {
+    if (both.includes(ph)) found.push(ph);
+  }
   return found;
 }
 
@@ -461,8 +472,31 @@ async function prepareDraft(draft, cfg) {
     if (stripped !== html) { html = stripped; changed = true; }
   }
 
-  // ---- 2. signature: the brand link, anchored on the brand ------------------------
+  // ---- 1b. documentation links: a fixed page, minted so the click is attributable ---
   const base = cfg.baseUrl.replace(/\/$/, '');
+  const docMinted = [];
+  for (const [ph, spec] of Object.entries(DOC_LINKS)) {
+    if (!text.includes(ph) && !html.includes(ph)) continue;
+    const pretty = `newsletterfit.com${spec.path}`;
+    if (!cfg.token) {
+      unresolved.push(ph);
+      notes.push(`no API_BEARER_TOKEN, so ${ph} could not be minted`);
+      continue;
+    }
+    try {
+      const row = await mintLink(cfg, leadId, `${base}${spec.path}`, spec.ref, campaign);
+      const url = `https://newsletterfit.com/api/click?lt=${row.token}`;
+      docMinted.push({ pretty, url });
+      text = text.split(ph).join(pretty);
+      minted.push({ name: pretty, slug: null, token: row.token, url });
+      changed = true;
+    } catch (e) {
+      notes.push(`mint failed for ${ph}: ${e.message}`);
+      unresolved.push(ph);
+    }
+  }
+
+  // ---- 2. signature: the brand link, anchored on the brand ------------------------
   const present = [...`${text}\n${html}`.matchAll(ANY_TRACKED_RE)].map((m) => m[1]);
   const byToken = new Map(readStore(cfg.storePath).clicks.map((c) => [c.token, c]));
   const homeRow = (() => {
@@ -504,6 +538,16 @@ async function prepareDraft(draft, cfg) {
     html = textToHtml(text);
     changed = true;
   }
+
+  // The docs and MCP anchors go in before the signature pass, so the brand-link fallback sees an
+  // anchor already present and leaves the URL whole instead of cutting it into "NewsletterFIT/docs".
+  for (const d of docMinted) {
+    const at = html.indexOf(d.pretty);
+    if (at !== -1) {
+      html = html.slice(0, at) + `<a href="${d.url}">${d.pretty}</a>` + html.slice(at + d.pretty.length);
+      changed = true;
+    }
+  }
   for (const p of published) {
     const nameEsc = esc(p.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const inBlock = new RegExp(`(<p>(?:(?!</p>)[\\s\\S])*?)(${nameEsc})((?:(?!</p>)[\\s\\S])*?</p>)`);
@@ -516,7 +560,9 @@ async function prepareDraft(draft, cfg) {
     const brandRe = /(Founder,\s*)(?:<a[^>]*>)?NewsletterFIT(?:<\/a>)?(\s*(?:[—–-]\s*)?(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?)?/i;
     if (brandRe.test(html)) {
       html = html.replace(brandRe, (_whole, lead) => `${lead}<a href="${signatureUrl}">NewsletterFIT</a>`);
-    } else if (!TOKEN_IN_BODY_RE.test(html) && /newsletterfit\.com/i.test(html)) {
+    } else if (!TOKEN_IN_BODY_RE.test(html) && !/<a\s/i.test(html) && /newsletterfit\.com/i.test(html)) {
+      // Only a draft with no anchor at all gets its bare domain turned into the brand link: a
+      // newsletterfit.com URL that is already a link (the docs page) must not be cut up.
       html = html.replace(/(?:<a[^>]*>)?newsletterfit\.com(?:<\/a>)?/i, `<a href="${signatureUrl}">NewsletterFIT</a>`);
     }
   }

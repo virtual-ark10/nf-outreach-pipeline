@@ -163,8 +163,10 @@ class DataFirstLadder(unittest.TestCase):
     def test_touch_three_names_the_tool_count_the_docs_and_the_endpoint(self):
         subject, text = icp.follow_up(DATA_LEAD, 3, self.picks)
         self.assertIn(f"{icp.MCP_TOOLS} tools", text)
-        self.assertIn(icp.MCP_URL, text)
-        self.assertIn(icp.API_DOCS, text)
+        # The docs and the MCP endpoint are placeholders now: the pad mints a tracked token for
+        # each on save, so the click on the docs is attributable like a publication click.
+        self.assertIn("[DOCS_LINK]", text)
+        self.assertIn("[MCP_LINK]", text)
         self.assertIn("trial key", text)
         # Still one tracked link, so the send carries attribution and the gate has a bullet it
         # can resolve against the corpus.
@@ -172,7 +174,9 @@ class DataFirstLadder(unittest.TestCase):
 
     def test_touch_four_asks_for_a_trial_key_rather_than_lists(self):
         _, text = icp.follow_up(DATA_LEAD, 4, self.picks[:1])
-        self.assertIn("trial key and a sample export", text)
+        self.assertIn("trial key", text)
+        self.assertIn("sample export", text)
+        self.assertIn("author fields", text)
         self.assertEqual(text.count("[TRACKED_LINK]"), 1)
 
     def test_the_quoted_tool_count_is_the_one_the_product_publishes(self):
@@ -384,6 +388,9 @@ class TheRealGateWouldSendAnIcpDraft(unittest.TestCase):
         lead = dict(lead or LEAD, stage="leads", first_contact_at=None)
         subject, text = icp.compose(lead, touch, picks)
         text = re.sub(r"\s*:\s*\[TRACKED_LINK\]", "", text).replace("[Name]", "Ian Hinga")
+        # The pad mints these two before the draft is gated or sent, so the gate never sees them.
+        text = (text.replace("[DOCS_LINK]", "newsletterfit.com/docs/api")
+                    .replace("[MCP_LINK]", "newsletterfit.com/mcp"))
         html = "<p>" + "</p><p>".join(
             f'<a href="https://newsletterfit.com/api/click?lt={self.TOKEN}">{p["name"]}</a>'
             f' (est. {p["label"]})' for p in picks) + "</p>"
@@ -462,6 +469,9 @@ class TheLiveGapCopiesClearTheGate(unittest.TestCase):
                     next_follow_up_at=datetime.date.today().isoformat())
         subject, text = icp.compose(lead, touch, picks)
         text = re.sub(r"\s*:\s*\[TRACKED_LINK\]", "", text).replace("[Name]", "Ian Hinga")
+        # The pad mints these two before the draft is gated or sent, so the gate never sees them.
+        text = (text.replace("[DOCS_LINK]", "newsletterfit.com/docs/api")
+                    .replace("[MCP_LINK]", "newsletterfit.com/mcp"))
         html = "<p>" + "</p><p>".join(
             f'<a href="https://newsletterfit.com/api/click?lt={self.TOKEN}">{p["name"]}</a>'
             f' (est. {p["label"]})' for p in picks) + "</p>"

@@ -138,6 +138,9 @@ Touch 4: the commercial close. Sample export for a segment they pick, or a scope
 - The competitor comparison is that lead's own peer set, read from their docs and from the graph.
   The Apollo, Clay and ZoomInfo trio is right for CRM data vendors and wrong for a crawler
   (Bright Data, Apify) or a two to ten person startup (no comparison at all).
+- Name the delivery surface once, with a minted link: `[DOCS_LINK]` for the REST docs and
+  `[MCP_LINK]` for the endpoint. The pad mints a token for each fixed page, keeps a readable URL
+  in the text part, and refuses the draft if it could not mint.
 - No count of publications, articles or sponsors. Say corpus of newsletters, or newsletter
   intelligence. A count is both stale and easy to check.
 - No em-dashes, no percentages, no "placement count" claims for a lead the corpus has never seen
