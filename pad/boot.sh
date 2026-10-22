@@ -25,12 +25,16 @@ fi
 
 # Outreach link minting credentials — shared corpus.env is the source of truth.
 # The pad needs NEWSLETTERFIT_API + API_BEARER_TOKEN to re-mint dead old-format
-# tracking links at send time (fail-closed: sends with such links are blocked).
+# tracking links at send time (fail-closed: sends with such links are blocked),
+# and ADMIN_API_KEY because POST /outreach/links is requireAdmin — with the bearer
+# alone every mint answers 401 Invalid admin key and the queue never leaves the gate.
 if [ -f /home/boxed/.config/newsletterfit/corpus.env ]; then
   API_LINE="$(grep -E '^NEWSLETTERFIT_API=' /home/boxed/.config/newsletterfit/corpus.env | head -1)"
   TOKEN_LINE="$(grep -E '^API_BEARER_TOKEN=' /home/boxed/.config/newsletterfit/corpus.env | head -1)"
+  ADMIN_LINE="$(grep -E '^ADMIN_API_KEY=' /home/boxed/.config/newsletterfit/corpus.env | head -1)"
   [ -n "$API_LINE" ] && export NEWSLETTERFIT_API="${API_LINE#*=}"
   [ -n "$TOKEN_LINE" ] && export API_BEARER_TOKEN="${TOKEN_LINE#*=}"
+  [ -n "$ADMIN_LINE" ] && export ADMIN_API_KEY="${ADMIN_LINE#*=}"
 fi
 
 export PORT DATA_DIR

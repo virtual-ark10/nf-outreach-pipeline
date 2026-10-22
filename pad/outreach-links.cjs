@@ -15,6 +15,10 @@
 // Config (cfg):
 //   apiBase   — newsletterfit API base, e.g. http://127.0.0.1:3000/api/v1
 //   token     — API bearer token ('' disables re-minting, still enforces policy)
+//   adminKey  — ADMIN_API_KEY; POST /outreach/links is requireAdmin (X-Admin-Api-Key),
+//               so a bearer alone gets 401 Invalid admin key and NO token is minted. This
+//               is what silently stopped the mint on 9 October 2026 and pinned the whole
+//               queue at the send gate for four days.
 //   storePath — local attribution store mirror (attribution.json)
 //   baseUrl   — https://newsletterfit.com (internal dest prefix)
 'use strict';
@@ -60,6 +64,7 @@ function mintLink(cfg, leadId, dest, ref, campaign) {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${cfg.token}`,
+        ...(cfg.adminKey ? { 'X-Admin-Api-Key': cfg.adminKey } : {}),
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(body),
       },

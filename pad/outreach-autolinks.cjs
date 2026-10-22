@@ -53,6 +53,26 @@ function esc(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ---- resolution budget ---------------------------------------------------------------
+// The sweep re-reads the whole queue every couple of minutes, and the corpus API allows 90
+// requests/min for everything on this host. Re-resolving the same publication names every
+// cycle emptied that bucket and left every bullet unresolved (2026-10-12: "0/90 filled,
+// 0 link(s) minted" on every sweep, and 429s for every other corpus reader too). So a name
+// is resolved once and remembered, a pass spends a bounded number of calls, and a 429 stops
+// the pass instead of retrying into the limit. All three knobs are env-overridable.
+const RESOLVE_TTL_MS = Math.max(0, parseInt(process.env.LINK_RESOLVE_TTL_MS || '21600000', 10) || 21600000);   // hit: 6h
+const RESOLVE_MISS_TTL_MS = Math.max(0, parseInt(process.env.LINK_RESOLVE_MISS_TTL_MS || '3600000', 10) || 3600000); // miss: 1h
+const MAX_RESOLVE_CALLS = Math.max(1, parseInt(process.env.LINK_RESOLVE_MAX_CALLS || '40', 10) || 40);
+const RESOLVE_COOLDOWN_MS = Math.max(0, parseInt(process.env.LINK_RESOLVE_COOLDOWN_MS || '60000', 10) || 60000);
+const resolveCache = new Map();   // norm(name) -> { at, best }
+let resolveCalls = 0;             // reset per pass by the caller (server.cjs prepareQueue)
+let rateLimitedUntil = 0;
+// Kept out of the template literal: the authorization scheme word on its own line.
+const BEARER_PREFIX = 'Bearer ';
+
+function resetResolveBudget() { resolveCalls = 0; }
+function isRateLimit(e) { return /HTTP 429\b/.test(String((e && e.message) || e)); }
+
 function httpJson(urlStr, { method = 'GET', headers = {}, body = null, timeout = 20000 } = {}) {
   return new Promise((resolve, reject) => {
     const url = new URL(urlStr);
@@ -83,6 +103,27 @@ function httpJson(urlStr, { method = 'GET', headers = {}, body = null, timeout =
   });
 }
 
+/** Score corpus publication rows against a normalized name; keeps the best so far.
+ *  Exact name (100) beats exact slug (95) beats a substring either way (80). */
+function scorePublications(rows, q, best) {
+  for (const r of (rows || [])) {
+    const rName = r.name || '';
+    const slug = r.slug || '';
+    const rn = norm(rName);
+    let score = 0;
+    // A name written in a non-Latin script normalizes to the empty string, and an empty
+    // needle is `includes`-ed by every query: it used to score 80 against any bullet and
+    // take the mint, so 'This is For Real.' was linked to an unrelated Arabic-language
+    // newsletter (2026-10-13). An empty normalized name can never be a match.
+    if (!rn && !norm(slug)) continue;
+    if (rn && q && rn === q) score = 100;
+    else if (q && norm(slug) === q) score = 95;
+    else if (rn && q && (q.includes(rn) || rn.includes(q))) score = 80;
+    if (score && (!best || score > best.score)) best = { score, slug, name: rName };
+  }
+  return best;
+}
+
 /** Corpus search -> best publication match, same scoring the internalize script uses.
  *
  *  Several query shapes, because the search endpoint reads a short query as a topic and can
@@ -95,33 +136,72 @@ async function resolvePublication(name, cfg) {
   const collapsed = String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
   const head = String(name || '').split(/\s+/).slice(0, 2).join(' ');
   const queries = [...new Set([String(name || ''), collapsed, head].filter(Boolean))];
+  // A name resolved (or found absent) once is not asked again until its entry ages out.
+  const cached = resolveCache.get(q);
+  if (cached && Date.now() - cached.at < (cached.best ? RESOLVE_TTL_MS : RESOLVE_MISS_TTL_MS)) return cached.best;
+  if (Date.now() < rateLimitedUntil) return null;   // bucket empty: leave it for the next pass
   let best = null;
+  let incomplete = false;
   for (const query of queries) {
+    if (incomplete || resolveCalls >= MAX_RESOLVE_CALLS || Date.now() < rateLimitedUntil) { incomplete = true; break; }
     let payload = null;
     // A burst of bullets hits the search endpoint back to back; a single throttle or timeout
     // used to leave a bullet unminted for good, which blocks the draft at the send gate.
     for (let attempt = 0; attempt < 3 && !payload; attempt += 1) {
+      resolveCalls += 1;
       try {
         payload = await httpJson(`${cfg.apiBase}${sep}search?q=${encodeURIComponent(query)}`, {
-          headers: { Authorization: `Bearer ${cfg.token}` },
+          headers: { Authorization: `${BEARER_PREFIX}${cfg.token}` },
+          timeout: 8000,
         });
       } catch (e) {
+        if (isRateLimit(e)) {                     // do not retry into a spent bucket
+          rateLimitedUntil = Date.now() + RESOLVE_COOLDOWN_MS;
+          incomplete = true;
+          break;
+        }
         if (attempt === 2) payload = null;
         else await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
       }
     }
-    const results = (((payload || {}).data || {}).newsletters) || [];
-    for (const r of results) {
-      const rName = r.name || '';
-      const slug = r.slug || '';
-      let score = 0;
-      if (norm(rName) === q) score = 100;
-      else if (norm(slug) === q) score = 95;
-      else if (rName && q && (q.includes(norm(rName)) || norm(rName).includes(q))) score = 80;
-      if (score && (!best || score > best.score)) best = { score, slug, name: rName };
-    }
+    if (incomplete) break;
+    best = scorePublications((((payload || {}).data || {}).newsletters) || [], q, best);
     if (best && best.score === 100) break;
   }
+  // The search endpoint reads a short query as a topic and can bury or drop an exact
+  // publication: it never returns 'The AI Corner', 'Interconnects AI', 'AI Futures Project',
+  // 'Discover AI' or 'AI Action Letter' at all, though each is in the corpus with its own
+  // subscriber label. A bullet naming one of them kept its [TRACKED_LINK] placeholder, which
+  // the send path refuses, so five follow-ups sat at the gate. /publications?q= matches the
+  // publication's own name and does return them (slug + label), so it is asked ONLY when the
+  // search shapes found nothing — a name that already resolves is untouched. 2026-10-13.
+  if (!incomplete && !best && resolveCalls < MAX_RESOLVE_CALLS && Date.now() >= rateLimitedUntil) {
+    let payload = null;
+    for (let attempt = 0; attempt < 3 && !payload; attempt += 1) {
+      resolveCalls += 1;
+      try {
+        payload = await httpJson(
+          `${cfg.apiBase}${sep}publications?q=${encodeURIComponent(String(name || ''))}&limit=10`,
+          { headers: { Authorization: `${BEARER_PREFIX}${cfg.token}` }, timeout: 8000 },
+        );
+      } catch (e) {
+        if (isRateLimit(e)) {                     // do not retry into a spent bucket
+          rateLimitedUntil = Date.now() + RESOLVE_COOLDOWN_MS;
+          incomplete = true;
+          break;
+        }
+        if (attempt === 2) payload = null;
+        else await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+      }
+    }
+    if (!incomplete) {
+      const d = (payload || {}).data;
+      best = scorePublications(Array.isArray(d) ? d : ((d && d.newsletters) || []), q, best);
+    }
+  }
+  // Only a completed search is remembered: a pass cut short by the budget or a 429 must be
+  // able to ask again next time (the cache is what makes the sweep converge, not a lockout).
+  if (!incomplete) resolveCache.set(q, { at: Date.now(), best });
   return best;
 }
 
@@ -451,4 +531,5 @@ async function prepareDraft(draft, cfg) {
 module.exports = {
   prepareDraft, resolvePublication, unfilled, displayName,
   anchorifyHtml, detokenText, bulletName, textToHtml, TOKEN_IN_BODY_RE,
+  resetResolveBudget,
 };
