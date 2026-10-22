@@ -157,6 +157,36 @@ def verdict(record, report_entry=None):
     return dict(base, status=BLOCKED, reason=f"gap_status is {gap or 'missing'}, which is not a verdict")
 
 
+def custom_body_hit(custom_dir, lead_id_, text, min_probe=40):
+    """The custom-copy file stem whose body appears in this draft, or None.
+
+    The seeder checks the research before it composes, but a draft already in the queue keeps the
+    body it was composed with, and the queue is where mail actually waits. So the send path asks a
+    different question: is this text a researched body, and whose? Matching on the body (not on the
+    draft id) means a draft renamed or re-seeded since still gets found. A probe shorter than
+    `min_probe` characters is not evidence: it could be a common sentence.
+    """
+    kid = str(lead_id_ or "")
+    if not kid or not text or not os.path.isdir(custom_dir):
+        return None
+    haystack = re.sub(r"\s+", " ", text).strip().lower()
+    for name in sorted(os.listdir(custom_dir)):
+        if not name.endswith(".json"):
+            continue
+        stem = name[:-5]
+        if stem != kid and not stem.startswith(kid + ".touch"):
+            continue
+        try:
+            with open(os.path.join(custom_dir, name), encoding="utf-8") as fh:
+                body = str((json.load(fh) or {}).get("body") or "")
+        except (OSError, ValueError):
+            continue
+        probe = re.sub(r"\s+", " ", body).strip().lower()[:80]
+        if len(probe) >= min_probe and probe in haystack:
+            return stem
+    return None
+
+
 class GapGate:
     """Ledger for one drafting run: which custom copies are allowed, and why not for the rest."""
 
@@ -171,19 +201,24 @@ class GapGate:
         name = f"{kid}.json" if touch == 1 else f"{kid}.touch{int(touch)}.json"
         return os.path.exists(os.path.join(self.custom_dir, name))
 
+    def verdict_for(self, lead_id_, company):
+        """The verdict for a lead whether or not a custom file exists, for callers that already
+        know the copy is in play (the send gate sees a body, not a file path)."""
+        kid = str(lead_id_ or "")
+        if kid in self._cache:
+            return self._cache[kid]
+        record = self.research.get(kid) or self.research.get(lead_id(company))
+        v = verdict(record, _report_for((record or {}).get("company") or company, self.report))
+        v["lead_id"] = kid
+        v["company"] = company
+        self._cache[kid] = v
+        return v
+
     def check(self, lead, touch=1):
         """None when there is no custom copy to judge, else the verdict for this lead."""
         if not self.has_custom(lead, touch):
             return None
-        kid = str(lead.get("id") or "")
-        if kid in self._cache:
-            return self._cache[kid]
-        record = self.research.get(kid) or self.research.get(lead_id(lead.get("company")))
-        v = verdict(record, _report_for((record or {}).get("company") or lead.get("company"), self.report))
-        v["lead_id"] = kid
-        v["company"] = lead.get("company")
-        self._cache[kid] = v
-        return v
+        return self.verdict_for(lead.get("id"), lead.get("company"))
 
     def summary(self):
         counts = {}

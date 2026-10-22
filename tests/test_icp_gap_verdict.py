@@ -139,6 +139,104 @@ class Gate(unittest.TestCase):
         self.assertEqual(gate.check({"id": "acme", "company": "Acme"})["status"], gv.BLOCKED)
 
 
+class MatchingTheBody(unittest.TestCase):
+    """A draft already in the queue is found by its body, whatever its id says."""
+
+    def setUp(self):
+        import json
+        import tempfile
+        self.dir = tempfile.mkdtemp()
+        self.custom = os.path.join(self.dir, "custom")
+        os.makedirs(self.custom)
+        self.body = ("Your docs describe a workflow's source as the set of URLs it extracts from. "
+                     "That means a fund must hand-build a pipeline per publication.")
+        for name in ("acme.json", "acme.touch2.json"):
+            with open(os.path.join(self.custom, name), "w") as fh:
+                json.dump({"subject": "s", "body": self.body}, fh)
+
+    def test_the_first_touch_body_is_recognised(self):
+        text = "Hi Wei,\n\n" + self.body + "\n\n[Name], Founder, NewsletterFIT"
+        self.assertEqual(gv.custom_body_hit(self.custom, "acme", text), "acme")
+
+    def test_a_per_touch_body_is_recognised(self):
+        text = "Hi Wei,\n\n" + self.body
+        self.assertEqual(gv.custom_body_hit(self.custom, "acme.touch2", text), "acme.touch2")
+
+    def test_another_company_s_text_is_not_this_lead_s(self):
+        text = "Hi Wei,\n\n" + self.body
+        self.assertIsNone(gv.custom_body_hit(self.custom, "other", text))
+
+    def test_a_lane_template_is_not_mistaken_for_researched_copy(self):
+        text = ("Hi Wei,\n\nThree lists taking sponsors in your lane, most recently Data "
+                "Engineering Central.\n\n- Data Engineering Central (est. 23K): [TRACKED_LINK]")
+        self.assertIsNone(gv.custom_body_hit(self.custom, "acme", text))
+
+    def test_a_short_body_is_not_evidence(self):
+        with open(os.path.join(self.custom, "tiny.json"), "w") as fh:
+            import json
+            json.dump({"subject": "s", "body": "Newsletter mentions."}, fh)
+        self.assertIsNone(gv.custom_body_hit(self.custom, "tiny", "Hi Wei,\n\nNewsletter mentions."))
+
+
+class SendPath(unittest.TestCase):
+    """The gate holds a queued draft whose researched body has lost its evidence."""
+
+    def setUp(self):
+        import json
+        import tempfile
+        import nf_send_gate as send_gate
+        self.send_gate = send_gate
+        self.dir = tempfile.mkdtemp()
+        self.custom = os.path.join(self.dir, "custom")
+        research = os.path.join(self.dir, "research")
+        os.makedirs(self.custom)
+        os.makedirs(research)
+        self.body = ("Your docs describe a workflow's source as the set of URLs it extracts "
+                     "from. That means a fund must hand-build a pipeline per publication.")
+        with open(os.path.join(self.custom, "acme.json"), "w") as fh:
+            json.dump({"subject": "A newsletter corpus for your fund customers", "body": self.body}, fh)
+        with open(os.path.join(research, "acme.json"), "w") as fh:
+            json.dump(record("confirmed"), fh)
+        report = os.path.join(self.dir, "verify-report.json")
+        with open(report, "w") as fh:
+            json.dump({"Acme": entry([MISS])}, fh)
+        send_gate.CUSTOM_DIR = self.custom
+        send_gate._GAP_GATE = gv.GapGate(self.custom, research, report)
+        token = "abcdefghijklmnopqrstuvwxyz012345"
+        self.ctx = {
+            "ledger": {token: {"dest": "https://newsletterfit.com/app/publications/x"}},
+            "leads": {"acme": {"id": "acme", "company": "Acme", "contact_name": "Wei Zhang",
+                               "email": "wei@acme.com", "domain": "acme.com", "stage": "leads",
+                               "lead_source": "icp_research"}},
+            "sent": {}, "replied": {},
+            "by_company": {"acme": [{"id": "acme", "to": "wei@acme.com"}]},
+            "corpus": type("C", (), {"placements": lambda s, c: [],
+                                     "sponsor_count": lambda s, c: 0,
+                                     "publication": lambda s, n: None,
+                                     "recent_for": lambda s, c: []})(),
+        }
+        self.draft = {"id": "acme", "company": "Acme", "to": "wei@acme.com",
+                      "from": "ian@newsletterfit.com",
+                      "subject": "A newsletter corpus for your fund customers",
+                      "text": "Hi Wei,\n\n" + self.body + "\n\n[Name], Founder, NewsletterFIT",
+                      "html": f'<a href="https://newsletterfit.com/api/click?lt={token}">x</a>'}
+
+    def test_a_blocked_researched_body_is_held_at_the_gate(self):
+        verdict, findings = self.send_gate.gate(self.draft, self.ctx)
+        messages = [f["message"] for f in findings if f["level"] == "HOLD"]
+        self.assertEqual(verdict, "HOLD")
+        self.assertTrue(any("researched copy" in m and "not backed" in m for m in messages), messages)
+
+    def test_a_verified_body_is_not_held_for_its_research(self):
+        import json
+        report = os.path.join(self.dir, "verify-report.json")
+        with open(report, "w") as fh:
+            json.dump({"Acme": entry([OK])}, fh)
+        self.send_gate._GAP_GATE = gv.GapGate(self.custom, os.path.join(self.dir, "research"), report)
+        _, findings = self.send_gate.gate(self.draft, self.ctx)
+        self.assertFalse(any("not backed" in f["message"] for f in findings))
+
+
 class RealTree(unittest.TestCase):
     """The rescued 2026-10-21 audit, run through the gate as the seeder would."""
 

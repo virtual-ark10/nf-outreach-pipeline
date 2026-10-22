@@ -359,8 +359,15 @@ def follow_up(lead, touch, picks):
     return subject, text
 
 
-def compose(lead, touch, picks):
-    custom = custom_copy(lead, touch)
+def compose(lead, touch, picks, allow_custom=True):
+    """The copy for this lead and touch.
+
+    `allow_custom=False` composes the deterministic lane template even when a researched file
+    exists. It is how a copy whose research did not hold up is degraded: the account still gets a
+    mail that makes no claim it cannot back, and the refuted file waits for a human instead of
+    taking the whole account down with it.
+    """
+    custom = custom_copy(lead, touch) if allow_custom else None
     if custom:
         # A researched, hand-written touch beats the generated copy: it says something only that
         # account could be told, which is the whole point of a per-account gap. The greeting and
@@ -509,15 +516,19 @@ def main():
     print(f"  {len(work)} ICP lead(s) owed a touch")
 
     gate = GapGate(CUSTOM_DIR, GAP_RESEARCH, GAP_REPORT)
-    pools, batch, skipped, held_gap = {}, [], [], []
+    pools, batch, skipped, degraded_gap = {}, [], [], []
     for i, (touch, lead) in enumerate(work[: args.count]):
-        # Researched copy has to clear its own research before it is used. A blocked verdict is a
-        # hold, not a fallback to the lane template: the template would still email the account,
-        # just without the claim, and someone needs to look at why the evidence did not hold.
+        # Researched copy has to clear its own research before it is used. When it does not, the
+        # run degrades to the lane template rather than skipping the account: the template makes
+        # no claim about the vendor's stack, so it is honest by construction, and the refuted file
+        # is still withdrawn and reported.
         gv = gate.check(lead, touch)
-        if gv and gv["status"] in ("blocked", "unresearched", "unchecked"):
-            held_gap.append((lead.get("company"), gv["status"], gv["reason"]))
-            continue
+        allow_custom = not (gv and gv["status"] in ("blocked", "unresearched", "unchecked"))
+        if not allow_custom:
+            # Degrade, do not hold: the lead qualified on its own, and the lane template claims
+            # nothing about the vendor's stack. What failed is the researched copy, so that is
+            # what is withdrawn, with the reason printed for whoever fixes the record.
+            degraded_gap.append((lead.get("company"), gv["status"], gv["reason"]))
         lane, queries = lane_for(lead)
         if lane not in pools:
             pools[lane] = candidates(search, queries)
@@ -525,7 +536,7 @@ def main():
         if not picks:
             skipped.append((lead.get("company"), f"no sponsor-taking list found in {lane}"))
             continue
-        subject, text = compose(lead, touch, picks)
+        subject, text = compose(lead, touch, picks, allow_custom=allow_custom)
         if not _greeting(lead):
             skipped.append((lead.get("company"), "no contact name, a greeting would be invented"))
             continue
@@ -547,8 +558,8 @@ def main():
     gap_counts = gate.summary()
     if gap_counts:
         print("  researched copy: " + ", ".join(f"{k} {v}" for k, v in sorted(gap_counts.items())))
-    for co, status, why in held_gap:
-        print(f"    held {str(co)[:26]:<26} {status}: {str(why)[:110]}")
+    for co, status, why in degraded_gap:
+        print(f"    degraded {str(co)[:24]:<24} {status}: lane template used, {str(why)[:100]}")
     print(f"  composed {len(batch)} draft(s)   (skipped {len(skipped)})")
     for co, why in skipped[:8]:
         print(f"    skip {str(co)[:26]:<26} {why}")

@@ -37,6 +37,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _lead_rank import quality_rank                    # noqa: E402
 from _address_rules import is_role_address              # noqa: E402
 import icp_fit                                          # noqa: E402
+import _gap_verdict as gapmod                           # noqa: E402
 
 PAD = "http://127.0.0.1:3001"
 CRM_DB = "/home/boxed/nf-outreach-pipeline/pad/data/outreach.db"
@@ -54,6 +55,19 @@ DEFAULT_CAP = 50
 # takes it throws the tail away: the 2026-10-12 run sent 31 of 50 and got 429 on the rest.
 # At 1.3s a run of 50 takes about a minute and stays inside both limits.
 SEND_PACE_S = float(os.environ.get("NF_SEND_PACE", "1.3"))
+# Researched copy and the research it stands on. The seeder checks this before composing, but a
+# draft in the queue keeps the body it was composed with, so the send path checks it again.
+CUSTOM_DIR = "/home/boxed/nf-outreach-pipeline/data/icp-custom"
+GAP_DIR = os.environ.get("ICP_GAP_DIR") or "/home/boxed/nf-outreach-pipeline/data/icp-gap"
+_GAP_GATE = None
+
+
+def gap_gate():
+    global _GAP_GATE
+    if _GAP_GATE is None:
+        _GAP_GATE = gapmod.GapGate(CUSTOM_DIR, os.path.join(GAP_DIR, "research"),
+                                   os.path.join(GAP_DIR, "verify-report.json"))
+    return _GAP_GATE
 
 
 def cap_for_date(day):
@@ -399,6 +413,20 @@ def gate(draft, ctx):
             hard(f"off-ICP: {detail}")
     if replied.get(hist_key):
         hard(f"prospect replied already: {replied[hist_key][:2]}")
+
+    # 3a. researched copy has to stand on its own evidence at the moment it would send. The
+    # seeder withdraws a copy whose research failed, but a draft already in the queue keeps the
+    # body it was composed with, and the queue is where mail waits. The body is matched against
+    # the custom files, so a draft that predates this check is still caught.
+    if lead:
+        stem = gapmod.custom_body_hit(CUSTOM_DIR, str(lead.get("id") or ""), text)
+        if stem:
+            gv = gap_gate().verdict_for(lead.get("id"), lead.get("company") or company)
+            if gv["status"] in (gapmod.BLOCKED, gapmod.UNRESEARCHED, gapmod.UNCHECKED):
+                hard(f"researched copy {stem!r} is not backed ({gv['status']}): {gv['reason']}")
+            elif gv["status"] == gapmod.ASK_ONLY:
+                soft(f"researched copy {stem!r} rests on an unverified gap: it may offer the data, "
+                     f"never assert the capability is missing")
 
     # 3b. the address has to belong to the company the corpus has evidence for. A corpus lead
     # imported before the domain-resolution pass carries no domain at all, so its sponsor export

@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(NF_REPO, "scripts"))
 
 import nf_send_gate as gate      # noqa: E402
 import seed_icp_drafts as icp    # noqa: E402
+import _gap_verdict as gapmod    # noqa: E402
 
 
 def pub(name, slug, label, subs, sponsors=(), mentions=0, accepts=True, freq="weekly"):
@@ -214,6 +215,20 @@ class ResearchedFirstTouch(unittest.TestCase):
         self.assertTrue(text.startswith("Hi Wei,"))
         self.assertTrue(text.rstrip().endswith("[Name], Founder, NewsletterFIT"))
         self.assertEqual(text.count("[TRACKED_LINK]"), 1)
+
+    def test_a_withdrawn_researched_copy_degrades_to_the_lane_template(self):
+        # When the gate blocks the researched file (a quote not on its page, a disconfirmed gap,
+        # quotes never checked), the seeder withdraws the copy and composes the template rather
+        # than skipping the account. The template claims nothing about the vendor's stack, so the
+        # mail is still honest, and the refuted file waits for a human instead of stalling a lead
+        # that qualified on its own.
+        subject, text = icp.compose(LEAD, 1, self.picks, allow_custom=False)
+        self.assertNotEqual(subject, "A newsletter corpus for your fund customers")
+        self.assertNotIn("Your docs describe a workflow's source", text)
+        self.assertIn(self.picks[0]["name"], text)
+        # The lane template lists its own picks (three of them), unlike the researched copy,
+        # which appends one list only when the body names none.
+        self.assertGreaterEqual(text.count("[TRACKED_LINK]"), 2)
 
     def test_a_first_touch_file_leaves_the_follow_ups_alone(self):
         # The touch-1 file must never leak into touch 2: a follow-up that repeats the first
@@ -459,18 +474,35 @@ class TheLiveGapCopiesClearTheGate(unittest.TestCase):
                "by_company": {lead["company"].lower(): [draft]}, "corpus": self.Corpus()}
         return draft, ctx
 
-    def test_both_rungs_pass_the_real_gate(self):
+    def test_each_rung_is_gated_on_its_own_research(self):
+        # Two things at once, because they are one rule now. The hand-written copy has to obey the
+        # gate's language rules, and it has to be backed by research the verifier cleared. A copy
+        # whose evidence failed comes back HOLD with that reason named, which is what happened to
+        # Common Room: its research cites a docs row that is not on the rendered page.
         picks = icp.candidates(search_of(PUBS), ["developer tools"])[:3]
+        gaps = icp.GapGate(icp.CUSTOM_DIR, icp.GAP_RESEARCH, icp.GAP_REPORT)
+        not_draftable = (gapmod.BLOCKED, gapmod.UNRESEARCHED, gapmod.UNCHECKED)
         for lead in self.LEADS:
             for touch in (1, 2):
                 self.assertIsNotNone(icp.custom_copy(lead, touch),
                                      f"no researched copy for {lead['id']} touch {touch}")
                 draft, ctx = self.draft_for(picks, touch, lead)
                 verdict, findings = gate.gate(draft, ctx)
-                self.assertEqual(
-                    verdict, "PASS",
-                    f"{lead['id']} touch {touch} came back {verdict}: "
-                    f"{[f['message'] for f in findings]}")
+                status = gaps.verdict_for(lead["id"], lead["company"])["status"]
+                if status in not_draftable:
+                    self.assertEqual(
+                        verdict, "HOLD",
+                        f"{lead['id']} touch {touch} is {status} but the gate passed it: "
+                        f"{[f['message'] for f in findings]}")
+                    self.assertTrue(
+                        any("not backed" in f["message"] for f in findings),
+                        f"{lead['id']} was held for another reason: "
+                        f"{[f['message'] for f in findings]}")
+                else:
+                    self.assertEqual(
+                        verdict, "PASS",
+                        f"{lead['id']} touch {touch} came back {verdict}: "
+                        f"{[f['message'] for f in findings]}")
 
     def test_the_follow_up_says_something_the_first_touch_did_not(self):
         for lead in self.LEADS:
