@@ -29,7 +29,9 @@ REPO = "/home/boxed/nf-outreach-pipeline"
 # Lead quality preference lives in one place (scripts/_lead_rank.py).
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import icp_fit                                          # noqa: E402
-from _lead_rank import quality_rank                    # noqa: E402
+from _lead_rank import quality_rank
+from _buyer_titles import buyer_verdict     # noqa: E402  (who is allowed to be greeted)                    # noqa: E402
+import _greetings as greet                             # noqa: E402
 PAD_DB = f"{REPO}/pad/data/outreach.db"
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
 CORPUS_ENV = "/home/boxed/.config/newsletterfit/corpus.env"
@@ -229,10 +231,15 @@ for score, quality, l, e in ranked:
         continue
     to = (l.get("email") or "").strip()
     name = (l.get("contact_name") or "").strip()
-    greeting = name.split()[0] if name else ""
-    if not greeting:
-        skipped.append((company, "no contact name, a greeting would be invented"))
+    # A non-buyer reads it and nobody who can buy does. The lead keeps its place in the CRM; the
+    # send goes to a buyer instead, so an intern or an office manager is never the greeting.
+    ok_buyer, why_not = buyer_verdict(l.get("contact_title"))
+    if not ok_buyer:
+        skipped.append((company, f"contact is not a buyer ({why_not}): re-source a buyer before drafting"))
         continue
+    # A lead with no verified person on it is still worth writing to: open with a bare "Hi,".
+    # Inventing a first name is the one thing that cannot happen (founder rule, 2026-10-22).
+    hello = greet.line(name)
 
     sponsored_list = jlist(l.get("sponsored_pubs")) or jlist(e.get("topSponsoredPublications"))
     recs_raw = jlist(l.get("recommended_pubs")) or jlist(e.get("topRecommendedPublications"))
@@ -281,7 +288,7 @@ for score, quality, l, e in ranked:
         f"- {n} (est. {lab}): [TRACKED_LINK]" if lab else f"- {n}: [TRACKED_LINK]"
         for n, lab in recs)
     text = (
-        f"Hi {greeting},\n\n"
+        f"{hello}\n\n"
         f"{opener}\n\n"
         "I'm building NewsletterFIT: a corpus of newsletters that reads who sponsors whom and "
         "which pubs are rising, so sponsors find fits for audiences they already pay for.\n\n"

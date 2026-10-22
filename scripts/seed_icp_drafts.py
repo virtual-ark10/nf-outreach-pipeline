@@ -53,6 +53,7 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _address_rules import is_role_address  # noqa: E402  (one definition, shared with the gate)
 import _greetings as greet                  # noqa: E402  (the opening line, one definition)
+from _buyer_titles import buyer_verdict     # noqa: E402  (who is allowed to be greeted)
 # The researched copy is only as good as the research behind it: one module decides whether a
 # custom file's evidence was verified, so the seeder cannot send a claim the verifier refuted.
 from _gap_verdict import GapGate           # noqa: E402
@@ -557,6 +558,13 @@ def main():
         picks = rotate(pools[lane], i, 3 if touch != 4 else 1)
         if not picks:
             skipped.append((lead.get("company"), f"no sponsor-taking list found in {lane}"))
+            continue
+        ok_buyer, why_not = buyer_verdict(lead.get("contact_title"))
+        if not ok_buyer:
+            # An Office Manager or a Marketing Intern reads it and nobody who can buy does. The
+            # lead keeps its place; the send goes to a buyer instead.
+            skipped.append((lead.get("company"),
+                            f"contact is not a buyer ({why_not}): re-source a buyer before drafting"))
             continue
         subject, text = compose(lead, touch, picks, allow_custom=allow_custom)
         if is_role_address(lead.get("email")):
