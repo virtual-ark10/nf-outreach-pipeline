@@ -74,7 +74,7 @@ LANES = (
 # name. Only person-shaped addresses are allowed to fill an empty email column. The list lives
 # in one place now (scripts/_address_rules.py) so the gate, the discovery pass and this pass
 # cannot disagree about what a queue address is.
-from _address_rules import is_role_address              # noqa: E402  (path set just above)
+from _address_rules import is_role_address, belongs_to_domain   # noqa: E402  (path set just above)
 
 STOPWORDS = {"the", "inc", "llc", "ltd", "limited", "group", "co", "corp", "corporation", "ai",
              "io", "com", "hq", "app", "labs", "lab", "technologies", "technology", "company"}
@@ -435,7 +435,13 @@ def main() -> int:
             src = f"{best['lane']} (free)"
             # A stored shared mailbox is not an address either: a person's own address from the
             # lanes is strictly better, so it replaces support@/info@ rather than deferring to it.
+            # It also has to be the person's address AT THIS COMPANY: a namesake record came back
+            # as sensors.alphasense@ametek.com and queued a stranger's mailbox, so an address on
+            # another host never fills the column, whatever the provider says.
             stored_email = str(lead.get("email") or "").strip()
+            if best["email"] and not belongs_to_domain(best["email"], domain):
+                print(f"  refused   {company:<30} {best['email']} is not on {domain}: not a contact")
+                best["email"] = ""
             if best["email"] and (not stored_email or is_role_address(stored_email)):
                 body["email"] = best["email"]
                 src += (f"; address {best['email']}"

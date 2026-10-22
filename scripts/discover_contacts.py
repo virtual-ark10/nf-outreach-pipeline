@@ -76,7 +76,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _lead_rank import quality_rank                    # noqa: E402
 # "a shared mailbox is not a contact" is one rule, in one place (scripts/_address_rules.py):
 # the gate holds a draft addressed to one, this script refuses to store one.
-from _address_rules import is_role_address             # noqa: E402
+from _address_rules import is_role_address, belongs_to_domain   # noqa: E402
 
 
 def load_token() -> str:
@@ -327,8 +327,12 @@ def main() -> int:
                 name, title, how = nm, ttl or title, how + [f"treg name ({served or 'people.search'})"]
                 stats["names"] += 1
                 if not email and free_email:
-                    email, how = free_email.lower(), how + ["address from the people route"]
-                    stats["addresses_free"] += 1
+                    if belongs_to_domain(free_email, domain):
+                        email, how = free_email.lower(), how + ["address from the people route"]
+                        stats["addresses_free"] += 1
+                    else:
+                        print(f"    {company}: the people route offers {free_email}, which is "
+                              f"not on {domain}: not a contact")
 
         # 3. treg's paid name-first find, verified before it is kept
         if finding and name and not email and finds < args.max_finds and spent < args.budget:
@@ -343,6 +347,9 @@ def main() -> int:
                 if vstatus == "invalid":
                     stats["rejected"] += 1
                     print(f"    {company}: {addr} failed verification, dropped")
+                elif not belongs_to_domain(addr, domain):
+                    stats["rejected"] += 1
+                    print(f"    {company}: {addr} is not on {domain}, dropped")
                 else:
                     email = addr
                     how = how + [f"treg find ({served}, {vstatus or 'unverified'})"]
