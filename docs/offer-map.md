@@ -24,10 +24,16 @@ The public documentation is a specification of what they will buy. Read four thi
 Apollo through treg is the qualification pass on the company behind the docs, not the pitch. One
 call gives headcount, revenue, funding stage, founding year, location and the technology list,
 which is enough to decide whether to offer a self serve trial or a data agreement. Sample check
-run 2026-10-22 on Diffbot: 31 employees, 8M revenue, 13M raised, Series A in 2016, Menlo Park, 48
-technologies, keywords heavy on knowledge graph, entity resolution and data enrichment. That
-profile says small, API first, technically literate, so the offer leads with records and a trial
-key, not with a plan grid. Cost 0.026 dollars, one call.
+run 2026-10-22 on Diffbot: 31 employees, 8M revenue, Menlo Park, 48 technologies, keywords heavy
+on knowledge graph, entity resolution and data enrichment. That profile says small, API first,
+technically literate, so the offer leads with records and a trial key, not with a plan grid. Cost
+0.026 dollars, one call.
+
+**Funding is capped at 2026.** A round older than the current year is stale and cannot size an
+offer: it says what a company raised years ago, not what it can spend now. Record the round with
+its date, mark it stale, and qualify on headcount, revenue and technology instead. Diffbot's
+Series A is from 2016, so it is recorded and ignored, which is also why the copy never mentions
+funding.
 
 ## Step 2: the surfaces, and which gap each one answers
 
@@ -64,6 +70,38 @@ Answers "we want to land this in our warehouse". Concede the 14 day window in th
 Rising and momentum (GET /directory/rising): momentum computed under published rules from
 repeated snapshots. Answers "how do you know it is rising". This is the one surface where the
 method is the pitch, so state a rule rather than a percentage.
+
+## Step 2b: when the gap cannot be proven, estimate it instead of stalling
+
+A vendor with no public docs (Persana) cannot be shown to lack anything, and the earlier rule
+held such a lead in "ask" form, which is honest but weak. The stronger move is an estimate built
+from things the corpus does know: the company type, what the product does, and how the companies
+it competes with in our own graph are covered.
+
+Method, two calls per name: `GET /entities/company?q=<name>` to resolve the entity, then
+`GET /entities/company/:id` for its page. Measured 2026-10-22:
+
+    Clay        92 articles, 56 publications, 36 in the last 30 days
+    Apollo     102 articles, 88 publications, 49 in the last 30 days
+    ZoomInfo    25 articles, 19 publications, 13 in the last 30 days
+    6sense      12 articles, 12 publications,  3 in the last 30 days
+    Common Room  6 articles,  6 publications
+    Lusha        5 articles,  4 publications
+    Crustdata    4 articles,  3 publications
+    Warmly       4 articles,  4 publications
+    Unify        2 articles,  2 publications
+    Persana      1 article,   1 publication
+    Ocean.io, Bitscale, Databar, SyncGTM, Diffbot, Cognism: absent
+
+So a lead that publishes no docs still gets a specific, checkable opener: their category is
+already measured in the newsletter layer, their own name is not, and the numbers come from the
+same graph the product sells. That is an estimate of need from comparables, not a claim about
+what the prospect lacks, so the send gate accepts it and the copy does not have to ask permission
+to make a point.
+
+Two rules. Never inflate an absent company into a negative ("you are invisible"), which reads as
+a taunt; state the comparison and let it land. And when the prospect is one of the measured names,
+cite its own figure rather than the category's.
 
 ## Step 3: the ladder for a data or GTM buyer
 

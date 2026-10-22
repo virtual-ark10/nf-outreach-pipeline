@@ -1,4 +1,4 @@
 {
  "subject": "what mention volume looks like per account",
- "body": "One account in the corpus, Brex, reads 66 articles across 31 publications, and its mentions moved from 17 in the prior thirty days to 27 in the last thirty. The same page carries the first and latest mention, the publications behind them, and the articles themselves.\n\nThat is the shape a signal would take on your side: a per account time series with provenance, not a one off mention count.\n\nHappy to pull it for a handful of accounts you already score, so you can see whether it adds lift before it becomes a source."
+ "body": "One account in the graph, Brex, reads 66 articles across 31 publications, and its mentions moved from 17 in the prior thirty days to 27 in the last thirty. The same page carries the first and latest mention, the publications behind them, and the articles themselves.\n\nThat is the shape a signal would take on your side: a per account time series with provenance, not a one off mention count.\n\nHappy to pull it for a handful of accounts you already score, so the lift is testable before it becomes a source.\n"
 }

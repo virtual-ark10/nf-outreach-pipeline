@@ -1,0 +1,4 @@
+{
+ "subject": "who is paying for the attention",
+ "body": "An entity page carries more than a mention count: article and publication totals, first and latest mention, the last thirty days against the thirty before, and the articles behind each one, which is the time series a ranking model can use.\n\nThe sponsor side adds the commercial read. A sponsor page holds its monthly placement history, the publications it runs in and the sponsors sharing inventory with it, so an account can be scored on who is already paying for its audience.\n\nBoth are one API call away, per account. I can send a sample keyed by domain with both sides joined.\n"
+}
