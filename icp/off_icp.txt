@@ -1,0 +1,36 @@
+# icp/off_icp.txt — names this pipeline will not pitch, one per line, # for comments.
+#
+# The size rule in scripts/icp_fit.py does the real work: a company measured over the ICP
+# spec's employee ceiling (icp/icp_spec.json, discovery.bands.employees, default 11-200) is
+# excluded wherever it comes from, because the corpus intake imports whoever sponsors a
+# newsletter and the sponsor export's tier is an outreach score rather than a size check.
+#
+# This list is the fallback for companies the free size lane cannot measure, and for the ones
+# whose size is known but whose fit is not a size question. Every entry here was seen in the
+# 2026-10-12 sends or in the queue for the following morning.
+#
+# Entries match a domain (atlassian.com also matches mail.atlassian.com) or a company name
+# (mongodb matches "MongoDB", never a substring: the name is flattened before comparing).
+
+# Enterprise brands the corpus export scored MEDIUM and the queue pitched.
+amazon.com          # AWS sponsors widely; the corpus row is the whole company
+anthropic.com       # Claude
+atlassian.com
+box.com
+mongodb.com
+brex.com
+asana.com
+airtable.com
+squarespace.com
+deel.com
+hubspot.com
+ahrefs.com
+framer.com
+teleport.dev
+goteleport.com
+brightdata.com
+bluevine.com
+hinge.co
+polymarket.com
+assemblyai.com
+brilliant.org

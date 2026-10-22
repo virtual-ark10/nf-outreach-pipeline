@@ -59,6 +59,7 @@ SERP_MAX_COST = os.environ.get("TREG_MAX_COST", "0.01")
 # preferred tier too, so the unimported pool does not fill HIGH-first while every downstream
 # queue works MEDIUM-first.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import icp_fit                                          # noqa: E402
 from _lead_rank import quality_rank                    # noqa: E402
 
 # Threshold scale only (LOW < MEDIUM < HIGH), used by --min-quality and the "or better" floor.
@@ -357,7 +358,7 @@ def main() -> int:
     print(f"  export: {len(rows)} row(s); {len(candidates)} qualified candidate(s) not in "
           f"the CRM at {args.min_quality}+ with {args.min_placements}+ placement(s)")
 
-    added, unresolved, failed = [], [], []
+    added, unresolved, failed, off_icp = [], [], [], []
     for placements, quality, name, r in candidates[: args.limit]:
         slug = slugs.get(norm(name), "")
         domain, evidence = resolve_domain(name, slug, budget)
@@ -368,6 +369,14 @@ def main() -> int:
         if not domain:
             unresolved.append(name)
             print(f"  no domain  {name} - skipped (nothing to enrich or pitch)")
+            continue
+        # Off-ICP sponsors do not become leads: the export's tier is an outreach score, not a
+        # size or fit judgement, so an enterprise brand scores MEDIUM and would ride into the
+        # first-touch queue beside the small shops (2026-10-12: Anthropic, Atlassian, AWS, Box).
+        fit, why, detail = icp_fit.verdict(name, domain)
+        if not fit:
+            off_icp.append((name, domain, detail))
+            print(f"  off-ICP    {name:<28} {domain:<28} {detail}")
             continue
         body = {
             "id": kebab(name),
@@ -396,9 +405,13 @@ def main() -> int:
         time.sleep(0.2)
 
     record_serps(budget["cost"], budget["calls"])
-    print(f"\nimported {len(added)} | unresolved {len(unresolved)} | failed {len(failed)} | "
-          f"search spend ${budget['cost']:.4f}"
+    print(f"\nimported {len(added)} | off-ICP {len(off_icp)} | unresolved {len(unresolved)} | "
+          f"failed {len(failed)} | search spend ${budget['cost']:.4f}"
           f"{' | DRY RUN - nothing written' if not args.apply else ''}")
+    if off_icp:
+        print(f"  off-ICP (size band {icp_fit.size_band()[0]}-{icp_fit.size_band()[1]} employees "
+              f"or icp/off_icp.txt): " + ", ".join(f"{n} ({d})" for n, d, _ in off_icp[:10])
+              + (" ..." if len(off_icp) > 10 else ""))
     if unresolved:
         print(f"  no domain found for: {', '.join(unresolved[:10])}"
               f"{' ...' if len(unresolved) > 10 else ''}")

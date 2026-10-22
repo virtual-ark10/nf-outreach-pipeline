@@ -28,6 +28,7 @@ import urllib.request
 REPO = "/home/boxed/nf-outreach-pipeline"
 # Lead quality preference lives in one place (scripts/_lead_rank.py).
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import icp_fit                                          # noqa: E402
 from _lead_rank import quality_rank                    # noqa: E402
 PAD_DB = f"{REPO}/pad/data/outreach.db"
 EXPORT_CSV = "/srv/newsletterfit/reports/sponsor-outreach/sponsor-leads.csv"
@@ -217,6 +218,14 @@ for score, quality, l, e in ranked:
     # to recommend" skip that looks like a supply problem.
     if str(l.get("lead_source") or "") == "icp_research":
         skipped.append((company, "ICP lead, drafted by the ICP ladder (seed_icp_drafts.py)"))
+        continue
+    # Off-ICP sponsors are not first-touch material, whichever ladder would draft them. The
+    # export's tier is an outreach score rather than a size check, so an enterprise brand
+    # scores MEDIUM and gets composed beside the small shops; on 2026-10-12 the day's sends
+    # were Anthropic, Atlassian, AWS, Box, Brex, MongoDB, Teleport.
+    fit, why, detail = icp_fit.verdict(company, l.get("domain") or l.get("website"))
+    if not fit:
+        skipped.append((company, f"off-ICP ({detail})"))
         continue
     to = (l.get("email") or "").strip()
     name = (l.get("contact_name") or "").strip()
