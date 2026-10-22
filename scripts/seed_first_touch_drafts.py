@@ -267,10 +267,34 @@ for score, quality, l, e in ranked:
     except (TypeError, ValueError):
         placements = None
 
+    # A publication name has to survive being read in a subject and as a bullet. Slugs, domains
+    # and "X's Substack" are not names, and a trailing full stop turns into "The Audacity..".
+    def clean_pub(value):
+        n = re.sub(r"\s+", " ", str(value or "")).strip(" .,:;|-")
+        return n
+
+    def pub_ok(value):
+        n = clean_pub(value)
+        return (len(n) >= 4 and "substack" not in n.lower()
+                and not re.search(r"\.(com|io|co|ai|org|net|substack|beehiiv)\b", n, re.I)
+                and not n.lower().endswith(".com"))
+
+    sponsored = [clean_pub(x) for x in sponsored if pub_ok(x)]
+    recs = [(clean_pub(n), lab) for n, lab in recs if pub_ok(n)]
+    if not recs:
+        skipped.append((company, "no publication with a usable name to recommend"))
+        continue
     subject_pub = sponsored[0] if sponsored else recs[0][0]
     subject = f"Spotted {company} in {subject_pub}"
+    if len(subject) > 58:
+        # Keep the pattern, shorten the tail: a subject that does not fit an inbox preview is
+        # worse than one that names only the company.
+        tail = re.split(r"\s+(?:by|\|)\s+", subject_pub)[0]
+        subject = f"Spotted {company} in {tail}" if len(f"Spotted {company} in {tail}") <= 58 \
+            else f"Spotted {company}"
 
-    opener = (f"{placements} {company} placements in the newsletters I track"
+    opener = (f"{placements} {company} placement{'s' if placements != 1 else ''} in the "
+              f"newsletters I track"
               if placements else f"{company} shows up in the newsletters I track")
     if sponsored:
         pubs = sponsored[:3]

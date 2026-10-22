@@ -518,7 +518,10 @@ async function prepareDraft(draft, cfg) {
     const keep = [];
     let dropped = 0;
     for (const line of text.split('\n')) {
-      if (!/^\s*[-*•]\s+/.test(line) || line.includes('[TRACKED_LINK]')) { keep.push(line); continue; }
+      // A line whose placeholder failed to mint is handled here too: it is retried against the
+      // resolver and dropped when it still cannot be placed, so no draft carries a bare
+      // [TRACKED_LINK] into the gate.
+      if (!/^\s*[-*•]\s+/.test(line)) { keep.push(line); continue; }
       const name = bulletName(line);
       if (!name || linkedNames.has(norm(name))) { keep.push(line); continue; }
       let resolved = null;
